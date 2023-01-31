@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/EsotericZ/monarch#readme",
   "dependencies": {
-    "concurrently": "^7.6.0"
+    "concurrently": "^7.6.0",
+    "create-react-app": "^5.0.1"
   }
 }
