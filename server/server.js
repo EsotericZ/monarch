@@ -1,69 +1,19 @@
-let express = require('express');
-let sql = require('mssql');
-let app = express();
+const express = require('express');
+const cors = require('cors');
 
-// let config = {
-//     user: 'sa',
-//     password: 'Mon@rch09',
-//     server: '10.0.1.130\\E2SQLSERVER',
-//     database: 'MONARCH_SHOP',
-//     // port: 1433
-//     options: {
-//         trustServerCertificate: true,
-//     }
-// };
+const app = express();
+let routes = require('./routes/api/routes');
 
-// (async function() {
-//     try {
-//         let pool = await sql.connect(config)
-//         console.log('Connection established')
-//     } catch (err) {
-//         console.error(err)
-//     }
-// }
+app.use(
+    cors({
+      origin: true,
+      methods: ["GET", "POST", "PUT", "DELETE"],
+      credentials: true,
+    })
+  );
 
-function connect() {
-    let dbConn = new sql.ConnectionPool(config);
-    dbConn.connect()
-    // console.log('Connection established')
-    .then(function () {
-        let request = new sql.Request(dbConn);
-        request.query("select * from OrderRouting").then(function (recordSet) {
-            console.log(recordSet);
-            dbConn.close();
-        }).catch(function (err) {
-            console.log(err);
-            dbConn.close();
-        });
-    }).catch(function (err) {
-        console.log(err);
-    });
-}
-connect();
+app.use(express.static("public"));
 
-// app.get('/', function(req, res) {
-//     let config = {
-//         user: 'sa',
-//         password: 'Mon@rch09',
-//         server: '10.0.1.130\\E2SQLSERVER',
-//         database: 'MONARCH_SHOP',
-//         options: {
-//             trustServerCertificate: true,
-//         }
-//     };
-
-//     sql.connect(config, function(err,) {
-//         if (err) console.error(err);
-//         let request = new sql.Request();
-
-//         request.query("SELECT * FROM OrderRouting WHERE WorkCntr='211 TLASER'", function(err, recordset) {
-//             if (err) console.error(err);
-
-//             res.send(recordset)
-//         });
-//     });
-// });
-
-// let server = app.listen(5000, function() {
-//     console.log('Server  is running')
-// });
+app.use("/", routes);
+// let server = app.listen(process.env.SERVER_PORT || 3001);
+let server = app.listen(3001);

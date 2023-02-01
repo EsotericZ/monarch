@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 
+import getJobs from '../../services/engineering/getJobs';
+
 const Home = () => {
 
     const [searchEng, setSearchEng] = useState([]);
@@ -7,6 +9,10 @@ const Home = () => {
     
     useEffect(() => {
         const find = () => {
+            let data = getJobs();
+            data.then((res) => {
+                console.log(res.data)
+            })
             // try {
             //     sql.connect(config, function(err,) {
             //         if (err) console.error(err);

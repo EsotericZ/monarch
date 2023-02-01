@@ -1,5 +1,4 @@
 let express = require('express');
-let express = require('express');
 let router = express.Router();
 
 const engineeringController = require('../../controllers/engineeringController');
