@@ -7,6 +7,6 @@ router.get('/', function (req, res) {
     res.send('Welcome to the API');
 });
 
-router.get("/engineering/getJobs", engineeringController.getJobs);
+router.get("/engineering/getAllJobs", engineeringController.getAllJobs);
 
 module.exports = router;

@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 
-import getJobs from '../../services/engineering/getJobs';
+import getAllJobs from '../../services/engineering/getJobs';
 
-const Home = () => {
+const Engineering = () => {
     const [searchedEng, setSearchedEng] = useState([]);
     const [loading, setLoading] = useState(true);
     
     useEffect(() => {
         const find = () => {
             try {
-                let data = getJobs();
+                let data = getAllJobs();
                 data.then((res) => {
                     setSearchedEng(res.recordsets[0]);
                     setLoading(false)
@@ -39,4 +39,4 @@ const Home = () => {
         </>
 }
 
-export default Home;
+export default Engineering;

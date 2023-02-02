@@ -1,7 +1,7 @@
 const model = require('../models/engineering');
 
-function getJobs(req, res) {
-    model.getJobs(req, res);
+function getAllJobs(req, res) {
+    model.getAllJobs(req, res);
 }
 
-exports.getJobs = getJobs;
+exports.getAllJobs = getAllJobs;

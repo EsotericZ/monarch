@@ -1,19 +1,17 @@
 let sql = require('mssql');
-const dotenv = require('dotenv');
-
 require("dotenv").config();
 
 let config = {
     user: process.env.DB_USER,
-    password: 'Mon@rch09',
-    server: '10.0.1.130\\E2SQLSERVER',
-    database: 'MONARCH_SHOP',
+    password: process.env.DB_PASS,
+    server: process.env.DB_SERV,
+    database: process.env.DB_NAME,
     options: {
         trustServerCertificate: true,
     }
 };
 
-async function getJobs(req, res) {
+async function getAllJobs(req, res) {
     sql.connect(config, function(err,) {
         if (err) console.error(err);
         let request = new sql.Request();
@@ -25,4 +23,4 @@ async function getJobs(req, res) {
     })    
 }
 
-exports.getJobs = getJobs;
+exports.getAllJobs = getAllJobs;
