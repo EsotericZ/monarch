@@ -29,13 +29,26 @@ const Engineering = () => {
         :
         <>
             <h1>Welcome</h1>
-            {searchedEng.map((job, index) => {
-                return (
-                    <ul key={index}>
-                        <li>{job.PartNo}</li>
-                    </ul>
-                )
-            })}
+            <table>
+                <tbody>
+                {searchedEng.map((job, index) => {
+                    return (
+                        <tr key={index}>
+                            <td>{job.JobNo}</td>
+                            <td>{job.PartNo}</td>
+                            <td>{job.Revision}</td>
+                            <td>{job.EstimQty}</td>
+                            <td>{job.DueDate}</td>
+                            <td>{job.CustCode}</td>
+                            <td>{job.User_Text3}</td>
+                            <td>{job.User_Text2}</td>
+                            <td>{job.User_Number3}</td>
+                            <td>{job.OrderNo}</td>
+                        </tr>
+                    )
+                })}
+                </tbody>
+            </table>
         </>
 }
 
