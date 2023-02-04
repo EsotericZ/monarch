@@ -11,21 +11,27 @@ let config = {
     }
 };
 
-async function getAllJobs(req, res) {
+async function getAllJobs(req, res, jobData) {
     sql.connect(config, function(err,) {
         if (err) console.error(err);
         let request = new sql.Request();
 
-        // request.query("SELECT TOP 5 PartNo, WorkCntr FROM OrderRouting WHERE WorkCntr='211 TLASER'", 
         request.query("SELECT R.JobNo, D.PartNo, D.Revision, R.EstimQty, D.DueDate, O.CustCode, D.User_Text3, D.User_Text2, D.User_Number3, R.OrderNo\
             FROM OrderRouting R INNER JOIN OrderDet D ON R.JobNo=D.JobNo INNER JOIN ORDERS O ON D.OrderNo=O.OrderNo\
             WHERE R.WorkCntr='101 ENGIN' AND R.Status!='Finished' AND R.Status!='Closed' AND D.Status='Open' AND O.User_Text3!='UNCONFIRMED'", 
         
         function(err, recordset) {
             if (err) console.error(err);
-            res.send(recordset)
+            let test = recordset.recordsets[0];
+
+            const map = new Map();
+            test.forEach(item => map.set(item.JobNo, item));
+            jobData.forEach(item => map.set(item.jobNo, {...map.get(item.jobNo), ...item}));
+            const fullJob = Array.from(map.values());
+
+            res.send(fullJob)
         })
-    })    
+    })
 }
 
 exports.getAllJobs = getAllJobs;

@@ -1,7 +1,9 @@
+const { Jobs } = require('../models');
 const model = require('../models/engineering');
 
-function getAllJobs(req, res) {
-    model.getAllJobs(req, res);
+async function getAllJobs(req, res) {
+    const jobData = await Jobs.findAll();
+    model.getAllJobs(req, res, jobData);
 }
 
 exports.getAllJobs = getAllJobs;

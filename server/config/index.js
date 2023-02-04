@@ -4,9 +4,12 @@ const Sequelize = require('sequelize');
 let sequelize;
 
 sequelize = new Sequelize(
-    process.env.SQ_NAME,
-    process.env.SQ_USER,
-    process.env.SQ_PASS,
+    // process.env.SQ_NAME,
+    // process.env.SQ_USER,
+    // process.env.SQ_PASS,
+    'monarch',
+    'root',
+    'password',
     {
         host: 'localhost',
         dialect: 'mysql',

@@ -1,17 +1,34 @@
 import { useEffect, useState } from 'react';
+import { Button, FloatingLabel, Form, Modal } from 'react-bootstrap';
 
 import getAllJobs from '../../services/engineering/getJobs';
 
 const Engineering = () => {
     const [searchedEng, setSearchedEng] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [show, setShow] = useState(false);
+
+    const [jobNoInfo, setJobNoInfo] = useState();
+    const [custInfo, setCustInfo] = useState();
+    const [partNoInfo, setParNoInfo] = useState();
+    const [engineerInfo, setEngineerInfo] = useState();
+
+
+    const handleClose = () => setShow(false);
+    const handleShow = (job) => {
+        setShow(true);
+        setJobNoInfo(job.JobNo)
+        setCustInfo(job.CustCode)
+        setParNoInfo(job.PartNo)
+        setEngineerInfo(job.dataValues.engineer)
+    } 
     
     useEffect(() => {
         const find = () => {
             try {
                 let data = getAllJobs();
                 data.then((res) => {
-                    setSearchedEng(res.recordsets[0]);
+                    setSearchedEng(res)
                     setLoading(false)
                 })
             } catch (err) {
@@ -29,11 +46,52 @@ const Engineering = () => {
         :
         <>
             <h1>Welcome</h1>
+            <Button variant='primary' onClick={handleShow}>
+                Launch
+            </Button>
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                <Modal.Title>{jobNoInfo}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                <Form>
+                    <FloatingLabel label="Customer Code" className="mb-3">
+                        <Form.Control defaultValue={custInfo} disabled />
+                    </FloatingLabel>
+                    <FloatingLabel controlId="floatingInput" label="Engineer" className="mb-3">
+                        <Form.Control placeholder="Email" defaultValue={engineerInfo} />
+                    </FloatingLabel>
+                    {/* <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                    <Form.Label>Customer</Form.Label>
+                    <Form.Control
+                        type="email"
+                        placeholder={custInfo}
+                        autoFocus
+                    />
+                    </Form.Group>
+                    <Form.Group
+                    className="mb-3"
+                    controlId="exampleForm.ControlTextarea1"
+                    >
+                    <Form.Label>Example textarea</Form.Label>
+                    <Form.Control as="textarea" rows={3} />
+                    </Form.Group> */}
+                </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                <Button variant="secondary" onClick={handleClose}>
+                    Close
+                </Button>
+                <Button variant="primary" onClick={handleClose}>
+                    Save Changes
+                </Button>
+                </Modal.Footer>
+            </Modal>
             <table>
                 <tbody>
                 {searchedEng.map((job, index) => {
                     return (
-                        <tr key={index}>
+                        <tr key={index} job={job} onClick={() => handleShow(job)}>
                             <td>{job.JobNo}</td>
                             <td>{job.PartNo}</td>
                             <td>{job.Revision}</td>
@@ -44,6 +102,7 @@ const Engineering = () => {
                             <td>{job.User_Text2}</td>
                             <td>{job.User_Number3}</td>
                             <td>{job.OrderNo}</td>
+                            <td>{job.dataValues.engineer}</td>
                         </tr>
                     )
                 })}

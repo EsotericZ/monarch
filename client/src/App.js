@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
-import Engineering from './components/engineering/Engineering';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
+import Engineering from './components/engineering/Engineering';
 import Home from './components/home/Home';
 
 const App = () => {
