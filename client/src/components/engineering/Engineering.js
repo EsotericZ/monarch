@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Button, FloatingLabel, Form, Modal } from 'react-bootstrap';
 
 import getAllJobs from '../../services/engineering/getJobs';
+import updateJob from '../../services/engineering/updateJob';
 
 const Engineering = () => {
     const [searchedEng, setSearchedEng] = useState([]);
@@ -15,7 +16,14 @@ const Engineering = () => {
 
 
     const handleClose = () => setShow(false);
+    const handleSave = () => {
+        console.log(jobNoInfo)
+        console.log(engineerInfo)
+        updateJob(jobNoInfo, engineerInfo)
+        setShow(false);
+    }
     const handleShow = (job) => {
+        console.log(job)
         setShow(true);
         setJobNoInfo(job.JobNo)
         setCustInfo(job.CustCode)
@@ -46,9 +54,6 @@ const Engineering = () => {
         :
         <>
             <h1>Welcome</h1>
-            <Button variant='primary' onClick={handleShow}>
-                Launch
-            </Button>
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
                 <Modal.Title>{jobNoInfo}</Modal.Title>
@@ -59,7 +64,7 @@ const Engineering = () => {
                         <Form.Control defaultValue={custInfo} disabled />
                     </FloatingLabel>
                     <FloatingLabel controlId="floatingInput" label="Engineer" className="mb-3">
-                        <Form.Control placeholder="Email" defaultValue={engineerInfo} />
+                        <Form.Control placeholder="Engineer" defaultValue={engineerInfo} onChange={(e) => {setEngineerInfo(e.target.value)}} />
                     </FloatingLabel>
                     {/* <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                     <Form.Label>Customer</Form.Label>
@@ -82,7 +87,7 @@ const Engineering = () => {
                 <Button variant="secondary" onClick={handleClose}>
                     Close
                 </Button>
-                <Button variant="primary" onClick={handleClose}>
+                <Button variant="primary" onClick={handleSave}>
                     Save Changes
                 </Button>
                 </Modal.Footer>

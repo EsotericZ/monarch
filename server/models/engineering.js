@@ -1,6 +1,8 @@
 let sql = require('mssql');
 require("dotenv").config();
 
+let sequelize = require('../config/index');
+
 let config = {
     user: process.env.DB_USER,
     password: process.env.DB_PASS,
@@ -34,4 +36,9 @@ async function getAllJobs(req, res, jobData) {
     })
 }
 
+async function updateJob(req, res) {
+    console.log(req.body)
+}
+
 exports.getAllJobs = getAllJobs;
+exports.updateJob = updateJob;

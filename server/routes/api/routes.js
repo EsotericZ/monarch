@@ -8,5 +8,6 @@ router.get('/', function (req, res) {
 });
 
 router.get("/engineering/getAllJobs", engineeringController.getAllJobs);
+router.post("/engineering/updateJob", engineeringController.updateJob);
 
 module.exports = router;
