@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-
 const app = express();
 
 let routes = require('./routes/api/routes');
@@ -13,7 +12,6 @@ app.use(
     credentials: true,
   })
 );
-
 
 app.use(
   bodyParser.json({
@@ -30,14 +28,8 @@ app.use(
     },
   })
 );
+
 app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(upload.array());
-// app.use(express.static("public"));
-// app.use(favicon(__dirname + "/public/images/favicon.png"));
-
-
-
-
 app.use(express.static("public"));
 
 app.use("/", routes);

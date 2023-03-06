@@ -14,22 +14,20 @@ const Engineering = () => {
     const [partNoInfo, setParNoInfo] = useState();
     const [engineerInfo, setEngineerInfo] = useState();
 
-
     const handleClose = () => setShow(false);
+
     const handleSave = () => {
-        console.log(jobNoInfo)
-        console.log(engineerInfo)
         updateJob(jobNoInfo, engineerInfo)
         setShow(false);
-    }
+    };
+
     const handleShow = (job) => {
-        console.log(job)
         setShow(true);
         setJobNoInfo(job.JobNo)
         setCustInfo(job.CustCode)
         setParNoInfo(job.PartNo)
         setEngineerInfo(job.dataValues.engineer)
-    } 
+    } ;
     
     useEffect(() => {
         const find = () => {
