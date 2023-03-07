@@ -39,7 +39,8 @@ async function getAllJobs(req, res, jobData) {
 async function updateJob(req, res) {
     let jobNo = req.body.jobNo;
     let engineer = req.body.engineer;
-    let sql = `UPDATE jobs SET engineer='${engineer}' WHERE jobNo='${jobNo}'`;
+    let jobStatus = req.body.jobStatus;
+    let sql = `UPDATE jobs SET engineer='${engineer}', jobStatus='${jobStatus}' WHERE jobNo='${jobNo}'`;
     sequelize.query(sql, function(err, result) {
         return res.status(200).json({
             status: 'success',

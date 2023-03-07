@@ -7,7 +7,6 @@ async function getAllJobs(req, res) {
 };
 
 function updateJob(req, res) {
-    console.log(req.body)
     model.updateJob(req, res);
 };
 

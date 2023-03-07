@@ -13,12 +13,26 @@ const Engineering = () => {
     const [custInfo, setCustInfo] = useState();
     const [partNoInfo, setParNoInfo] = useState();
     const [engineerInfo, setEngineerInfo] = useState();
+    const [jobStatus, setJobStatus] = useState('');
+
+    const find = () => {
+        try {
+            let data = getAllJobs();
+            data.then((res) => {
+                setSearchedEng(res)
+                setLoading(false)
+            })
+        } catch (err) {
+            console.log(err)
+        }
+    };
 
     const handleClose = () => setShow(false);
 
     const handleSave = () => {
-        updateJob(jobNoInfo, engineerInfo)
+        updateJob(jobNoInfo, engineerInfo, jobStatus)
         setShow(false);
+        find();
     };
 
     const handleShow = (job) => {
@@ -27,21 +41,12 @@ const Engineering = () => {
         setCustInfo(job.CustCode)
         setParNoInfo(job.PartNo)
         setEngineerInfo(job.dataValues.engineer)
+        setJobStatus(job.dataValues.jobStatus)
     } ;
     
     useEffect(() => {
-        const find = () => {
-            try {
-                let data = getAllJobs();
-                data.then((res) => {
-                    setSearchedEng(res)
-                    setLoading(false)
-                })
-            } catch (err) {
-                console.log(err)
-            }
-        };
         find();
+    // }, [find]);
     }, []);
 
     return loading ?
@@ -63,6 +68,16 @@ const Engineering = () => {
                     </FloatingLabel>
                     <FloatingLabel controlId="floatingInput" label="Engineer" className="mb-3">
                         <Form.Control placeholder="Engineer" defaultValue={engineerInfo} onChange={(e) => {setEngineerInfo(e.target.value)}} />
+                    </FloatingLabel>
+                    <FloatingLabel controlId="floatingInput" label="Status" className="mb-3">
+                        <Form.Select placeholder="Status" defaultValue={jobStatus} onChange={(e) => {setJobStatus(e.target.value)}} >
+                        {/* <Form.Select> */}
+                            <option></option>
+                            <option>WIP</option>
+                            <option>QC</option>
+                            <option>HOLD</option>
+                            <option>DONE</option>
+                        </Form.Select>
                     </FloatingLabel>
                     {/* <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                     <Form.Label>Customer</Form.Label>
@@ -106,6 +121,7 @@ const Engineering = () => {
                             <td>{job.User_Number3}</td>
                             <td>{job.OrderNo}</td>
                             <td>{job.dataValues.engineer}</td>
+                            <td>{job.dataValues.jobStatus}</td>
                         </tr>
                     )
                 })}

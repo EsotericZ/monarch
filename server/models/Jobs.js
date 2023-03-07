@@ -18,24 +18,27 @@ Jobs.init(
         engineer: {
             type: DataTypes.STRING,
         },
-        wip: {
-            type: DataTypes.BOOLEAN,
-        },
-        hold: {
-            type: DataTypes.BOOLEAN,
-        },
-        holdNotes: {
+        jobStatus: {
             type: DataTypes.STRING,
         },
-        qc: {
-            type: DataTypes.BOOLEAN,
-        },
-        qcNotes: {
-            type: DataTypes.STRING,
-        },
-        approved: {
-            type: DataTypes.BOOLEAN,
-        }
+        // wip: {
+        //     type: DataTypes.BOOLEAN,
+        // },
+        // hold: {
+        //     type: DataTypes.BOOLEAN,
+        // },
+        // holdNotes: {
+        //     type: DataTypes.STRING,
+        // },
+        // qc: {
+        //     type: DataTypes.BOOLEAN,
+        // },
+        // qcNotes: {
+        //     type: DataTypes.STRING,
+        // },
+        // approved: {
+        //     type: DataTypes.BOOLEAN,
+        // }
     },
     {
         sequelize,
