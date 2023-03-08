@@ -13,14 +13,14 @@ const Engineering = () => {
     const [custInfo, setCustInfo] = useState();
     const [partNoInfo, setParNoInfo] = useState();
     const [engineerInfo, setEngineerInfo] = useState();
-    const [jobStatus, setJobStatus] = useState('');
+    const [jobStatus, setJobStatus] = useState(' ');
 
     const find = () => {
         try {
             let data = getAllJobs();
             data.then((res) => {
-                setSearchedEng(res)
-                setLoading(false)
+                setSearchedEng(res);
+                setLoading(false);
             })
         } catch (err) {
             console.log(err)
@@ -30,24 +30,24 @@ const Engineering = () => {
     const handleClose = () => setShow(false);
 
     const handleSave = () => {
-        updateJob(jobNoInfo, engineerInfo, jobStatus)
+        updateJob(jobNoInfo, engineerInfo, jobStatus);
         setShow(false);
         find();
     };
 
     const handleShow = (job) => {
         setShow(true);
-        setJobNoInfo(job.JobNo)
-        setCustInfo(job.CustCode)
-        setParNoInfo(job.PartNo)
-        setEngineerInfo(job.dataValues.engineer)
-        setJobStatus(job.dataValues.jobStatus)
+        setJobNoInfo(job.JobNo);
+        setCustInfo(job.CustCode);
+        setParNoInfo(job.PartNo);
+        setEngineerInfo(job.dataValues.engineer);
+        setJobStatus(job.dataValues.jobStatus);
     } ;
     
     useEffect(() => {
         find();
-    // }, [find]);
-    }, []);
+        console.log('ran')
+    }, [loading]);
 
     return loading ?
         <>
