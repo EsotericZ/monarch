@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button, FloatingLabel, Form, Modal } from 'react-bootstrap';
 
-import getAllJobs from '../../services/engineering/getJobs';
+import getAllJobs from '../../services/engineering/getAllJobs';
 import updateJob from '../../services/engineering/updateJob';
 
 const Engineering = () => {

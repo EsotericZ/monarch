@@ -1,7 +1,7 @@
 import api from '../api';
 
 const updateJob = async (jobNo, engineer, jobStatus) => {
-    const res = await api.post("/engineering/updateJob", {
+    const res = await api.post('/engineering/updateJob', {
         jobNo: jobNo, 
         engineer: engineer,
         jobStatus: jobStatus,

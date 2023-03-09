@@ -8,7 +8,7 @@ let routes = require('./routes/api/routes');
 app.use(
   cors({
     origin: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
   })
 );
@@ -20,10 +20,10 @@ app.use(
         JSON.parse(buf);
       } catch (e) {
         res.status(404).send({
-          status: "error",
-          description: "invalid json",
+          status: 'error',
+          description: 'Invalid JSON',
         });
-        throw Error("invalid JSON");
+        throw Error('Invalid JSON');
       }
     },
   })

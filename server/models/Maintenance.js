@@ -15,7 +15,39 @@ Maintenance.init(
             autoIncrement: true,
             allowNull: false,
         },
-
+        requestedBy: {
+            type: DataTypes.STRING,
+        },
+        area: {
+            type: DataTypes.STRING,
+        },
+        equipment: {
+            type: DataTypes.STRING,
+        },
+        requestType: {
+            type: DataTypes.STRING,
+        },
+        description: {
+            type: DataTypes.STRING,
+        },
+        approvedBy: {
+            type: DataTypes.STRING,
+        },
+        repairedBy: {
+            type: DataTypes.STRING,
+        },
+        repairDescription: {
+            type: DataTypes.STRING,
+        },
+        repairTime: {
+            type: DataTypes.STRING,
+        },
+        comments: {
+            type: DataTypes.STRING,
+        },
+        done: {
+            type: DataTypes.BOOLEAN,
+        },
     }, {
         sequelize,
         timestamps: true,
