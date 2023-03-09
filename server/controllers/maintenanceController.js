@@ -1,8 +1,18 @@
 const { Maintenance } = require('../models');
 let sequelize = require('../config/index');
 
-function getAllRequests(req, res) {
+async function getAllRequests(req, res) {
     console.log('hit')
+    const requestData = await Maintenance.findAll()
+    .then((result) => {
+        return res.status(200).send({
+            data: result
+        })
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
 }
 
 function createRequest(req, res) {
