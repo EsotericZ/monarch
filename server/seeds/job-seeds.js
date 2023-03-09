@@ -46,6 +46,9 @@ const jobData = [
     {
         jobNo: '145850'
     },
+    {
+        jobNo: '145869'
+    },
 ]
 
 const seedJobs = () => Jobs.bulkCreate(jobData);
