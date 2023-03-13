@@ -26,19 +26,13 @@ const Maintenance = () => {
         comments: '',
     });
 
-    const handleChangeAdd = (e) => {
-        const { name, value } = e.target;
-        setNewRequest((prev) => {
-            return {...prev, [name]: value}
-        });
-    };
-
-    const handleChangeUpdate = (e) => {
-        const { name, value } = e.target;
-        setNewRequest((prev) => {
-            return {...prev, [name]: value}
-        });
-    };
+    const [record, setRecord] = useState('');
+    const [requestedBy, setRequestedBy] = useState('');
+    const [area, setArea] = useState('');
+    const [equipment, setEquipment] = useState('');
+    const [requestType, setRequestType] = useState('');
+    const [description, setDescription] = useState('');
+    const [comments, setComments] = useState('');
 
     async function fetchData() {
         console.log('Fetching Data')
@@ -53,9 +47,12 @@ const Maintenance = () => {
         }
     }
 
-    useEffect(() => {
-        fetchData();
-    }, [showAdd, showUpdate]);
+    const handleChangeAdd = (e) => {
+        const { name, value } = e.target;
+        setNewRequest((prev) => {
+            return {...prev, [name]: value}
+        });
+    };
 
     const handleOpenAdd = () => setShowAdd(true);
     const handleCloseAdd = () => setShowAdd(false);
@@ -66,15 +63,45 @@ const Maintenance = () => {
         .then(setShowAdd(false))
     };
 
-    const handleOpenUpdate = () => setShowUpdate(true);
+    const handleChangeUpdate = (e) => {
+        const { name, value } = e.target;
+        setUpdateRequest((prev) => {
+            return {...prev, [name]: value}
+        });
+    };
+
+    const handleOpenUpdate = (request) => {
+        setUpdateRequest({
+            ...updateRequest,
+            requestedBy: request.requestedBy,
+            area: request.area,
+            equipment: request.equipment,
+            requestType: request.requestType,
+            description: request.description,
+            comments: request.comments,
+        });
+        setRecord(request.record);
+        setRequestedBy(request.requestedBy);
+        setArea(request.area);
+        setEquipment(request.equipment);
+        setRequestType(request.requestType);
+        setDescription(request.description);
+        setComments(request.comments);
+        setShowUpdate(true);
+    };
     const handleCloseUpdate = () => setShowUpdate(false);
     const handleUpdate = () => {
+        console.log(updateRequest)
         // createRequest(newRequest)
         // .then(fetchData())
         // .then(console.log('you'))
         // .then(setShowAdd(false))
-        console.log('hit')
+        console.log('hit', record)
     };
+
+    useEffect(() => {
+        fetchData();
+    }, [showAdd, showUpdate]);
 
     return loading ?
         <>
@@ -121,27 +148,27 @@ const Maintenance = () => {
 
             <Modal show={showUpdate}>
                 <Modal.Header>
-                    <Modal.Title>Update Request</Modal.Title>
+                    <Modal.Title>Update Record {record}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
                         <FloatingLabel label="Requested By" className="mb-2">
-                            <Form.Control name="requestedBy" onChange={handleChangeUpdate} />
+                            <Form.Control defaultValue={requestedBy} name="requestedBy" onChange={handleChangeUpdate} />
                         </FloatingLabel>
                         <FloatingLabel label="Area" className="mb-2">
-                            <Form.Control name="area" onChange={handleChangeUpdate} />
+                            <Form.Control defaultValue={area} name="area" onChange={handleChangeUpdate} />
                         </FloatingLabel>
                         <FloatingLabel label="Equipment" className="mb-2">
-                            <Form.Control name="equipment" onChange={handleChangeUpdate} />
+                            <Form.Control defaultValue={equipment} name="equipment" onChange={handleChangeUpdate} />
                         </FloatingLabel>
                         <FloatingLabel label="Request Type" className="mb-2">
-                            <Form.Control name="requestType" onChange={handleChangeUpdate} />
+                            <Form.Control defaultValue={requestType} name="requestType" onChange={handleChangeUpdate} />
                         </FloatingLabel>
                         <FloatingLabel label="Description" className="mb-2">
-                            <Form.Control name="description" onChange={handleChangeUpdate} />
+                            <Form.Control defaultValue={description} name="description" onChange={handleChangeUpdate} />
                         </FloatingLabel>
                         <FloatingLabel label="Comments">
-                            <Form.Control name="comments" onChange={handleChangeUpdate} />
+                            <Form.Control defaultValue={comments} name="comments" onChange={handleChangeUpdate} />
                         </FloatingLabel>
                     </Form>  
                 </Modal.Body>
@@ -163,7 +190,7 @@ const Maintenance = () => {
                 <tbody>
                     {searchedMaint.map((request, index) => {
                         return (
-                            <tr key={index} request={request}>
+                            <tr key={index} request={request} onClick={() => handleOpenUpdate(request)}>
                                 <td>{request.record}</td>
                                 <td>{request.requestedBy}</td>
                                 <td>{request.description}</td>
