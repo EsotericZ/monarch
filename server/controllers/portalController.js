@@ -25,9 +25,11 @@ async function login(req, res) {
         if (decryptedPassword === password) {
             const accessToken = jwt.sign(
                 {
-                    username: userInfo.username,
                     name: userInfo.name,
-                    number: userInfo.number
+                    username: userInfo.username,
+                    email: userInfo.email,
+                    number: userInfo.number,
+                    role: userInfo.role,
                 },
                 process.env.JWT_SECRET_KEY || 'pass',
                 { expiresIn: '1d' }
@@ -38,7 +40,10 @@ async function login(req, res) {
                 accessToken: accessToken,
                 auth: true,
                 name: userInfo.name,
+                username: userInfo.username,
+                email: userInfo.email,
                 number: userInfo.number,
+                role: userInfo.role,
             });
         } else {
             return res.status(405).json({

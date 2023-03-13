@@ -19,6 +19,11 @@ User.init(
             unique: true,
             allowNull: false,
         },
+        email: {
+            type: DataTypes.STRING,
+            unique: true,
+            allowNull: false,
+        },
         number: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -26,6 +31,10 @@ User.init(
         password: {
             type: DataTypes.STRING,
             allowNull: false,
+        }, 
+        role: {
+            type: DataTypes.STRING,
+            defaultValue: 'employee',
         }, 
     }, {
         sequelize,

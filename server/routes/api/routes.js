@@ -3,10 +3,13 @@ let router = express.Router();
 
 const engineeringController = require('../../controllers/engineeringController');
 const maintenanceController = require('../../controllers/maintenanceController');
+const portalController = require('../../controllers/portalController');
 
 router.get('/', function (req, res) {
     res.send('Welcome to the API');
 });
+
+router.post('/portal/login', portalController.login);
 
 router.get('/engineering/getAllJobs', engineeringController.getAllJobs);
 router.post('/engineering/updateJob', engineeringController.updateJob);
