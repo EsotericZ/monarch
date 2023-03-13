@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import getJobs from '../../services/engineering/getJobs';
+import getJobs from '../../services/engineering/getAllJobs';
 
 const Home = () => {
     const [searchedEng, setSearchedEng] = useState([]);

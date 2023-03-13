@@ -8,12 +8,13 @@ Maintenance.init(
         id: {
             type: DataTypes.UUID,
             defaultValue: UUIDV4,
-            primaryKey: true,
+            
         },
         record: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
             allowNull: false,
+            primaryKey: true,
         },
         requestedBy: {
             type: DataTypes.STRING,

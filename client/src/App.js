@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Engineering from './components/engineering/Engineering';
 import Home from './components/home/Home';
+import Maintenance from './components/maintenance/Maintenance';
 
 const App = () => {
   return (
@@ -15,6 +16,10 @@ const App = () => {
         <Route
           path='/engineering'
           element={<Engineering />}
+        />
+        <Route
+          path='/maintenance'
+          element={<Maintenance />}
         />
       </Routes>
     </>

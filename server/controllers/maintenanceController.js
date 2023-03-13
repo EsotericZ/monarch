@@ -3,7 +3,7 @@ let sequelize = require('../config/index');
 
 async function getAllRequests(req, res) {
     console.log('hit')
-    const requestData = await Maintenance.findAll()
+    await Maintenance.findAll()
     .then((result) => {
         return res.status(200).send({
             data: result
@@ -15,8 +15,10 @@ async function getAllRequests(req, res) {
     })
 }
 
-function createRequest(req, res) {
+async function createRequest(req, res) {
     console.log('hit')
+    console.log(req.body)
+    await Maintenance.create(req.body)
 }
 
 function updateRequest(req, res) {
