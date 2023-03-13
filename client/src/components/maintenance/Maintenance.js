@@ -5,9 +5,10 @@ import getAllRequests from '../../services/maintenance/getAllRequests';
 import createRequest from '../../services/maintenance/createRequest';
 
 const Maintenance = () => {
-    const [searchedMaint, setSearchedMain] = useState([]);
+    const [searchedMaint, setSearchedMaint] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [show, setShow] = useState(false);
+    const [showAdd, setShowAdd] = useState(false);
+    const [showUpdate, setShowUpdate] = useState(false);
     const [newRequest, setNewRequest] = useState({
         requestedBy: '',
         area: '',
@@ -16,41 +17,63 @@ const Maintenance = () => {
         description: '',
         comments: '',
     });
+    const [updateRequest, setUpdateRequest] = useState({
+        requestedBy: '',
+        area: '',
+        equipment: '',
+        requestType: '',
+        description: '',
+        comments: '',
+    });
 
-    const handleChange = (e) => {
+    const handleChangeAdd = (e) => {
         const { name, value } = e.target;
         setNewRequest((prev) => {
             return {...prev, [name]: value}
         });
     };
 
-    useEffect(() => {
-        try {
-            let data = getAllRequests();
-            data.then((res) => {
-                setSearchedMain(res.data);
-                setLoading(false);
-            })
-        } catch (err) {
-            console.log(err);
-        }
-    }, []);
+    const handleChangeUpdate = (e) => {
+        const { name, value } = e.target;
+        setNewRequest((prev) => {
+            return {...prev, [name]: value}
+        });
+    };
 
-    const handleOpen = () => setShow(true);
-    const handleClose = () => setShow(false);
-    const handleSave = () => {
-        console.log(newRequest);
-        createRequest(newRequest);
-        setShow(false);
+    async function fetchData() {
+        console.log('Fetching Data')
         try {
             let data = getAllRequests();
             data.then((res) => {
-                setSearchedMain(res.data);
+                setSearchedMaint(res.data);
                 setLoading(false);
             })
         } catch (err) {
             console.log(err);
         }
+    }
+
+    useEffect(() => {
+        fetchData();
+    }, [showAdd, showUpdate]);
+
+    const handleOpenAdd = () => setShowAdd(true);
+    const handleCloseAdd = () => setShowAdd(false);
+    const handleSave = () => {
+        createRequest(newRequest)
+        .then(fetchData())
+        .then(console.log('you'))
+        .then(setShowAdd(false))
+    };
+
+    const handleOpenUpdate = () => setShowUpdate(true);
+    const handleCloseUpdate = () => setShowUpdate(false);
+    const handleUpdate = () => {
+        // createRequest(newRequest)
+        // .then(fetchData())
+        // .then(console.log('you'))
+        // .then(setShowAdd(false))
+        console.log('hit')
     };
 
     return loading ?
@@ -59,26 +82,35 @@ const Maintenance = () => {
         </>
         :
         <>
-            <h1>Welcome</h1>
-            <Modal show={show}>
+            <h1>Maintenance</h1>
+            <Modal show={showAdd}>
                 <Modal.Header>
                     <Modal.Title>Add Request</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
-                        <FloatingLabel label="Requested By" className="mb-3">
-                            <Form.Control name="requestedBy" onChange={handleChange} />
+                        <FloatingLabel label="Requested By" className="mb-2">
+                            <Form.Control name="requestedBy" onChange={handleChangeAdd} />
                         </FloatingLabel>
-                        <FloatingLabel label="Description" className="mb-3">
-                            <Form.Control name="description" onChange={handleChange} />
+                        <FloatingLabel label="Area" className="mb-2">
+                            <Form.Control name="area" onChange={handleChangeAdd} />
                         </FloatingLabel>
-                        <FloatingLabel label="Area">
-                            <Form.Control name="area" onChange={handleChange} />
+                        <FloatingLabel label="Equipment" className="mb-2">
+                            <Form.Control name="equipment" onChange={handleChangeAdd} />
+                        </FloatingLabel>
+                        <FloatingLabel label="Request Type" className="mb-2">
+                            <Form.Control name="requestType" onChange={handleChangeAdd} />
+                        </FloatingLabel>
+                        <FloatingLabel label="Description" className="mb-2">
+                            <Form.Control name="description" onChange={handleChangeAdd} />
+                        </FloatingLabel>
+                        <FloatingLabel label="Comments">
+                            <Form.Control name="comments" onChange={handleChangeAdd} />
                         </FloatingLabel>
                     </Form>  
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
+                    <Button variant="secondary" onClick={handleCloseAdd}>
                         Cancel
                     </Button>
                     <Button variant="primary" onClick={handleSave}>
@@ -86,10 +118,46 @@ const Maintenance = () => {
                     </Button>
                 </Modal.Footer>
             </Modal>
+
+            <Modal show={showUpdate}>
+                <Modal.Header>
+                    <Modal.Title>Update Request</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <FloatingLabel label="Requested By" className="mb-2">
+                            <Form.Control name="requestedBy" onChange={handleChangeUpdate} />
+                        </FloatingLabel>
+                        <FloatingLabel label="Area" className="mb-2">
+                            <Form.Control name="area" onChange={handleChangeUpdate} />
+                        </FloatingLabel>
+                        <FloatingLabel label="Equipment" className="mb-2">
+                            <Form.Control name="equipment" onChange={handleChangeUpdate} />
+                        </FloatingLabel>
+                        <FloatingLabel label="Request Type" className="mb-2">
+                            <Form.Control name="requestType" onChange={handleChangeUpdate} />
+                        </FloatingLabel>
+                        <FloatingLabel label="Description" className="mb-2">
+                            <Form.Control name="description" onChange={handleChangeUpdate} />
+                        </FloatingLabel>
+                        <FloatingLabel label="Comments">
+                            <Form.Control name="comments" onChange={handleChangeUpdate} />
+                        </FloatingLabel>
+                    </Form>  
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseUpdate}>
+                        Cancel
+                    </Button>
+                    <Button variant="primary" onClick={handleUpdate}>
+                        Save Changes
+                    </Button>
+                </Modal.Footer>
+            </Modal>
             <table>
                 <thead>
                     <tr>
-                        <th onClick={handleOpen}>Description</th>
+                        <th onClick={handleOpenAdd}>Description</th>
                     </tr>
                 </thead>
                 <tbody>
