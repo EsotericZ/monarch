@@ -1,8 +1,6 @@
 const { Maintenance } = require('../models');
-let sequelize = require('../config/index');
 
 async function getAllRequests(req, res) {
-    console.log('hit')
     await Maintenance.findAll()
     .then((result) => {
         return res.status(200).send({
@@ -16,13 +14,34 @@ async function getAllRequests(req, res) {
 }
 
 async function createRequest(req, res) {
-    console.log('hit')
-    console.log(req.body)
     await Maintenance.create(req.body)
+    .then((result) => {
+        return res.status(200).send({
+            data: result
+        })
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
 }
 
-function updateRequest(req, res) {
-    console.log('hit')
+async function updateRequest(req, res) {
+    let record = req.body.record;
+    let updateRequest = req.body.updateRequest;
+
+    await Maintenance.update(
+        updateRequest,
+        { where: { record: record }}
+    ).then((result) => {
+        return res.status(200).send({
+            data: result
+        })
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
 }
 
 exports.getAllRequests = getAllRequests;

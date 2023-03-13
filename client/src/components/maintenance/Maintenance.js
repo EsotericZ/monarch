@@ -3,6 +3,7 @@ import { Button, FloatingLabel, Form, Modal } from 'react-bootstrap';
 
 import getAllRequests from '../../services/maintenance/getAllRequests';
 import createRequest from '../../services/maintenance/createRequest';
+import updateRequest from '../../services/maintenance/updateRequest';
 
 const Maintenance = () => {
     const [searchedMaint, setSearchedMaint] = useState([]);
@@ -17,7 +18,7 @@ const Maintenance = () => {
         description: '',
         comments: '',
     });
-    const [updateRequest, setUpdateRequest] = useState({
+    const [updateSingleRequest, setUpdateSingleRequest] = useState({
         requestedBy: '',
         area: '',
         equipment: '',
@@ -65,14 +66,14 @@ const Maintenance = () => {
 
     const handleChangeUpdate = (e) => {
         const { name, value } = e.target;
-        setUpdateRequest((prev) => {
+        setUpdateSingleRequest((prev) => {
             return {...prev, [name]: value}
         });
     };
 
     const handleOpenUpdate = (request) => {
-        setUpdateRequest({
-            ...updateRequest,
+        setUpdateSingleRequest({
+            ...updateSingleRequest,
             requestedBy: request.requestedBy,
             area: request.area,
             equipment: request.equipment,
@@ -91,12 +92,10 @@ const Maintenance = () => {
     };
     const handleCloseUpdate = () => setShowUpdate(false);
     const handleUpdate = () => {
-        console.log(updateRequest)
-        // createRequest(newRequest)
-        // .then(fetchData())
-        // .then(console.log('you'))
-        // .then(setShowAdd(false))
-        console.log('hit', record)
+        updateRequest(updateSingleRequest, record)
+        .then(fetchData())
+        .then(console.log('you'))
+        .then(setShowUpdate(false))
     };
 
     useEffect(() => {
@@ -194,6 +193,7 @@ const Maintenance = () => {
                                 <td>{request.record}</td>
                                 <td>{request.requestedBy}</td>
                                 <td>{request.description}</td>
+                                <td>{request.comments}</td>
                             </tr>
                         )
                     })}
