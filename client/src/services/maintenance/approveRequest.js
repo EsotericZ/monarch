@@ -1,11 +1,10 @@
 import api from '../api';
 
-const approveRequest = async (record, approvedBy) => {
-    console.log("now we here")
-    console.log(record, approvedBy)
+const approveRequest = async (record, approvedBy, requestHold) => {
     const res = await api.post('/maintenance/approveRequest', {
         approvedBy: approvedBy,
-        record: record
+        record: record,
+        requestHold: requestHold,
     });
     return res.data;
 }

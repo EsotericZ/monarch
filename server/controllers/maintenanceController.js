@@ -47,12 +47,13 @@ async function updateRequest(req, res) {
 async function approveRequest(req, res) {
     let record = req.body.record;
     let approvedBy = req.body.approvedBy;
-
-    console.log('server here')
-    console.log(record, approvedBy)
+    let hold = req.body.requestHold;
 
     await Maintenance.update(
-        { approvedBy: approvedBy },
+        { 
+            approvedBy: approvedBy,
+            hold: hold, 
+        },
         { where: { record: record }}
     ).then((result) => {
         return res.status(200).send({
@@ -69,9 +70,6 @@ async function denyRequest(req, res) {
     let record = req.body.record;
     let done = req.body.done;
     let comments = req.body.comments;
-
-    console.log('server here')
-    console.log(record, done, comments)
 
     await Maintenance.update(
         { 
@@ -93,12 +91,31 @@ async function denyRequest(req, res) {
 async function holdRequest(req, res) {
     let record = req.body.record;
     let hold = req.body.requestHold;
-
-    console.log('server here')
-    console.log(record, hold)
+    let approvedBy = req.body.approvedBy;
 
     await Maintenance.update(
-        { hold: hold },
+        { 
+            hold: hold, 
+            approvedBy: approvedBy,
+        },
+        { where: { record: record }}
+    ).then((result) => {
+        return res.status(200).send({
+            data: result
+        })
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
+
+async function doneRequest(req, res) {
+    let record = req.body.record;
+    let done = req.body.done;
+
+    await Maintenance.update(
+        { done: done },
         { where: { record: record }}
     ).then((result) => {
         return res.status(200).send({
@@ -117,3 +134,4 @@ exports.updateRequest = updateRequest;
 exports.approveRequest = approveRequest;
 exports.denyRequest = denyRequest;
 exports.holdRequest = holdRequest;
+exports.doneRequest = doneRequest;

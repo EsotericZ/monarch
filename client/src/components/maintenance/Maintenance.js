@@ -12,6 +12,7 @@ import updateRequest from '../../services/maintenance/updateRequest';
 import approveRequest from '../../services/maintenance/approveRequest';
 import denyRequest from '../../services/maintenance/denyRequest';
 import holdRequest from '../../services/maintenance/holdRequest';
+import doneRequest from '../../services/maintenance/doneRequest';
 
 export const Maintenance = () => {
     const [searchedMaint, setSearchedMaint] = useState([]);
@@ -21,6 +22,7 @@ export const Maintenance = () => {
     const [showApprove, setShowApprove] = useState(false);
     const [showDeny, setShowDeny] = useState(false);
     const [showHold, setShowHold] = useState(false);
+    const [showDone, setShowDone] = useState(false);
     const [showComplete, setShowComplete] = useState(false);
     const [newRequest, setNewRequest] = useState({
         requestedBy: '',
@@ -55,7 +57,6 @@ export const Maintenance = () => {
     const [approvedBy, setApprovedBy] = useState('');
 
     async function fetchData() {
-        console.log('Fetching Data')
         try {
             getAllRequests()
             .then((res) => {
@@ -123,13 +124,13 @@ export const Maintenance = () => {
     const handleUpdate = () => {
         updateRequest(updateSingleRequest, record)
         .then(fetchData())
-        .then(console.log('you'))
         .then(setShowUpdate(false))
     };
 
     const handleApprove = (request) => {
         setRecord(request.record);
-        setApprovedBy('CJ')
+        setRequestHold(false);
+        setApprovedBy('CJ');
         setShowApprove(true);
     } 
     const handleApproveNo = () => {
@@ -137,11 +138,10 @@ export const Maintenance = () => {
         setShowApprove(false);
     }
     const handleApproveYes = () => {
-        approveRequest(record, approvedBy);
+        approveRequest(record, approvedBy, requestHold);
         setShowApprove(false);
     }
     
-
     const handleDeny = (request) => {
         setRecord(request.record);
         setDone(true);
@@ -160,7 +160,8 @@ export const Maintenance = () => {
 
     const handleHold = (request) => {
         setRecord(request.record);
-        setRequestHold(true)
+        setApprovedBy('');
+        setRequestHold(true);
         setShowHold(true);
     }
     const handleHoldNo = () => {
@@ -168,9 +169,24 @@ export const Maintenance = () => {
         setShowHold(false);
     }
     const handleHoldYes = () => {
-        holdRequest(record, requestHold);
+        holdRequest(record, requestHold, approvedBy);
         setShowHold(false);
     }
+
+    const handleDone = (request) => {
+        setRecord(request.record);
+        setDone(true);
+        setShowDone(true);
+    } 
+    const handleDoneNo = () => {
+        setDone(false);
+        setShowDone(false);
+    }
+    const handleDoneYes = () => {
+        doneRequest(record, done);
+        setShowDone(false);
+    }
+    
 
     const handleOpenComplete = (request) => {
         setUpdateSingleRequest({
@@ -195,7 +211,7 @@ export const Maintenance = () => {
 
     useEffect(() => {
         fetchData();
-    }, [showAdd, showUpdate, showApprove, showDeny, showHold]);
+    }, [showAdd, showUpdate, showApprove, showDeny, showHold, showDone]);
 
     return loading ?
         <>
@@ -226,7 +242,7 @@ export const Maintenance = () => {
                     <Modal.Title>Confirm</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    Deny Record {record}
+                    Deny: Record #{record}
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleDenyNo}>
@@ -243,13 +259,30 @@ export const Maintenance = () => {
                     <Modal.Title>Confirm</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    Hold Record {record}
+                    Hold: Record #{record}
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleHoldNo}>
                         No
                     </Button>
                     <Button variant="primary" onClick={handleHoldYes}>
+                        Yes
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal show={showDone}>
+                <Modal.Header>
+                    <Modal.Title>Confirm</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    Finished: Record #{record}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleDoneNo}>
+                        No
+                    </Button>
+                    <Button variant="primary" onClick={handleDoneYes}>
                         Yes
                     </Button>
                 </Modal.Footer>
@@ -390,6 +423,11 @@ export const Maintenance = () => {
                                             <td onClick={() => handleOpenUpdate(request)}>{request.description}</td>
                                             <td onClick={() => handleOpenUpdate(request)}>{request.comments}</td>
                                             <td onClick={() => handleOpenUpdate(request)}>{request.updatedAt}</td>
+                                            <td>
+                                                <Icon icon={ checkCircleO } size={24} style={{ color: '#5BC236' }} onClick={() => handleDone(request)} />
+                                                <Icon icon={ timesCircleO } size={24} style={{ color: '#CC0202' }} onClick={() => handleDeny(request)}/>
+                                                <Icon icon={ compass } size={24} style={{ color: '#F0D500' }} onClick={() => handleHold(request)}/>
+                                            </td>
                                         </tr>
                                     )
                                 }
@@ -453,7 +491,7 @@ export const Maintenance = () => {
                         </thead>
                         <tbody>
                             {searchedMaint.map((request, index) => {
-                                if (!request.approvedBy && request.hold) {
+                                if (!request.approvedBy && request.hold &&!request.done) {
                                     return (
                                         <tr key={index} request={request}>
                                             <td onClick={() => handleOpenUpdate(request)}>{request.record}</td>
