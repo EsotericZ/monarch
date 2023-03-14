@@ -33,8 +33,4 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 app.use("/", routes);
-// let server = app.listen(process.env.SERVER_PORT || 3001);
 app.listen(3001);
-// app.listen('3001', '10.0.1.26', () => {
-//   console.log('Server Started')
-// });
