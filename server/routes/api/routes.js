@@ -17,5 +17,7 @@ router.post('/engineering/updateJob', engineeringController.updateJob);
 router.get('/maintenance/getAllRequests', maintenanceController.getAllRequests);
 router.post('/maintenance/createRequest', maintenanceController.createRequest);
 router.post('/maintenance/updateRequest', maintenanceController.updateRequest);
+router.post('/maintenance/approveRequest', maintenanceController.approveRequest);
+router.post('/maintenance/holdRequest', maintenanceController.holdRequest);
 
 module.exports = router;

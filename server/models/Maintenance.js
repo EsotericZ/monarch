@@ -46,6 +46,9 @@ Maintenance.init(
         comments: {
             type: DataTypes.STRING,
         },
+        hold: {
+            type: DataTypes.BOOLEAN,
+        },
         done: {
             type: DataTypes.BOOLEAN,
         },

@@ -8,7 +8,10 @@ export const Login = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        login(username, password);
+        login(username, password)
+        .then((res) => {
+            console.log(res)
+        })
     }
 
     return (

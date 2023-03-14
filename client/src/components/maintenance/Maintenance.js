@@ -1,15 +1,25 @@
 import { useEffect, useState } from 'react';
-import { Button, FloatingLabel, Form, Modal } from 'react-bootstrap';
+import { Button, FloatingLabel, Form, Modal, Tab, Tabs, Table } from 'react-bootstrap';
+
+import { Icon } from 'react-icons-kit';
+import { checkCircleO } from 'react-icons-kit/fa/checkCircleO';
+import { timesCircleO } from 'react-icons-kit/fa/timesCircleO';
+import { compass } from 'react-icons-kit/fa/compass';
 
 import getAllRequests from '../../services/maintenance/getAllRequests';
 import createRequest from '../../services/maintenance/createRequest';
 import updateRequest from '../../services/maintenance/updateRequest';
+import approveRequest from '../../services/maintenance/approveRequest';
+import holdRequest from '../../services/maintenance/holdRequest';
 
 export const Maintenance = () => {
     const [searchedMaint, setSearchedMaint] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showAdd, setShowAdd] = useState(false);
     const [showUpdate, setShowUpdate] = useState(false);
+    const [showApprove, setShowApprove] = useState(false);
+    const [showDeny, setShowDeny] = useState(false);
+    const [showHold, setShowHold] = useState(false);
     const [newRequest, setNewRequest] = useState({
         requestedBy: '',
         area: '',
@@ -27,6 +37,10 @@ export const Maintenance = () => {
         comments: '',
     });
 
+    const [active, setActive] = useState('');
+    const [requested, setRequested] = useState('');
+    const [hold, setHold] = useState('');
+
     const [record, setRecord] = useState('');
     const [requestedBy, setRequestedBy] = useState('');
     const [area, setArea] = useState('');
@@ -34,15 +48,28 @@ export const Maintenance = () => {
     const [requestType, setRequestType] = useState('');
     const [description, setDescription] = useState('');
     const [comments, setComments] = useState('');
+    const [requestHold, setRequestHold] = useState(false);
+    const [approvedBy, setApprovedBy] = useState('');
 
     async function fetchData() {
         console.log('Fetching Data')
         try {
-            let data = getAllRequests();
-            data.then((res) => {
-                setSearchedMaint(res.data);
+            getAllRequests()
+            .then((res) => {
+                setSearchedMaint(res.data)
                 setLoading(false);
-            })
+                let activeCount = 0;
+                let requestCount = 0;
+                let holdCount = 0;
+                for (let i=0; i<res.data.length; i++) {
+                    if (res.data[i].approvedBy && !res.data[i].done) activeCount += 1;
+                    if (!res.data[i].approvedBy && !res.data[i].hold && !res.data[i].done) requestCount += 1;
+                    if (!res.data[i].approvedBy && res.data[i].hold && !res.data[i].done) holdCount += 1;
+                }
+                (activeCount > 0) ? setActive(`Active (${activeCount})`) : setActive('Active');
+                (requestCount > 0) ? setRequested(`Requested (${requestCount})`) : setRequested('Requested');
+                (holdCount > 0) ? setHold(`Hold (${holdCount})`) : setHold('Hold');
+            });
         } catch (err) {
             console.log(err);
         }
@@ -60,7 +87,6 @@ export const Maintenance = () => {
     const handleSave = () => {
         createRequest(newRequest)
         .then(fetchData())
-        .then(console.log('you'))
         .then(setShowAdd(false))
     };
 
@@ -98,9 +124,46 @@ export const Maintenance = () => {
         .then(setShowUpdate(false))
     };
 
+    const handleApprove = (request) => {
+        setRecord(request.record);
+        setApprovedBy('CJ')
+        setShowApprove(true);
+    } 
+    const handleApproveNo = () => {
+        setApprovedBy('')
+        setShowApprove(false);
+    }
+    const handleApproveYes = () => {
+        approveRequest(record, approvedBy);
+        setShowApprove(false);
+    }
+    
+
+    const handleDeny = (request) => {
+        setRecord(request.record);
+        setShowDeny(true);
+        console.log(`${request.record} denied`);
+    }
+
+    const handleHold = (request) => {
+        setRecord(request.record);
+        setRequestHold(true)
+        setShowHold(true);
+    }
+    const handleHoldNo = () => {
+        setRequestHold(false)
+        setShowHold(false);
+    }
+    const handleHoldYes = () => {
+        holdRequest(record, requestHold);
+        setShowHold(false);
+    }
+
+
+
     useEffect(() => {
         fetchData();
-    }, [showAdd, showUpdate]);
+    }, [showAdd, showUpdate, showApprove, showHold]);
 
     return loading ?
         <>
@@ -109,6 +172,40 @@ export const Maintenance = () => {
         :
         <>
             <h1>Maintenance</h1>
+            <Modal show={showApprove}>
+                <Modal.Header>
+                    <Modal.Title>Confirm</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    Approve Record {record}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleApproveNo}>
+                        No
+                    </Button>
+                    <Button variant="primary" onClick={handleApproveYes}>
+                        Yes
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal show={showHold}>
+                <Modal.Header>
+                    <Modal.Title>Confirm</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    Hold Record {record}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleHoldNo}>
+                        No
+                    </Button>
+                    <Button variant="primary" onClick={handleHoldYes}>
+                        Yes
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
             <Modal show={showAdd}>
                 <Modal.Header>
                     <Modal.Title>Add Request</Modal.Title>
@@ -180,24 +277,129 @@ export const Maintenance = () => {
                     </Button>
                 </Modal.Footer>
             </Modal>
-            <table>
-                <thead>
-                    <tr>
-                        <th onClick={handleOpenAdd}>Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {searchedMaint.map((request, index) => {
-                        return (
-                            <tr key={index} request={request} onClick={() => handleOpenUpdate(request)}>
-                                <td>{request.record}</td>
-                                <td>{request.requestedBy}</td>
-                                <td>{request.description}</td>
-                                <td>{request.comments}</td>
+            <Tabs
+                defaultActiveKey="home"            
+                id="justify-tab-example"
+                className='mb-3'
+                justify
+            >
+                <Tab eventKey="home" title="Home">
+                    <h1>Home</h1>
+                </Tab>
+                <Tab eventKey="active" title={active}>
+                    <Table striped hover>
+                        <thead>
+                            <tr>
+                                <th>Record</th>
+                                <th>Area</th>
+                                <th>Equipment</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                                <th>Comments</th>
+                                <th>Updated</th>
+                                <th>Actions</th>
                             </tr>
-                        )
-                    })}
-                </tbody>
-            </table>
+                        </thead>
+                        <tbody>
+                            {searchedMaint.map((request, index) => {
+                                if (request.approvedBy && !request.done) {
+                                    return (
+                                        <tr key={index} request={request}>
+                                            <td onClick={() => handleOpenUpdate(request)}>{request.record}</td>
+                                            <td onClick={() => handleOpenUpdate(request)}>{request.area}</td>
+                                            <td onClick={() => handleOpenUpdate(request)}>{request.equipment}</td>
+                                            <td onClick={() => handleOpenUpdate(request)}>{request.type}</td>
+                                            <td onClick={() => handleOpenUpdate(request)}>{request.description}</td>
+                                            <td onClick={() => handleOpenUpdate(request)}>{request.comments}</td>
+                                            <td onClick={() => handleOpenUpdate(request)}>{request.updatedAt}</td>
+                                        </tr>
+                                    )
+                                }
+                            })}
+                        </tbody>
+                    </Table>
+                </Tab>
+                <Tab eventKey="request" title={requested}>
+                    <Table striped hover>
+                        <thead>
+                            <tr>
+                                <th>Record</th>
+                                <th>Requester</th>
+                                <th>Created</th>
+                                <th>Area</th>
+                                <th>Equipment</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                                <th>Comments</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {searchedMaint.map((request, index) => {
+                                if (!request.approvedBy && !request.hold) {
+                                    return (
+                                        <tr key={index} request={request}>
+                                            <td onClick={() => handleOpenUpdate(request)}>{request.record}</td>
+                                            <td onClick={() => handleOpenUpdate(request)}>{request.requestedBy}</td>
+                                            <td onClick={() => handleOpenUpdate(request)}>{request.createdAt}</td>
+                                            <td onClick={() => handleOpenUpdate(request)}>{request.area}</td>
+                                            <td onClick={() => handleOpenUpdate(request)}>{request.equipment}</td>
+                                            <td onClick={() => handleOpenUpdate(request)}>{request.type}</td>
+                                            <td onClick={() => handleOpenUpdate(request)}>{request.description}</td>
+                                            <td onClick={() => handleOpenUpdate(request)}>{request.comments}</td>
+                                            <td>
+                                                <Icon icon={ checkCircleO } size={24} style={{ color: '#5BC236' }} onClick={() => handleApprove(request)} />
+                                                <Icon icon={ timesCircleO } size={24} style={{ color: '#CC0202' }} onClick={() => handleDeny(request)}/>
+                                                <Icon icon={ compass } size={24} style={{ color: '#F0D500' }} onClick={() => handleHold(request)}/>
+                                            </td>
+                                        </tr>
+                                    )
+                                }
+                            })}
+                        </tbody>
+                    </Table>
+                </Tab>
+                <Tab eventKey="hold" title={hold}>
+                    <Table striped hover>
+                        <thead>
+                            <tr>
+                                <th>Record</th>
+                                <th>Requester</th>
+                                <th>Area</th>
+                                <th>Equipment</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                                <th>Comments</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {searchedMaint.map((request, index) => {
+                                if (!request.approvedBy && request.hold) {
+                                    return (
+                                        <tr key={index} request={request}>
+                                            <td onClick={() => handleOpenUpdate(request)}>{request.record}</td>
+                                            <td onClick={() => handleOpenUpdate(request)}>{request.requestedBy}</td>
+                                            <td onClick={() => handleOpenUpdate(request)}>{request.area}</td>
+                                            <td onClick={() => handleOpenUpdate(request)}>{request.equipment}</td>
+                                            <td onClick={() => handleOpenUpdate(request)}>{request.type}</td>
+                                            <td onClick={() => handleOpenUpdate(request)}>{request.description}</td>
+                                            <td onClick={() => handleOpenUpdate(request)}>{request.comments}</td>
+                                            <td>
+                                                <Icon icon={ checkCircleO } size={24} style={{ color: '#5BC236' }} onClick={() => handleApprove(request)} />
+                                                <Icon icon={ timesCircleO } size={24} style={{ color: '#CC0202' }} onClick={() => handleDeny(request)}/>
+                                            </td>
+                                        </tr>
+                                    )
+                                }
+                            })}
+                        </tbody>
+                    </Table>
+                </Tab>
+                <Tab eventKey="completed" title="Completed">
+                    <h1>Completed</h1>
+                </Tab>
+            </Tabs>
+            <button onClick={handleOpenAdd}>Add</button>
         </>
 }

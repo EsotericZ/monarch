@@ -17,6 +17,7 @@ async function login(req, res) {
             description: 'User Does Not Exist'
         });
     } else {
+        console.log('User!')
         const bytes = CryptoJS.AES.decrypt(
             userInfo.password,
             process.env.SECRET_KEY || '1234'
@@ -34,7 +35,6 @@ async function login(req, res) {
                 process.env.JWT_SECRET_KEY || 'pass',
                 { expiresIn: '1d' }
             );
-            console.log('Signed In')
             return res.status(200).json({
                 status: 'success',
                 accessToken: accessToken,

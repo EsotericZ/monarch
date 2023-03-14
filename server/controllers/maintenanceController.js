@@ -44,6 +44,50 @@ async function updateRequest(req, res) {
     })
 }
 
+async function approveRequest(req, res) {
+    let record = req.body.record;
+    let approvedBy = req.body.approvedBy;
+
+    console.log('server here')
+    console.log(record, approvedBy)
+
+    await Maintenance.update(
+        { approvedBy: approvedBy },
+        { where: { record: record }}
+    ).then((result) => {
+        return res.status(200).send({
+            data: result
+        })
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
+
+async function holdRequest(req, res) {
+    let record = req.body.record;
+    let hold = req.body.requestHold;
+
+    console.log('server here')
+    console.log(record, hold)
+
+    await Maintenance.update(
+        { hold: hold },
+        { where: { record: record }}
+    ).then((result) => {
+        return res.status(200).send({
+            data: result
+        })
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
+
 exports.getAllRequests = getAllRequests;
 exports.createRequest = createRequest;
 exports.updateRequest = updateRequest;
+exports.approveRequest = approveRequest;
+exports.holdRequest = holdRequest;
