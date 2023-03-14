@@ -4,7 +4,7 @@ import { Button, FloatingLabel, Form, Modal } from 'react-bootstrap';
 import getAllJobs from '../../services/engineering/getAllJobs';
 import updateJob from '../../services/engineering/updateJob';
 
-const Engineering = () => {
+export const Engineering = () => {
     const [searchedEng, setSearchedEng] = useState([]);
     const [loading, setLoading] = useState(true);
     const [show, setShow] = useState(false);
@@ -129,5 +129,3 @@ const Engineering = () => {
             </table>
         </>
 }
-
-export default Engineering;

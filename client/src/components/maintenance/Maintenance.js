@@ -5,7 +5,7 @@ import getAllRequests from '../../services/maintenance/getAllRequests';
 import createRequest from '../../services/maintenance/createRequest';
 import updateRequest from '../../services/maintenance/updateRequest';
 
-const Maintenance = () => {
+export const Maintenance = () => {
     const [searchedMaint, setSearchedMaint] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showAdd, setShowAdd] = useState(false);
@@ -201,5 +201,3 @@ const Maintenance = () => {
             </table>
         </>
 }
-
-export default Maintenance;

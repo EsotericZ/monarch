@@ -1,11 +1,11 @@
 import { Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import Engineering from './components/engineering/Engineering';
-import Home from './components/home/Home';
-import Maintenance from './components/maintenance/Maintenance';
+import { Engineering } from './components/engineering/Engineering';
+import { Home } from './components/home/Home';
+import { Maintenance } from './components/maintenance/Maintenance';
 
-const App = () => {
+export const App = () => {
   return (
     <>
       <Routes>
@@ -25,5 +25,3 @@ const App = () => {
     </>
   );
 }
-
-export default App;

@@ -1,5 +1,6 @@
 const seedJobs = require('./job-seeds');
 const seedMaintenance = require('./maintenance-seeds');
+const seedUsers = require('./user-seeds');
 
 const sequelize = require('../config');
 
@@ -12,6 +13,9 @@ const seedAll = async () => {
 
     await seedMaintenance();
     console.log('\n----- MAINTENANCE SEEDED -----\n');
+
+    await seedUsers();
+    console.log('\n----- USERS SEEDED -----\n');
 
     process.exit(0);
 };
