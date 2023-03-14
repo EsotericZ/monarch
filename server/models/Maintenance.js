@@ -48,9 +48,11 @@ Maintenance.init(
         },
         hold: {
             type: DataTypes.BOOLEAN,
+            defaultValue: false,
         },
         done: {
             type: DataTypes.BOOLEAN,
+            defaultValue: false,
         },
     }, {
         sequelize,

@@ -65,6 +65,31 @@ async function approveRequest(req, res) {
     })
 }
 
+async function denyRequest(req, res) {
+    let record = req.body.record;
+    let done = req.body.done;
+    let comments = req.body.comments;
+
+    console.log('server here')
+    console.log(record, done, comments)
+
+    await Maintenance.update(
+        { 
+            done: done,
+            comments: comments 
+        },
+        { where: { record: record }}
+    ).then((result) => {
+        return res.status(200).send({
+            data: result
+        })
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
+
 async function holdRequest(req, res) {
     let record = req.body.record;
     let hold = req.body.requestHold;
@@ -90,4 +115,5 @@ exports.getAllRequests = getAllRequests;
 exports.createRequest = createRequest;
 exports.updateRequest = updateRequest;
 exports.approveRequest = approveRequest;
+exports.denyRequest = denyRequest;
 exports.holdRequest = holdRequest;

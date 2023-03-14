@@ -10,6 +10,7 @@ import getAllRequests from '../../services/maintenance/getAllRequests';
 import createRequest from '../../services/maintenance/createRequest';
 import updateRequest from '../../services/maintenance/updateRequest';
 import approveRequest from '../../services/maintenance/approveRequest';
+import denyRequest from '../../services/maintenance/denyRequest';
 import holdRequest from '../../services/maintenance/holdRequest';
 
 export const Maintenance = () => {
@@ -20,6 +21,7 @@ export const Maintenance = () => {
     const [showApprove, setShowApprove] = useState(false);
     const [showDeny, setShowDeny] = useState(false);
     const [showHold, setShowHold] = useState(false);
+    const [showComplete, setShowComplete] = useState(false);
     const [newRequest, setNewRequest] = useState({
         requestedBy: '',
         area: '',
@@ -49,6 +51,7 @@ export const Maintenance = () => {
     const [description, setDescription] = useState('');
     const [comments, setComments] = useState('');
     const [requestHold, setRequestHold] = useState(false);
+    const [done, setDone] = useState(false);
     const [approvedBy, setApprovedBy] = useState('');
 
     async function fetchData() {
@@ -141,8 +144,18 @@ export const Maintenance = () => {
 
     const handleDeny = (request) => {
         setRecord(request.record);
+        setDone(true);
+        setComments('Request Denied');
         setShowDeny(true);
-        console.log(`${request.record} denied`);
+    }
+    const handleDenyNo = () => {
+        setDone(false);
+        setComments('');
+        setShowDeny(false);
+    }
+    const handleDenyYes = () => {
+        denyRequest(record, done, comments);
+        setShowDeny(false);
     }
 
     const handleHold = (request) => {
@@ -159,11 +172,30 @@ export const Maintenance = () => {
         setShowHold(false);
     }
 
-
+    const handleOpenComplete = (request) => {
+        setUpdateSingleRequest({
+            ...updateSingleRequest,
+            requestedBy: request.requestedBy,
+            area: request.area,
+            equipment: request.equipment,
+            requestType: request.requestType,
+            description: request.description,
+            comments: request.comments,
+        });
+        setRecord(request.record);
+        setRequestedBy(request.requestedBy);
+        setArea(request.area);
+        setEquipment(request.equipment);
+        setRequestType(request.requestType);
+        setDescription(request.description);
+        setComments(request.comments);
+        setShowComplete(true);
+    };
+    const handleCloseComplete = () => setShowComplete(false);
 
     useEffect(() => {
         fetchData();
-    }, [showAdd, showUpdate, showApprove, showHold]);
+    }, [showAdd, showUpdate, showApprove, showDeny, showHold]);
 
     return loading ?
         <>
@@ -184,6 +216,23 @@ export const Maintenance = () => {
                         No
                     </Button>
                     <Button variant="primary" onClick={handleApproveYes}>
+                        Yes
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal show={showDeny}>
+                <Modal.Header>
+                    <Modal.Title>Confirm</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    Deny Record {record}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleDenyNo}>
+                        No
+                    </Button>
+                    <Button variant="primary" onClick={handleDenyYes}>
                         Yes
                     </Button>
                 </Modal.Footer>
@@ -277,6 +326,35 @@ export const Maintenance = () => {
                     </Button>
                 </Modal.Footer>
             </Modal>
+
+            <Modal show={showComplete} onHide={handleCloseComplete} centered>
+                <Modal.Header>
+                    <Modal.Title>Completed: Record #{record}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <FloatingLabel label="Requested By" className="mb-2">
+                            <Form.Control disabled defaultValue={requestedBy} name="requestedBy" />
+                        </FloatingLabel>
+                        <FloatingLabel label="Area" className="mb-2">
+                            <Form.Control disabled defaultValue={area} name="area" />
+                        </FloatingLabel>
+                        <FloatingLabel label="Equipment" className="mb-2">
+                            <Form.Control disabled defaultValue={equipment} name="equipment" />
+                        </FloatingLabel>
+                        <FloatingLabel label="Request Type" className="mb-2">
+                            <Form.Control disabled defaultValue={requestType} name="requestType" />
+                        </FloatingLabel>
+                        <FloatingLabel label="Description" className="mb-2">
+                            <Form.Control disabled defaultValue={description} name="description" />
+                        </FloatingLabel>
+                        <FloatingLabel label="Comments">
+                            <Form.Control disabled defaultValue={comments} name="comments" />
+                        </FloatingLabel>
+                    </Form>  
+                </Modal.Body>
+            </Modal>
+
             <Tabs
                 defaultActiveKey="home"            
                 id="justify-tab-example"
@@ -336,7 +414,7 @@ export const Maintenance = () => {
                         </thead>
                         <tbody>
                             {searchedMaint.map((request, index) => {
-                                if (!request.approvedBy && !request.hold) {
+                                if (!request.approvedBy && !request.hold && !request.done) {
                                     return (
                                         <tr key={index} request={request}>
                                             <td onClick={() => handleOpenUpdate(request)}>{request.record}</td>
@@ -397,7 +475,36 @@ export const Maintenance = () => {
                     </Table>
                 </Tab>
                 <Tab eventKey="completed" title="Completed">
-                    <h1>Completed</h1>
+                    <Table striped hover>
+                        <thead>
+                            <tr>
+                                <th>Record</th>
+                                <th>Area</th>
+                                <th>Equipment</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                                <th>Comments</th>
+                                <th>Completed</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {searchedMaint.map((request, index) => {
+                                if (request.done) {
+                                    return (
+                                        <tr key={index} request={request}>
+                                            <td onClick={() => handleOpenComplete(request)}>{request.record}</td>
+                                            <td onClick={() => handleOpenComplete(request)}>{request.area}</td>
+                                            <td onClick={() => handleOpenComplete(request)}>{request.equipment}</td>
+                                            <td onClick={() => handleOpenComplete(request)}>{request.type}</td>
+                                            <td onClick={() => handleOpenComplete(request)}>{request.description}</td>
+                                            <td onClick={() => handleOpenComplete(request)}>{request.comments}</td>
+                                            <td onClick={() => handleOpenComplete(request)}>{request.updatedAt}</td>
+                                        </tr>
+                                    )
+                                }
+                            })}
+                        </tbody>
+                    </Table>
                 </Tab>
             </Tabs>
             <button onClick={handleOpenAdd}>Add</button>
