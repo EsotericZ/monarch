@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import Cookies from 'universal-cookie';
 
 import login from '../../services/portal/login';
 
 export const Login = () => {
+    const cookies = new Cookies();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
@@ -10,7 +12,7 @@ export const Login = () => {
         e.preventDefault();
         login(username, password)
         .then((res) => {
-            console.log(res)
+            cookies.set('jwt', res.accessToken)
         })
     }
 

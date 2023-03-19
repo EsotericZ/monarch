@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button, FloatingLabel, Form, Modal, Tab, Tabs, Table } from 'react-bootstrap';
+import Cookies from 'universal-cookie';
+import jwt_decode from 'jwt-decode';
 
 import { Icon } from 'react-icons-kit';
 import { checkCircleO } from 'react-icons-kit/fa/checkCircleO';
@@ -15,10 +17,19 @@ import holdRequest from '../../services/maintenance/holdRequest';
 import doneRequest from '../../services/maintenance/doneRequest';
 
 export const Maintenance = () => {
+    const cookies = new Cookies();
+    let userData
+    try {
+        userData = jwt_decode(cookies.get('jwt'));
+    } catch {
+        userData = {'name': 'Guest'};
+    }
+
     const [searchedMaint, setSearchedMaint] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showAdd, setShowAdd] = useState(false);
     const [showUpdate, setShowUpdate] = useState(false);
+    const [showActive, setShowActive] = useState(false);
     const [showApprove, setShowApprove] = useState(false);
     const [showDeny, setShowDeny] = useState(false);
     const [showHold, setShowHold] = useState(false);
@@ -38,6 +49,10 @@ export const Maintenance = () => {
         equipment: '',
         requestType: '',
         description: '',
+        approvedBy: '',
+        repairedBy: '',
+        repairDescription: '',
+        repairTime: '',
         comments: '',
     });
 
@@ -51,10 +66,13 @@ export const Maintenance = () => {
     const [equipment, setEquipment] = useState('');
     const [requestType, setRequestType] = useState('');
     const [description, setDescription] = useState('');
+    const [approvedBy, setApprovedBy] = useState('');
+    const [repairedBy, setRepairedBy] = useState('');
+    const [repairDescription, setRepairDescription] = useState('');
+    const [repairTime, setRepairTime] = useState('');
     const [comments, setComments] = useState('');
     const [requestHold, setRequestHold] = useState(false);
     const [done, setDone] = useState(false);
-    const [approvedBy, setApprovedBy] = useState('');
 
     async function fetchData() {
         try {
@@ -127,6 +145,51 @@ export const Maintenance = () => {
         .then(setShowUpdate(false))
     };
 
+
+
+    const handleChangeActive = (e) => {
+        const { name, value } = e.target;
+        setUpdateSingleRequest((prev) => {
+            return {...prev, [name]: value}
+        });
+    };
+
+    const handleOpenActive = (request) => {
+        setUpdateSingleRequest({
+            ...updateSingleRequest,
+            requestedBy: request.requestedBy,
+            area: request.area,
+            equipment: request.equipment,
+            requestType: request.requestType,
+            description: request.description,
+            comments: request.comments,
+            approvedBy: request.approvedBy,
+            repairedBy: request.repairedBy,
+            repairDescription: request.repairDescription,
+            repairTime: request.repairTime,
+        });
+        setRecord(request.record);
+        setRequestedBy(request.requestedBy);
+        setArea(request.area);
+        setEquipment(request.equipment);
+        setRequestType(request.requestType);
+        setDescription(request.description);
+        setComments(request.comments);
+        setApprovedBy(request.approvedBy);
+        setRepairedBy(request.repairedBy);
+        setRepairDescription(request.repairDescription);
+        setRepairTime(request.repairTime);
+        setShowActive(true);
+    };
+    const handleCloseActive = () => setShowActive(false);
+    const handleUpdateActive = () => {
+        updateRequest(updateSingleRequest, record)
+        .then(fetchData())
+        .then(setShowActive(false))
+    };
+
+
+
     const handleApprove = (request) => {
         setRecord(request.record);
         setRequestHold(false);
@@ -186,7 +249,6 @@ export const Maintenance = () => {
         doneRequest(record, done);
         setShowDone(false);
     }
-    
 
     const handleOpenComplete = (request) => {
         setUpdateSingleRequest({
@@ -211,7 +273,7 @@ export const Maintenance = () => {
 
     useEffect(() => {
         fetchData();
-    }, [showAdd, showUpdate, showApprove, showDeny, showHold, showDone]);
+    }, [showAdd, showUpdate, showApprove, showActive, showDeny, showHold, showDone]);
 
     return loading ?
         <>
@@ -219,13 +281,13 @@ export const Maintenance = () => {
         </>
         :
         <>
-            <h1>Maintenance</h1>
+            <h1>Maintenance Signed in as {userData.name}</h1>
             <Modal show={showApprove}>
                 <Modal.Header>
                     <Modal.Title>Confirm</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    Approve Record {record}
+                    Approve: Record #{record}
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleApproveNo}>
@@ -326,7 +388,7 @@ export const Maintenance = () => {
 
             <Modal show={showUpdate}>
                 <Modal.Header>
-                    <Modal.Title>Update Record {record}</Modal.Title>
+                    <Modal.Title>Update: Record #{record}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
@@ -355,6 +417,54 @@ export const Maintenance = () => {
                         Cancel
                     </Button>
                     <Button variant="primary" onClick={handleUpdate}>
+                        Save Changes
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal show={showActive}>
+                <Modal.Header>
+                    <Modal.Title>Update: Record #{record}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <FloatingLabel label="Requested By" className="mb-2">
+                            <Form.Control disabled defaultValue={requestedBy} name="requestedBy" onChange={handleChangeActive} />
+                        </FloatingLabel>
+                        <FloatingLabel label="Area" className="mb-2">
+                            <Form.Control disabled defaultValue={area} name="area" onChange={handleChangeActive} />
+                        </FloatingLabel>
+                        <FloatingLabel label="Equipment" className="mb-2">
+                            <Form.Control disabled defaultValue={equipment} name="equipment" onChange={handleChangeActive} />
+                        </FloatingLabel>
+                        <FloatingLabel label="Request Type" className="mb-2">
+                            <Form.Control disabled defaultValue={requestType} name="requestType" onChange={handleChangeActive} />
+                        </FloatingLabel>
+                        <FloatingLabel label="Description" className="mb-2">
+                            <Form.Control disabled defaultValue={description} name="description" onChange={handleChangeActive} />
+                        </FloatingLabel>
+                        <FloatingLabel label="Comments" className="mb-2">
+                            <Form.Control defaultValue={comments} name="comments" onChange={handleChangeActive} />
+                        </FloatingLabel>
+                        <FloatingLabel label="Approved By" className="mb-2">
+                            <Form.Control disabled defaultValue={approvedBy} name="approvedBy" onChange={handleChangeActive} />
+                        </FloatingLabel>
+                        <FloatingLabel label="Repaired By" className="mb-2">
+                            <Form.Control defaultValue={repairedBy} name="repairedBy" onChange={handleChangeActive} />
+                        </FloatingLabel>
+                        <FloatingLabel label="Repair Notes" className="mb-2">
+                            <Form.Control defaultValue={repairDescription} name="repairDescription" onChange={handleChangeActive} />
+                        </FloatingLabel>
+                        <FloatingLabel label="Repair Time" className="mb-2">
+                            <Form.Control defaultValue={repairTime} name="repairTime" onChange={handleChangeActive} />
+                        </FloatingLabel>
+                    </Form>  
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseActive}>
+                        Cancel
+                    </Button>
+                    <Button variant="primary" onClick={handleUpdateActive}>
                         Save Changes
                     </Button>
                 </Modal.Footer>
@@ -416,13 +526,13 @@ export const Maintenance = () => {
                                 if (request.approvedBy && !request.done) {
                                     return (
                                         <tr key={index} request={request}>
-                                            <td onClick={() => handleOpenUpdate(request)}>{request.record}</td>
-                                            <td onClick={() => handleOpenUpdate(request)}>{request.area}</td>
-                                            <td onClick={() => handleOpenUpdate(request)}>{request.equipment}</td>
-                                            <td onClick={() => handleOpenUpdate(request)}>{request.type}</td>
-                                            <td onClick={() => handleOpenUpdate(request)}>{request.description}</td>
-                                            <td onClick={() => handleOpenUpdate(request)}>{request.comments}</td>
-                                            <td onClick={() => handleOpenUpdate(request)}>{request.updatedAt}</td>
+                                            <td onClick={() => handleOpenActive(request)}>{request.record}</td>
+                                            <td onClick={() => handleOpenActive(request)}>{request.area}</td>
+                                            <td onClick={() => handleOpenActive(request)}>{request.equipment}</td>
+                                            <td onClick={() => handleOpenActive(request)}>{request.type}</td>
+                                            <td onClick={() => handleOpenActive(request)}>{request.description}</td>
+                                            <td onClick={() => handleOpenActive(request)}>{request.comments}</td>
+                                            <td onClick={() => handleOpenActive(request)}>{request.updatedAt}</td>
                                             <td>
                                                 <Icon icon={ checkCircleO } size={24} style={{ color: '#5BC236' }} onClick={() => handleDone(request)} />
                                                 <Icon icon={ timesCircleO } size={24} style={{ color: '#CC0202' }} onClick={() => handleDeny(request)}/>

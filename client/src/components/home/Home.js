@@ -4,7 +4,7 @@ export const Home = () => {
     return (
         <>
             <h1>Monarch Metal</h1>
-            {/* <Login /> */}
+            <Login />
             <a href='/maintenance'>Maintenance</a>
         </>
     )

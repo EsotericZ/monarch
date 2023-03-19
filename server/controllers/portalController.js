@@ -38,12 +38,6 @@ async function login(req, res) {
             return res.status(200).json({
                 status: 'success',
                 accessToken: accessToken,
-                auth: true,
-                name: userInfo.name,
-                username: userInfo.username,
-                email: userInfo.email,
-                number: userInfo.number,
-                role: userInfo.role,
             });
         } else {
             return res.status(405).json({
