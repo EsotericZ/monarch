@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button, FloatingLabel, Form, Modal, Tab, Tabs, Table } from 'react-bootstrap';
+import { format, parseISO } from 'date-fns';
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 
@@ -145,8 +146,6 @@ export const Maintenance = () => {
         .then(setShowUpdate(false))
     };
 
-
-
     const handleChangeActive = (e) => {
         const { name, value } = e.target;
         setUpdateSingleRequest((prev) => {
@@ -187,8 +186,6 @@ export const Maintenance = () => {
         .then(fetchData())
         .then(setShowActive(false))
     };
-
-
 
     const handleApprove = (request) => {
         setRecord(request.record);
@@ -511,14 +508,14 @@ export const Maintenance = () => {
                     <Table striped hover>
                         <thead>
                             <tr>
-                                <th>Record</th>
-                                <th>Area</th>
-                                <th>Equipment</th>
-                                <th>Type</th>
-                                <th>Description</th>
-                                <th>Comments</th>
-                                <th>Updated</th>
-                                <th>Actions</th>
+                                <th className='text-center'>Record</th>
+                                <th className='text-center'>Area</th>
+                                <th className='text-center'>Equipment</th>
+                                <th className='text-center'>Type</th>
+                                <th className='text-center'>Description</th>
+                                <th className='text-center'>Comments</th>
+                                <th className='text-center'>Updated</th>
+                                <th className='text-center'>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -526,13 +523,13 @@ export const Maintenance = () => {
                                 if (request.approvedBy && !request.done) {
                                     return (
                                         <tr key={index} request={request}>
-                                            <td onClick={() => handleOpenActive(request)}>{request.record}</td>
-                                            <td onClick={() => handleOpenActive(request)}>{request.area}</td>
-                                            <td onClick={() => handleOpenActive(request)}>{request.equipment}</td>
-                                            <td onClick={() => handleOpenActive(request)}>{request.type}</td>
+                                            <td onClick={() => handleOpenActive(request)} className='text-center'>{request.record}</td>
+                                            <td onClick={() => handleOpenActive(request)} className='text-center'>{request.area}</td>
+                                            <td onClick={() => handleOpenActive(request)} className='text-center'>{request.equipment}</td>
+                                            <td onClick={() => handleOpenActive(request)} className='text-center'>{request.requestType}</td>
                                             <td onClick={() => handleOpenActive(request)}>{request.description}</td>
                                             <td onClick={() => handleOpenActive(request)}>{request.comments}</td>
-                                            <td onClick={() => handleOpenActive(request)}>{request.updatedAt}</td>
+                                            <td onClick={() => handleOpenActive(request)} className='text-center'>{format(parseISO(request.updatedAt), 'MM/dd h:mm b')}</td>
                                             <td>
                                                 <Icon icon={ checkCircleO } size={24} style={{ color: '#5BC236' }} onClick={() => handleDone(request)} />
                                                 <Icon icon={ timesCircleO } size={24} style={{ color: '#CC0202' }} onClick={() => handleDeny(request)}/>
