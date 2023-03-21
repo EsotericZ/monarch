@@ -15,6 +15,7 @@ router.get('/engineering/getAllJobs', engineeringController.getAllJobs);
 router.post('/engineering/updateJob', engineeringController.updateJob);
 
 router.get('/maintenance/getAllRequests', maintenanceController.getAllRequests);
+router.get('/maintenance/getAllEquipment', maintenanceController.getAllEquipment);
 router.post('/maintenance/createRequest', maintenanceController.createRequest);
 router.post('/maintenance/updateRequest', maintenanceController.updateRequest);
 router.post('/maintenance/approveRequest', maintenanceController.approveRequest);

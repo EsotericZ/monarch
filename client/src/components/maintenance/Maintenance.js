@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, FloatingLabel, Form, Modal, Tab, Tabs, Table } from 'react-bootstrap';
+import { Button, Dropdown, FloatingLabel, Form, Modal, Tab, Tabs, Table } from 'react-bootstrap';
 import { format, parseISO } from 'date-fns';
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
@@ -10,6 +10,7 @@ import { timesCircleO } from 'react-icons-kit/fa/timesCircleO';
 import { compass } from 'react-icons-kit/fa/compass';
 
 import getAllRequests from '../../services/maintenance/getAllRequests';
+import getAllEquipment from '../../services/maintenance/getAllEquipment';
 import createRequest from '../../services/maintenance/createRequest';
 import updateRequest from '../../services/maintenance/updateRequest';
 import approveRequest from '../../services/maintenance/approveRequest';
@@ -44,7 +45,7 @@ export const Maintenance = () => {
         requestedBy: '',
         area: '',
         equipment: '',
-        requestType: '',
+        requestType: 'Routine',
         description: '',
         comments: '',
     });
@@ -64,6 +65,7 @@ export const Maintenance = () => {
     const [active, setActive] = useState('');
     const [requested, setRequested] = useState('');
     const [hold, setHold] = useState('');
+    const [equipmentList, setEquipmentList] = useState(['1', '2', '3', '4']);
 
     const [record, setRecord] = useState('');
     const [requestedBy, setRequestedBy] = useState('');
@@ -81,6 +83,10 @@ export const Maintenance = () => {
 
     async function fetchData() {
         try {
+            getAllEquipment()
+            .then((res) => {
+                setEquipmentList(res)
+            });
             getAllRequests()
             .then((res) => {
                 setSearchedMaint(res.data)
@@ -103,6 +109,9 @@ export const Maintenance = () => {
     }
 
     const handleChangeAdd = (e) => {
+        userData.name && setNewRequest((prev) => {
+            return {...prev, 'requestedBy': userData.name}
+        });
         const { name, value } = e.target;
         setNewRequest((prev) => {
             return {...prev, [name]: value}
@@ -274,6 +283,7 @@ export const Maintenance = () => {
 
     useEffect(() => {
         fetchData();
+        // fetchEquipment();
     }, [showAdd, showUpdate, showApprove, showActive, showDeny, showHold, showDone]);
 
     return loading ?
@@ -368,10 +378,22 @@ export const Maintenance = () => {
                             <Form.Control name="area" onChange={handleChangeAdd} />
                         </FloatingLabel>
                         <FloatingLabel label="Equipment" className="mb-2">
-                            <Form.Control name="equipment" onChange={handleChangeAdd} />
+                            <Form.Control as="select" name="equipment" onChange={handleChangeAdd}>
+                                <option value={''}></option>
+                                {equipmentList.map((item, index) => {
+                                    return (
+                                        <option key={index} value={item.PartNo}>{item.PartNo}</option>
+                                    )
+                                })}
+                            </Form.Control>
                         </FloatingLabel>
                         <FloatingLabel label="Request Type" className="mb-2">
-                            <Form.Control name="requestType" onChange={handleChangeAdd} />
+                            <Form.Control as="select" name="requestType" onChange={handleChangeAdd}>
+                                <option>Routine</option>
+                                <option>Emergency</option>
+                                <option>Safety</option>
+                                <option>Planned</option>
+                            </Form.Control>
                         </FloatingLabel>
                         <FloatingLabel label="Description" className="mb-2">
                             <Form.Control name="description" onChange={handleChangeAdd} />
