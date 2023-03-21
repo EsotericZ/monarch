@@ -2,66 +2,57 @@ import { useEffect, useState } from 'react';
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 
-// import { Login } from '../login/Login';
 import login from '../../services/portal/login';
+import { Sidebar } from '../sidebar/Sidebar';
 
 export const Home = () => {
     const cookies = new Cookies();
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [userData, setUserData] = useState('');
+    const [cookieData1, setCookieData1] = useState('');
+    const [loggedIn, setLoggedIn] = useState(false);
 
     const handleSubmit = (e) => {
         e.preventDefault();
         login(username, password)
         .then((res) => {
             cookies.set('jwt', res.accessToken)
-            setUserData(jwt_decode(cookies.get('jwt')))
+            setCookieData1(jwt_decode(cookies.get('jwt')))
+            setLoggedIn(true)
         })
     }
 
     const handleLogout = () => {
-        cookies.remove('jwt', { path: '/' });
-        setUserData('');
+        setCookieData1('')
+        setLoggedIn(false)
+        cookies.remove('jwt', { path: '/' })
     }
 
     useEffect(() => {
         try {
-            setUserData(jwt_decode(cookies.get('jwt')));
+            setCookieData1(jwt_decode(cookies.get('jwt')));
         } catch {
-            setUserData('');
+            setCookieData1('');
         }
-    }, [userData])
+    }, [loggedIn])
 
     return (
-        <>
-            <h1>Monarch Metal</h1>
-            {userData ?
-                <h2>Signed in as {userData.name}</h2>
-                
-            :
-                <form onSubmit={handleSubmit}>
-                    <input className='input' type='text' placeholder='Username' onChange={(e) => {setUsername(e.target.value)}}></input>
-                    <input className='input' type='text' placeholder='Password' onChange={(e) => {setPassword(e.target.value)}}></input>
-                    <button>Login</button>
-                </form>
-            }
-            <ul>
-                <li>
-                    <a href='/maintenance'>Maintenance</a>
-                </li>
-                {userData &&
-                    <li>
-                        <a onClick={() => handleLogout()}>Logout</a>
-                    </li>
+        <div style={{ display: 'flex' }}>
+            <Sidebar />
+            <div style={{ display: 'inline' }}>
+                <h1>Monarch Metal</h1>
+                {cookieData1 ?
+                    <h2>Signed in as {cookieData1.name}</h2>
+                    
+                :
+                    <form onSubmit={handleSubmit}>
+                        <input className='input' type='text' placeholder='Username' onChange={(e) => {setUsername(e.target.value)}}></input>
+                        <input className='input' type='text' placeholder='Password' onChange={(e) => {setPassword(e.target.value)}}></input>
+                        <button>Login</button>
+                    </form>
                 }
-                {(userData.role == 'admin') && 
-                    <li>
-                        <a href='/admin'>Admin Page</a>
-                    </li>
-                }
-            </ul>
-        </>
+            </div>
+        </div>
     )
 }

@@ -29,17 +29,10 @@ async function getAllEquipment(req, res) {
     sql.connect(config, function(err,) {
         if (err) console.error(err);
         let request = new sql.Request();
-
         request.query("SELECT DISTINCT PartNo FROM Estim WHERE ProdCode='EQUIP'", 
-        
         function(err, recordset) {
             if (err) console.error(err);
             let equipment = recordset.recordsets[0];
-            console.log(equipment)
-
-            // const map = new Map();
-            // test.forEach(item => map.set(item.JobNo, item));
-
             res.send(equipment);
         })
     })
