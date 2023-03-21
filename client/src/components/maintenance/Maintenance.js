@@ -23,7 +23,11 @@ export const Maintenance = () => {
     try {
         userData = jwt_decode(cookies.get('jwt'));
     } catch {
-        userData = {'name': 'Guest'};
+        userData = {
+            'name': '',
+            'role': 'employee',
+            'maintenance': false,
+        };
     }
 
     const [searchedMaint, setSearchedMaint] = useState([]);
@@ -190,7 +194,7 @@ export const Maintenance = () => {
     const handleApprove = (request) => {
         setRecord(request.record);
         setRequestHold(false);
-        setApprovedBy('CJ');
+        setApprovedBy(userData.name);
         setShowApprove(true);
     } 
     const handleApproveNo = () => {
@@ -278,7 +282,11 @@ export const Maintenance = () => {
         </>
         :
         <>
-            <h1>Maintenance Signed in as {userData.name}</h1>
+            {userData.name ? 
+                <h1>Maintenance Signed in as {userData.name}</h1>
+            :
+                <h1>Maintenance</h1>
+            }
             <Modal show={showApprove}>
                 <Modal.Header>
                     <Modal.Title>Confirm</Modal.Title>
@@ -354,7 +362,7 @@ export const Maintenance = () => {
                 <Modal.Body>
                     <Form>
                         <FloatingLabel label="Requested By" className="mb-2">
-                            <Form.Control name="requestedBy" onChange={handleChangeAdd} />
+                            <Form.Control defaultValue={userData.name} name="requestedBy" onChange={handleChangeAdd} />
                         </FloatingLabel>
                         <FloatingLabel label="Area" className="mb-2">
                             <Form.Control name="area" onChange={handleChangeAdd} />
@@ -496,14 +504,12 @@ export const Maintenance = () => {
             </Modal>
 
             <Tabs
-                defaultActiveKey="home"            
+                defaultActiveKey="active"            
                 id="justify-tab-example"
                 className='mb-3'
                 justify
             >
-                <Tab eventKey="home" title="Home">
-                    <h1>Home</h1>
-                </Tab>
+                
                 <Tab eventKey="active" title={active}>
                     <Table striped hover>
                         <thead>
@@ -515,7 +521,9 @@ export const Maintenance = () => {
                                 <th className='text-center'>Description</th>
                                 <th className='text-center'>Comments</th>
                                 <th className='text-center'>Updated</th>
-                                <th className='text-center'>Actions</th>
+                                {userData.maintenance &&
+                                    <th className='text-center'>Actions</th>
+                                }
                             </tr>
                         </thead>
                         <tbody>
@@ -530,11 +538,13 @@ export const Maintenance = () => {
                                             <td onClick={() => handleOpenActive(request)}>{request.description}</td>
                                             <td onClick={() => handleOpenActive(request)}>{request.comments}</td>
                                             <td onClick={() => handleOpenActive(request)} className='text-center'>{format(parseISO(request.updatedAt), 'MM/dd h:mm b')}</td>
-                                            <td>
-                                                <Icon icon={ checkCircleO } size={24} style={{ color: '#5BC236' }} onClick={() => handleDone(request)} />
-                                                <Icon icon={ timesCircleO } size={24} style={{ color: '#CC0202' }} onClick={() => handleDeny(request)}/>
-                                                <Icon icon={ compass } size={24} style={{ color: '#F0D500' }} onClick={() => handleHold(request)}/>
-                                            </td>
+                                            {userData.maintenance && 
+                                                <td>
+                                                    <Icon icon={ checkCircleO } size={24} style={{ color: '#5BC236' }} onClick={() => handleDone(request)} />
+                                                    <Icon icon={ timesCircleO } size={24} style={{ color: '#CC0202' }} onClick={() => handleDeny(request)}/>
+                                                    <Icon icon={ compass } size={24} style={{ color: '#F0D500' }} onClick={() => handleHold(request)}/>
+                                                </td>
+                                            }
                                         </tr>
                                     )
                                 }
@@ -546,15 +556,15 @@ export const Maintenance = () => {
                     <Table striped hover>
                         <thead>
                             <tr>
-                                <th>Record</th>
-                                <th>Requester</th>
-                                <th>Created</th>
-                                <th>Area</th>
-                                <th>Equipment</th>
-                                <th>Type</th>
-                                <th>Description</th>
-                                <th>Comments</th>
-                                <th>Actions</th>
+                                <th className='text-center'>Record</th>
+                                <th className='text-center'>Requester</th>
+                                <th className='text-center'>Created</th>
+                                <th className='text-center'>Area</th>
+                                <th className='text-center'>Equipment</th>
+                                <th className='text-center'>Type</th>
+                                <th className='text-center'>Description</th>
+                                <th className='text-center'>Comments</th>
+                                <th className='text-center'>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -562,19 +572,23 @@ export const Maintenance = () => {
                                 if (!request.approvedBy && !request.hold && !request.done) {
                                     return (
                                         <tr key={index} request={request}>
-                                            <td onClick={() => handleOpenUpdate(request)}>{request.record}</td>
-                                            <td onClick={() => handleOpenUpdate(request)}>{request.requestedBy}</td>
-                                            <td onClick={() => handleOpenUpdate(request)}>{request.createdAt}</td>
-                                            <td onClick={() => handleOpenUpdate(request)}>{request.area}</td>
-                                            <td onClick={() => handleOpenUpdate(request)}>{request.equipment}</td>
-                                            <td onClick={() => handleOpenUpdate(request)}>{request.type}</td>
+                                            <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.record}</td>
+                                            <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.requestedBy}</td>
+                                            <td onClick={() => handleOpenUpdate(request)} className='text-center'>{format(parseISO(request.createdAt), 'MM/dd h:mm b')}</td>
+                                            <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.area}</td>
+                                            <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.equipment}</td>
+                                            <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.requestType}</td>
                                             <td onClick={() => handleOpenUpdate(request)}>{request.description}</td>
                                             <td onClick={() => handleOpenUpdate(request)}>{request.comments}</td>
-                                            <td>
-                                                <Icon icon={ checkCircleO } size={24} style={{ color: '#5BC236' }} onClick={() => handleApprove(request)} />
-                                                <Icon icon={ timesCircleO } size={24} style={{ color: '#CC0202' }} onClick={() => handleDeny(request)}/>
-                                                <Icon icon={ compass } size={24} style={{ color: '#F0D500' }} onClick={() => handleHold(request)}/>
-                                            </td>
+                                            {userData.maintenance ? 
+                                                <td className='text-center'>
+                                                    <Icon icon={ checkCircleO } size={24} style={{ color: '#5BC236' }} onClick={() => handleApprove(request)} />
+                                                    <Icon icon={ timesCircleO } size={24} style={{ color: '#CC0202' }} onClick={() => handleDeny(request)}/>
+                                                    <Icon icon={ compass } size={24} style={{ color: '#F0D500' }} onClick={() => handleHold(request)}/>
+                                                </td>
+                                            :
+                                                <td onClick={() => handleOpenUpdate(request)} className='text-center'>Pending</td>
+                                            }
                                         </tr>
                                     )
                                 }
@@ -586,14 +600,14 @@ export const Maintenance = () => {
                     <Table striped hover>
                         <thead>
                             <tr>
-                                <th>Record</th>
-                                <th>Requester</th>
-                                <th>Area</th>
-                                <th>Equipment</th>
-                                <th>Type</th>
-                                <th>Description</th>
-                                <th>Comments</th>
-                                <th>Actions</th>
+                                <th className='text-center'>Record</th>
+                                <th className='text-center'>Requester</th>
+                                <th className='text-center'>Area</th>
+                                <th className='text-center'>Equipment</th>
+                                <th className='text-center'>Type</th>
+                                <th className='text-center'>Description</th>
+                                <th className='text-center'>Comments</th>
+                                <th className='text-center'>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -601,14 +615,14 @@ export const Maintenance = () => {
                                 if (!request.approvedBy && request.hold &&!request.done) {
                                     return (
                                         <tr key={index} request={request}>
-                                            <td onClick={() => handleOpenUpdate(request)}>{request.record}</td>
-                                            <td onClick={() => handleOpenUpdate(request)}>{request.requestedBy}</td>
-                                            <td onClick={() => handleOpenUpdate(request)}>{request.area}</td>
-                                            <td onClick={() => handleOpenUpdate(request)}>{request.equipment}</td>
-                                            <td onClick={() => handleOpenUpdate(request)}>{request.type}</td>
+                                            <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.record}</td>
+                                            <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.requestedBy}</td>
+                                            <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.area}</td>
+                                            <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.equipment}</td>
+                                            <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.requestType}</td>
                                             <td onClick={() => handleOpenUpdate(request)}>{request.description}</td>
                                             <td onClick={() => handleOpenUpdate(request)}>{request.comments}</td>
-                                            <td>
+                                            <td className='text-center'>
                                                 <Icon icon={ checkCircleO } size={24} style={{ color: '#5BC236' }} onClick={() => handleApprove(request)} />
                                                 <Icon icon={ timesCircleO } size={24} style={{ color: '#CC0202' }} onClick={() => handleDeny(request)}/>
                                             </td>
@@ -623,13 +637,13 @@ export const Maintenance = () => {
                     <Table striped hover>
                         <thead>
                             <tr>
-                                <th>Record</th>
-                                <th>Area</th>
-                                <th>Equipment</th>
-                                <th>Type</th>
-                                <th>Description</th>
-                                <th>Comments</th>
-                                <th>Completed</th>
+                                <th className='text-center'>Record</th>
+                                <th className='text-center'>Area</th>
+                                <th className='text-center'>Equipment</th>
+                                <th className='text-center'>Type</th>
+                                <th className='text-center'>Description</th>
+                                <th className='text-center'>Comments</th>
+                                <th className='text-center'>Completed</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -637,19 +651,22 @@ export const Maintenance = () => {
                                 if (request.done) {
                                     return (
                                         <tr key={index} request={request}>
-                                            <td onClick={() => handleOpenComplete(request)}>{request.record}</td>
-                                            <td onClick={() => handleOpenComplete(request)}>{request.area}</td>
-                                            <td onClick={() => handleOpenComplete(request)}>{request.equipment}</td>
-                                            <td onClick={() => handleOpenComplete(request)}>{request.type}</td>
+                                            <td onClick={() => handleOpenComplete(request)} className='text-center'>{request.record}</td>
+                                            <td onClick={() => handleOpenComplete(request)} className='text-center'>{request.area}</td>
+                                            <td onClick={() => handleOpenComplete(request)} className='text-center'>{request.equipment}</td>
+                                            <td onClick={() => handleOpenComplete(request)} className='text-center'>{request.requestType}</td>
                                             <td onClick={() => handleOpenComplete(request)}>{request.description}</td>
                                             <td onClick={() => handleOpenComplete(request)}>{request.comments}</td>
-                                            <td onClick={() => handleOpenComplete(request)}>{request.updatedAt}</td>
+                                            <td onClick={() => handleOpenComplete(request)} className='text-center'>{format(parseISO(request.updatedAt), 'MM/dd h:mm b')}</td>
                                         </tr>
                                     )
                                 }
                             })}
                         </tbody>
                     </Table>
+                </Tab>
+                <Tab eventKey="schedule" title="Scheduled">
+                    <h1>Coming Soon</h1>
                 </Tab>
             </Tabs>
             <button onClick={handleOpenAdd}>Add</button>

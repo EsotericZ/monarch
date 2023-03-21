@@ -19,11 +19,6 @@ User.init(
             unique: true,
             allowNull: false,
         },
-        email: {
-            type: DataTypes.STRING,
-            unique: true,
-            allowNull: false,
-        },
         number: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -35,7 +30,19 @@ User.init(
         role: {
             type: DataTypes.STRING,
             defaultValue: 'employee',
-        }, 
+        },
+        maintenance: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
+        shipping: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
+        engineering: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
     }, {
         sequelize,
         tableName: 'users',

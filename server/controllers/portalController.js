@@ -28,9 +28,11 @@ async function login(req, res) {
                 {
                     name: userInfo.name,
                     username: userInfo.username,
-                    email: userInfo.email,
                     number: userInfo.number,
                     role: userInfo.role,
+                    maintenance: userInfo.maintenance,
+                    shipping: userInfo.shipping,
+                    engineering: userInfo.engineering,
                 },
                 process.env.JWT_SECRET_KEY || 'pass',
                 { expiresIn: '1d' }
