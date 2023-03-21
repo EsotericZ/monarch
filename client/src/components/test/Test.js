@@ -15,6 +15,7 @@ import {
 export const Test = () => {
     const cookies = new Cookies();
     const [name, setName] = useState('');
+    const [admin, setAdmin] = useState(false);
     const [loading, setLoading] = useState(true);
     let userData
 
@@ -22,15 +23,22 @@ export const Test = () => {
         try {
             userData = (jwt_decode(cookies.get('jwt')))
             setName(userData.name.split(' ')[0]);
+            userData.role == 'admin' && setAdmin(true);
             setLoading(false)
         } catch {
             setLoading(false)
         }
     }
 
+    const handleLogout = () => {
+        cookies.remove('jwt', { path: '/', domain:'' });
+        setName('');
+        setAdmin(false);
+    }
+
     useEffect(() => {
         setData();
-    }, [])
+    }, [name, admin])
 
     return loading ?
         <>
@@ -49,13 +57,21 @@ export const Test = () => {
                     </CDBSidebarMenu>
                     {name ?
                         <CDBSidebarMenu>
-                            <CDBSidebarMenuItem>Logout</CDBSidebarMenuItem>
+                            <CDBSidebarMenuItem icon="user" onClick={handleLogout}>Logout</CDBSidebarMenuItem>
                         </CDBSidebarMenu>
                     :
                         <CDBSidebarMenu>
                             <CDBSidebarMenuItem icon="user">Login</CDBSidebarMenuItem>
                         </CDBSidebarMenu>
                     }
+                    {admin &&
+                        <CDBSidebarMenu>
+                            <NavLink exact to='/admin'>
+                                <CDBSidebarMenuItem icon="wrench">Admin</CDBSidebarMenuItem>
+                            </NavLink>
+                        </CDBSidebarMenu>
+                    }
+
                 </CDBSidebarContent>
 
                 <CDBSidebarFooter style={{ textAlign: 'center' }}>
