@@ -16,25 +16,21 @@ export const Test = () => {
     const cookies = new Cookies();
     const [name, setName] = useState('');
     const [loading, setLoading] = useState(true);
-    let userData = {'name': ''}
+    let userData
 
     const setData = () => {
-        
         try {
-            userData = jwt_decode(cookies.get('jwt'));
-            let fullName = userData.name.split(' ');
-            setName(fullName[0])
-            console.log(name)
+            userData = (jwt_decode(cookies.get('jwt')))
+            setName(userData.name.split(' ')[0]);
             setLoading(false)
         } catch {
-            userData = {'name': ''};
             setLoading(false)
         }
     }
 
     useEffect(() => {
         setData();
-    })
+    }, [])
 
     return loading ?
         <>
@@ -53,12 +49,11 @@ export const Test = () => {
                     </CDBSidebarMenu>
                     {name ?
                         <CDBSidebarMenu>
-                            <CDBSidebarMenuItem>{name}</CDBSidebarMenuItem>
                             <CDBSidebarMenuItem>Logout</CDBSidebarMenuItem>
                         </CDBSidebarMenu>
                     :
                         <CDBSidebarMenu>
-                            <CDBSidebarMenuItem>Login</CDBSidebarMenuItem>
+                            <CDBSidebarMenuItem icon="user">Login</CDBSidebarMenuItem>
                         </CDBSidebarMenu>
                     }
                 </CDBSidebarContent>
