@@ -284,7 +284,6 @@ export const Maintenance = () => {
 
     useEffect(() => {
         fetchData();
-        // fetchEquipment();
     }, [showAdd, showUpdate, showApprove, showActive, showDeny, showHold, showDone]);
 
     return (
