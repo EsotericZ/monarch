@@ -293,7 +293,7 @@ export const Maintenance = () => {
             {loading ?
                 <h1>Loading</h1>
             :
-            <div style={{ display: 'inline' }}>
+            <div style={{ display: 'inline', width: '100%' }}>
                 <h1>Maintenance</h1>
                 <Modal show={showApprove}>
                     <Modal.Header>
