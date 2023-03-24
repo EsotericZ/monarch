@@ -10,6 +10,7 @@ import getAllUsers from '../../services/users/getAllUsers';
 import updateEngineering from '../../services/users/updateEngineering';
 import updateShipping from '../../services/users/updateShipping';
 import updateMaintenance from '../../services/users/updateMaintenance';
+import createUser from '../../services/users/createUser';
 import { Sidebar } from '../sidebar/Sidebar';
 
 export const Admin = () => {
@@ -27,6 +28,17 @@ export const Admin = () => {
     const [allUsers, setAllUsers] = useState('');
     const [loading, setLoading] = useState(true);
     const [update, setUpdate] = useState('');
+    const [showAdd, setShowAdd] = useState(false);
+    const [newUser, setNewUser] = useState({
+        name: '',
+        username: '',
+        number: '',
+        password: '',
+        role: 'employee',
+        maintenance: '',
+        shipping: '',
+        engineering: ''
+    });
 
     async function fetchData() {
         try {
@@ -55,6 +67,21 @@ export const Admin = () => {
         setUpdate('Engineering')
     }
 
+    const handleChangeAdd = (e) => {
+        const { name, value } = e.target;
+        setNewUser((prev) => {
+            return {...prev, [name]: value}
+        });
+    };
+
+    const handleOpenAdd = () => setShowAdd(true);
+    const handleCloseAdd = () => setShowAdd(false);
+    const handleSave = () => {
+        createUser(newUser)
+        .then(fetchData())
+        .then(setShowAdd(false))
+    };
+
     useEffect(() => {
         fetchData();
         setUpdate('');
@@ -71,6 +98,45 @@ export const Admin = () => {
                 (cookieData.name ?
                     <div style={{ display: 'inline', width: '100%' }}>
                         <h1>Employee Database</h1>
+                        <Modal show={showAdd}>
+                            <Modal.Header>
+                                <Modal.Title>Add User</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                <Form>
+                                    <FloatingLabel label="Employee Name" className="mb-2">
+                                        <Form.Control name="name" onChange={handleChangeAdd} />
+                                    </FloatingLabel>
+                                    <FloatingLabel label="Username" className="mb-2">
+                                        <Form.Control name="username" onChange={handleChangeAdd} />
+                                    </FloatingLabel>
+                                    <FloatingLabel label="Employee Number" className="mb-2">
+                                        <Form.Control name="number" onChange={handleChangeAdd} />
+                                    </FloatingLabel>
+                                    <FloatingLabel label="Password" className="mb-2">
+                                        <Form.Control name="password" onChange={handleChangeAdd} />
+                                    </FloatingLabel>
+                                    <FloatingLabel label="Enigineering (Write Access)" className="mb-2">
+                                        <Form.Control name="enigineering" onChange={handleChangeAdd} />
+                                    </FloatingLabel>
+                                    <FloatingLabel label="Maintenance (Write Access)" className="mb-2">
+                                        <Form.Control name="maintenance" onChange={handleChangeAdd} />
+                                    </FloatingLabel>
+                                    <FloatingLabel label="Shipping (Write Access)">
+                                        <Form.Control name="shipping" onChange={handleChangeAdd} />
+                                    </FloatingLabel>
+                                </Form>  
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <Button variant="secondary" onClick={handleCloseAdd}>
+                                    Cancel
+                                </Button>
+                                <Button variant="primary" onClick={handleSave}>
+                                    Save Changes
+                                </Button>
+                            </Modal.Footer>
+                        </Modal>
+
                         <Table striped hover>
                             <thead>
                                 <tr>
@@ -118,6 +184,7 @@ export const Admin = () => {
                                 })}
                             </tbody>
                         </Table>
+                        <button onClick={handleOpenAdd}>Add User</button>
                     </div>
                 :
                     <div style={{ display: 'inline', width: '100%' }}>
