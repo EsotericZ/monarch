@@ -35,9 +35,9 @@ export const Admin = () => {
         number: '',
         password: '',
         role: 'employee',
-        maintenance: '',
-        shipping: '',
-        engineering: ''
+        maintenance: 0,
+        shipping: 0,
+        engineering: 0,
     });
 
     async function fetchData() {
@@ -85,7 +85,7 @@ export const Admin = () => {
     useEffect(() => {
         fetchData();
         setUpdate('');
-    }, [update]);
+    }, [showAdd, update]);
 
     return (
         <div style={{ display: 'flex' }}>
@@ -115,15 +115,6 @@ export const Admin = () => {
                                     </FloatingLabel>
                                     <FloatingLabel label="Password" className="mb-2">
                                         <Form.Control name="password" onChange={handleChangeAdd} />
-                                    </FloatingLabel>
-                                    <FloatingLabel label="Enigineering (Write Access)" className="mb-2">
-                                        <Form.Control name="enigineering" onChange={handleChangeAdd} />
-                                    </FloatingLabel>
-                                    <FloatingLabel label="Maintenance (Write Access)" className="mb-2">
-                                        <Form.Control name="maintenance" onChange={handleChangeAdd} />
-                                    </FloatingLabel>
-                                    <FloatingLabel label="Shipping (Write Access)">
-                                        <Form.Control name="shipping" onChange={handleChangeAdd} />
                                     </FloatingLabel>
                                 </Form>  
                             </Modal.Body>
