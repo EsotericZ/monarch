@@ -39,8 +39,25 @@ async function createUser(req, res) {
     })
 }
 
+async function deleteUser(req, res) {
+    let id = req.body.id;
+
+    await User.destroy({
+        where: { id:id }
+    })
+    .then((result) => {
+        return res.status(200).send({
+            data: result
+        })
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
+
 async function updateEngineering(req, res) {
-    let id = req.body.id
+    let id = req.body.id;
 
     await User.findOne({
         where: {id: id}
@@ -164,6 +181,7 @@ async function updateShipping(req, res) {
 
 exports.getAllUsers = getAllUsers;
 exports.createUser = createUser;
+exports.deleteUser = deleteUser;
 exports.updateEngineering = updateEngineering;
 exports.updateMaintenance = updateMaintenance;
 exports.updateShipping = updateShipping;

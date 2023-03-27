@@ -26,6 +26,7 @@ router.post('/maintenance/doneRequest', maintenanceController.doneRequest);
 
 router.get('/users/getAllUsers', userController.getAllUsers);
 router.post('/users/createUser', userController.createUser);
+router.post('/users/deleteUser', userController.deleteUser);
 router.post('/users/updateEngineering', userController.updateEngineering);
 router.post('/users/updateMaintenance', userController.updateMaintenance);
 router.post('/users/updateShipping', userController.updateShipping);
