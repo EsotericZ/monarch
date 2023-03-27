@@ -40,10 +40,10 @@ async function createUser(req, res) {
 }
 
 async function deleteUser(req, res) {
-    let id = req.body.id;
+    let username = req.body.username;
 
     await User.destroy({
-        where: { id:id }
+        where: { username:username }
     })
     .then((result) => {
         return res.status(200).send({

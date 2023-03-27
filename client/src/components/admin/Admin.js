@@ -7,10 +7,11 @@ import { Icon } from 'react-icons-kit';
 import { primitiveDotStroke } from 'react-icons-kit/oct/primitiveDotStroke';
 
 import getAllUsers from '../../services/users/getAllUsers';
+import createUser from '../../services/users/createUser';
+import deleteUser  from '../../services/users/deleteUser';
 import updateEngineering from '../../services/users/updateEngineering';
 import updateShipping from '../../services/users/updateShipping';
 import updateMaintenance from '../../services/users/updateMaintenance';
-import createUser from '../../services/users/createUser';
 import { Sidebar } from '../sidebar/Sidebar';
 
 export const Admin = () => {
@@ -29,6 +30,7 @@ export const Admin = () => {
     const [loading, setLoading] = useState(true);
     const [update, setUpdate] = useState('');
     const [showAdd, setShowAdd] = useState(false);
+    const [showUpdate, setShowUpdate] = useState(false);
     const [newUser, setNewUser] = useState({
         name: '',
         username: '',
@@ -39,6 +41,18 @@ export const Admin = () => {
         shipping: 0,
         engineering: 0,
     });
+    const [updateSingleUser, setUpdateSingleUser] = useState({
+        name: '',
+        username: '',
+        number: '',
+        password: '',
+    });
+
+    const [record, setRecord] = useState('');
+    const [name, setName] = useState('');
+    const [username, setUsername] = useState('');
+    const [number, setNumber] = useState('');
+    const [password, setPassword] = useState('');
 
     async function fetchData() {
         try {
@@ -82,10 +96,46 @@ export const Admin = () => {
         .then(setShowAdd(false))
     };
 
+    const handleChangeUpdate = (e) => {
+        const { name, value } = e.target;
+        setUpdateSingleUser((prev) => {
+            return {...prev, [name]: value}
+        });
+    };
+
+    const handleOpenUpdate = (user) => {
+        setUpdateSingleUser({
+            ...updateSingleUser,
+            name: user.name,
+            username: user.username,
+            number: user.number,
+            password: user.password,
+        });
+        setName(user.name);
+        setUsername(user.username);
+        setNumber(user.number);
+        setPassword(user.password);
+        setShowUpdate(true);
+    };
+    const handleCloseUpdate = () => setShowUpdate(false);
+    const handleUpdate = () => {
+        console.log('yep')
+        console.log(updateSingleUser)
+        // updateRequest(updateSingleRequest, record)
+        // .then(fetchData())
+        // .then(setShowUpdate(false))
+    };
+
+    const handleDelete = () => {
+        deleteUser(updateSingleUser)
+        .then(fetchData())
+        .then(setShowUpdate(false))
+    };
+
     useEffect(() => {
         fetchData();
         setUpdate('');
-    }, [showAdd, update]);
+    }, [showAdd, update, showUpdate]);
 
     return (
         <div style={{ display: 'flex' }}>
@@ -123,7 +173,40 @@ export const Admin = () => {
                                     Cancel
                                 </Button>
                                 <Button variant="primary" onClick={handleSave}>
-                                    Save Changes
+                                    Save
+                                </Button>
+                            </Modal.Footer>
+                        </Modal>
+
+                        <Modal show={showUpdate}>
+                            <Modal.Header>
+                                <Modal.Title>Update Employee {name}</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                <Form>
+                                    <FloatingLabel label="Employee Name" className="mb-2">
+                                        <Form.Control defaultValue={name} name="name" onChange={handleChangeUpdate} />
+                                    </FloatingLabel>
+                                    <FloatingLabel label="Username" className="mb-2">
+                                        <Form.Control defaultValue={username} name="username" onChange={handleChangeUpdate} />
+                                    </FloatingLabel>
+                                    <FloatingLabel label="Employee Number" className="mb-2">
+                                        <Form.Control defaultValue={number} name="number" onChange={handleChangeUpdate} />
+                                    </FloatingLabel>
+                                    <FloatingLabel label="Password" className="mb-2">
+                                        <Form.Control defaultValue={password} name="password" onChange={handleChangeUpdate} />
+                                    </FloatingLabel>
+                                </Form>  
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <Button variant="danger" onClick={handleDelete}>
+                                    Delete
+                                </Button>
+                                <Button variant="secondary" onClick={handleCloseUpdate}>
+                                    Cancel
+                                </Button>
+                                <Button variant="primary" onClick={handleUpdate}>
+                                    Save
                                 </Button>
                             </Modal.Footer>
                         </Modal>
@@ -145,9 +228,9 @@ export const Admin = () => {
                                 {allUsers.map((user, index) => {
                                     return (
                                         <tr key={index} user={user}>
-                                            <td className='text-center'>{user.name}</td>
-                                            <td className='text-center'>{user.username}</td>
-                                            <td className='text-center'>{user.number}</td>
+                                            <td onClick={() => handleOpenUpdate(user)} className='text-center'>{user.name}</td>
+                                            <td onClick={() => handleOpenUpdate(user)} className='text-center'>{user.username}</td>
+                                            <td onClick={() => handleOpenUpdate(user)} className='text-center'>{user.number}</td>
                                             <td className='text-center'>
                                                 <Icon icon={ primitiveDotStroke }/>
                                                 <Icon icon={ primitiveDotStroke }/>
