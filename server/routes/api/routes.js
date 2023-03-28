@@ -25,8 +25,10 @@ router.post('/maintenance/holdRequest', maintenanceController.holdRequest);
 router.post('/maintenance/doneRequest', maintenanceController.doneRequest);
 
 router.get('/users/getAllUsers', userController.getAllUsers);
+router.post('/users/getUserPassword', userController.getUserPassword);
 router.post('/users/createUser', userController.createUser);
 router.post('/users/deleteUser', userController.deleteUser);
+router.post('/users/updateUser', userController.updateUser);
 router.post('/users/updateEngineering', userController.updateEngineering);
 router.post('/users/updateMaintenance', userController.updateMaintenance);
 router.post('/users/updateShipping', userController.updateShipping);

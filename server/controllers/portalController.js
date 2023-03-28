@@ -17,7 +17,6 @@ async function login(req, res) {
             description: 'User Does Not Exist'
         });
     } else {
-        console.log('User!')
         const bytes = CryptoJS.AES.decrypt(
             userInfo.password,
             process.env.SECRET_KEY || '1234'

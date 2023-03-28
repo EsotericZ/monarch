@@ -7,8 +7,10 @@ import { Icon } from 'react-icons-kit';
 import { primitiveDotStroke } from 'react-icons-kit/oct/primitiveDotStroke';
 
 import getAllUsers from '../../services/users/getAllUsers';
+import getUserPassword from '../../services/users/getUserPassword';
 import createUser from '../../services/users/createUser';
 import deleteUser  from '../../services/users/deleteUser';
+import updateUser from '../../services/users/updateUser';
 import updateEngineering from '../../services/users/updateEngineering';
 import updateShipping from '../../services/users/updateShipping';
 import updateMaintenance from '../../services/users/updateMaintenance';
@@ -42,13 +44,13 @@ export const Admin = () => {
         engineering: 0,
     });
     const [updateSingleUser, setUpdateSingleUser] = useState({
+        id: '',
         name: '',
         username: '',
         number: '',
         password: '',
     });
 
-    const [record, setRecord] = useState('');
     const [name, setName] = useState('');
     const [username, setUsername] = useState('');
     const [number, setNumber] = useState('');
@@ -104,26 +106,28 @@ export const Admin = () => {
     };
 
     const handleOpenUpdate = (user) => {
-        setUpdateSingleUser({
-            ...updateSingleUser,
-            name: user.name,
-            username: user.username,
-            number: user.number,
-            password: user.password,
-        });
+        getUserPassword(user.id)
+        .then((res) => {
+            setUpdateSingleUser({
+                ...updateSingleUser,
+                id: user.id,
+                name: user.name,
+                username: user.username,
+                number: user.number,
+                password: res.data
+            })
+            setPassword(res.data)
+        })
         setName(user.name);
         setUsername(user.username);
         setNumber(user.number);
-        setPassword(user.password);
         setShowUpdate(true);
     };
     const handleCloseUpdate = () => setShowUpdate(false);
     const handleUpdate = () => {
-        console.log('yep')
-        console.log(updateSingleUser)
-        // updateRequest(updateSingleRequest, record)
-        // .then(fetchData())
-        // .then(setShowUpdate(false))
+        updateUser(updateSingleUser)
+        .then(fetchData())
+        .then(setShowUpdate(false))
     };
 
     const handleDelete = () => {
@@ -164,7 +168,7 @@ export const Admin = () => {
                                         <Form.Control name="number" onChange={handleChangeAdd} />
                                     </FloatingLabel>
                                     <FloatingLabel label="Password" className="mb-2">
-                                        <Form.Control name="password" onChange={handleChangeAdd} />
+                                        <Form.Control type="password" name="password" onChange={handleChangeAdd} />
                                     </FloatingLabel>
                                 </Form>  
                             </Modal.Body>
