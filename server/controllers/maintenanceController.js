@@ -29,7 +29,7 @@ async function getAllEquipment(req, res) {
     sql.connect(config, function(err,) {
         if (err) console.error(err);
         let request = new sql.Request();
-        request.query("SELECT DISTINCT PartNo FROM Estim WHERE ProdCode='EQUIP' ORDER BY PartNo", 
+        request.query("SELECT DISTINCT PartNo, Descrip FROM Estim WHERE ProdCode='EQUIP' ORDER BY PartNo", 
         function(err, recordset) {
             if (err) console.error(err);
             let equipment = recordset.recordsets[0];

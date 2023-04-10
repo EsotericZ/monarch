@@ -86,6 +86,10 @@ export const Maintenance = () => {
         try {
             getAllEquipment()
             .then((res) => {
+                res.forEach(e => {
+                    let split = e.Descrip.split(/[\n\:]+/)
+                    e.dropDown = split[1] + split[3] + split[5]
+                 })
                 setEquipmentList(res)
             });
             getAllRequests()
@@ -379,7 +383,7 @@ export const Maintenance = () => {
                                     <option value={''}></option>
                                     {equipmentList.map((item, index) => {
                                         return (
-                                            <option key={index} value={item.PartNo}>{item.PartNo}</option>
+                                            <option key={index} value={item.PartNo}>{item.PartNo} -{item.dropDown}</option>
                                         )
                                     })}
                                 </Form.Control>
