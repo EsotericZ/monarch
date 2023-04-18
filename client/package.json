@@ -12,6 +12,7 @@
     "cdbreact-pro": "file:cdbreact-pro-1.7.4.tgz",
     "date-fns": "^2.29.3",
     "jwt-decode": "^3.1.2",
+    "mdbreact": "^5.2.0",
     "react": "^16.13.1",
     "react-bootstrap": "^2.7.0",
     "react-bootstrap-table-next": "^4.0.3",

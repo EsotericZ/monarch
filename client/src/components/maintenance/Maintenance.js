@@ -4,6 +4,9 @@ import { format, parseISO } from 'date-fns';
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 
+
+import { MDBDataTable } from 'mdbreact';
+
 import { Icon } from 'react-icons-kit';
 import { checkCircleO } from 'react-icons-kit/fa/checkCircleO';
 import { timesCircleO } from 'react-icons-kit/fa/timesCircleO';
@@ -31,6 +34,14 @@ export const Maintenance = () => {
             'maintenance': false,
         };
     }
+
+    const [searchedValueRecord, setSearchedValueRecord] = useState('');
+    const [searchedValueArea, setSearchedValueArea] = useState('');
+    const [searchedValueEquipment, setSearchedValueEquipment] = useState('');
+    const [searchedValueType, setSearchedValueType] = useState('');
+    const [searchedValueDescription, setSearchedValueDescription] = useState('');
+    const [searchedValueComments, setSearchedValueComments] = useState('');
+    const [searchedValueCompleted, setSearchedValueCompleted] = useState('');
 
     const [searchedMaint, setSearchedMaint] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -85,29 +96,29 @@ export const Maintenance = () => {
     async function fetchData() {
         try {
             getAllEquipment()
-            .then((res) => {
-                res.forEach(e => {
-                    let split = e.Descrip.split(/[\n\:]+/)
-                    e.dropDown = split[1] + split[3] + split[5]
-                 })
-                setEquipmentList(res)
-            });
+                .then((res) => {
+                    res.forEach(e => {
+                        let split = e.Descrip.split(/[\n\:]+/)
+                        e.dropDown = split[1] + split[3] + split[5]
+                    })
+                    setEquipmentList(res)
+                });
             getAllRequests()
-            .then((res) => {
-                setSearchedMaint(res.data)
-                setLoading(false);
-                let activeCount = 0;
-                let requestCount = 0;
-                let holdCount = 0;
-                for (let i=0; i<res.data.length; i++) {
-                    if (res.data[i].approvedBy && !res.data[i].done) activeCount += 1;
-                    if (!res.data[i].approvedBy && !res.data[i].hold && !res.data[i].done) requestCount += 1;
-                    if (!res.data[i].approvedBy && res.data[i].hold && !res.data[i].done) holdCount += 1;
-                }
-                (activeCount > 0) ? setActive(`Active (${activeCount})`) : setActive('Active');
-                (requestCount > 0) ? setRequested(`Requested (${requestCount})`) : setRequested('Requested');
-                (holdCount > 0) ? setHold(`Hold (${holdCount})`) : setHold('Hold');
-            });
+                .then((res) => {
+                    setSearchedMaint(res.data)
+                    setLoading(false);
+                    let activeCount = 0;
+                    let requestCount = 0;
+                    let holdCount = 0;
+                    for (let i = 0; i < res.data.length; i++) {
+                        if (res.data[i].approvedBy && !res.data[i].done) activeCount += 1;
+                        if (!res.data[i].approvedBy && !res.data[i].hold && !res.data[i].done) requestCount += 1;
+                        if (!res.data[i].approvedBy && res.data[i].hold && !res.data[i].done) holdCount += 1;
+                    }
+                    (activeCount > 0) ? setActive(`Active (${activeCount})`) : setActive('Active');
+                    (requestCount > 0) ? setRequested(`Requested (${requestCount})`) : setRequested('Requested');
+                    (holdCount > 0) ? setHold(`Hold (${holdCount})`) : setHold('Hold');
+                });
         } catch (err) {
             console.log(err);
         }
@@ -115,11 +126,11 @@ export const Maintenance = () => {
 
     const handleChangeAdd = (e) => {
         cookieData.name && setNewRequest((prev) => {
-            return {...prev, 'requestedBy': cookieData.name}
+            return { ...prev, 'requestedBy': cookieData.name }
         });
         const { name, value } = e.target;
         setNewRequest((prev) => {
-            return {...prev, [name]: value}
+            return { ...prev, [name]: value }
         });
     };
 
@@ -127,14 +138,14 @@ export const Maintenance = () => {
     const handleCloseAdd = () => setShowAdd(false);
     const handleSave = () => {
         createRequest(newRequest)
-        .then(fetchData())
-        .then(setShowAdd(false))
+            .then(fetchData())
+            .then(setShowAdd(false))
     };
 
     const handleChangeUpdate = (e) => {
         const { name, value } = e.target;
         setUpdateSingleRequest((prev) => {
-            return {...prev, [name]: value}
+            return { ...prev, [name]: value }
         });
     };
 
@@ -160,14 +171,14 @@ export const Maintenance = () => {
     const handleCloseUpdate = () => setShowUpdate(false);
     const handleUpdate = () => {
         updateRequest(updateSingleRequest, record)
-        .then(fetchData())
-        .then(setShowUpdate(false))
+            .then(fetchData())
+            .then(setShowUpdate(false))
     };
 
     const handleChangeActive = (e) => {
         const { name, value } = e.target;
         setUpdateSingleRequest((prev) => {
-            return {...prev, [name]: value}
+            return { ...prev, [name]: value }
         });
     };
 
@@ -201,8 +212,8 @@ export const Maintenance = () => {
     const handleCloseActive = () => setShowActive(false);
     const handleUpdateActive = () => {
         updateRequest(updateSingleRequest, record)
-        .then(fetchData())
-        .then(setShowActive(false))
+            .then(fetchData())
+            .then(setShowActive(false))
     };
 
     const handleApprove = (request) => {
@@ -210,7 +221,7 @@ export const Maintenance = () => {
         setRequestHold(false);
         setApprovedBy(cookieData.name);
         setShowApprove(true);
-    } 
+    }
     const handleApproveNo = () => {
         setApprovedBy('')
         setShowApprove(false);
@@ -219,7 +230,7 @@ export const Maintenance = () => {
         approveRequest(record, approvedBy, requestHold);
         setShowApprove(false);
     }
-    
+
     const handleDeny = (request) => {
         setRecord(request.record);
         setDone(true);
@@ -255,7 +266,7 @@ export const Maintenance = () => {
         setRecord(request.record);
         setDone(true);
         setShowDone(true);
-    } 
+    }
     const handleDoneNo = () => {
         setDone(false);
         setShowDone(false);
@@ -295,406 +306,475 @@ export const Maintenance = () => {
             <Sidebar />
             {loading ?
                 <h1>Loading</h1>
-            :
-            <div style={{ display: 'inline', width: '100%' }}>
-                <h1>Maintenance</h1>
-                <Modal show={showApprove}>
-                    <Modal.Header>
-                        <Modal.Title>Confirm</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        Approve: Record #{record}
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={handleApproveNo}>
-                            No
-                        </Button>
-                        <Button variant="primary" onClick={handleApproveYes}>
-                            Yes
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
+                :
+                <div style={{ display: 'inline', width: '100%' }}>
+                    <h1>Maintenance</h1>
+                    <Modal show={showApprove}>
+                        <Modal.Header>
+                            <Modal.Title>Confirm</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            Approve: Record #{record}
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={handleApproveNo}>
+                                No
+                            </Button>
+                            <Button variant="primary" onClick={handleApproveYes}>
+                                Yes
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
 
-                <Modal show={showDeny}>
-                    <Modal.Header>
-                        <Modal.Title>Confirm</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        Deny: Record #{record}
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={handleDenyNo}>
-                            No
-                        </Button>
-                        <Button variant="primary" onClick={handleDenyYes}>
-                            Yes
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
+                    <Modal show={showDeny}>
+                        <Modal.Header>
+                            <Modal.Title>Confirm</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            Deny: Record #{record}
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={handleDenyNo}>
+                                No
+                            </Button>
+                            <Button variant="primary" onClick={handleDenyYes}>
+                                Yes
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
 
-                <Modal show={showHold}>
-                    <Modal.Header>
-                        <Modal.Title>Confirm</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        Hold: Record #{record}
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={handleHoldNo}>
-                            No
-                        </Button>
-                        <Button variant="primary" onClick={handleHoldYes}>
-                            Yes
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
+                    <Modal show={showHold}>
+                        <Modal.Header>
+                            <Modal.Title>Confirm</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            Hold: Record #{record}
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={handleHoldNo}>
+                                No
+                            </Button>
+                            <Button variant="primary" onClick={handleHoldYes}>
+                                Yes
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
 
-                <Modal show={showDone}>
-                    <Modal.Header>
-                        <Modal.Title>Confirm</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        Finished: Record #{record}
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={handleDoneNo}>
-                            No
-                        </Button>
-                        <Button variant="primary" onClick={handleDoneYes}>
-                            Yes
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
+                    <Modal show={showDone}>
+                        <Modal.Header>
+                            <Modal.Title>Confirm</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            Finished: Record #{record}
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={handleDoneNo}>
+                                No
+                            </Button>
+                            <Button variant="primary" onClick={handleDoneYes}>
+                                Yes
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
 
-                <Modal show={showAdd}>
-                    <Modal.Header>
-                        <Modal.Title>Add Request</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <Form>
-                            <FloatingLabel label="Requested By" className="mb-2">
-                                <Form.Control defaultValue={cookieData.name} name="requestedBy" onChange={handleChangeAdd} />
-                            </FloatingLabel>
-                            <FloatingLabel label="Area" className="mb-2">
-                                <Form.Control name="area" onChange={handleChangeAdd} />
-                            </FloatingLabel>
-                            <FloatingLabel label="Equipment" className="mb-2">
-                                <Form.Control as="select" name="equipment" onChange={handleChangeAdd}>
-                                    <option value={''}></option>
-                                    {equipmentList.map((item, index) => {
-                                        return (
-                                            <option key={index} value={item.PartNo}>{item.PartNo} -{item.dropDown}</option>
-                                        )
+                    <Modal show={showAdd}>
+                        <Modal.Header>
+                            <Modal.Title>Add Request</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <Form>
+                                <FloatingLabel label="Requested By" className="mb-2">
+                                    <Form.Control defaultValue={cookieData.name} name="requestedBy" onChange={handleChangeAdd} />
+                                </FloatingLabel>
+                                <FloatingLabel label="Area" className="mb-2">
+                                    <Form.Control name="area" onChange={handleChangeAdd} />
+                                </FloatingLabel>
+                                <FloatingLabel label="Equipment" className="mb-2">
+                                    <Form.Control as="select" name="equipment" onChange={handleChangeAdd}>
+                                        <option value={''}></option>
+                                        {equipmentList.map((item, index) => {
+                                            return (
+                                                <option key={index} value={item.PartNo}>{item.PartNo} -{item.dropDown}</option>
+                                            )
+                                        })}
+                                    </Form.Control>
+                                </FloatingLabel>
+                                <FloatingLabel label="Request Type" className="mb-2">
+                                    <Form.Control as="select" name="requestType" onChange={handleChangeAdd}>
+                                        <option>Routine</option>
+                                        <option>Emergency</option>
+                                        <option>Safety</option>
+                                        <option>Planned</option>
+                                    </Form.Control>
+                                </FloatingLabel>
+                                <FloatingLabel label="Description" className="mb-2">
+                                    <Form.Control name="description" onChange={handleChangeAdd} />
+                                </FloatingLabel>
+                                <FloatingLabel label="Comments">
+                                    <Form.Control name="comments" onChange={handleChangeAdd} />
+                                </FloatingLabel>
+                            </Form>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={handleCloseAdd}>
+                                Cancel
+                            </Button>
+                            <Button variant="primary" onClick={handleSave}>
+                                Save Changes
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
+
+                    <Modal show={showUpdate}>
+                        <Modal.Header>
+                            <Modal.Title>Update: Record #{record}</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <Form>
+                                <FloatingLabel label="Requested By" className="mb-2">
+                                    <Form.Control defaultValue={requestedBy} name="requestedBy" onChange={handleChangeUpdate} />
+                                </FloatingLabel>
+                                <FloatingLabel label="Area" className="mb-2">
+                                    <Form.Control defaultValue={area} name="area" onChange={handleChangeUpdate} />
+                                </FloatingLabel>
+                                <FloatingLabel label="Equipment" className="mb-2">
+                                    <Form.Control defaultValue={equipment} name="equipment" onChange={handleChangeUpdate} />
+                                </FloatingLabel>
+                                <FloatingLabel label="Request Type" className="mb-2">
+                                    <Form.Control defaultValue={requestType} name="requestType" onChange={handleChangeUpdate} />
+                                </FloatingLabel>
+                                <FloatingLabel label="Description" className="mb-2">
+                                    <Form.Control defaultValue={description} name="description" onChange={handleChangeUpdate} />
+                                </FloatingLabel>
+                                <FloatingLabel label="Comments">
+                                    <Form.Control defaultValue={comments} name="comments" onChange={handleChangeUpdate} />
+                                </FloatingLabel>
+                            </Form>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={handleCloseUpdate}>
+                                Cancel
+                            </Button>
+                            <Button variant="primary" onClick={handleUpdate}>
+                                Save Changes
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
+
+                    <Modal show={showActive}>
+                        <Modal.Header>
+                            <Modal.Title>Update: Record #{record}</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <Form>
+                                <FloatingLabel label="Requested By" className="mb-2">
+                                    <Form.Control disabled defaultValue={requestedBy} name="requestedBy" onChange={handleChangeActive} />
+                                </FloatingLabel>
+                                <FloatingLabel label="Area" className="mb-2">
+                                    <Form.Control disabled defaultValue={area} name="area" onChange={handleChangeActive} />
+                                </FloatingLabel>
+                                <FloatingLabel label="Equipment" className="mb-2">
+                                    <Form.Control disabled defaultValue={equipment} name="equipment" onChange={handleChangeActive} />
+                                </FloatingLabel>
+                                <FloatingLabel label="Request Type" className="mb-2">
+                                    <Form.Control disabled defaultValue={requestType} name="requestType" onChange={handleChangeActive} />
+                                </FloatingLabel>
+                                <FloatingLabel label="Description" className="mb-2">
+                                    <Form.Control disabled defaultValue={description} name="description" onChange={handleChangeActive} />
+                                </FloatingLabel>
+                                <FloatingLabel label="Comments" className="mb-2">
+                                    <Form.Control defaultValue={comments} name="comments" onChange={handleChangeActive} />
+                                </FloatingLabel>
+                                <FloatingLabel label="Approved By" className="mb-2">
+                                    <Form.Control disabled defaultValue={approvedBy} name="approvedBy" onChange={handleChangeActive} />
+                                </FloatingLabel>
+                                <FloatingLabel label="Repaired By" className="mb-2">
+                                    <Form.Control defaultValue={repairedBy} name="repairedBy" onChange={handleChangeActive} />
+                                </FloatingLabel>
+                                <FloatingLabel label="Repair Notes" className="mb-2">
+                                    <Form.Control defaultValue={repairDescription} name="repairDescription" onChange={handleChangeActive} />
+                                </FloatingLabel>
+                                <FloatingLabel label="Repair Time" className="mb-2">
+                                    <Form.Control defaultValue={repairTime} name="repairTime" onChange={handleChangeActive} />
+                                </FloatingLabel>
+                            </Form>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={handleCloseActive}>
+                                Cancel
+                            </Button>
+                            <Button variant="primary" onClick={handleUpdateActive}>
+                                Save Changes
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
+
+                    <Modal show={showComplete} onHide={handleCloseComplete} centered>
+                        <Modal.Header>
+                            <Modal.Title>Completed: Record #{record}</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <Form>
+                                <FloatingLabel label="Requested By" className="mb-2">
+                                    <Form.Control disabled defaultValue={requestedBy} name="requestedBy" />
+                                </FloatingLabel>
+                                <FloatingLabel label="Area" className="mb-2">
+                                    <Form.Control disabled defaultValue={area} name="area" />
+                                </FloatingLabel>
+                                <FloatingLabel label="Equipment" className="mb-2">
+                                    <Form.Control disabled defaultValue={equipment} name="equipment" />
+                                </FloatingLabel>
+                                <FloatingLabel label="Request Type" className="mb-2">
+                                    <Form.Control disabled defaultValue={requestType} name="requestType" />
+                                </FloatingLabel>
+                                <FloatingLabel label="Description" className="mb-2">
+                                    <Form.Control disabled defaultValue={description} name="description" />
+                                </FloatingLabel>
+                                <FloatingLabel label="Comments">
+                                    <Form.Control disabled defaultValue={comments} name="comments" />
+                                </FloatingLabel>
+                            </Form>
+                        </Modal.Body>
+                    </Modal>
+
+                    <Tabs
+                        defaultActiveKey="active"
+                        id="justify-tab-example"
+                        className='mb-3'
+                        justify
+                    >
+
+                        <Tab eventKey="active" title={active}>
+                            <Table striped hover>
+                                <thead>
+                                    <tr>
+                                        <th className='text-center'>Record</th>
+                                        <th className='text-center'>Area</th>
+                                        <th className='text-center'>Equipment</th>
+                                        <th className='text-center'>Type</th>
+                                        <th className='text-center'>Description</th>
+                                        <th className='text-center'>Comments</th>
+                                        <th className='text-center'>Updated</th>
+                                        {cookieData.maintenance &&
+                                            <th className='text-center'>Actions</th>
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {searchedMaint.map((request, index) => {
+                                        if (request.approvedBy && !request.done) {
+                                            return (
+                                                <tr key={index} request={request}>
+                                                    <td onClick={() => handleOpenActive(request)} className='text-center'>{request.record}</td>
+                                                    <td onClick={() => handleOpenActive(request)} className='text-center'>{request.area}</td>
+                                                    <td onClick={() => handleOpenActive(request)} className='text-center'>{request.equipment}</td>
+                                                    <td onClick={() => handleOpenActive(request)} className='text-center'>{request.requestType}</td>
+                                                    <td onClick={() => handleOpenActive(request)}>{request.description}</td>
+                                                    <td onClick={() => handleOpenActive(request)}>{request.comments}</td>
+                                                    <td onClick={() => handleOpenActive(request)} className='text-center'>{format(parseISO(request.updatedAt), 'MM/dd h:mm b')}</td>
+                                                    {cookieData.maintenance &&
+                                                        <td>
+                                                            <Icon icon={checkCircleO} size={24} style={{ color: '#5BC236' }} onClick={() => handleDone(request)} />
+                                                            <Icon icon={timesCircleO} size={24} style={{ color: '#CC0202' }} onClick={() => handleDeny(request)} />
+                                                            <Icon icon={compass} size={24} style={{ color: '#F0D500' }} onClick={() => handleHold(request)} />
+                                                        </td>
+                                                    }
+                                                </tr>
+                                            )
+                                        }
                                     })}
-                                </Form.Control>
-                            </FloatingLabel>
-                            <FloatingLabel label="Request Type" className="mb-2">
-                                <Form.Control as="select" name="requestType" onChange={handleChangeAdd}>
-                                    <option>Routine</option>
-                                    <option>Emergency</option>
-                                    <option>Safety</option>
-                                    <option>Planned</option>
-                                </Form.Control>
-                            </FloatingLabel>
-                            <FloatingLabel label="Description" className="mb-2">
-                                <Form.Control name="description" onChange={handleChangeAdd} />
-                            </FloatingLabel>
-                            <FloatingLabel label="Comments">
-                                <Form.Control name="comments" onChange={handleChangeAdd} />
-                            </FloatingLabel>
-                        </Form>  
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={handleCloseAdd}>
-                            Cancel
-                        </Button>
-                        <Button variant="primary" onClick={handleSave}>
-                            Save Changes
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
-
-                <Modal show={showUpdate}>
-                    <Modal.Header>
-                        <Modal.Title>Update: Record #{record}</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <Form>
-                            <FloatingLabel label="Requested By" className="mb-2">
-                                <Form.Control defaultValue={requestedBy} name="requestedBy" onChange={handleChangeUpdate} />
-                            </FloatingLabel>
-                            <FloatingLabel label="Area" className="mb-2">
-                                <Form.Control defaultValue={area} name="area" onChange={handleChangeUpdate} />
-                            </FloatingLabel>
-                            <FloatingLabel label="Equipment" className="mb-2">
-                                <Form.Control defaultValue={equipment} name="equipment" onChange={handleChangeUpdate} />
-                            </FloatingLabel>
-                            <FloatingLabel label="Request Type" className="mb-2">
-                                <Form.Control defaultValue={requestType} name="requestType" onChange={handleChangeUpdate} />
-                            </FloatingLabel>
-                            <FloatingLabel label="Description" className="mb-2">
-                                <Form.Control defaultValue={description} name="description" onChange={handleChangeUpdate} />
-                            </FloatingLabel>
-                            <FloatingLabel label="Comments">
-                                <Form.Control defaultValue={comments} name="comments" onChange={handleChangeUpdate} />
-                            </FloatingLabel>
-                        </Form>  
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={handleCloseUpdate}>
-                            Cancel
-                        </Button>
-                        <Button variant="primary" onClick={handleUpdate}>
-                            Save Changes
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
-
-                <Modal show={showActive}>
-                    <Modal.Header>
-                        <Modal.Title>Update: Record #{record}</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <Form>
-                            <FloatingLabel label="Requested By" className="mb-2">
-                                <Form.Control disabled defaultValue={requestedBy} name="requestedBy" onChange={handleChangeActive} />
-                            </FloatingLabel>
-                            <FloatingLabel label="Area" className="mb-2">
-                                <Form.Control disabled defaultValue={area} name="area" onChange={handleChangeActive} />
-                            </FloatingLabel>
-                            <FloatingLabel label="Equipment" className="mb-2">
-                                <Form.Control disabled defaultValue={equipment} name="equipment" onChange={handleChangeActive} />
-                            </FloatingLabel>
-                            <FloatingLabel label="Request Type" className="mb-2">
-                                <Form.Control disabled defaultValue={requestType} name="requestType" onChange={handleChangeActive} />
-                            </FloatingLabel>
-                            <FloatingLabel label="Description" className="mb-2">
-                                <Form.Control disabled defaultValue={description} name="description" onChange={handleChangeActive} />
-                            </FloatingLabel>
-                            <FloatingLabel label="Comments" className="mb-2">
-                                <Form.Control defaultValue={comments} name="comments" onChange={handleChangeActive} />
-                            </FloatingLabel>
-                            <FloatingLabel label="Approved By" className="mb-2">
-                                <Form.Control disabled defaultValue={approvedBy} name="approvedBy" onChange={handleChangeActive} />
-                            </FloatingLabel>
-                            <FloatingLabel label="Repaired By" className="mb-2">
-                                <Form.Control defaultValue={repairedBy} name="repairedBy" onChange={handleChangeActive} />
-                            </FloatingLabel>
-                            <FloatingLabel label="Repair Notes" className="mb-2">
-                                <Form.Control defaultValue={repairDescription} name="repairDescription" onChange={handleChangeActive} />
-                            </FloatingLabel>
-                            <FloatingLabel label="Repair Time" className="mb-2">
-                                <Form.Control defaultValue={repairTime} name="repairTime" onChange={handleChangeActive} />
-                            </FloatingLabel>
-                        </Form>  
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={handleCloseActive}>
-                            Cancel
-                        </Button>
-                        <Button variant="primary" onClick={handleUpdateActive}>
-                            Save Changes
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
-
-                <Modal show={showComplete} onHide={handleCloseComplete} centered>
-                    <Modal.Header>
-                        <Modal.Title>Completed: Record #{record}</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <Form>
-                            <FloatingLabel label="Requested By" className="mb-2">
-                                <Form.Control disabled defaultValue={requestedBy} name="requestedBy" />
-                            </FloatingLabel>
-                            <FloatingLabel label="Area" className="mb-2">
-                                <Form.Control disabled defaultValue={area} name="area" />
-                            </FloatingLabel>
-                            <FloatingLabel label="Equipment" className="mb-2">
-                                <Form.Control disabled defaultValue={equipment} name="equipment" />
-                            </FloatingLabel>
-                            <FloatingLabel label="Request Type" className="mb-2">
-                                <Form.Control disabled defaultValue={requestType} name="requestType" />
-                            </FloatingLabel>
-                            <FloatingLabel label="Description" className="mb-2">
-                                <Form.Control disabled defaultValue={description} name="description" />
-                            </FloatingLabel>
-                            <FloatingLabel label="Comments">
-                                <Form.Control disabled defaultValue={comments} name="comments" />
-                            </FloatingLabel>
-                        </Form>  
-                    </Modal.Body>
-                </Modal>
-
-                <Tabs
-                    defaultActiveKey="active"            
-                    id="justify-tab-example"
-                    className='mb-3'
-                    justify
-                >
-                    
-                    <Tab eventKey="active" title={active}>
-                        <Table striped hover>
-                            <thead>
-                                <tr>
-                                    <th className='text-center'>Record</th>
-                                    <th className='text-center'>Area</th>
-                                    <th className='text-center'>Equipment</th>
-                                    <th className='text-center'>Type</th>
-                                    <th className='text-center'>Description</th>
-                                    <th className='text-center'>Comments</th>
-                                    <th className='text-center'>Updated</th>
-                                    {cookieData.maintenance &&
+                                </tbody>
+                            </Table>
+                        </Tab>
+                        <Tab eventKey="request" title={requested}>
+                            <Table striped hover>
+                                <thead>
+                                    <tr>
+                                        <th className='text-center'>Record</th>
+                                        <th className='text-center'>Requester</th>
+                                        <th className='text-center'>Created</th>
+                                        <th className='text-center'>Area</th>
+                                        <th className='text-center'>Equipment</th>
+                                        <th className='text-center'>Type</th>
+                                        <th className='text-center'>Description</th>
+                                        <th className='text-center'>Comments</th>
                                         <th className='text-center'>Actions</th>
-                                    }
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {searchedMaint.map((request, index) => {
-                                    if (request.approvedBy && !request.done) {
-                                        return (
-                                            <tr key={index} request={request}>
-                                                <td onClick={() => handleOpenActive(request)} className='text-center'>{request.record}</td>
-                                                <td onClick={() => handleOpenActive(request)} className='text-center'>{request.area}</td>
-                                                <td onClick={() => handleOpenActive(request)} className='text-center'>{request.equipment}</td>
-                                                <td onClick={() => handleOpenActive(request)} className='text-center'>{request.requestType}</td>
-                                                <td onClick={() => handleOpenActive(request)}>{request.description}</td>
-                                                <td onClick={() => handleOpenActive(request)}>{request.comments}</td>
-                                                <td onClick={() => handleOpenActive(request)} className='text-center'>{format(parseISO(request.updatedAt), 'MM/dd h:mm b')}</td>
-                                                {cookieData.maintenance && 
-                                                    <td>
-                                                        <Icon icon={ checkCircleO } size={24} style={{ color: '#5BC236' }} onClick={() => handleDone(request)} />
-                                                        <Icon icon={ timesCircleO } size={24} style={{ color: '#CC0202' }} onClick={() => handleDeny(request)}/>
-                                                        <Icon icon={ compass } size={24} style={{ color: '#F0D500' }} onClick={() => handleHold(request)}/>
-                                                    </td>
-                                                }
-                                            </tr>
-                                        )
-                                    }
-                                })}
-                            </tbody>
-                        </Table>
-                    </Tab>
-                    <Tab eventKey="request" title={requested}>
-                        <Table striped hover>
-                            <thead>
-                                <tr>
-                                    <th className='text-center'>Record</th>
-                                    <th className='text-center'>Requester</th>
-                                    <th className='text-center'>Created</th>
-                                    <th className='text-center'>Area</th>
-                                    <th className='text-center'>Equipment</th>
-                                    <th className='text-center'>Type</th>
-                                    <th className='text-center'>Description</th>
-                                    <th className='text-center'>Comments</th>
-                                    <th className='text-center'>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {searchedMaint.map((request, index) => {
-                                    if (!request.approvedBy && !request.hold && !request.done) {
-                                        return (
-                                            <tr key={index} request={request}>
-                                                <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.record}</td>
-                                                <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.requestedBy}</td>
-                                                <td onClick={() => handleOpenUpdate(request)} className='text-center'>{format(parseISO(request.createdAt), 'MM/dd h:mm b')}</td>
-                                                <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.area}</td>
-                                                <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.equipment}</td>
-                                                <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.requestType}</td>
-                                                <td onClick={() => handleOpenUpdate(request)}>{request.description}</td>
-                                                <td onClick={() => handleOpenUpdate(request)}>{request.comments}</td>
-                                                {cookieData.maintenance ? 
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {searchedMaint.map((request, index) => {
+                                        if (!request.approvedBy && !request.hold && !request.done) {
+                                            return (
+                                                <tr key={index} request={request}>
+                                                    <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.record}</td>
+                                                    <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.requestedBy}</td>
+                                                    <td onClick={() => handleOpenUpdate(request)} className='text-center'>{format(parseISO(request.createdAt), 'MM/dd h:mm b')}</td>
+                                                    <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.area}</td>
+                                                    <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.equipment}</td>
+                                                    <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.requestType}</td>
+                                                    <td onClick={() => handleOpenUpdate(request)}>{request.description}</td>
+                                                    <td onClick={() => handleOpenUpdate(request)}>{request.comments}</td>
+                                                    {cookieData.maintenance ?
+                                                        <td className='text-center'>
+                                                            <Icon icon={checkCircleO} size={24} style={{ color: '#5BC236' }} onClick={() => handleApprove(request)} />
+                                                            <Icon icon={timesCircleO} size={24} style={{ color: '#CC0202' }} onClick={() => handleDeny(request)} />
+                                                            <Icon icon={compass} size={24} style={{ color: '#F0D500' }} onClick={() => handleHold(request)} />
+                                                        </td>
+                                                        :
+                                                        <td onClick={() => handleOpenUpdate(request)} className='text-center'>Pending</td>
+                                                    }
+                                                </tr>
+                                            )
+                                        }
+                                    })}
+                                </tbody>
+                            </Table>
+                        </Tab>
+                        <Tab eventKey="hold" title={hold}>
+                            <Table striped hover>
+                                <thead>
+                                    <tr>
+                                        <th className='text-center'>Record</th>
+                                        <th className='text-center'>Requester</th>
+                                        <th className='text-center'>Area</th>
+                                        <th className='text-center'>Equipment</th>
+                                        <th className='text-center'>Type</th>
+                                        <th className='text-center'>Description</th>
+                                        <th className='text-center'>Comments</th>
+                                        <th className='text-center'>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {searchedMaint.map((request, index) => {
+                                        if (!request.approvedBy && request.hold && !request.done) {
+                                            return (
+                                                <tr key={index} request={request}>
+                                                    <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.record}</td>
+                                                    <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.requestedBy}</td>
+                                                    <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.area}</td>
+                                                    <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.equipment}</td>
+                                                    <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.requestType}</td>
+                                                    <td onClick={() => handleOpenUpdate(request)}>{request.description}</td>
+                                                    <td onClick={() => handleOpenUpdate(request)}>{request.comments}</td>
                                                     <td className='text-center'>
-                                                        <Icon icon={ checkCircleO } size={24} style={{ color: '#5BC236' }} onClick={() => handleApprove(request)} />
-                                                        <Icon icon={ timesCircleO } size={24} style={{ color: '#CC0202' }} onClick={() => handleDeny(request)}/>
-                                                        <Icon icon={ compass } size={24} style={{ color: '#F0D500' }} onClick={() => handleHold(request)}/>
+                                                        <Icon icon={checkCircleO} size={24} style={{ color: '#5BC236' }} onClick={() => handleApprove(request)} />
+                                                        <Icon icon={timesCircleO} size={24} style={{ color: '#CC0202' }} onClick={() => handleDeny(request)} />
                                                     </td>
-                                                :
-                                                    <td onClick={() => handleOpenUpdate(request)} className='text-center'>Pending</td>
-                                                }
-                                            </tr>
+                                                </tr>
+                                            )
+                                        }
+                                    })}
+                                </tbody>
+                            </Table>
+                        </Tab>
+                        <Tab eventKey="completed" title="Completed">
+                            <Table striped hover>
+                                <thead>
+                                    <tr>
+                                        <th className='text-center'>Record</th>
+                                        <th className='text-center'>Area</th>
+                                        <th className='text-center'>Equipment</th>
+                                        <th className='text-center'>Type</th>
+                                        <th className='text-center'>Description</th>
+                                        <th className='text-center'>Comments</th>
+                                        <th className='text-center'>Completed</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {searchedMaint.map((request, index) => {
+                                        if (request.done) {
+                                            return (
+                                                <tr key={index} request={request}>
+                                                    <td onClick={() => handleOpenComplete(request)} className='text-center'>{request.record}</td>
+                                                    <td onClick={() => handleOpenComplete(request)} className='text-center'>{request.area}</td>
+                                                    <td onClick={() => handleOpenComplete(request)} className='text-center'>{request.equipment}</td>
+                                                    <td onClick={() => handleOpenComplete(request)} className='text-center'>{request.requestType}</td>
+                                                    <td onClick={() => handleOpenComplete(request)}>{request.description}</td>
+                                                    <td onClick={() => handleOpenComplete(request)}>{request.comments}</td>
+                                                    <td onClick={() => handleOpenComplete(request)} className='text-center'>{format(parseISO(request.updatedAt), 'MM/dd h:mm b')}</td>
+                                                </tr>
+                                            )
+                                        }
+                                    })}
+                                </tbody>
+                            </Table>
+                        </Tab>
+                        <Tab eventKey="schedule" title="Scheduled">
+                            {/* <h1>Coming Soon</h1> */}
+                            {/* <input onChange = {(e) => setSearchedValue(e.target.value)} /> */}
+                            <Table striped hover>
+                                <thead>
+                                    <tr>
+                                        <th className='text-center'>Record<input onChange={(e) => setSearchedValueRecord(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                        <th className='text-center'>Area<input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                        <th className='text-center'>Equipment<input onChange={(e) => setSearchedValueEquipment(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                        <th className='text-center'>Type<input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                        <th className='text-center'>Description<input onChange={(e) => setSearchedValueDescription(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                        <th className='text-center'>Comments<input onChange={(e) => setSearchedValueComments(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                        <th className='text-center align-middle'>Completed</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {searchedMaint
+                                        .filter((row) => 
+                                            !searchedValueRecord || row.record
+                                                .toString()
+                                                .toLowerCase()
+                                                .includes(searchedValueRecord.toString().toLowerCase())
                                         )
-                                    }
-                                })}
-                            </tbody>
-                        </Table>
-                    </Tab>
-                    <Tab eventKey="hold" title={hold}>
-                        <Table striped hover>
-                            <thead>
-                                <tr>
-                                    <th className='text-center'>Record</th>
-                                    <th className='text-center'>Requester</th>
-                                    <th className='text-center'>Area</th>
-                                    <th className='text-center'>Equipment</th>
-                                    <th className='text-center'>Type</th>
-                                    <th className='text-center'>Description</th>
-                                    <th className='text-center'>Comments</th>
-                                    <th className='text-center'>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {searchedMaint.map((request, index) => {
-                                    if (!request.approvedBy && request.hold &&!request.done) {
-                                        return (
-                                            <tr key={index} request={request}>
-                                                <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.record}</td>
-                                                <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.requestedBy}</td>
-                                                <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.area}</td>
-                                                <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.equipment}</td>
-                                                <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.requestType}</td>
-                                                <td onClick={() => handleOpenUpdate(request)}>{request.description}</td>
-                                                <td onClick={() => handleOpenUpdate(request)}>{request.comments}</td>
-                                                <td className='text-center'>
-                                                    <Icon icon={ checkCircleO } size={24} style={{ color: '#5BC236' }} onClick={() => handleApprove(request)} />
-                                                    <Icon icon={ timesCircleO } size={24} style={{ color: '#CC0202' }} onClick={() => handleDeny(request)}/>
-                                                </td>
-                                            </tr>
+                                        .filter((row) => 
+                                            !searchedValueArea || row.area
+                                                .toString()
+                                                .toLowerCase()
+                                                .includes(searchedValueArea.toString().toLowerCase())
                                         )
-                                    }
-                                })}
-                            </tbody>
-                        </Table>
-                    </Tab>
-                    <Tab eventKey="completed" title="Completed">
-                        <Table striped hover>
-                            <thead>
-                                <tr>
-                                    <th className='text-center'>Record</th>
-                                    <th className='text-center'>Area</th>
-                                    <th className='text-center'>Equipment</th>
-                                    <th className='text-center'>Type</th>
-                                    <th className='text-center'>Description</th>
-                                    <th className='text-center'>Comments</th>
-                                    <th className='text-center'>Completed</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {searchedMaint.map((request, index) => {
-                                    if (request.done) {
-                                        return (
-                                            <tr key={index} request={request}>
-                                                <td onClick={() => handleOpenComplete(request)} className='text-center'>{request.record}</td>
-                                                <td onClick={() => handleOpenComplete(request)} className='text-center'>{request.area}</td>
-                                                <td onClick={() => handleOpenComplete(request)} className='text-center'>{request.equipment}</td>
-                                                <td onClick={() => handleOpenComplete(request)} className='text-center'>{request.requestType}</td>
-                                                <td onClick={() => handleOpenComplete(request)}>{request.description}</td>
-                                                <td onClick={() => handleOpenComplete(request)}>{request.comments}</td>
-                                                <td onClick={() => handleOpenComplete(request)} className='text-center'>{format(parseISO(request.updatedAt), 'MM/dd h:mm b')}</td>
-                                            </tr>
+                                        .filter((row) => 
+                                            !searchedValueEquipment || row.equipment
+                                                .toString()
+                                                .toLowerCase()
+                                                .includes(searchedValueEquipment.toString().toLowerCase())
                                         )
+                                        .filter((row) => 
+                                            !searchedValueType || row.requestType
+                                                .toString()
+                                                .toLowerCase()
+                                                .includes(searchedValueType.toString().toLowerCase())
+                                        )
+                                        .filter((row) => 
+                                            !searchedValueDescription || row.description
+                                                .toString()
+                                                .toLowerCase()
+                                                .includes(searchedValueDescription.toString().toLowerCase())
+                                        )
+                                        .filter((row) => 
+                                            !searchedValueComments || row.comments
+                                                .toString()
+                                                .toLowerCase()
+                                                .includes(searchedValueComments.toString().toLowerCase())
+                                        )
+                                        .map((request, index) => {
+                                            if (request.done) {
+                                                return (
+                                                    <tr key={index} request={request}>
+                                                        <td onClick={() => handleOpenComplete(request)} className='text-center'>{request.record}</td>
+                                                        <td onClick={() => handleOpenComplete(request)} className='text-center'>{request.area}</td>
+                                                        <td onClick={() => handleOpenComplete(request)} className='text-center'>{request.equipment}</td>
+                                                        <td onClick={() => handleOpenComplete(request)} className='text-center'>{request.requestType}</td>
+                                                        <td onClick={() => handleOpenComplete(request)}>{request.description}</td>
+                                                        <td onClick={() => handleOpenComplete(request)}>{request.comments}</td>
+                                                        <td onClick={() => handleOpenComplete(request)} className='text-center'>{format(parseISO(request.updatedAt), 'MM/dd h:mm b')}</td>
+                                                    </tr>
+                                                )
+                                            }
+                                        })
                                     }
-                                })}
-                            </tbody>
-                        </Table>
-                    </Tab>
-                    <Tab eventKey="schedule" title="Scheduled">
-                        <h1>Coming Soon</h1>
-                    </Tab>
-                </Tabs>
-                <button onClick={handleOpenAdd}>Add</button>
-            </div>
-        }
+                                </tbody>
+                            </Table>
+                        </Tab>
+                    </Tabs>
+                    <button onClick={handleOpenAdd}>Add</button>
+                </div>
+            }
         </div>
     )
 }
