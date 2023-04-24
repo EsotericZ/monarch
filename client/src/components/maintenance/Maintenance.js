@@ -36,6 +36,7 @@ export const Maintenance = () => {
     }
 
     const [searchedValueRecord, setSearchedValueRecord] = useState('');
+    const [searchedValueRequester, setSearchedValueRequester] = useState('');
     const [searchedValueArea, setSearchedValueArea] = useState('');
     const [searchedValueEquipment, setSearchedValueEquipment] = useState('');
     const [searchedValueType, setSearchedValueType] = useState('');
@@ -548,41 +549,79 @@ export const Maintenance = () => {
                             <Table striped hover>
                                 <thead>
                                     <tr>
-                                        <th className='text-center'>Record</th>
-                                        <th className='text-center'>Area</th>
-                                        <th className='text-center'>Equipment</th>
-                                        <th className='text-center'>Type</th>
-                                        <th className='text-center'>Description</th>
-                                        <th className='text-center'>Comments</th>
-                                        <th className='text-center'>Updated</th>
+                                        <th className='text-center'>Record<input onChange={(e) => setSearchedValueRecord(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                        <th className='text-center'>Area<input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                        <th className='text-center'>Equipment<input onChange={(e) => setSearchedValueEquipment(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                        <th className='text-center'>Type<input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                        <th className='text-center'>Description<input onChange={(e) => setSearchedValueDescription(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                        <th className='text-center'>Comments<input onChange={(e) => setSearchedValueComments(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                        <th className='text-center align-middle'>Updated</th>
                                         {cookieData.maintenance &&
-                                            <th className='text-center'>Actions</th>
+                                            <th className='text-center align-middle'>Actions</th>
                                         }
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {searchedMaint.map((request, index) => {
-                                        if (request.approvedBy && !request.done) {
-                                            return (
-                                                <tr key={index} request={request}>
-                                                    <td onClick={() => handleOpenActive(request)} className='text-center'>{request.record}</td>
-                                                    <td onClick={() => handleOpenActive(request)} className='text-center'>{request.area}</td>
-                                                    <td onClick={() => handleOpenActive(request)} className='text-center'>{request.equipment}</td>
-                                                    <td onClick={() => handleOpenActive(request)} className='text-center'>{request.requestType}</td>
-                                                    <td onClick={() => handleOpenActive(request)}>{request.description}</td>
-                                                    <td onClick={() => handleOpenActive(request)}>{request.comments}</td>
-                                                    <td onClick={() => handleOpenActive(request)} className='text-center'>{format(parseISO(request.updatedAt), 'MM/dd h:mm b')}</td>
-                                                    {cookieData.maintenance &&
-                                                        <td>
-                                                            <Icon icon={checkCircleO} size={24} style={{ color: '#5BC236' }} onClick={() => handleDone(request)} />
-                                                            <Icon icon={timesCircleO} size={24} style={{ color: '#CC0202' }} onClick={() => handleDeny(request)} />
-                                                            <Icon icon={compass} size={24} style={{ color: '#F0D500' }} onClick={() => handleHold(request)} />
-                                                        </td>
-                                                    }
-                                                </tr>
-                                            )
-                                        }
-                                    })}
+                                    {searchedMaint
+                                        .filter((row) => 
+                                            !searchedValueRecord || row.record
+                                                .toString()
+                                                .toLowerCase()
+                                                .includes(searchedValueRecord.toString().toLowerCase())
+                                        )
+                                        .filter((row) => 
+                                            !searchedValueArea || row.area
+                                                .toString()
+                                                .toLowerCase()
+                                                .includes(searchedValueArea.toString().toLowerCase())
+                                        )
+                                        .filter((row) => 
+                                            !searchedValueEquipment || row.equipment
+                                                .toString()
+                                                .toLowerCase()
+                                                .includes(searchedValueEquipment.toString().toLowerCase())
+                                        )
+                                        .filter((row) => 
+                                            !searchedValueType || row.requestType
+                                                .toString()
+                                                .toLowerCase()
+                                                .includes(searchedValueType.toString().toLowerCase())
+                                        )
+                                        .filter((row) => 
+                                            !searchedValueDescription || row.description
+                                                .toString()
+                                                .toLowerCase()
+                                                .includes(searchedValueDescription.toString().toLowerCase())
+                                        )
+                                        .filter((row) => 
+                                            !searchedValueComments || row.comments
+                                                .toString()
+                                                .toLowerCase()
+                                                .includes(searchedValueComments.toString().toLowerCase())
+                                        )
+                                        .map((request, index) => {
+                                            if (request.approvedBy && !request.done) {
+                                                return (
+                                                    <tr key={index} request={request}>
+                                                        <td onClick={() => handleOpenActive(request)} className='text-center'>{request.record}</td>
+                                                        <td onClick={() => handleOpenActive(request)} className='text-center'>{request.area}</td>
+                                                        <td onClick={() => handleOpenActive(request)} className='text-center'>{request.equipment}</td>
+                                                        <td onClick={() => handleOpenActive(request)} className='text-center'>{request.requestType}</td>
+                                                        <td onClick={() => handleOpenActive(request)}>{request.description}</td>
+                                                        <td onClick={() => handleOpenActive(request)}>{request.comments}</td>
+                                                        <td onClick={() => handleOpenActive(request)} className='text-center'>{format(parseISO(request.updatedAt), 'MM/dd h:mm b')}</td>
+                                                        {cookieData.maintenance &&
+                                                            <td>
+                                                                <Icon icon={checkCircleO} size={24} style={{ color: '#5BC236' }} onClick={() => handleDone(request)} />
+                                                                <Icon icon={timesCircleO} size={24} style={{ color: '#CC0202' }} onClick={() => handleDeny(request)} />
+                                                                <Icon icon={compass} size={24} style={{ color: '#F0D500' }} onClick={() => handleHold(request)} />
+                                                            </td>
+                                                        }
+                                                    </tr>
+                                                )
+                                            }
+                                        })
+                                    }
                                 </tbody>
                             </Table>
                         </Tab>
@@ -590,43 +629,86 @@ export const Maintenance = () => {
                             <Table striped hover>
                                 <thead>
                                     <tr>
-                                        <th className='text-center'>Record</th>
-                                        <th className='text-center'>Requester</th>
-                                        <th className='text-center'>Created</th>
-                                        <th className='text-center'>Area</th>
-                                        <th className='text-center'>Equipment</th>
-                                        <th className='text-center'>Type</th>
-                                        <th className='text-center'>Description</th>
-                                        <th className='text-center'>Comments</th>
-                                        <th className='text-center'>Actions</th>
+                                        <th className='text-center'>Record<input onChange={(e) => setSearchedValueRecord(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                        <th className='text-center'>Requester<input onChange={(e) => setSearchedValueRequester(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                        <th className='text-center align-middle'>Created</th>
+                                        <th className='text-center'>Area<input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                        <th className='text-center'>Equipment<input onChange={(e) => setSearchedValueEquipment(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                        <th className='text-center'>Type<input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                        <th className='text-center'>Description<input onChange={(e) => setSearchedValueDescription(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                        <th className='text-center'>Comments<input onChange={(e) => setSearchedValueComments(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {searchedMaint.map((request, index) => {
-                                        if (!request.approvedBy && !request.hold && !request.done) {
-                                            return (
-                                                <tr key={index} request={request}>
-                                                    <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.record}</td>
-                                                    <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.requestedBy}</td>
-                                                    <td onClick={() => handleOpenUpdate(request)} className='text-center'>{format(parseISO(request.createdAt), 'MM/dd h:mm b')}</td>
-                                                    <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.area}</td>
-                                                    <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.equipment}</td>
-                                                    <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.requestType}</td>
-                                                    <td onClick={() => handleOpenUpdate(request)}>{request.description}</td>
-                                                    <td onClick={() => handleOpenUpdate(request)}>{request.comments}</td>
-                                                    {cookieData.maintenance ?
-                                                        <td className='text-center'>
-                                                            <Icon icon={checkCircleO} size={24} style={{ color: '#5BC236' }} onClick={() => handleApprove(request)} />
-                                                            <Icon icon={timesCircleO} size={24} style={{ color: '#CC0202' }} onClick={() => handleDeny(request)} />
-                                                            <Icon icon={compass} size={24} style={{ color: '#F0D500' }} onClick={() => handleHold(request)} />
-                                                        </td>
-                                                        :
-                                                        <td onClick={() => handleOpenUpdate(request)} className='text-center'>Pending</td>
-                                                    }
-                                                </tr>
-                                            )
-                                        }
-                                    })}
+                                    {searchedMaint
+                                        .filter((row) => 
+                                            !searchedValueRecord || row.record
+                                                .toString()
+                                                .toLowerCase()
+                                                .includes(searchedValueRecord.toString().toLowerCase())
+                                        )
+                                        .filter((row) => 
+                                            !searchedValueRecord || row.requestedBy
+                                                .toString()
+                                                .toLowerCase()
+                                                .includes(searchedValueRequester.toString().toLowerCase())
+                                        )
+                                        .filter((row) => 
+                                            !searchedValueArea || row.area
+                                                .toString()
+                                                .toLowerCase()
+                                                .includes(searchedValueArea.toString().toLowerCase())
+                                        )
+                                        .filter((row) => 
+                                            !searchedValueEquipment || row.equipment
+                                                .toString()
+                                                .toLowerCase()
+                                                .includes(searchedValueEquipment.toString().toLowerCase())
+                                        )
+                                        .filter((row) => 
+                                            !searchedValueType || row.requestType
+                                                .toString()
+                                                .toLowerCase()
+                                                .includes(searchedValueType.toString().toLowerCase())
+                                        )
+                                        .filter((row) => 
+                                            !searchedValueDescription || row.description
+                                                .toString()
+                                                .toLowerCase()
+                                                .includes(searchedValueDescription.toString().toLowerCase())
+                                        )
+                                        .filter((row) => 
+                                            !searchedValueComments || row.comments
+                                                .toString()
+                                                .toLowerCase()
+                                                .includes(searchedValueComments.toString().toLowerCase())
+                                        )
+                                        .map((request, index) => {
+                                            if (!request.approvedBy && !request.hold && !request.done) {
+                                                return (
+                                                    <tr key={index} request={request}>
+                                                        <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.record}</td>
+                                                        <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.requestedBy}</td>
+                                                        <td onClick={() => handleOpenUpdate(request)} className='text-center'>{format(parseISO(request.createdAt), 'MM/dd h:mm b')}</td>
+                                                        <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.area}</td>
+                                                        <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.equipment}</td>
+                                                        <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.requestType}</td>
+                                                        <td onClick={() => handleOpenUpdate(request)}>{request.description}</td>
+                                                        <td onClick={() => handleOpenUpdate(request)}>{request.comments}</td>
+                                                        {cookieData.maintenance ?
+                                                            <td className='text-center'>
+                                                                <Icon icon={checkCircleO} size={24} style={{ color: '#5BC236' }} onClick={() => handleApprove(request)} />
+                                                                <Icon icon={timesCircleO} size={24} style={{ color: '#CC0202' }} onClick={() => handleDeny(request)} />
+                                                                <Icon icon={compass} size={24} style={{ color: '#F0D500' }} onClick={() => handleHold(request)} />
+                                                            </td>
+                                                            :
+                                                            <td onClick={() => handleOpenUpdate(request)} className='text-center'>Pending</td>
+                                                        }
+                                                    </tr>
+                                                )
+                                            }
+                                        })
+                                    }
                                 </tbody>
                             </Table>
                         </Tab>
@@ -634,74 +716,84 @@ export const Maintenance = () => {
                             <Table striped hover>
                                 <thead>
                                     <tr>
-                                        <th className='text-center'>Record</th>
-                                        <th className='text-center'>Requester</th>
-                                        <th className='text-center'>Area</th>
-                                        <th className='text-center'>Equipment</th>
-                                        <th className='text-center'>Type</th>
-                                        <th className='text-center'>Description</th>
-                                        <th className='text-center'>Comments</th>
-                                        <th className='text-center'>Actions</th>
+                                        <th className='text-center'>Record<input onChange={(e) => setSearchedValueRecord(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                        <th className='text-center'>Requester<input onChange={(e) => setSearchedValueRequester(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                        <th className='text-center'>Area<input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                        <th className='text-center'>Equipment<input onChange={(e) => setSearchedValueEquipment(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                        <th className='text-center'>Type<input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                        <th className='text-center'>Description<input onChange={(e) => setSearchedValueDescription(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                        <th className='text-center'>Comments<input onChange={(e) => setSearchedValueComments(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                        <th className='text-center align-middle'>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {searchedMaint.map((request, index) => {
-                                        if (!request.approvedBy && request.hold && !request.done) {
-                                            return (
-                                                <tr key={index} request={request}>
-                                                    <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.record}</td>
-                                                    <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.requestedBy}</td>
-                                                    <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.area}</td>
-                                                    <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.equipment}</td>
-                                                    <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.requestType}</td>
-                                                    <td onClick={() => handleOpenUpdate(request)}>{request.description}</td>
-                                                    <td onClick={() => handleOpenUpdate(request)}>{request.comments}</td>
-                                                    <td className='text-center'>
-                                                        <Icon icon={checkCircleO} size={24} style={{ color: '#5BC236' }} onClick={() => handleApprove(request)} />
-                                                        <Icon icon={timesCircleO} size={24} style={{ color: '#CC0202' }} onClick={() => handleDeny(request)} />
-                                                    </td>
-                                                </tr>
-                                            )
-                                        }
-                                    })}
+                                    {searchedMaint
+                                        .filter((row) => 
+                                            !searchedValueRecord || row.record
+                                                .toString()
+                                                .toLowerCase()
+                                                .includes(searchedValueRecord.toString().toLowerCase())
+                                        )
+                                        .filter((row) => 
+                                            !searchedValueRecord || row.requestedBy
+                                                .toString()
+                                                .toLowerCase()
+                                                .includes(searchedValueRequester.toString().toLowerCase())
+                                        )
+                                        .filter((row) => 
+                                            !searchedValueArea || row.area
+                                                .toString()
+                                                .toLowerCase()
+                                                .includes(searchedValueArea.toString().toLowerCase())
+                                        )
+                                        .filter((row) => 
+                                            !searchedValueEquipment || row.equipment
+                                                .toString()
+                                                .toLowerCase()
+                                                .includes(searchedValueEquipment.toString().toLowerCase())
+                                        )
+                                        .filter((row) => 
+                                            !searchedValueType || row.requestType
+                                                .toString()
+                                                .toLowerCase()
+                                                .includes(searchedValueType.toString().toLowerCase())
+                                        )
+                                        .filter((row) => 
+                                            !searchedValueDescription || row.description
+                                                .toString()
+                                                .toLowerCase()
+                                                .includes(searchedValueDescription.toString().toLowerCase())
+                                        )
+                                        .filter((row) => 
+                                            !searchedValueComments || row.comments
+                                                .toString()
+                                                .toLowerCase()
+                                                .includes(searchedValueComments.toString().toLowerCase())
+                                        )
+                                        .map((request, index) => {
+                                            if (!request.approvedBy && request.hold && !request.done) {
+                                                return (
+                                                    <tr key={index} request={request}>
+                                                        <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.record}</td>
+                                                        <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.requestedBy}</td>
+                                                        <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.area}</td>
+                                                        <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.equipment}</td>
+                                                        <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.requestType}</td>
+                                                        <td onClick={() => handleOpenUpdate(request)}>{request.description}</td>
+                                                        <td onClick={() => handleOpenUpdate(request)}>{request.comments}</td>
+                                                        <td className='text-center'>
+                                                            <Icon icon={checkCircleO} size={24} style={{ color: '#5BC236' }} onClick={() => handleApprove(request)} />
+                                                            <Icon icon={timesCircleO} size={24} style={{ color: '#CC0202' }} onClick={() => handleDeny(request)} />
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            }
+                                        })
+                                    }
                                 </tbody>
                             </Table>
                         </Tab>
                         <Tab eventKey="completed" title="Completed">
-                            <Table striped hover>
-                                <thead>
-                                    <tr>
-                                        <th className='text-center'>Record</th>
-                                        <th className='text-center'>Area</th>
-                                        <th className='text-center'>Equipment</th>
-                                        <th className='text-center'>Type</th>
-                                        <th className='text-center'>Description</th>
-                                        <th className='text-center'>Comments</th>
-                                        <th className='text-center'>Completed</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {searchedMaint.map((request, index) => {
-                                        if (request.done) {
-                                            return (
-                                                <tr key={index} request={request}>
-                                                    <td onClick={() => handleOpenComplete(request)} className='text-center'>{request.record}</td>
-                                                    <td onClick={() => handleOpenComplete(request)} className='text-center'>{request.area}</td>
-                                                    <td onClick={() => handleOpenComplete(request)} className='text-center'>{request.equipment}</td>
-                                                    <td onClick={() => handleOpenComplete(request)} className='text-center'>{request.requestType}</td>
-                                                    <td onClick={() => handleOpenComplete(request)}>{request.description}</td>
-                                                    <td onClick={() => handleOpenComplete(request)}>{request.comments}</td>
-                                                    <td onClick={() => handleOpenComplete(request)} className='text-center'>{format(parseISO(request.updatedAt), 'MM/dd h:mm b')}</td>
-                                                </tr>
-                                            )
-                                        }
-                                    })}
-                                </tbody>
-                            </Table>
-                        </Tab>
-                        <Tab eventKey="schedule" title="Scheduled">
-                            {/* <h1>Coming Soon</h1> */}
-                            {/* <input onChange = {(e) => setSearchedValue(e.target.value)} /> */}
                             <Table striped hover>
                                 <thead>
                                     <tr>
@@ -770,6 +862,9 @@ export const Maintenance = () => {
                                     }
                                 </tbody>
                             </Table>
+                        </Tab>
+                        <Tab eventKey="schedule" title="Scheduled">
+                            <h1>Coming Soon</h1>
                         </Tab>
                     </Tabs>
                     <button onClick={handleOpenAdd}>Add</button>
