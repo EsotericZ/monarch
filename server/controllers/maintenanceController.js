@@ -153,7 +153,17 @@ async function holdRequest(req, res) {
 
 async function doneRequest(req, res) {
     let record = req.body.record;
+    let comments = req.body.comments;
     let done = req.body.done;
+
+    // sql.connect(config, function(err,) {
+    //     if (err) console.error(err);
+    //     let request = new sql.Request();
+    //     request.query("SELECT DISTINCT PartNo, Descrip FROM Estim WHERE ProdCode='EQUIP' ORDER BY PartNo", 
+    //     function(err) {
+    //         if (err) console.error(err);
+    //     })
+    // })
 
     await Maintenance.update(
         { done: done },

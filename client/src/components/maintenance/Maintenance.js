@@ -263,6 +263,7 @@ export const Maintenance = () => {
 
     const handleDone = (request) => {
         setRecord(request.record);
+        setComments(request.comments);
         setDone(true);
         setShowDone(true);
     }
@@ -271,7 +272,7 @@ export const Maintenance = () => {
         setShowDone(false);
     }
     const handleDoneYes = () => {
-        doneRequest(record, done);
+        doneRequest(record, comments, done);
         setShowDone(false);
     }
 
@@ -611,9 +612,9 @@ export const Maintenance = () => {
                                                         <td onClick={() => handleOpenActive(request)} className='text-center'>{format(parseISO(request.updatedAt), 'MM/dd h:mmb')}</td>
                                                         {cookieData.maintenance &&
                                                             <td>
-                                                                <Icon icon={checkCircleO} size={24} style={{ color: '#5BC236' }} onClick={() => handleDone(request)} />
-                                                                <Icon icon={timesCircleO} size={24} style={{ color: '#CC0202' }} onClick={() => handleDeny(request)} />
-                                                                <Icon icon={compass} size={24} style={{ color: '#F0D500' }} onClick={() => handleHold(request)} />
+                                                                <Icon icon={checkCircleO} size={18} style={{ color: '#5BC236' }} onClick={() => handleDone(request)} />
+                                                                <Icon icon={timesCircleO} size={18} style={{ color: '#CC0202' }} onClick={() => handleDeny(request)} />
+                                                                <Icon icon={compass} size={18} style={{ color: '#F0D500' }} onClick={() => handleHold(request)} />
                                                             </td>
                                                         }
                                                     </tr>
@@ -701,9 +702,9 @@ export const Maintenance = () => {
                                                         <td onClick={() => handleOpenUpdate(request)}>{request.comments}</td>
                                                         {cookieData.maintenance ?
                                                             <td className='text-center'>
-                                                                <Icon icon={checkCircleO} size={24} style={{ color: '#5BC236' }} onClick={() => handleApprove(request)} />
-                                                                <Icon icon={timesCircleO} size={24} style={{ color: '#CC0202' }} onClick={() => handleDeny(request)} />
-                                                                <Icon icon={compass} size={24} style={{ color: '#F0D500' }} onClick={() => handleHold(request)} />
+                                                                <Icon icon={checkCircleO} size={18} style={{ color: '#5BC236' }} onClick={() => handleApprove(request)} />
+                                                                <Icon icon={timesCircleO} size={18} style={{ color: '#CC0202' }} onClick={() => handleDeny(request)} />
+                                                                <Icon icon={compass} size={18} style={{ color: '#F0D500' }} onClick={() => handleHold(request)} />
                                                             </td>
                                                             :
                                                             <td onClick={() => handleOpenUpdate(request)} className='text-center'>Pending</td>
@@ -786,8 +787,8 @@ export const Maintenance = () => {
                                                         <td onClick={() => handleOpenUpdate(request)}>{request.description}</td>
                                                         <td onClick={() => handleOpenUpdate(request)}>{request.comments}</td>
                                                         <td className='text-center'>
-                                                            <Icon icon={checkCircleO} size={24} style={{ color: '#5BC236' }} onClick={() => handleApprove(request)} />
-                                                            <Icon icon={timesCircleO} size={24} style={{ color: '#CC0202' }} onClick={() => handleDeny(request)} />
+                                                            <Icon icon={checkCircleO} size={18} style={{ color: '#5BC236' }} onClick={() => handleApprove(request)} />
+                                                            <Icon icon={timesCircleO} size={18} style={{ color: '#CC0202' }} onClick={() => handleDeny(request)} />
                                                         </td>
                                                     </tr>
                                                 )
