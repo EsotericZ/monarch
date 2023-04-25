@@ -41,11 +41,8 @@ export const Sidebar = () => {
     }, [name, admin])
 
     return !loading &&
-        // <>
-        //     <h1>Loading</h1>
-        // </>
-        // :
-        <div style={{ display: 'flex', height: '100vh', overflow: 'scroll initial' }}>
+        // <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', position: 'fixed' }}>
+        <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
             <CDBSidebar toggled={true}>
                 <CDBSidebarHeader prefix={<i className="fa fa-bars" />}>Monarch Metal</CDBSidebarHeader>
                 <CDBSidebarContent>

@@ -113,6 +113,22 @@ async function denyRequest(req, res) {
     })
 }
 
+async function deleteRequest(req, res) {
+    let record = req.body.record;
+
+    await Maintenance.destroy({ 
+        where: { record: record }
+    }).then((result) => {
+        return res.status(200).send({
+            data: result
+        })
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
+
 async function holdRequest(req, res) {
     let record = req.body.record;
     let hold = req.body.requestHold;
@@ -159,5 +175,6 @@ exports.createRequest = createRequest;
 exports.updateRequest = updateRequest;
 exports.approveRequest = approveRequest;
 exports.denyRequest = denyRequest;
+exports.deleteRequest = deleteRequest;
 exports.holdRequest = holdRequest;
 exports.doneRequest = doneRequest;

@@ -4,9 +4,6 @@ import { format, parseISO } from 'date-fns';
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 
-
-import { MDBDataTable } from 'mdbreact';
-
 import { Icon } from 'react-icons-kit';
 import { checkCircleO } from 'react-icons-kit/fa/checkCircleO';
 import { timesCircleO } from 'react-icons-kit/fa/timesCircleO';
@@ -18,6 +15,7 @@ import createRequest from '../../services/maintenance/createRequest';
 import updateRequest from '../../services/maintenance/updateRequest';
 import approveRequest from '../../services/maintenance/approveRequest';
 import denyRequest from '../../services/maintenance/denyRequest';
+import deleteRequest from '../../services/maintenance/deleteRequest';
 import holdRequest from '../../services/maintenance/holdRequest';
 import doneRequest from '../../services/maintenance/doneRequest';
 import { Sidebar } from '../sidebar/Sidebar';
@@ -42,7 +40,6 @@ export const Maintenance = () => {
     const [searchedValueType, setSearchedValueType] = useState('');
     const [searchedValueDescription, setSearchedValueDescription] = useState('');
     const [searchedValueComments, setSearchedValueComments] = useState('');
-    const [searchedValueCompleted, setSearchedValueCompleted] = useState('');
 
     const [searchedMaint, setSearchedMaint] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -244,7 +241,8 @@ export const Maintenance = () => {
         setShowDeny(false);
     }
     const handleDenyYes = () => {
-        denyRequest(record, done, comments);
+        // denyRequest(record, done, comments);
+        deleteRequest(record);
         setShowDeny(false);
     }
 
@@ -308,7 +306,8 @@ export const Maintenance = () => {
             {loading ?
                 <h1>Loading</h1>
                 :
-                <div style={{ display: 'inline', width: '100%' }}>
+                // <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
+                <div style={{ display: 'block', width: '100%' }}>
                     <h1>Maintenance</h1>
                     <Modal show={showApprove}>
                         <Modal.Header>
@@ -609,7 +608,7 @@ export const Maintenance = () => {
                                                         <td onClick={() => handleOpenActive(request)} className='text-center'>{request.requestType}</td>
                                                         <td onClick={() => handleOpenActive(request)}>{request.description}</td>
                                                         <td onClick={() => handleOpenActive(request)}>{request.comments}</td>
-                                                        <td onClick={() => handleOpenActive(request)} className='text-center'>{format(parseISO(request.updatedAt), 'MM/dd h:mm b')}</td>
+                                                        <td onClick={() => handleOpenActive(request)} className='text-center'>{format(parseISO(request.updatedAt), 'MM/dd h:mmb')}</td>
                                                         {cookieData.maintenance &&
                                                             <td>
                                                                 <Icon icon={checkCircleO} size={24} style={{ color: '#5BC236' }} onClick={() => handleDone(request)} />
@@ -637,6 +636,11 @@ export const Maintenance = () => {
                                         <th className='text-center'>Type<input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
                                         <th className='text-center'>Description<input onChange={(e) => setSearchedValueDescription(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
                                         <th className='text-center'>Comments<input onChange={(e) => setSearchedValueComments(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                        {cookieData.maintenance ?
+                                            <th className='text-center align-middle'>Actions</th>
+                                            :
+                                            <th className='text-center align-middle'>Status</th>
+                                        }
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -689,7 +693,7 @@ export const Maintenance = () => {
                                                     <tr key={index} request={request}>
                                                         <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.record}</td>
                                                         <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.requestedBy}</td>
-                                                        <td onClick={() => handleOpenUpdate(request)} className='text-center'>{format(parseISO(request.createdAt), 'MM/dd h:mm b')}</td>
+                                                        <td onClick={() => handleOpenUpdate(request)} className='text-center'>{format(parseISO(request.createdAt), 'MM/dd h:mmb')}</td>
                                                         <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.area}</td>
                                                         <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.equipment}</td>
                                                         <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.requestType}</td>
@@ -854,7 +858,7 @@ export const Maintenance = () => {
                                                         <td onClick={() => handleOpenComplete(request)} className='text-center'>{request.requestType}</td>
                                                         <td onClick={() => handleOpenComplete(request)}>{request.description}</td>
                                                         <td onClick={() => handleOpenComplete(request)}>{request.comments}</td>
-                                                        <td onClick={() => handleOpenComplete(request)} className='text-center'>{format(parseISO(request.updatedAt), 'MM/dd h:mm b')}</td>
+                                                        <td onClick={() => handleOpenComplete(request)} className='text-center'>{format(parseISO(request.updatedAt), 'MM/dd h:mmb')}</td>
                                                     </tr>
                                                 )
                                             }

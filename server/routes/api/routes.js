@@ -21,6 +21,7 @@ router.post('/maintenance/createRequest', maintenanceController.createRequest);
 router.post('/maintenance/updateRequest', maintenanceController.updateRequest);
 router.post('/maintenance/approveRequest', maintenanceController.approveRequest);
 router.post('/maintenance/denyRequest', maintenanceController.denyRequest);
+router.post('/maintenance/deleteRequest', maintenanceController.deleteRequest);
 router.post('/maintenance/holdRequest', maintenanceController.holdRequest);
 router.post('/maintenance/doneRequest', maintenanceController.doneRequest);
 
