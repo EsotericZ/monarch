@@ -21,6 +21,13 @@ Jobs.init(
         jobStatus: {
             type: DataTypes.STRING,
         },
+        createdAt : {
+            type: DataTypes.DATE,
+        },
+        updatedAt : {
+            type: DataTypes.DATE,
+            defaultValue: null,
+        },
         // wip: {
         //     type: DataTypes.BOOLEAN,
         // },
