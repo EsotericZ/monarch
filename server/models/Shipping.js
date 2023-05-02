@@ -1,9 +1,9 @@
 const { Model, DataTypes, UUIDV4 } = require('sequelize');
 const sequelize = require('../config');
 
-class Maintenance extends Model {}
+class Shipping extends Model {}
 
-Maintenance.init(
+Shipping.init(
     {
         id: {
             type: DataTypes.UUID,
@@ -15,50 +15,43 @@ Maintenance.init(
             allowNull: false,
             primaryKey: true,
         },
-        requestedBy: {
+        customer: {
             type: DataTypes.STRING,
         },
-        area: {
+        location: {
             type: DataTypes.STRING,
         },
-        equipment: {
+        priority: {
             type: DataTypes.STRING,
         },
-        requestType: {
+        jobNo: {
             type: DataTypes.STRING,
         },
-        description: {
+        poNo: {
             type: DataTypes.STRING,
         },
-        approvedBy: {
-            type: DataTypes.STRING,
-        },
-        repairedBy: {
-            type: DataTypes.STRING,
-        },
-        repairDescription: {
-            type: DataTypes.STRING,
-        },
-        repairTime: {
+        delivery: {
             type: DataTypes.STRING,
         },
         comments: {
             type: DataTypes.STRING,
         },
-        hold: {
+        scheduled: {
             type: DataTypes.BOOLEAN,
             defaultValue: false,
         },
-        done: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false,
+        date: {
+            type: DataTypes.DATE,
+        },
+        driver: {
+            type: DataTypes.STRING,
         },
     }, {
         sequelize,
         timestamps: true,
         freezeTableName: true,
-        modelName: 'maintenance',
+        modelName: 'shipping',
     }
 );
 
-module.exports = Maintenance;
+module.exports = Shipping;
