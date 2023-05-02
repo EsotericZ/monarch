@@ -8,6 +8,7 @@ import { Icon } from 'react-icons-kit';
 import { checkCircleO } from 'react-icons-kit/fa/checkCircleO';
 import { timesCircleO } from 'react-icons-kit/fa/timesCircleO';
 
+import getAllOrders from '../../services/shipping/getAllOrders';
 import { Sidebar } from '../sidebar/Sidebar';
 
 export const Shipping = () => {
@@ -29,8 +30,11 @@ export const Shipping = () => {
 
     async function fetchData() {
         try {
-            console.log('Hit')
-            setLoading(false)
+            getAllOrders()
+            .then((res) => {
+                setSearchedShip(res.data)
+                setLoading(false)
+            })
         } catch (err) {
             console.log(err);
         }
