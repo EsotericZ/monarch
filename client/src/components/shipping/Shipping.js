@@ -115,9 +115,25 @@ export const Shipping = () => {
                             <Table striped hover>
                                 <thead>
                                     <tr>
+                                        <th>Record</th>
+                                        <th>Customer</th>
+                                        <th>Location</th>
+                                        <th>Priority</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    {searchedShip
+                                        .map((record, index) => {
+                                            return (
+                                                <tr key={index} record={record}>
+                                                    <td>{record.record}</td>
+                                                    <td>{record.customer}</td>
+                                                    <td>{record.location}</td>
+                                                    <td>{record.priority}</td>
+                                                </tr>
+                                            )
+                                        })
+                                    }
                                 </tbody>
                             </Table>
                         </Tab>
