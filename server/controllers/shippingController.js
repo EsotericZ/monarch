@@ -57,6 +57,24 @@ async function createRequest(req, res) {
     })
 }
 
+async function updateRecord(req, res) {
+    let record = req.body.record;
+    let updateRecord = req.body.updateRecord;
+
+    await Shipping.update(
+        updateRecord,
+        { where: { record: record }}
+    ).then((result) => {
+        return res.status(200).send({
+            data: result
+        })
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
+
 async function scheduleRequest(req, res) {
     let record = req.body.record;
     let driver = req.body.driver;
@@ -102,5 +120,6 @@ async function completeRequest(req, res) {
 exports.getAllOrders = getAllOrders;
 exports.getAllCustomers = getAllCustomers;
 exports.createRequest = createRequest;
+exports.updateRecord = updateRecord;
 exports.scheduleRequest = scheduleRequest;
 exports.completeRequest = completeRequest;

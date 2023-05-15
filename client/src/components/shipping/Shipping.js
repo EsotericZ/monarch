@@ -6,12 +6,12 @@ import jwt_decode from 'jwt-decode';
 
 import { Icon } from 'react-icons-kit';
 import { checkCircleO } from 'react-icons-kit/fa/checkCircleO';
-// import { timesCircleO } from 'react-icons-kit/fa/timesCircleO';
 
 import getAllOrders from '../../services/shipping/getAllOrders';
 import getAllCustomers from '../../services/shipping/getAllCustomers';
 import createRequest from '../../services/shipping/createRequest';
 import scheduleRequest from '../../services/shipping/scheduleRequest';
+import updateRecord from '../../services/shipping/updateRecord';
 import completeRequest from '../../services/shipping/completeRequest';
 import { Sidebar } from '../sidebar/Sidebar';
 
@@ -32,6 +32,8 @@ export const Shipping = () => {
     const [loading, setLoading] = useState(true);
     const [showAdd, setShowAdd] = useState(false);
     const [showSchedule, setShowSchedule] = useState(false);
+    const [showUpdate, setShowUpdate] = useState(false);
+    const [showScheduled, setShowScheduled] = useState(false);
     const [shippingRecord, setShippingRecord] = useState();
     const [customerList, setCustomerList] = useState([]);
     const [newRequest, setNewRequest] = useState({
@@ -48,6 +50,28 @@ export const Shipping = () => {
         driver: '',
         date: '',
     })
+    const [updateSingleRequest, setUpdateSingleRequest] = useState({
+        customer: '',
+        location: '',
+        priority: '',
+        jobNo: '',
+        poNo: '',
+        delivery: '',
+        comments: '',
+        driver: '',
+        date: '',
+    });
+
+    const [record, setRecord] = useState('');
+    const [customer, setCustomer] = useState('');
+    const [location, setLocation] = useState('');
+    const [priority, setPriority] = useState('');
+    const [jobNo, setJobNo] = useState('');
+    const [poNo, setPoNo] = useState('');
+    const [delivery, setDelivery] = useState('');
+    const [comments, setComments] = useState('');
+    const [driver, setDriver] = useState('');
+    const [date, setDate] = useState('');
 
     async function fetchData() {
         try {
@@ -89,6 +113,77 @@ export const Shipping = () => {
             }))
     }
 
+    const handleOpenActive = (record) => {
+        setUpdateSingleRequest({
+            ...updateSingleRequest,
+            customer: record.customer,
+            location: record.location,
+            priority: record.priority,
+            jobNo: record.jobNo,
+            poNo: record.poNo,
+            delivery: record.delivery,
+            comments: record.comments,
+            driver: record.driver,
+            date: record.date,
+        })
+        setRecord(record.record);
+        setCustomer(record.customer);
+        setLocation(record.location);
+        setPriority(record.priority);
+        setJobNo(record.jobNo);
+        setPoNo(record.poNo);
+        setDelivery(record.delivery);
+        setComments(record.comments);
+        setDriver(record.driver);
+        setDate(record.date);
+        setShowUpdate(true)
+    }
+    const handleCloseUpdate = () => setShowUpdate(false);
+    const handleUpdate = () => {
+        updateRecord(updateSingleRequest, record)
+            .then(fetchData())
+            .then(setShowUpdate(false))
+    }
+
+    const handleOpenScheduled = (record) => {
+        setUpdateSingleRequest({
+            ...updateSingleRequest,
+            customer: record.customer,
+            location: record.location,
+            priority: record.priority,
+            jobNo: record.jobNo,
+            poNo: record.poNo,
+            delivery: record.delivery,
+            comments: record.comments,
+            driver: record.driver,
+            date: record.date,
+        })
+        setRecord(record.record);
+        setCustomer(record.customer);
+        setLocation(record.location);
+        setPriority(record.priority);
+        setJobNo(record.jobNo);
+        setPoNo(record.poNo);
+        setDelivery(record.delivery);
+        setComments(record.comments);
+        setDriver(record.driver);
+        setDate(record.date);
+        setShowScheduled(true)
+    }
+    const handleCloseScheduled = () => setShowScheduled(false);
+    const handleScheduled = () => {
+        updateRecord(updateSingleRequest, record)
+            .then(fetchData())
+            .then(setShowScheduled(false))
+    }
+
+    const handleChangeActive = (e) => {
+        const { name, value } = e.target;
+        setUpdateSingleRequest((prev) => {
+            return { ...prev, [name]: value }
+        });
+    }
+
     const handleChangeSchedule = (e) => {
         setScheduleSingleRequest((prev) => {
             return { ...prev, 'record': shippingRecord }
@@ -117,7 +212,7 @@ export const Shipping = () => {
 
     useEffect(() => {
         fetchData();
-    }, [showAdd, showSchedule]);
+    }, [showAdd, showSchedule, showUpdate, showScheduled]);
 
     return (
         <div style={{ display: 'flex' }}>
@@ -207,6 +302,120 @@ export const Shipping = () => {
                         </Modal.Footer>
                     </Modal>
 
+                    <Modal show={showUpdate}>
+                        <Modal.Header>
+                            <Modal.Title>Update Shipping Request</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <Form>
+                                <FloatingLabel label="Customer" className="mb-2">
+                                    <Form.Control defaultValue={customer} as="select" name="customer" onChange={handleChangeActive}>
+                                        <option value={''}></option>
+                                        {customerList.map((item, index) => {
+                                            return (
+                                                <option key={index} value={item.CustCode}>{item.CustCode}</option>
+                                            )
+                                        })}
+                                    </Form.Control>
+                                </FloatingLabel>
+                                <FloatingLabel label="Location" className="mb-2">
+                                    <Form.Control defaultValue={location} name="location" onChange={handleChangeActive} />
+                                </FloatingLabel>
+                                <FloatingLabel label="Priority" className="mb-2">
+                                    <Form.Control defaultValue={priority} as="select" name="priority" onChange={handleChangeActive}>
+                                        <option>1 - Low</option>
+                                        <option>2 - Medium</option>
+                                        <option>3 - High</option>
+                                        <option>4 - Urgent</option>
+                                    </Form.Control>
+                                </FloatingLabel>
+                                <FloatingLabel label="Delivery Type" className="mb-2">
+                                    <Form.Control defaultValue={delivery} as="select" name="delivery" onChange={handleChangeActive}>
+                                        <option>Dropoff</option>
+                                        <option>Pickup</option>
+                                    </Form.Control>
+                                </FloatingLabel>
+                                <FloatingLabel label="Job No" className="mb-2">
+                                    <Form.Control defaultValue={jobNo} name="jobNo" onChange={handleChangeActive} />
+                                </FloatingLabel>
+                                <FloatingLabel label="PO No" className="mb-2">
+                                    <Form.Control defaultValue={poNo} name="poNo" onChange={handleChangeActive} />
+                                </FloatingLabel>
+                                <FloatingLabel label="Comments">
+                                    <Form.Control defaultValue={comments} name="comments" onChange={handleChangeActive} />
+                                </FloatingLabel>
+                            </Form>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={handleCloseUpdate}>
+                                Cancel
+                            </Button>
+                            <Button variant="primary" onClick={handleUpdate}>
+                                Save Changes
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
+
+                    <Modal show={showScheduled}>
+                        <Modal.Header>
+                            <Modal.Title>Update Shipping Request</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <Form>
+                                <FloatingLabel label="Customer" className="mb-2">
+                                    <Form.Control defaultValue={customer} as="select" name="customer" onChange={handleChangeActive}>
+                                        <option value={''}></option>
+                                        {customerList.map((item, index) => {
+                                            return (
+                                                <option key={index} value={item.CustCode}>{item.CustCode}</option>
+                                            )
+                                        })}
+                                    </Form.Control>
+                                </FloatingLabel>
+                                <FloatingLabel label="Location" className="mb-2">
+                                    <Form.Control defaultValue={location} name="location" onChange={handleChangeActive} />
+                                </FloatingLabel>
+                                <FloatingLabel label="Priority" className="mb-2">
+                                    <Form.Control defaultValue={priority} as="select" name="priority" onChange={handleChangeActive}>
+                                        <option>1 - Low</option>
+                                        <option>2 - Medium</option>
+                                        <option>3 - High</option>
+                                        <option>4 - Urgent</option>
+                                    </Form.Control>
+                                </FloatingLabel>
+                                <FloatingLabel label="Delivery Type" className="mb-2">
+                                    <Form.Control defaultValue={delivery} as="select" name="delivery" onChange={handleChangeActive}>
+                                        <option>Dropoff</option>
+                                        <option>Pickup</option>
+                                    </Form.Control>
+                                </FloatingLabel>
+                                <FloatingLabel label="Job No" className="mb-2">
+                                    <Form.Control defaultValue={jobNo} name="jobNo" onChange={handleChangeActive} />
+                                </FloatingLabel>
+                                <FloatingLabel label="PO No" className="mb-2">
+                                    <Form.Control defaultValue={poNo} name="poNo" onChange={handleChangeActive} />
+                                </FloatingLabel>
+                                <FloatingLabel label="Driver" className="mb-2">
+                                    <Form.Control defaultValue={driver} name="driver" onChange={handleChangeActive} />
+                                </FloatingLabel>
+                                <FloatingLabel label="Delivery Date" className="mb-2">
+                                    <Form.Control defaultValue={date} type="date" name="date" onChange={handleChangeActive} />
+                                </FloatingLabel>
+                                <FloatingLabel label="Comments">
+                                    <Form.Control defaultValue={comments} name="comments" onChange={handleChangeActive} />
+                                </FloatingLabel>
+                            </Form>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={handleCloseScheduled}>
+                                Cancel
+                            </Button>
+                            <Button variant="primary" onClick={handleScheduled}>
+                                Save Changes
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
+
                     <Tabs
                         defaultActiveKey='future'
                         id='justify-tab-example'
@@ -235,13 +444,13 @@ export const Shipping = () => {
                                             if (!record.scheduled && !record.done) {
                                                 return (
                                                     <tr key={index} record={record}>
-                                                        <td className='text-center'>{record.customer}</td>
-                                                        <td className='text-center'>{record.location}</td>
-                                                        <td className='text-center'>{record.priority}</td>
-                                                        <td className='text-center'>{record.delivery}</td>
-                                                        <td className='text-center'>{record.jobNo}</td>
-                                                        <td className='text-center'>{record.poNo}</td>
-                                                        <td className='text-center'>{record.comments}</td>
+                                                        <td onClick={() => handleOpenActive(record)} className='text-center'>{record.customer}</td>
+                                                        <td onClick={() => handleOpenActive(record)} className='text-center'>{record.location}</td>
+                                                        <td onClick={() => handleOpenActive(record)} className='text-center'>{record.priority}</td>
+                                                        <td onClick={() => handleOpenActive(record)} className='text-center'>{record.delivery}</td>
+                                                        <td onClick={() => handleOpenActive(record)} className='text-center'>{record.jobNo}</td>
+                                                        <td onClick={() => handleOpenActive(record)} className='text-center'>{record.poNo}</td>
+                                                        <td onClick={() => handleOpenActive(record)} className='text-center'>{record.comments}</td>
                                                         {cookieData.shipping &&
                                                                 <td style={{display: 'flex', justifyContent: 'center'}}>
                                                                     <Icon icon={checkCircleO} size={18} style={{ color: '#5BC236' }} onClick={() => handleSchedule(record)} />
@@ -280,15 +489,15 @@ export const Shipping = () => {
                                             if (record.scheduled && !record.done) {
                                                 return (
                                                     <tr key={index} record={record}>
-                                                        <td className='text-center'>{record.customer}</td>
-                                                        <td className='text-center'>{record.location}</td>
-                                                        <td className='text-center'>{record.priority}</td>
-                                                        <td className='text-center'>{record.delivery}</td>
-                                                        <td className='text-center'>{record.jobNo}</td>
-                                                        <td className='text-center'>{record.poNo}</td>
-                                                        <td className='text-center'>{record.driver}</td>
-                                                        <td className='text-center'>{format(parseISO(record.date), 'MM/dd/Y')}</td>
-                                                        <td className='text-center'>{record.comments}</td>
+                                                        <td onClick={() => handleOpenScheduled(record)} className='text-center'>{record.customer}</td>
+                                                        <td onClick={() => handleOpenScheduled(record)} className='text-center'>{record.location}</td>
+                                                        <td onClick={() => handleOpenScheduled(record)} className='text-center'>{record.priority}</td>
+                                                        <td onClick={() => handleOpenScheduled(record)} className='text-center'>{record.delivery}</td>
+                                                        <td onClick={() => handleOpenScheduled(record)} className='text-center'>{record.jobNo}</td>
+                                                        <td onClick={() => handleOpenScheduled(record)} className='text-center'>{record.poNo}</td>
+                                                        <td onClick={() => handleOpenScheduled(record)} className='text-center'>{record.driver}</td>
+                                                        <td onClick={() => handleOpenScheduled(record)} className='text-center'>{format(parseISO(record.date), 'MM/dd/Y')}</td>
+                                                        <td onClick={() => handleOpenScheduled(record)} className='text-center'>{record.comments}</td>
                                                         {cookieData.shipping &&
                                                                 <td style={{display: 'flex', justifyContent: 'center'}}>
                                                                     <Icon icon={checkCircleO} size={18} style={{ color: '#5BC236' }} onClick={() => handleComplete(record)} />
