@@ -6,9 +6,11 @@ import jwt_decode from 'jwt-decode';
 
 import { Icon } from 'react-icons-kit';
 import { checkCircleO } from 'react-icons-kit/fa/checkCircleO';
-import { timesCircleO } from 'react-icons-kit/fa/timesCircleO';
+// import { timesCircleO } from 'react-icons-kit/fa/timesCircleO';
 
 import getAllOrders from '../../services/shipping/getAllOrders';
+import getAllCustomers from '../../services/shipping/getAllCustomers';
+import createRequest from '../../services/shipping/createRequest';
 import { Sidebar } from '../sidebar/Sidebar';
 
 export const Shipping = () => {
@@ -20,16 +22,31 @@ export const Shipping = () => {
         cookieData = {
             'name': '',
             'role': 'employee',
-            'maintenance': false,
+            'shipping': false,
         };
     }
 
     const [searchedShip, setSearchedShip] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showAdd, setShowAdd] = useState(false);
+    const [customerList, setCustomerList] = useState([]);
+    const [newRequest, setNewRequest] = useState({
+        // requestedBy: '',
+        customer: '',
+        location: '',
+        priority: '',
+        jobNo: '',
+        poNo: '',
+        delivery: '',
+        comments: '',
+    });
 
     async function fetchData() {
         try {
+            getAllCustomers()
+                .then((res) => {
+                    setCustomerList(res)
+                })
             getAllOrders()
             .then((res) => {
                 setSearchedShip(res.data)
@@ -41,18 +58,39 @@ export const Shipping = () => {
     }
 
     const handleChangeAdd = (e) => {
-        console.log(e)
+        setNewRequest((prev) => {
+            return { ...prev, 'priority': 'Low', 'delivery': 'Dropoff' }
+        });
+        const { name, value } = e.target;
+        setNewRequest((prev) => {
+            return { ...prev, [name]: value }
+        });
     }
 
     const handleOpenAdd = () => setShowAdd(true);
     const handleCloseAdd = () => setShowAdd(false);
     const handleSave = () => {
-        console.log('add')
+        createRequest(newRequest)
+            .then(fetchData())
+            .then(setShowAdd(false))
+            .then(setNewRequest({
+                customer: '',
+                location: '',
+                priority: '',
+                jobNo: '',
+                poNo: '',
+                delivery: '',
+                comments: '',
+            }))
+    }
+
+    const handleSchedule = (record) => {
+        console.log(record)
     }
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [showAdd]);
 
     return (
         <div style={{ display: 'flex' }}>
@@ -64,30 +102,45 @@ export const Shipping = () => {
                     <h1>Shipping</h1>
                     <Modal show={showAdd}>
                         <Modal.Header>
-                            <Modal.Title>Add Request</Modal.Title>
+                            <Modal.Title>Add Shipment</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <Form>
-                                <FloatingLabel label="Requested By" className="mb-2">
+                                {/* <FloatingLabel label="Requested By" className="mb-2">
                                     <Form.Control defaultValue={cookieData.name} name="requestedBy" onChange={handleChangeAdd} />
-                                </FloatingLabel>
-                                <FloatingLabel label="Area" className="mb-2">
-                                    <Form.Control name="area" onChange={handleChangeAdd} />
-                                </FloatingLabel>
-                                <FloatingLabel label="Equipment" className="mb-2">
-                                    <Form.Control as="select" name="equipment" onChange={handleChangeAdd}>
+                                </FloatingLabel> */}
+                                <FloatingLabel label="Customer" className="mb-2">
+                                    <Form.Control as="select" name="customer" onChange={handleChangeAdd}>
+                                        <option value={''}></option>
+                                        {customerList.map((item, index) => {
+                                            return (
+                                                <option key={index} value={item.CustCode}>{item.CustCode}</option>
+                                            )
+                                        })}
                                     </Form.Control>
                                 </FloatingLabel>
-                                <FloatingLabel label="Request Type" className="mb-2">
-                                    <Form.Control as="select" name="requestType" onChange={handleChangeAdd}>
-                                        <option>Routine</option>
-                                        <option>Emergency</option>
-                                        <option>Safety</option>
-                                        <option>Planned</option>
+                                <FloatingLabel label="Location" className="mb-2">
+                                    <Form.Control name="location" onChange={handleChangeAdd} />
+                                </FloatingLabel>
+                                <FloatingLabel label="Priority" className="mb-2">
+                                    <Form.Control as="select" name="priority" onChange={handleChangeAdd}>
+                                        <option>Low</option>
+                                        <option>Medium</option>
+                                        <option>High</option>
+                                        <option>Urgent</option>
                                     </Form.Control>
                                 </FloatingLabel>
-                                <FloatingLabel label="Description" className="mb-2">
-                                    <Form.Control name="description" onChange={handleChangeAdd} />
+                                <FloatingLabel label="Job Number" className="mb-2">
+                                    <Form.Control name="jobNo" onChange={handleChangeAdd} />
+                                </FloatingLabel>
+                                <FloatingLabel label="PO Number" className="mb-2">
+                                    <Form.Control name="poNo" onChange={handleChangeAdd} />
+                                </FloatingLabel>
+                                <FloatingLabel label="Delivery Type" className="mb-2">
+                                    <Form.Control as="select" name="delivery" onChange={handleChangeAdd}>
+                                        <option>Dropoff</option>
+                                        <option>Pickup</option>
+                                    </Form.Control>
                                 </FloatingLabel>
                                 <FloatingLabel label="Comments">
                                     <Form.Control name="comments" onChange={handleChangeAdd} />
@@ -99,7 +152,7 @@ export const Shipping = () => {
                                 Cancel
                             </Button>
                             <Button variant="primary" onClick={handleSave}>
-                                Save Changes
+                                Save
                             </Button>
                         </Modal.Footer>
                     </Modal>
@@ -114,10 +167,16 @@ export const Shipping = () => {
                             <Table striped hover>
                                 <thead>
                                     <tr>
-                                        <th>Record</th>
-                                        <th>Customer</th>
-                                        <th>Location</th>
-                                        <th>Priority</th>
+                                        <th className='text-center'>Record</th>
+                                        <th className='text-center'>Customer</th>
+                                        <th className='text-center'>Location</th>
+                                        <th className='text-center'>Priority</th>
+                                        <th className='text-center'>Job No</th>
+                                        <th className='text-center'>PO No</th>
+                                        <th className='text-center'>Comments</th>
+                                        {cookieData.shipping &&
+                                            <th className='text-center align-middle'>Schedule</th>
+                                        }
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -125,10 +184,18 @@ export const Shipping = () => {
                                         .map((record, index) => {
                                             return (
                                                 <tr key={index} record={record}>
-                                                    <td>{record.record}</td>
-                                                    <td>{record.customer}</td>
-                                                    <td>{record.location}</td>
-                                                    <td>{record.priority}</td>
+                                                    <td className='text-center'>{record.record}</td>
+                                                    <td className='text-center'>{record.customer}</td>
+                                                    <td className='text-center'>{record.location}</td>
+                                                    <td className='text-center'>{record.priority}</td>
+                                                    <td className='text-center'>{record.jobNo}</td>
+                                                    <td className='text-center'>{record.poNo}</td>
+                                                    <td className='text-center'>{record.comments}</td>
+                                                    {cookieData.shipping &&
+                                                            <td style={{display: 'flex', justifyContent: 'center'}}>
+                                                                <Icon icon={checkCircleO} size={18} style={{ color: '#5BC236' }} onClick={() => handleSchedule(record)} />
+                                                            </td>
+                                                        }
                                                 </tr>
                                             )
                                         })
@@ -159,6 +226,7 @@ export const Shipping = () => {
                             </Table>
                         </Tab>
                     </Tabs>
+                    <button onClick={handleOpenAdd}>Add</button>
                 </div>
             }
         </div>
