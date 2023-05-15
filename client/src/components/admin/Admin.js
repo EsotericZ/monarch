@@ -150,7 +150,7 @@ export const Admin = () => {
                 </div>
             :
                 (cookieData.name ?
-                    <div style={{ display: 'inline', width: '100%' }}>
+                    <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
                         <h1>Employee Database</h1>
                         <Modal show={showAdd}>
                             <Modal.Header>

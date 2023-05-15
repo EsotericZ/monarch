@@ -40,7 +40,7 @@ export const Home = () => {
     return (
         <div style={{ display: 'flex' }}>
             <Sidebar />
-            <div style={{ display: 'inline' }}>
+            <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
                 <h1>Monarch Metal</h1>
                 {cookieData1 ?
                     <h2>Signed in as {cookieData1.name}</h2>

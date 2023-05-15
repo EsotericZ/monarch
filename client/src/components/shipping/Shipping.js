@@ -60,8 +60,7 @@ export const Shipping = () => {
             {loading ?
                 <h1>Loading</h1>
                 :
-                // <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
-                <div style={{ display: 'block', width: '100%' }}>
+                <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
                     <h1>Shipping</h1>
                     <Modal show={showAdd}>
                         <Modal.Header>
