@@ -29,6 +29,8 @@ router.post('/maintenance/doneRequest', maintenanceController.doneRequest);
 router.get('/shipping/getAllOrders', shippingController.getAllOrders);
 router.get('/shipping/getAllCustomers', shippingController.getAllCustomers);
 router.post('/shipping/createRequest', shippingController.createRequest);
+router.post('/shipping/scheduleRequest', shippingController.scheduleRequest);
+router.post('/shipping/completeRequest', shippingController.completeRequest);
 
 router.get('/users/getAllUsers', userController.getAllUsers);
 router.post('/users/getUserPassword', userController.getUserPassword);

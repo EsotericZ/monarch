@@ -13,7 +13,13 @@ let config = {
 };
 
 async function getAllOrders(req, res) {
-    await Shipping.findAll()
+    await Shipping.findAll({
+        order: [
+            ['priority', 'DESC'],
+            ['date', 'ASC'],
+            ['record', 'ASC']
+        ]
+    })
     .then((result) => {
         return res.status(200).send({
             data: result
@@ -51,6 +57,50 @@ async function createRequest(req, res) {
     })
 }
 
+async function scheduleRequest(req, res) {
+    let record = req.body.record;
+    let driver = req.body.driver;
+    let date = req.body.date;
+
+    await Shipping.update(
+        {
+            driver: driver,
+            date: date,
+            scheduled: 1,
+        },
+        { where: { record: record }}
+    ).then((result) => {
+        return res.status(200).send({
+            data: result
+        })
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
+
+async function completeRequest(req, res) {
+    let record = req.body.record;
+    
+    await Shipping.update(
+        {
+            done: 1,
+        },
+        { where: { record: record }}
+    ).then((result) => {
+        return res.status(200).send({
+            data: result
+        })
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
+
 exports.getAllOrders = getAllOrders;
 exports.getAllCustomers = getAllCustomers;
 exports.createRequest = createRequest;
+exports.scheduleRequest = scheduleRequest;
+exports.completeRequest = completeRequest;

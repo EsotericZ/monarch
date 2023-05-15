@@ -11,6 +11,8 @@ import { checkCircleO } from 'react-icons-kit/fa/checkCircleO';
 import getAllOrders from '../../services/shipping/getAllOrders';
 import getAllCustomers from '../../services/shipping/getAllCustomers';
 import createRequest from '../../services/shipping/createRequest';
+import scheduleRequest from '../../services/shipping/scheduleRequest';
+import completeRequest from '../../services/shipping/completeRequest';
 import { Sidebar } from '../sidebar/Sidebar';
 
 export const Shipping = () => {
@@ -29,17 +31,23 @@ export const Shipping = () => {
     const [searchedShip, setSearchedShip] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showAdd, setShowAdd] = useState(false);
+    const [showSchedule, setShowSchedule] = useState(false);
+    const [shippingRecord, setShippingRecord] = useState();
     const [customerList, setCustomerList] = useState([]);
     const [newRequest, setNewRequest] = useState({
-        // requestedBy: '',
         customer: '',
         location: '',
-        priority: '',
+        priority: '1 - Low',
         jobNo: '',
         poNo: '',
-        delivery: '',
+        delivery: 'Dropoff',
         comments: '',
     });
+    const [scheduleSingleRequest, setScheduleSingleRequest] = useState({
+        record: '',
+        driver: '',
+        date: '',
+    })
 
     async function fetchData() {
         try {
@@ -58,9 +66,6 @@ export const Shipping = () => {
     }
 
     const handleChangeAdd = (e) => {
-        setNewRequest((prev) => {
-            return { ...prev, 'priority': 'Low', 'delivery': 'Dropoff' }
-        });
         const { name, value } = e.target;
         setNewRequest((prev) => {
             return { ...prev, [name]: value }
@@ -84,13 +89,35 @@ export const Shipping = () => {
             }))
     }
 
+    const handleChangeSchedule = (e) => {
+        setScheduleSingleRequest((prev) => {
+            return { ...prev, 'record': shippingRecord }
+        });
+        const { name, value } = e.target;
+        setScheduleSingleRequest((prev) => {
+            return { ...prev, [name]: value }
+        });
+    };
+
     const handleSchedule = (record) => {
-        console.log(record)
+        setShippingRecord(record.record)
+        setShowSchedule(true);
+    }
+    const handleCloseSchedule = () => setShowSchedule(false);
+    const handleScheduleSave = () => {
+        scheduleRequest(scheduleSingleRequest)
+            .then(fetchData())
+            .then(setShowSchedule(false))
+    }
+
+    const handleComplete = (record) => {
+        completeRequest(record)
+            .then(fetchData())
     }
 
     useEffect(() => {
         fetchData();
-    }, [showAdd]);
+    }, [showAdd, showSchedule]);
 
     return (
         <div style={{ display: 'flex' }}>
@@ -106,9 +133,6 @@ export const Shipping = () => {
                         </Modal.Header>
                         <Modal.Body>
                             <Form>
-                                {/* <FloatingLabel label="Requested By" className="mb-2">
-                                    <Form.Control defaultValue={cookieData.name} name="requestedBy" onChange={handleChangeAdd} />
-                                </FloatingLabel> */}
                                 <FloatingLabel label="Customer" className="mb-2">
                                     <Form.Control as="select" name="customer" onChange={handleChangeAdd}>
                                         <option value={''}></option>
@@ -124,10 +148,10 @@ export const Shipping = () => {
                                 </FloatingLabel>
                                 <FloatingLabel label="Priority" className="mb-2">
                                     <Form.Control as="select" name="priority" onChange={handleChangeAdd}>
-                                        <option>Low</option>
-                                        <option>Medium</option>
-                                        <option>High</option>
-                                        <option>Urgent</option>
+                                        <option>1 - Low</option>
+                                        <option>2 - Medium</option>
+                                        <option>3 - High</option>
+                                        <option>4 - Urgent</option>
                                     </Form.Control>
                                 </FloatingLabel>
                                 <FloatingLabel label="Job Number" className="mb-2">
@@ -157,6 +181,32 @@ export const Shipping = () => {
                         </Modal.Footer>
                     </Modal>
 
+                    <Modal show={showSchedule}>
+                        <Modal.Header>
+                            <Modal.Title>Schedule Shipment</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <Form>
+                                <FloatingLabel label="Delivery Date" className="mb-2">
+                                    <Form.Control type="date" name="date" onChange={handleChangeSchedule} />
+                                </FloatingLabel>    
+                            </Form>
+                            <Form>
+                                <FloatingLabel label="Driver" className="mb-2">
+                                    <Form.Control name="driver" onChange={handleChangeSchedule} />
+                                </FloatingLabel>    
+                            </Form>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={handleCloseSchedule}>
+                                Cancel
+                            </Button>
+                            <Button variant="primary" onClick={handleScheduleSave}>
+                                Save
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
+
                     <Tabs
                         defaultActiveKey='future'
                         id='justify-tab-example'
@@ -167,10 +217,10 @@ export const Shipping = () => {
                             <Table striped hover>
                                 <thead>
                                     <tr>
-                                        <th className='text-center'>Record</th>
                                         <th className='text-center'>Customer</th>
                                         <th className='text-center'>Location</th>
                                         <th className='text-center'>Priority</th>
+                                        <th className='text-center'>Type</th>
                                         <th className='text-center'>Job No</th>
                                         <th className='text-center'>PO No</th>
                                         <th className='text-center'>Comments</th>
@@ -182,22 +232,24 @@ export const Shipping = () => {
                                 <tbody>
                                     {searchedShip
                                         .map((record, index) => {
-                                            return (
-                                                <tr key={index} record={record}>
-                                                    <td className='text-center'>{record.record}</td>
-                                                    <td className='text-center'>{record.customer}</td>
-                                                    <td className='text-center'>{record.location}</td>
-                                                    <td className='text-center'>{record.priority}</td>
-                                                    <td className='text-center'>{record.jobNo}</td>
-                                                    <td className='text-center'>{record.poNo}</td>
-                                                    <td className='text-center'>{record.comments}</td>
-                                                    {cookieData.shipping &&
-                                                            <td style={{display: 'flex', justifyContent: 'center'}}>
-                                                                <Icon icon={checkCircleO} size={18} style={{ color: '#5BC236' }} onClick={() => handleSchedule(record)} />
-                                                            </td>
-                                                        }
-                                                </tr>
-                                            )
+                                            if (!record.scheduled && !record.done) {
+                                                return (
+                                                    <tr key={index} record={record}>
+                                                        <td className='text-center'>{record.customer}</td>
+                                                        <td className='text-center'>{record.location}</td>
+                                                        <td className='text-center'>{record.priority}</td>
+                                                        <td className='text-center'>{record.delivery}</td>
+                                                        <td className='text-center'>{record.jobNo}</td>
+                                                        <td className='text-center'>{record.poNo}</td>
+                                                        <td className='text-center'>{record.comments}</td>
+                                                        {cookieData.shipping &&
+                                                                <td style={{display: 'flex', justifyContent: 'center'}}>
+                                                                    <Icon icon={checkCircleO} size={18} style={{ color: '#5BC236' }} onClick={() => handleSchedule(record)} />
+                                                                </td>
+                                                            }
+                                                    </tr>
+                                                )
+                                            }
                                         })
                                     }
                                 </tbody>
@@ -208,22 +260,88 @@ export const Shipping = () => {
                             <Table striped hover>
                                 <thead>
                                     <tr>
+                                        <th className='text-center'>Customer</th>
+                                        <th className='text-center'>Location</th>
+                                        <th className='text-center'>Priority</th>
+                                        <th className='text-center'>Type</th>
+                                        <th className='text-center'>Job No</th>
+                                        <th className='text-center'>PO No</th>
+                                        <th className='text-center'>Driver</th>
+                                        <th className='text-center'>Date</th>
+                                        <th className='text-center'>Comments</th>
+                                        {cookieData.shipping &&
+                                            <th className='text-center align-middle'>Complete</th>
+                                        }
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    {searchedShip
+                                        .map((record, index) => {
+                                            if (record.scheduled && !record.done) {
+                                                return (
+                                                    <tr key={index} record={record}>
+                                                        <td className='text-center'>{record.customer}</td>
+                                                        <td className='text-center'>{record.location}</td>
+                                                        <td className='text-center'>{record.priority}</td>
+                                                        <td className='text-center'>{record.delivery}</td>
+                                                        <td className='text-center'>{record.jobNo}</td>
+                                                        <td className='text-center'>{record.poNo}</td>
+                                                        <td className='text-center'>{record.driver}</td>
+                                                        <td className='text-center'>{format(parseISO(record.date), 'MM/dd/Y')}</td>
+                                                        <td className='text-center'>{record.comments}</td>
+                                                        {cookieData.shipping &&
+                                                                <td style={{display: 'flex', justifyContent: 'center'}}>
+                                                                    <Icon icon={checkCircleO} size={18} style={{ color: '#5BC236' }} onClick={() => handleComplete(record)} />
+                                                                </td>
+                                                            }
+                                                    </tr>
+                                                )
+                                            }
+                                        })
+                                    }
+                                </tbody>
+                            </Table>
+                        </Tab>
+
+                        <Tab eventKey='complete' title='Completed'>
+                            <Table striped hover>
+                                <thead>
+                                    <tr>
+                                        <th className='text-center'>Customer</th>
+                                        <th className='text-center'>Location</th>
+                                        <th className='text-center'>Type</th>
+                                        <th className='text-center'>Job No</th>
+                                        <th className='text-center'>PO No</th>
+                                        <th className='text-center'>Driver</th>
+                                        <th className='text-center'>Date</th>
+                                        <th className='text-center'>Comments</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {searchedShip
+                                        .map((record, index) => {
+                                            if (record.done) {
+                                                return (
+                                                    <tr key={index} record={record}>
+                                                        <td className='text-center'>{record.customer}</td>
+                                                        <td className='text-center'>{record.location}</td>
+                                                        <td className='text-center'>{record.delivery}</td>
+                                                        <td className='text-center'>{record.jobNo}</td>
+                                                        <td className='text-center'>{record.poNo}</td>
+                                                        <td className='text-center'>{record.driver}</td>
+                                                        <td className='text-center'>{format(parseISO(record.date), 'MM/dd/Y')}</td>
+                                                        <td className='text-center'>{record.comments}</td>
+                                                    </tr>
+                                                )
+                                            }
+                                        })
+                                    }
                                 </tbody>
                             </Table>
                         </Tab>
 
                         <Tab eventKey='calendar' title='Calendar'>
-                            <Table striped hover>
-                                <thead>
-                                    <tr>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </Table>
+                            <h4>Coming Soon</h4>
                         </Tab>
                     </Tabs>
                     <button onClick={handleOpenAdd}>Add</button>

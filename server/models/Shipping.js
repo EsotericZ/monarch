@@ -46,6 +46,10 @@ Shipping.init(
         driver: {
             type: DataTypes.STRING,
         },
+        done: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
     }, {
         sequelize,
         timestamps: true,
