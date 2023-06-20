@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { Admin } from './components/admin/Admin';
+import { Calendar } from './components/calendar/Calendar';
 import { Engineering } from './components/engineering/Engineering';
 import { Home } from './components/home/Home';
 import { Maintenance } from './components/maintenance/Maintenance';
@@ -19,6 +20,10 @@ export const App = () => {
         <Route
           path='/admin'
           element={<Admin />}
+        />
+        <Route
+          path='/calendar'
+          element={<Calendar />}
         />
         <Route
           path='/engineering'
