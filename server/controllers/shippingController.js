@@ -60,6 +60,8 @@ async function createRequest(req, res) {
 async function updateRecord(req, res) {
     let record = req.body.record;
     let updateRecord = req.body.updateRecord;
+    let newDate = updateRecord.date + ' 05:00:00'
+    updateRecord.date = newDate
 
     await Shipping.update(
         updateRecord,
@@ -117,9 +119,30 @@ async function completeRequest(req, res) {
     })
 }
 
+async function updateTimes(req, res) {
+    let id = req.body.id;
+    let startTime = req.body.start;
+
+    await Shipping.update(
+        {
+            date: startTime,
+        },
+        { where: { id: id }}
+    ).then((result) => {
+        return res.status(200).send({
+            data: result
+        })
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
+
 exports.getAllOrders = getAllOrders;
 exports.getAllCustomers = getAllCustomers;
 exports.createRequest = createRequest;
 exports.updateRecord = updateRecord;
 exports.scheduleRequest = scheduleRequest;
 exports.completeRequest = completeRequest;
+exports.updateTimes = updateTimes;

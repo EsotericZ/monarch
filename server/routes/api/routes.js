@@ -32,6 +32,7 @@ router.post('/shipping/createRequest', shippingController.createRequest);
 router.post('/shipping/updateRecord', shippingController.updateRecord);
 router.post('/shipping/scheduleRequest', shippingController.scheduleRequest);
 router.post('/shipping/completeRequest', shippingController.completeRequest);
+router.post('/shipping/updateTimes', shippingController.updateTimes);
 
 router.get('/users/getAllUsers', userController.getAllUsers);
 router.post('/users/getUserPassword', userController.getUserPassword);

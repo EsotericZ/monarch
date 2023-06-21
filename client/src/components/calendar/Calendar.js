@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from 'react';
 import { DayPilot, DayPilotCalendar, DayPilotNavigator } from '@daypilot/daypilot-lite-react';
 
 import './calendar.css';
+import getAllOrders from '../../services/shipping/getAllOrders';
+import updateTimes from '../../services/shipping/updateTimes';
 
 const styles = {
     wrap: {
@@ -15,7 +17,13 @@ const styles = {
     }
 };
 
+let eventData = [];
+
 export const Calendar = () => {
+    const [loading, setLoading] = useState(true);
+    const [searchedShip, setSearchedShip] = useState([]);
+    const [events, setEvents] = useState([]);
+
     const [config, setConfig] = useState({
         viewType: 'WorkWeek',
         headerDateFormat: 'dddd MMMM dd',
@@ -38,10 +46,12 @@ export const Calendar = () => {
         eventMoveHandling: "Update",
         onEventMoved: (args) => {
             console.log("Event moved: " + args.e.text());
+            handleUpdateTimes(args)
         },
         eventResizeHandling: "Update",
         onEventResized: (args) => {
             console.log("Event resized: " + args.e.text());
+            handleUpdateTimes(args)
         },
         eventClickHandling: "Disabled",
         // eventClickHandling: "ContextMenu",
@@ -66,41 +76,57 @@ export const Calendar = () => {
         });
     }
 
-    useEffect(() => {
+    const handleUpdateTimes = (args) => {
+        updateTimes(args.e.data.id, args.newStart.value, args.newEnd.value);
+    }
+
+    const fetchData = () => {
+        try {
+            getAllOrders()
+            .then((res) => {
+                let shipData = res.data;
+                let color;
+                
+                for (let i=0; i < shipData.length; i++) {
+                    if (shipData[i].date) {
+                        if (shipData[i] == '3 - High') {
+                            color = '#cc4125'
+                        } else if (shipData[i] == '2 - Medium') {
+                            color = '#f1c232'
+                        } else {
+                            color = '#6aa84f'
+                        }
+                        eventData.push({
+                            // id: shipData[i].record,
+                            id: shipData[i].id,
+                            text: `${shipData[i].customer} (${shipData[i].location})`,
+                            start: shipData[i].date,
+                            end: shipData[i].date,
+                            backColor: color,
+                        })
+                    }
+                }
+                setEvents(eventData);
+                setLoading(false)
+                hitMe(eventData)
+            })
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    const hitMe = (events) => {
         calendarRef.current.control.update({
-            events: [
-                {
-                    id: 1,
-                    text: "Event 1",
-                    start: "2023-06-20T10:30:00",
-                    end: "2023-06-20T13:00:00"
-                },
-                {
-                    id: 2,
-                    text: "Event 2",
-                    start: "2023-06-21T09:30:00",
-                    end: "2023-06-21T11:30:00",
-                    backColor: "#6aa84f"
-                },
-                {
-                    id: 3,
-                    text: "Event 3",
-                    start: "2023-06-19T12:00:00",
-                    end: "2023-06-19T15:00:00",
-                    backColor: "#f1c232"
-                },
-                {
-                    id: 4,
-                    text: "Event 4",
-                    start: "2023-06-21T11:30:00",
-                    end: "2023-06-21T14:30:00",
-                    backColor: "#cc4125"
-                },
-            ]
+            events
         });
+    }
+
+    useEffect(() => {
+        fetchData()
     }, []);
 
     return (
+        <>
         <div style={styles.wrap}>
             <div style={styles.left}>
                 <DayPilotNavigator 
@@ -117,5 +143,11 @@ export const Calendar = () => {
                 />
             </div>
         </div>
+        {searchedShip.map((item, index) => {
+            return (
+                <h3 key={index}>{item.jobNo}</h3>
+            )
+        })}
+        </>
     )
 }
