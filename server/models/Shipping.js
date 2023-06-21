@@ -43,6 +43,9 @@ Shipping.init(
         date: {
             type: DataTypes.DATE,
         },
+        timeFinish: {
+            type: DataTypes.DATE,
+        },
         driver: {
             type: DataTypes.STRING,
         },

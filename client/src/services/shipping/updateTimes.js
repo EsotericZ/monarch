@@ -1,7 +1,7 @@
 import api from '../api';
 
 const updateTimes = async (updateID, newStart, newEnd) => {
-    // console.log(updateID, newStart, newEnd)
+    console.log(updateID, newStart, newEnd)
     const res = await api.post('/shipping/updateTimes', {
         id: updateID,
         start: newStart,

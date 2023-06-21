@@ -122,10 +122,12 @@ async function completeRequest(req, res) {
 async function updateTimes(req, res) {
     let id = req.body.id;
     let startTime = req.body.start;
+    let endTime = req.body.end;
 
     await Shipping.update(
         {
             date: startTime,
+            timeFinish: endTime,
         },
         { where: { id: id }}
     ).then((result) => {

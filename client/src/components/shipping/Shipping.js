@@ -14,6 +14,7 @@ import scheduleRequest from '../../services/shipping/scheduleRequest';
 import updateRecord from '../../services/shipping/updateRecord';
 import completeRequest from '../../services/shipping/completeRequest';
 import { Sidebar } from '../sidebar/Sidebar';
+import { Calendar } from '../calendar/Calendar';
 
 export const Shipping = () => {
     const cookies = new Cookies();
@@ -218,10 +219,10 @@ export const Shipping = () => {
         <div style={{ display: 'flex' }}>
             <Sidebar />
             {loading ?
-                <h1>Loading</h1>
+                <h1 className="text-center m-3">Loading</h1>
                 :
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
-                    <h1>Shipping</h1>
+                    <h1 className="text-center m-3">Shipping</h1>
                     <Modal show={showAdd}>
                         <Modal.Header>
                             <Modal.Title>Add Shipment</Modal.Title>
@@ -426,137 +427,144 @@ export const Shipping = () => {
                         justify
                     >
                         <Tab eventKey='future' title='Future'>
-                            <Table striped hover>
-                                <thead>
-                                    <tr>
-                                        <th className='text-center'>Customer</th>
-                                        <th className='text-center'>Location</th>
-                                        <th className='text-center'>Priority</th>
-                                        <th className='text-center'>Type</th>
-                                        <th className='text-center'>Job No</th>
-                                        <th className='text-center'>PO No</th>
-                                        <th className='text-center'>Comments</th>
-                                        {cookieData.shipping &&
-                                            <th className='text-center align-middle'>Schedule</th>
-                                        }
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {searchedShip
-                                        .map((record, index) => {
-                                            if (!record.scheduled && !record.done) {
-                                                return (
-                                                    <tr key={index} record={record}>
-                                                        <td onClick={() => handleOpenActive(record)} className='text-center'>{record.customer}</td>
-                                                        <td onClick={() => handleOpenActive(record)} className='text-center'>{record.location}</td>
-                                                        <td onClick={() => handleOpenActive(record)} className='text-center'>{record.priority}</td>
-                                                        <td onClick={() => handleOpenActive(record)} className='text-center'>{record.delivery}</td>
-                                                        <td onClick={() => handleOpenActive(record)} className='text-center'>{record.jobNo}</td>
-                                                        <td onClick={() => handleOpenActive(record)} className='text-center'>{record.poNo}</td>
-                                                        <td onClick={() => handleOpenActive(record)} className='text-center'>{record.comments}</td>
-                                                        {cookieData.shipping &&
-                                                                <td style={{display: 'flex', justifyContent: 'center'}}>
+                            <div className="mx-3">
+                                <Table striped hover>
+                                    <thead>
+                                        <tr>
+                                            <th className='text-center'>Customer</th>
+                                            <th className='text-center'>Location</th>
+                                            <th className='text-center'>Priority</th>
+                                            <th className='text-center'>Type</th>
+                                            <th className='text-center'>Job No</th>
+                                            <th className='text-center'>PO No</th>
+                                            <th className='text-center'>Comments</th>
+                                            {cookieData.shipping &&
+                                                <th className='text-center align-middle'>Schedule</th>
+                                            }
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {searchedShip
+                                            .map((record, index) => {
+                                                if (!record.scheduled && !record.done) {
+                                                    return (
+                                                        <tr key={index} record={record}>
+                                                            <td onClick={() => handleOpenActive(record)} className='text-center'>{record.customer}</td>
+                                                            <td onClick={() => handleOpenActive(record)} className='text-center'>{record.location}</td>
+                                                            <td onClick={() => handleOpenActive(record)} className='text-center'>{record.priority}</td>
+                                                            <td onClick={() => handleOpenActive(record)} className='text-center'>{record.delivery}</td>
+                                                            <td onClick={() => handleOpenActive(record)} className='text-center'>{record.jobNo}</td>
+                                                            <td onClick={() => handleOpenActive(record)} className='text-center'>{record.poNo}</td>
+                                                            <td onClick={() => handleOpenActive(record)} className='text-center'>{record.comments}</td>
+                                                            {cookieData.shipping &&
+                                                                <td className="text-center">
                                                                     <Icon icon={checkCircleO} size={18} style={{ color: '#5BC236' }} onClick={() => handleSchedule(record)} />
                                                                 </td>
                                                             }
-                                                    </tr>
-                                                )
-                                            }
-                                        })
-                                    }
-                                </tbody>
-                            </Table>
+                                                        </tr>
+                                                    )
+                                                }
+                                            })
+                                        }
+                                    </tbody>
+                                </Table>
+                                <button onClick={handleOpenAdd}>Add</button>
+                            </div>
                         </Tab>
 
                         <Tab eventKey='scheduled' title='Scheduled'>
-                            <Table striped hover>
-                                <thead>
-                                    <tr>
-                                        <th className='text-center'>Customer</th>
-                                        <th className='text-center'>Location</th>
-                                        <th className='text-center'>Priority</th>
-                                        <th className='text-center'>Type</th>
-                                        <th className='text-center'>Job No</th>
-                                        <th className='text-center'>PO No</th>
-                                        <th className='text-center'>Driver</th>
-                                        <th className='text-center'>Date</th>
-                                        <th className='text-center'>Comments</th>
-                                        {cookieData.shipping &&
-                                            <th className='text-center align-middle'>Complete</th>
-                                        }
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {searchedShip
-                                        .map((record, index) => {
-                                            if (record.scheduled && !record.done) {
-                                                return (
-                                                    <tr key={index} record={record}>
-                                                        <td onClick={() => handleOpenScheduled(record)} className='text-center'>{record.customer}</td>
-                                                        <td onClick={() => handleOpenScheduled(record)} className='text-center'>{record.location}</td>
-                                                        <td onClick={() => handleOpenScheduled(record)} className='text-center'>{record.priority}</td>
-                                                        <td onClick={() => handleOpenScheduled(record)} className='text-center'>{record.delivery}</td>
-                                                        <td onClick={() => handleOpenScheduled(record)} className='text-center'>{record.jobNo}</td>
-                                                        <td onClick={() => handleOpenScheduled(record)} className='text-center'>{record.poNo}</td>
-                                                        <td onClick={() => handleOpenScheduled(record)} className='text-center'>{record.driver}</td>
-                                                        <td onClick={() => handleOpenScheduled(record)} className='text-center'>{format(parseISO(record.date), 'MM/dd/Y')}</td>
-                                                        <td onClick={() => handleOpenScheduled(record)} className='text-center'>{record.comments}</td>
-                                                        {cookieData.shipping &&
-                                                                <td style={{display: 'flex', justifyContent: 'center'}}>
+                            <div className="mx-3">
+                                <Table striped hover>
+                                    <thead>
+                                        <tr>
+                                            <th className='text-center'>Customer</th>
+                                            <th className='text-center'>Location</th>
+                                            <th className='text-center'>Priority</th>
+                                            <th className='text-center'>Type</th>
+                                            <th className='text-center'>Job No</th>
+                                            <th className='text-center'>PO No</th>
+                                            <th className='text-center'>Driver</th>
+                                            <th className='text-center'>Date</th>
+                                            <th className='text-center'>Comments</th>
+                                            {cookieData.shipping &&
+                                                <th className='text-center align-middle'>Complete</th>
+                                            }
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {searchedShip
+                                            .map((record, index) => {
+                                                if (record.scheduled && !record.done) {
+                                                    return (
+                                                        <tr key={index} record={record}>
+                                                            <td onClick={() => handleOpenScheduled(record)} className='text-center'>{record.customer}</td>
+                                                            <td onClick={() => handleOpenScheduled(record)} className='text-center'>{record.location}</td>
+                                                            <td onClick={() => handleOpenScheduled(record)} className='text-center'>{record.priority}</td>
+                                                            <td onClick={() => handleOpenScheduled(record)} className='text-center'>{record.delivery}</td>
+                                                            <td onClick={() => handleOpenScheduled(record)} className='text-center'>{record.jobNo}</td>
+                                                            <td onClick={() => handleOpenScheduled(record)} className='text-center'>{record.poNo}</td>
+                                                            <td onClick={() => handleOpenScheduled(record)} className='text-center'>{record.driver}</td>
+                                                            <td onClick={() => handleOpenScheduled(record)} className='text-center'>{format(parseISO(record.date), 'MM/dd/Y')}</td>
+                                                            <td onClick={() => handleOpenScheduled(record)} className='text-center'>{record.comments}</td>
+                                                            {cookieData.shipping &&
+                                                                <td className='text-center'>
                                                                     <Icon icon={checkCircleO} size={18} style={{ color: '#5BC236' }} onClick={() => handleComplete(record)} />
                                                                 </td>
                                                             }
-                                                    </tr>
-                                                )
-                                            }
-                                        })
-                                    }
-                                </tbody>
-                            </Table>
+                                                        </tr>
+                                                    )
+                                                }
+                                            })
+                                        }
+                                    </tbody>
+                                </Table>
+                                <button onClick={handleOpenAdd}>Add</button>
+                            </div>
                         </Tab>
 
                         <Tab eventKey='complete' title='Completed'>
-                            <Table striped hover>
-                                <thead>
-                                    <tr>
-                                        <th className='text-center'>Customer</th>
-                                        <th className='text-center'>Location</th>
-                                        <th className='text-center'>Type</th>
-                                        <th className='text-center'>Job No</th>
-                                        <th className='text-center'>PO No</th>
-                                        <th className='text-center'>Driver</th>
-                                        <th className='text-center'>Date</th>
-                                        <th className='text-center'>Comments</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {searchedShip
-                                        .map((record, index) => {
-                                            if (record.done) {
-                                                return (
-                                                    <tr key={index} record={record}>
-                                                        <td className='text-center'>{record.customer}</td>
-                                                        <td className='text-center'>{record.location}</td>
-                                                        <td className='text-center'>{record.delivery}</td>
-                                                        <td className='text-center'>{record.jobNo}</td>
-                                                        <td className='text-center'>{record.poNo}</td>
-                                                        <td className='text-center'>{record.driver}</td>
-                                                        <td className='text-center'>{format(parseISO(record.date), 'MM/dd/Y')}</td>
-                                                        <td className='text-center'>{record.comments}</td>
-                                                    </tr>
-                                                )
-                                            }
-                                        })
-                                    }
-                                </tbody>
-                            </Table>
+                            <div className="mx-3">
+                                <Table striped hover>
+                                    <thead>
+                                        <tr>
+                                            <th className='text-center'>Customer</th>
+                                            <th className='text-center'>Location</th>
+                                            <th className='text-center'>Type</th>
+                                            <th className='text-center'>Job No</th>
+                                            <th className='text-center'>PO No</th>
+                                            <th className='text-center'>Driver</th>
+                                            <th className='text-center'>Date</th>
+                                            <th className='text-center'>Comments</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {searchedShip
+                                            .map((record, index) => {
+                                                if (record.done) {
+                                                    return (
+                                                        <tr key={index} record={record}>
+                                                            <td className='text-center'>{record.customer}</td>
+                                                            <td className='text-center'>{record.location}</td>
+                                                            <td className='text-center'>{record.delivery}</td>
+                                                            <td className='text-center'>{record.jobNo}</td>
+                                                            <td className='text-center'>{record.poNo}</td>
+                                                            <td className='text-center'>{record.driver}</td>
+                                                            <td className='text-center'>{format(parseISO(record.date), 'MM/dd/Y')}</td>
+                                                            <td className='text-center'>{record.comments}</td>
+                                                        </tr>
+                                                    )
+                                                }
+                                            })
+                                        }
+                                    </tbody>
+                                </Table>
+                            </div>
                         </Tab>
 
                         <Tab eventKey='calendar' title='Calendar'>
-                            <h4>Coming Soon</h4>
+                            <Calendar />
                         </Tab>
                     </Tabs>
-                    <button onClick={handleOpenAdd}>Add</button>
                 </div>
             }
         </div>

@@ -31,18 +31,18 @@ export const Calendar = () => {
         businessBeginsHour: 5,
         businessEndsHour: 16,
         // timeRangeSelectedHandling: "Enabled",
-        onTimeRangeSelected: async (args) => {
-            const modal = await DayPilot.Modal.prompt("Create a new event:", "Event 1");
-            const dp = args.control;
-            dp.clearSelection();
-            if (modal.canceled) { return; }
-            dp.events.add({
-                start: args.start,
-                end: args.end,
-                id: DayPilot.guid(),
-                text: modal.result
-            });
-        },
+        // onTimeRangeSelected: async (args) => {
+        //     const modal = await DayPilot.Modal.prompt("Create a new event:", "Event 1");
+        //     const dp = args.control;
+        //     dp.clearSelection();
+        //     if (modal.canceled) { return; }
+        //     dp.events.add({
+        //         start: args.start,
+        //         end: args.end,
+        //         id: DayPilot.guid(),
+        //         text: modal.result
+        //     });
+        // },
         eventMoveHandling: "Update",
         onEventMoved: (args) => {
             console.log("Event moved: " + args.e.text());
@@ -53,7 +53,7 @@ export const Calendar = () => {
             console.log("Event resized: " + args.e.text());
             handleUpdateTimes(args)
         },
-        eventClickHandling: "Disabled",
+        // eventClickHandling: "Disabled",
         // eventClickHandling: "ContextMenu",
         // contextMenu: new DayPilot.Menu({
         //     items: [
@@ -86,22 +86,35 @@ export const Calendar = () => {
             .then((res) => {
                 let shipData = res.data;
                 let color;
+                let endTime;
                 
                 for (let i=0; i < shipData.length; i++) {
                     if (shipData[i].date) {
-                        if (shipData[i] == '3 - High') {
-                            color = '#cc4125'
-                        } else if (shipData[i] == '2 - Medium') {
-                            color = '#f1c232'
+                        if (shipData[i].done) {
+                            color = '#808080'
                         } else {
-                            color = '#6aa84f'
+                            if (shipData[i].priority == '4 - Urgent') {
+                                color = '#cc4125'
+                            } else if (shipData[i].priority == '3 - High') {
+                                color = '#ff5f15'
+                            } else if (shipData[i].priority == '2 - Medium') {
+                                color = '#f1c232'
+                            } else {
+                                color = '#0000ff'
+                            }
                         }
+
+                        if (shipData[i].timeFinish) {
+                            endTime = shipData[i].timeFinish;
+                        } else {
+                            endTime = shipData[i].date;
+                        }
+
                         eventData.push({
-                            // id: shipData[i].record,
                             id: shipData[i].id,
                             text: `${shipData[i].customer} (${shipData[i].location})`,
                             start: shipData[i].date,
-                            end: shipData[i].date,
+                            end: endTime,
                             backColor: color,
                         })
                     }
@@ -126,28 +139,31 @@ export const Calendar = () => {
     }, []);
 
     return (
-        <>
-        <div style={styles.wrap}>
-            <div style={styles.left}>
-                <DayPilotNavigator 
-                    selectMode={'Week'}
-                    showMonths={2}
-                    skipMonths={2}
-                    onTimeRangeSelected={handleTimeRangeSelected}
-                />
+        loading ? 
+            <h2>Loading</h2>
+        :
+        <div className="m-3">
+            <div style={styles.wrap}>
+                <div style={styles.left}>
+                    <DayPilotNavigator 
+                        selectMode={'Week'}
+                        showMonths={2}
+                        skipMonths={2}
+                        onTimeRangeSelected={handleTimeRangeSelected}
+                    />
+                </div>
+                <div style={styles.main}>
+                    <DayPilotCalendar 
+                        {...config} 
+                        ref={calendarRef} 
+                    />
+                </div>
             </div>
-            <div style={styles.main}>
-                <DayPilotCalendar 
-                    {...config} 
-                    ref={calendarRef} 
-                />
-            </div>
+            {searchedShip.map((item, index) => {
+                return (
+                    <h3 key={index}>{item.jobNo}</h3>
+                )
+            })}
         </div>
-        {searchedShip.map((item, index) => {
-            return (
-                <h3 key={index}>{item.jobNo}</h3>
-            )
-        })}
-        </>
     )
 }
