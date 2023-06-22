@@ -61,6 +61,7 @@ export const Shipping = () => {
         comments: '',
         driver: '',
         date: '',
+        timeFinish: '',
     });
 
     const [record, setRecord] = useState('');
@@ -73,6 +74,7 @@ export const Shipping = () => {
     const [comments, setComments] = useState('');
     const [driver, setDriver] = useState('');
     const [date, setDate] = useState('');
+    const [timeFinish, setTimeFinish] = useState('');
 
     async function fetchData() {
         try {
@@ -126,6 +128,7 @@ export const Shipping = () => {
             comments: record.comments,
             driver: record.driver,
             date: record.date,
+            timeFinish: record.timeFinish,
         })
         setRecord(record.record);
         setCustomer(record.customer);
@@ -137,10 +140,12 @@ export const Shipping = () => {
         setComments(record.comments);
         setDriver(record.driver);
         setDate(record.date);
+        setTimeFinish(record.timeFinish);
         setShowUpdate(true)
     }
     const handleCloseUpdate = () => setShowUpdate(false);
     const handleUpdate = () => {
+        console.log(updateSingleRequest)
         updateRecord(updateSingleRequest, record)
             .then(fetchData())
             .then(setShowUpdate(false))
@@ -158,6 +163,7 @@ export const Shipping = () => {
             comments: record.comments,
             driver: record.driver,
             date: record.date,
+            timeFinish: record.timeFinish,
         })
         setRecord(record.record);
         setCustomer(record.customer);
@@ -169,6 +175,7 @@ export const Shipping = () => {
         setComments(record.comments);
         setDriver(record.driver);
         setDate(record.date);
+        setTimeFinish(record.timeFinish);
         setShowScheduled(true)
     }
     const handleCloseScheduled = () => setShowScheduled(false);

@@ -87,6 +87,7 @@ export const Calendar = () => {
                 let shipData = res.data;
                 let color;
                 let endTime;
+                setSearchedShip(res.data)
                 
                 for (let i=0; i < shipData.length; i++) {
                     if (shipData[i].date) {
@@ -159,11 +160,13 @@ export const Calendar = () => {
                     />
                 </div>
             </div>
-            {searchedShip.map((item, index) => {
-                return (
-                    <h3 key={index}>{item.jobNo}</h3>
-                )
-            })}
+            {/* {searchedShip.map((item, index) => {
+                if (item.scheduled && !item.done) {
+                    return (
+                    <h4 key={index}>{item.record}, {item.customer} / {item.location} || {item.date} - {item.timeFinish}</h4>
+                    )    
+                }
+            })} */}
         </div>
     )
 }
