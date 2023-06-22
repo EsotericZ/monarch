@@ -409,9 +409,9 @@ export const Shipping = () => {
                                 <FloatingLabel label="Driver" className="mb-2">
                                     <Form.Control defaultValue={driver} name="driver" onChange={handleChangeActive} />
                                 </FloatingLabel>
-                                <FloatingLabel label="Delivery Date" className="mb-2">
+                                {/* <FloatingLabel label="Delivery Date" className="mb-2">
                                     <Form.Control defaultValue={date} type="date" name="date" onChange={handleChangeActive} />
-                                </FloatingLabel>
+                                </FloatingLabel> */}
                                 <FloatingLabel label="Comments">
                                     <Form.Control defaultValue={comments} name="comments" onChange={handleChangeActive} />
                                 </FloatingLabel>

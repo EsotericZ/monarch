@@ -60,9 +60,6 @@ async function createRequest(req, res) {
 async function updateRecord(req, res) {
     let record = req.body.record;
     let updateRecord = req.body.updateRecord;
-    let date = req.body.updateRecord.date;
-    date += ' 05:00:00'
-    updateRecord.date = date
 
     await Shipping.update(
         updateRecord,
@@ -83,7 +80,6 @@ async function scheduleRequest(req, res) {
     let driver = req.body.driver;
     let date = req.body.date;
     date += ' 11:00:00'
-    console.log(record, driver, date)
 
     await Shipping.update(
         {
