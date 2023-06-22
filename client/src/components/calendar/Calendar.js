@@ -4,6 +4,7 @@ import { DayPilot, DayPilotCalendar, DayPilotNavigator } from '@daypilot/daypilo
 import './calendar.css';
 import getAllOrders from '../../services/shipping/getAllOrders';
 import updateTimes from '../../services/shipping/updateTimes';
+import deleteSchedule from '../../services/shipping/deleteSchedule';
 
 const styles = {
     wrap: {
@@ -43,6 +44,11 @@ export const Calendar = () => {
         //         text: modal.result
         //     });
         // },
+        eventDeleteHandling: "Update",
+        onEventDeleted: (args) => {
+          console.log("Event deleted: " + args.e.text());
+          handleDeleteSchedule(args);
+        },
         eventMoveHandling: "Update",
         onEventMoved: (args) => {
             console.log("Event moved: " + args.e.text());
@@ -78,6 +84,10 @@ export const Calendar = () => {
 
     const handleUpdateTimes = (args) => {
         updateTimes(args.e.data.id, args.newStart.value, args.newEnd.value);
+    }
+
+    const handleDeleteSchedule = (args) => {
+        deleteSchedule(args.e.data.id);
     }
 
     const fetchData = () => {

@@ -99,6 +99,29 @@ async function scheduleRequest(req, res) {
     })
 }
 
+async function deleteSchedule(req, res) {
+    console.log(req.body)
+    let id = req.body.id;
+    console.log(id)
+
+    await Shipping.update(
+        {
+            date: null,
+            timeFinish: null,
+            scheduled: 0,
+        },
+        { where: { id: id }}
+    ).then((result) => {
+        return res.status(200).send({
+            data: result
+        })
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
+
 async function completeRequest(req, res) {
     let record = req.body.record;
     
@@ -145,5 +168,6 @@ exports.getAllCustomers = getAllCustomers;
 exports.createRequest = createRequest;
 exports.updateRecord = updateRecord;
 exports.scheduleRequest = scheduleRequest;
+exports.deleteSchedule = deleteSchedule;
 exports.completeRequest = completeRequest;
 exports.updateTimes = updateTimes;
