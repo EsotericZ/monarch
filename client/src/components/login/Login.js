@@ -23,6 +23,8 @@ export const Login = () => {
                 <input className='input' type='text' placeholder='Password' onChange={(e) => {setPassword(e.target.value)}}></input>
                 <button>Login</button>
             </form>
+
+
         </>
     )
 }

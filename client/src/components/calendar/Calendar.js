@@ -105,7 +105,7 @@ export const Calendar = () => {
                             color = '#808080'
                         } else {
                             if (shipData[i].priority == '4 - Urgent') {
-                                color = '#cc4125'
+                                color = '#d30000'
                             } else if (shipData[i].priority == '3 - High') {
                                 color = '#ff5f15'
                             } else if (shipData[i].priority == '2 - Medium') {

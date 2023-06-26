@@ -267,6 +267,7 @@ export const Shipping = () => {
                                     <Form.Control as="select" name="delivery" onChange={handleChangeAdd}>
                                         <option>Dropoff</option>
                                         <option>Pickup</option>
+                                        <option>Shipping</option>
                                         <option>Will Call</option>
                                     </Form.Control>
                                 </FloatingLabel>
@@ -342,6 +343,7 @@ export const Shipping = () => {
                                     <Form.Control defaultValue={delivery} as="select" name="delivery" onChange={handleChangeActive}>
                                         <option>Dropoff</option>
                                         <option>Pickup</option>
+                                        <option>Shipping</option>
                                         <option>Will Call</option>
                                     </Form.Control>
                                 </FloatingLabel>
@@ -397,6 +399,7 @@ export const Shipping = () => {
                                     <Form.Control defaultValue={delivery} as="select" name="delivery" onChange={handleChangeActive}>
                                         <option>Dropoff</option>
                                         <option>Pickup</option>
+                                        <option>Shipping</option>
                                         <option>Will Call</option>
                                     </Form.Control>
                                 </FloatingLabel>
