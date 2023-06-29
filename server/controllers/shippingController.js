@@ -78,6 +78,9 @@ async function updateRecord(req, res) {
 async function scheduleRequest(req, res) {
     let record = req.body.record;
     let driver = req.body.driver;
+    if (driver == null) {
+        driver = '';
+    };
     let date = req.body.date;
     date += ' 11:00:00'
 

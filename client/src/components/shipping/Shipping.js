@@ -29,6 +29,15 @@ export const Shipping = () => {
         };
     }
 
+    const [searchedValueCustomer, setSearchedValueCustomer] = useState('');
+    const [searchedValueLocation, setSearchedValueLocation] = useState('');
+    const [searchedValuePriority, setSearchedValuePriority] = useState('');
+    const [searchedValueType, setSearchedValueType] = useState('');
+    const [searchedValueJobNo, setSearchedValueJobNo] = useState('');
+    const [searchedValuePONo, setSearchedValuePONo] = useState('');
+    const [searchedValueComments, setSearchedValueComments] = useState('');
+    const [searchedValueDriver, setSearchedValueDriver] = useState('');
+
     const [searchedShip, setSearchedShip] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showAdd, setShowAdd] = useState(false);
@@ -441,13 +450,13 @@ export const Shipping = () => {
                                 <Table striped hover>
                                     <thead>
                                         <tr>
-                                            <th className='text-center'>Customer</th>
-                                            <th className='text-center'>Location</th>
-                                            <th className='text-center'>Priority</th>
-                                            <th className='text-center'>Type</th>
-                                            <th className='text-center'>Job No</th>
-                                            <th className='text-center'>PO No</th>
-                                            <th className='text-center'>Comments</th>
+                                            <th className='text-center'>Customer<input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                            <th className='text-center'>Location<input onChange={(e) => setSearchedValueLocation(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                            <th className='text-center'>Priority<input onChange={(e) => setSearchedValuePriority(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                            <th className='text-center'>Type<input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                            <th className='text-center'>Job No<input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                            <th className='text-center'>PO No<input onChange={(e) => setSearchedValuePONo(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                            <th className='text-center'>Comments<input onChange={(e) => setSearchedValueComments(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
                                             {cookieData.shipping &&
                                                 <th className='text-center align-middle'>Schedule</th>
                                             }
@@ -455,6 +464,48 @@ export const Shipping = () => {
                                     </thead>
                                     <tbody>
                                         {searchedShip
+                                            .filter((row) => 
+                                                !searchedValueCustomer || row.customer
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueCustomer.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueLocation || row.location
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueLocation.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValuePriority || row.priority
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValuePriority.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueType || row.delivery
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueType.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueJobNo || row.jobNo
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueJobNo.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValuePONo || row.poNo
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValuePONo.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueComments || row.comments
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueComments.toString().toLowerCase())
+                                            )
                                             .map((record, index) => {
                                                 if (!record.scheduled && !record.done) {
                                                     return (
@@ -487,15 +538,15 @@ export const Shipping = () => {
                                 <Table striped hover>
                                     <thead>
                                         <tr>
-                                            <th className='text-center'>Customer</th>
-                                            <th className='text-center'>Location</th>
-                                            <th className='text-center'>Priority</th>
-                                            <th className='text-center'>Type</th>
-                                            <th className='text-center'>Job No</th>
-                                            <th className='text-center'>PO No</th>
-                                            <th className='text-center'>Driver</th>
-                                            <th className='text-center'>Date</th>
-                                            <th className='text-center'>Comments</th>
+                                            <th className='text-center'>Customer<input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                            <th className='text-center'>Location<input onChange={(e) => setSearchedValueLocation(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                            <th className='text-center'>Priority<input onChange={(e) => setSearchedValuePriority(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                            <th className='text-center'>Type<input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                            <th className='text-center'>Job No<input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                            <th className='text-center'>PO No<input onChange={(e) => setSearchedValuePONo(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                            <th className='text-center'>Driver<input onChange={(e) => setSearchedValueDriver(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                            <th className='text-center align-middle'>Date</th>
+                                            <th className='text-center'>Comments<input onChange={(e) => setSearchedValueComments(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
                                             {cookieData.shipping &&
                                                 <th className='text-center align-middle'>Complete</th>
                                             }
@@ -503,6 +554,54 @@ export const Shipping = () => {
                                     </thead>
                                     <tbody>
                                         {searchedShip
+                                            .filter((row) => 
+                                                !searchedValueCustomer || row.customer
+                                                        .toString()
+                                                        .toLowerCase()
+                                                        .includes(searchedValueCustomer.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueLocation || row.location
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueLocation.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValuePriority || row.priority
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValuePriority.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueType || row.delivery
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueType.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueJobNo || row.jobNo
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueJobNo.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValuePONo || row.poNo
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValuePONo.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueDriver || row.driver
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueDriver.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueComments || row.comments
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueComments.toString().toLowerCase())
+                                            )
                                             .map((record, index) => {
                                                 if (record.scheduled && !record.done) {
                                                     return (
@@ -537,18 +636,60 @@ export const Shipping = () => {
                                 <Table striped hover>
                                     <thead>
                                         <tr>
-                                            <th className='text-center'>Customer</th>
-                                            <th className='text-center'>Location</th>
-                                            <th className='text-center'>Type</th>
-                                            <th className='text-center'>Job No</th>
-                                            <th className='text-center'>PO No</th>
-                                            <th className='text-center'>Driver</th>
-                                            <th className='text-center'>Date</th>
-                                            <th className='text-center'>Comments</th>
+                                            <th className='text-center'>Customer<input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                            <th className='text-center'>Location<input onChange={(e) => setSearchedValueLocation(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                            <th className='text-center'>Type<input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                            <th className='text-center'>Job No<input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                            <th className='text-center'>PO No<input onChange={(e) => setSearchedValuePONo(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                            <th className='text-center'>Driver<input onChange={(e) => setSearchedValueDriver(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                            <th className='text-center align-middle'>Date</th>
+                                            <th className='text-center'>Comments<input onChange={(e) => setSearchedValueComments(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {searchedShip
+                                            .filter((row) => 
+                                                !searchedValueCustomer || row.customer
+                                                        .toString()
+                                                        .toLowerCase()
+                                                        .includes(searchedValueCustomer.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueLocation || row.location
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueLocation.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueType || row.delivery
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueType.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueJobNo || row.jobNo
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueJobNo.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValuePONo || row.poNo
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValuePONo.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueDriver || row.driver
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueDriver.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueComments || row.comments
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueComments.toString().toLowerCase())
+                                            )
                                             .map((record, index) => {
                                                 if (record.done) {
                                                     return (
