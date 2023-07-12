@@ -30,19 +30,12 @@ export const Sidebar = () => {
         }
     }
 
-    const handleLogout = () => {
-        cookies.remove('jwt', { path: '/', domain:'' });
-        setName('');
-        setAdmin(false);
-    }
-
     useEffect(() => {
         setData();
     }, [name, admin])
 
     return !loading &&
         <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', position: 'fixed' }}>
-        {/* <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}> */}
             <CDBSidebar toggled={true}>
                 <CDBSidebarHeader prefix={<i className="fa fa-bars" />}>Monarch Metal</CDBSidebarHeader>
                 <CDBSidebarContent>
@@ -59,11 +52,15 @@ export const Sidebar = () => {
                     </CDBSidebarMenu>
                     {name ?
                         <CDBSidebarMenu>
-                            <CDBSidebarMenuItem icon="user" onClick={handleLogout}>Logout</CDBSidebarMenuItem>
+                            <NavLink exact to='/profile'>
+                                <CDBSidebarMenuItem icon="user">Profile</CDBSidebarMenuItem>
+                            </NavLink>
                         </CDBSidebarMenu>
                     :
                         <CDBSidebarMenu>
-                            <CDBSidebarMenuItem icon="user">Login</CDBSidebarMenuItem>
+                            <NavLink exact to='/login'>
+                                <CDBSidebarMenuItem icon="user">Login</CDBSidebarMenuItem>
+                            </NavLink>
                         </CDBSidebarMenu>
                     }
                     {admin &&

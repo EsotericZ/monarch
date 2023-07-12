@@ -33,11 +33,3 @@
     font-weight: 600;
     color: rgb(34, 34, 34);
   }
-
-  .LoginError {
-    display: flex;
-    color: red;
-    font-style: italic;
-    font-size: 14 px;
-    justify-content: center;
-  }
