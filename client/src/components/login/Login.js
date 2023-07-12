@@ -31,11 +31,9 @@ export const Login = () => {
     }
 
     return (
-        // <>
         <div style={{ display: 'flex' }}>
             <Sidebar />
             <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
-                <h1>Monarch Metal</h1>
                 {loggedIn ?
                     <h2>Signed in as {cookieData.name}</h2>
                 :

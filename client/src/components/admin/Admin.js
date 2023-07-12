@@ -117,11 +117,12 @@ export const Admin = () => {
                 password: res.data
             })
             setPassword(res.data)
+        }).then(() => {
+            setName(user.name);
+            setUsername(user.username);
+            setNumber(user.number);
+            setShowUpdate(true);    
         })
-        setName(user.name);
-        setUsername(user.username);
-        setNumber(user.number);
-        setShowUpdate(true);
     };
     const handleCloseUpdate = () => setShowUpdate(false);
     const handleUpdate = () => {
@@ -151,7 +152,7 @@ export const Admin = () => {
             :
                 (cookieData.name ?
                     <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
-                        <h1>Employee Database</h1>
+                        <h1 className='text-center m-3'>Employee Database</h1>
                         <Modal show={showAdd}>
                             <Modal.Header>
                                 <Modal.Title>Add User</Modal.Title>
@@ -215,54 +216,56 @@ export const Admin = () => {
                             </Modal.Footer>
                         </Modal>
 
-                        <Table striped hover>
-                            <thead>
-                                <tr>
-                                    <th className='text-center'>Name</th>
-                                    <th className='text-center'>Username</th>
-                                    <th className='text-center'>Number</th>
-                                    <th className='text-center'>Password</th>
-                                    <th className='text-center'>Role</th>
-                                    <th className='text-center'>Maintenance</th>
-                                    <th className='text-center'>Shipping</th>
-                                    <th className='text-center'>Engineering</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {allUsers.map((user, index) => {
-                                    return (
-                                        <tr key={index} user={user}>
-                                            <td onClick={() => handleOpenUpdate(user)} className='text-center'>{user.name}</td>
-                                            <td onClick={() => handleOpenUpdate(user)} className='text-center'>{user.username}</td>
-                                            <td onClick={() => handleOpenUpdate(user)} className='text-center'>{user.number}</td>
-                                            <td className='text-center'>
-                                                <Icon icon={ primitiveDotStroke }/>
-                                                <Icon icon={ primitiveDotStroke }/>
-                                                <Icon icon={ primitiveDotStroke }/>
-                                                <Icon icon={ primitiveDotStroke }/>
-                                            </td>
-                                            <td className='text-center'>{user.role}</td>
-                                            {user.maintenance ?
-                                                <td className='text-center' onClick={() => toggleMaintenance(user)}>On</td>
-                                            :
-                                                <td className='text-center' onClick={() => toggleMaintenance(user)}>-</td>
-                                            }
-                                            {user.shipping ?
-                                                <td className='text-center' onClick={() => toggleShipping(user)}>On</td>
-                                            :
-                                                <td className='text-center' onClick={() => toggleShipping(user)}>-</td>
-                                            }
-                                            {user.engineering ?
-                                                <td className='text-center' onClick={() => toggleEngineering(user)}>On</td>
-                                            :
-                                                <td className='text-center' onClick={() => toggleEngineering(user)}>-</td>
-                                            }
-                                        </tr>
-                                    )
-                                })}
-                            </tbody>
-                        </Table>
-                        <button onClick={handleOpenAdd}>Add User</button>
+                        <div className='mx-3'>
+                            <Table striped hover>
+                                <thead>
+                                    <tr>
+                                        <th className='text-center'>Name</th>
+                                        <th className='text-center'>Username</th>
+                                        <th className='text-center'>Number</th>
+                                        {/* <th className='text-center'>Password</th> */}
+                                        <th className='text-center'>Role</th>
+                                        <th className='text-center'>Maintenance</th>
+                                        <th className='text-center'>Shipping</th>
+                                        <th className='text-center'>Engineering</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {allUsers.map((user, index) => {
+                                        return (
+                                            <tr key={index} user={user}>
+                                                <td onClick={() => handleOpenUpdate(user)} className='text-center'>{user.name}</td>
+                                                <td onClick={() => handleOpenUpdate(user)} className='text-center'>{user.username}</td>
+                                                <td onClick={() => handleOpenUpdate(user)} className='text-center'>{user.number}</td>
+                                                {/* <td className='text-center'>
+                                                    <Icon icon={ primitiveDotStroke }/>
+                                                    <Icon icon={ primitiveDotStroke }/>
+                                                    <Icon icon={ primitiveDotStroke }/>
+                                                    <Icon icon={ primitiveDotStroke }/>
+                                                </td> */}
+                                                <td className='text-center'>{user.role}</td>
+                                                {user.maintenance ?
+                                                    <td className='text-center' onClick={() => toggleMaintenance(user)}>On</td>
+                                                :
+                                                    <td className='text-center' onClick={() => toggleMaintenance(user)}>-</td>
+                                                }
+                                                {user.shipping ?
+                                                    <td className='text-center' onClick={() => toggleShipping(user)}>On</td>
+                                                :
+                                                    <td className='text-center' onClick={() => toggleShipping(user)}>-</td>
+                                                }
+                                                {user.engineering ?
+                                                    <td className='text-center' onClick={() => toggleEngineering(user)}>On</td>
+                                                :
+                                                    <td className='text-center' onClick={() => toggleEngineering(user)}>-</td>
+                                                }
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </Table>
+                            <button onClick={handleOpenAdd}>Add User</button>
+                        </div>
                     </div>
                 :
                     <div style={{ display: 'inline', width: '100%' }}>
