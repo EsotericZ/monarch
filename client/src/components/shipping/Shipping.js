@@ -50,6 +50,7 @@ export const Shipping = () => {
     const [vendorList, setVendorList] = useState([]);
     const [newRequest, setNewRequest] = useState({
         customer: '',
+        vendor: '',
         location: '',
         priority: '1 - Low',
         jobNo: '',
@@ -64,6 +65,7 @@ export const Shipping = () => {
     })
     const [updateSingleRequest, setUpdateSingleRequest] = useState({
         customer: '',
+        vendor: '',
         location: '',
         priority: '',
         jobNo: '',
@@ -123,6 +125,7 @@ export const Shipping = () => {
             .then(setShowAdd(false))
             .then(setNewRequest({
                 customer: '',
+                vendor: '',
                 location: '',
                 priority: '',
                 jobNo: '',
@@ -136,6 +139,7 @@ export const Shipping = () => {
         setUpdateSingleRequest({
             ...updateSingleRequest,
             customer: record.customer,
+            vendor: record.vendor,
             location: record.location,
             priority: record.priority,
             jobNo: record.jobNo,
@@ -148,6 +152,7 @@ export const Shipping = () => {
         })
         setRecord(record.record);
         setCustomer(record.customer);
+        setVendor(record.vendor);
         setLocation(record.location);
         setPriority(record.priority);
         setJobNo(record.jobNo);
@@ -171,6 +176,7 @@ export const Shipping = () => {
         setUpdateSingleRequest({
             ...updateSingleRequest,
             customer: record.customer,
+            vendor: record.vendor,
             location: record.location,
             priority: record.priority,
             jobNo: record.jobNo,
@@ -183,6 +189,7 @@ export const Shipping = () => {
         })
         setRecord(record.record);
         setCustomer(record.customer);
+        setVendor(record.vendor);
         setLocation(record.location);
         setPriority(record.priority);
         setJobNo(record.jobNo);
@@ -263,7 +270,7 @@ export const Shipping = () => {
                                     </Form.Control>
                                 </FloatingLabel>
                                 <FloatingLabel label="Vendor" className="mb-2">
-                                    <Form.Control as="select" name="vednor" onChange={handleChangeAdd}>
+                                    <Form.Control as="select" name="vendor" onChange={handleChangeAdd}>
                                         <option value={''}></option>
                                         {vendorList.map((item, index) => {
                                             return (
@@ -487,7 +494,7 @@ export const Shipping = () => {
                                 <Table striped hover>
                                     <thead>
                                         <tr>
-                                            <th className='text-center'>Customer<input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                            <th className='text-center'>Cust/Vend<input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
                                             <th className='text-center'>Location<input onChange={(e) => setSearchedValueLocation(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
                                             <th className='text-center'>Priority<input onChange={(e) => setSearchedValuePriority(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
                                             <th className='text-center'>Type<input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
@@ -547,7 +554,11 @@ export const Shipping = () => {
                                                 if (!record.scheduled && !record.done) {
                                                     return (
                                                         <tr key={index} record={record}>
-                                                            <td onClick={() => handleOpenActive(record)} className='text-center'>{record.customer}</td>
+                                                            {record.customer ?
+                                                                <td onClick={() => handleOpenActive(record)} className='text-center'>{record.customer}</td>
+                                                            :
+                                                                <td onClick={() => handleOpenActive(record)} className='text-center'>{record.vendor}</td>
+                                                            }
                                                             <td onClick={() => handleOpenActive(record)} className='text-center'>{record.location}</td>
                                                             <td onClick={() => handleOpenActive(record)} className='text-center'>{record.priority}</td>
                                                             <td onClick={() => handleOpenActive(record)} className='text-center'>{record.delivery}</td>
@@ -575,7 +586,7 @@ export const Shipping = () => {
                                 <Table striped hover>
                                     <thead>
                                         <tr>
-                                            <th className='text-center'>Customer<input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                            <th className='text-center'>Cust/Vend<input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
                                             <th className='text-center'>Location<input onChange={(e) => setSearchedValueLocation(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
                                             <th className='text-center'>Priority<input onChange={(e) => setSearchedValuePriority(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
                                             <th className='text-center'>Type<input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
@@ -643,7 +654,11 @@ export const Shipping = () => {
                                                 if (record.scheduled && !record.done) {
                                                     return (
                                                         <tr key={index} record={record}>
-                                                            <td onClick={() => handleOpenScheduled(record)} className='text-center'>{record.customer}</td>
+                                                            {record.customer ?
+                                                                <td onClick={() => handleOpenScheduled(record)} className='text-center'>{record.customer}</td>
+                                                            :
+                                                                <td onClick={() => handleOpenScheduled(record)} className='text-center'>{record.vendor}</td>
+                                                            }
                                                             <td onClick={() => handleOpenScheduled(record)} className='text-center'>{record.location}</td>
                                                             <td onClick={() => handleOpenScheduled(record)} className='text-center'>{record.priority}</td>
                                                             <td onClick={() => handleOpenScheduled(record)} className='text-center'>{record.delivery}</td>
@@ -673,7 +688,7 @@ export const Shipping = () => {
                                 <Table striped hover>
                                     <thead>
                                         <tr>
-                                            <th className='text-center'>Customer<input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                            <th className='text-center'>Cust/Vend<input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
                                             <th className='text-center'>Location<input onChange={(e) => setSearchedValueLocation(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
                                             <th className='text-center'>Type<input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
                                             <th className='text-center'>Job No<input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
@@ -731,6 +746,11 @@ export const Shipping = () => {
                                                 if (record.done) {
                                                     return (
                                                         <tr key={index} record={record}>
+                                                            {record.customer ?
+                                                                <td className='text-center'>{record.customer}</td>
+                                                            :
+                                                                <td className='text-center'>{record.vendor}</td>
+                                                            }
                                                             <td className='text-center'>{record.customer}</td>
                                                             <td className='text-center'>{record.location}</td>
                                                             <td className='text-center'>{record.delivery}</td>
