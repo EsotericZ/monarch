@@ -30,9 +30,9 @@ export const Profile = () => {
             <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
                 {loggedIn ?
                     <>
-                        <h2>{cookieData.name}</h2>
+                        <h2 className='text-center m-3'>{cookieData.name}</h2>
                         <NavLink exact to='/'>
-                            <h2 onClick={handleLogout}>Logout</h2>
+                            <h2 onClick={handleLogout} className='text-center m-3'>Logout</h2>
                         </NavLink>
                     </>
                 :

@@ -24,11 +24,13 @@ export const Home = () => {
         <div style={{ display: 'flex' }}>
             <Sidebar />
             <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
-                <h1>Monarch Metal</h1>
+                <h1 className='text-center m-3'>Monarch Metal</h1>
                 {cookieData ?
-                    <h2>Signed in as {cookieData.name}</h2>
+                    <h5 className='text-center m-3'>User: {cookieData.name}</h5>
                 :
-                    <NavLink exact to='/login'>Login</NavLink>
+                    <div className='text-center m-3'>
+                        <NavLink exact to='/login'>Login</NavLink>
+                    </div>
                 }
             </div>
         </div>

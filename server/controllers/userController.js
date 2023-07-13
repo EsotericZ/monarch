@@ -1,10 +1,14 @@
 const CryptoJS = require('crypto-js');
 const jwt = require("jsonwebtoken");
+const Op = require('sequelize').Op;
 
 const { User } = require('../models');
 
 async function getAllUsers(req, res) {
     await User.findAll({
+        where: {
+            name: { [Op.ne]: 'Admin' }
+        },
         order: [['number', 'ASC']]
     })
     .then((result) => {

@@ -68,6 +68,9 @@ export const Sidebar = () => {
                             <NavLink exact to='/admin'>
                                 <CDBSidebarMenuItem icon="wrench">Admin</CDBSidebarMenuItem>
                             </NavLink>
+                            <a href='http://10.0.1.45:3000/' target='__blank'>
+                                <CDBSidebarMenuItem icon="lock">RFID Site</CDBSidebarMenuItem>
+                            </a>
                         </CDBSidebarMenu>
                     }
 
