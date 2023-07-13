@@ -18,6 +18,9 @@ Shipping.init(
         customer: {
             type: DataTypes.STRING,
         },
+        vendor: {
+            type: DataTypes.STRING,
+        },
         location: {
             type: DataTypes.STRING,
         },

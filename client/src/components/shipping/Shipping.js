@@ -9,6 +9,7 @@ import { checkCircleO } from 'react-icons-kit/fa/checkCircleO';
 
 import getAllOrders from '../../services/shipping/getAllOrders';
 import getAllCustomers from '../../services/shipping/getAllCustomers';
+import getAllVendors from '../../services/shipping/getAllVendors';
 import createRequest from '../../services/shipping/createRequest';
 import scheduleRequest from '../../services/shipping/scheduleRequest';
 import updateRecord from '../../services/shipping/updateRecord';
@@ -46,6 +47,7 @@ export const Shipping = () => {
     const [showScheduled, setShowScheduled] = useState(false);
     const [shippingRecord, setShippingRecord] = useState();
     const [customerList, setCustomerList] = useState([]);
+    const [vendorList, setVendorList] = useState([]);
     const [newRequest, setNewRequest] = useState({
         customer: '',
         location: '',
@@ -75,6 +77,7 @@ export const Shipping = () => {
 
     const [record, setRecord] = useState('');
     const [customer, setCustomer] = useState('');
+    const [vendor, setVendor] = useState('');
     const [location, setLocation] = useState('');
     const [priority, setPriority] = useState('');
     const [jobNo, setJobNo] = useState('');
@@ -90,6 +93,10 @@ export const Shipping = () => {
             getAllCustomers()
                 .then((res) => {
                     setCustomerList(res)
+                })
+            getAllVendors()
+                .then((res) => {
+                    setVendorList(res)
                 })
             getAllOrders()
             .then((res) => {
@@ -255,6 +262,16 @@ export const Shipping = () => {
                                         })}
                                     </Form.Control>
                                 </FloatingLabel>
+                                <FloatingLabel label="Vendor" className="mb-2">
+                                    <Form.Control as="select" name="vednor" onChange={handleChangeAdd}>
+                                        <option value={''}></option>
+                                        {vendorList.map((item, index) => {
+                                            return (
+                                                <option key={index} value={item.VendCode}>{item.VendCode}</option>
+                                            )
+                                        })}
+                                    </Form.Control>
+                                </FloatingLabel>
                                 <FloatingLabel label="Location" className="mb-2">
                                     <Form.Control name="location" onChange={handleChangeAdd} />
                                 </FloatingLabel>
@@ -337,6 +354,16 @@ export const Shipping = () => {
                                         })}
                                     </Form.Control>
                                 </FloatingLabel>
+                                <FloatingLabel label="Vendor" className="mb-2">
+                                    <Form.Control defaultValue={vendor} as="select" name="vendor" onChange={handleChangeActive}>
+                                        <option value={''}></option>
+                                        {vendorList.map((item, index) => {
+                                            return (
+                                                <option key={index} value={item.VendCode}>{item.VendCode}</option>
+                                            )
+                                        })}
+                                    </Form.Control>
+                                </FloatingLabel>
                                 <FloatingLabel label="Location" className="mb-2">
                                     <Form.Control defaultValue={location} name="location" onChange={handleChangeActive} />
                                 </FloatingLabel>
@@ -389,6 +416,16 @@ export const Shipping = () => {
                                         {customerList.map((item, index) => {
                                             return (
                                                 <option key={index} value={item.CustCode}>{item.CustCode}</option>
+                                            )
+                                        })}
+                                    </Form.Control>
+                                </FloatingLabel>
+                                <FloatingLabel label="Vendor" className="mb-2">
+                                    <Form.Control defaultValue={vendor} as="select" name="vendor" onChange={handleChangeActive}>
+                                        <option value={''}></option>
+                                        {vendorList.map((item, index) => {
+                                            return (
+                                                <option key={index} value={item.VendCode}>{item.VendCode}</option>
                                             )
                                         })}
                                     </Form.Control>

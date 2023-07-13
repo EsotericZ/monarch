@@ -28,6 +28,7 @@ router.post('/maintenance/doneRequest', maintenanceController.doneRequest);
 
 router.get('/shipping/getAllOrders', shippingController.getAllOrders);
 router.get('/shipping/getAllCustomers', shippingController.getAllCustomers);
+router.get('/shipping/getAllVendors', shippingController.getAllVendors);
 router.post('/shipping/createRequest', shippingController.createRequest);
 router.post('/shipping/updateRecord', shippingController.updateRecord);
 router.post('/shipping/scheduleRequest', shippingController.scheduleRequest);

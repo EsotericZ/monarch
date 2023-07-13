@@ -44,6 +44,19 @@ async function getAllCustomers(req, res) {
     })
 }
 
+async function getAllVendors(req, res) {
+    sql.connect(config, function(err,) {
+        if (err) console.error(err);
+        let request = new sql.Request();
+        request.query("SELECT DISTINCT VendCode FROM Routing ORDER BY VendCode", 
+        function(err, recordset) {
+            if (err) console.error(err);
+            let vendors = recordset.recordsets[0];
+            res.send(vendors);
+        })
+    })
+}
+
 async function createRequest(req, res) {
     await Shipping.create(req.body)
     .then((result) => {
@@ -168,6 +181,7 @@ async function updateTimes(req, res) {
 
 exports.getAllOrders = getAllOrders;
 exports.getAllCustomers = getAllCustomers;
+exports.getAllVendors = getAllVendors;
 exports.createRequest = createRequest;
 exports.updateRecord = updateRecord;
 exports.scheduleRequest = scheduleRequest;
