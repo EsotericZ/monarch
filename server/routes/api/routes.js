@@ -5,6 +5,7 @@ const engineeringController = require('../../controllers/engineeringController')
 const maintenanceController = require('../../controllers/maintenanceController');
 const portalController = require('../../controllers/portalController');
 const shippingController = require('../../controllers/shippingController');
+const todoController = require('../../controllers/todoController');
 const userController = require('../../controllers/userController');
 
 router.get('/', function (req, res) {
@@ -35,6 +36,9 @@ router.post('/shipping/scheduleRequest', shippingController.scheduleRequest);
 router.post('/shipping/deleteSchedule', shippingController.deleteSchedule);
 router.post('/shipping/completeRequest', shippingController.completeRequest);
 router.post('/shipping/updateTimes', shippingController.updateTimes);
+
+router.get('/todo/getAllTodos', todoController.getAllTodos);
+router.post('/todo/createTodo', todoController.createTodo);
 
 router.get('/users/getAllUsers', userController.getAllUsers);
 router.post('/users/getUserPassword', userController.getUserPassword);
