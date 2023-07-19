@@ -39,6 +39,7 @@ router.post('/shipping/updateTimes', shippingController.updateTimes);
 
 router.get('/todo/getAllTodos', todoController.getAllTodos);
 router.post('/todo/createTodo', todoController.createTodo);
+router.post('/todo/updateTodo', todoController.updateTodo);
 
 router.get('/users/getAllUsers', userController.getAllUsers);
 router.post('/users/getUserPassword', userController.getUserPassword);
