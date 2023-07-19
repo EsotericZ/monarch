@@ -32,11 +32,19 @@ export const Profile = () => {
                     <>
                         <h2 className='text-center m-3'>{cookieData.name}</h2>
                         <NavLink exact to='/'>
-                            <h2 onClick={handleLogout} className='text-center m-3'>Logout</h2>
+                            <div className='text-center'>
+                                <button onClick={handleLogout} className='text-center m-3 mmBtn'>Logout</button>
+                            </div>
                         </NavLink>
                     </>
                 :
-                    <h2>Log In</h2>
+                    <>
+                        <NavLink exact to='/login'>
+                            <div className='text-center'>
+                                <button className='m-5 mmBtn'>Log In</button>
+                            </div>
+                        </NavLink>
+                    </>
                 }
             </div>
         </div>

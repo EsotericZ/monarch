@@ -577,7 +577,7 @@ export const Shipping = () => {
                                         }
                                     </tbody>
                                 </Table>
-                                <button onClick={handleOpenAdd}>Add</button>
+                                <button className='mmBtn' onClick={handleOpenAdd}>Add</button>
                             </div>
                         </Tab>
 
@@ -679,7 +679,7 @@ export const Shipping = () => {
                                         }
                                     </tbody>
                                 </Table>
-                                <button onClick={handleOpenAdd}>Add</button>
+                                <button className='mmBtn' onClick={handleOpenAdd}>Add</button>
                             </div>
                         </Tab>
 

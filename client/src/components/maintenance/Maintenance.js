@@ -624,7 +624,7 @@ export const Maintenance = () => {
                                         }
                                     </tbody>
                                 </Table>
-                                <button onClick={handleOpenAdd}>Add</button>
+                                <button className='mmBtn' onClick={handleOpenAdd}>Add</button>
                             </div>
                         </Tab>
                         <Tab eventKey="request" title={requested}>
@@ -719,7 +719,7 @@ export const Maintenance = () => {
                                         }
                                     </tbody>
                                 </Table>
-                                <button onClick={handleOpenAdd}>Add</button>
+                                <button className='mmBtn' onClick={handleOpenAdd}>Add</button>
                             </div>
                         </Tab>
                         <Tab eventKey="hold" title={hold}>

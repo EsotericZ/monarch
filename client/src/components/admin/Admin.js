@@ -290,7 +290,7 @@ export const Admin = () => {
                                     })}
                                 </tbody>
                             </Table>
-                            <button onClick={handleOpenAdd}>Add User</button>
+                            <button className='mmBtn' onClick={handleOpenAdd}>Add User</button>
                         </div>
                     </div>
                 :

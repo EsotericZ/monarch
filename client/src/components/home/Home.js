@@ -29,7 +29,9 @@ export const Home = () => {
                     <h5 className='text-center m-3'>User: {cookieData.name}</h5>
                 :
                     <div className='text-center m-3'>
-                        <NavLink exact to='/login'>Login</NavLink>
+                        <NavLink exact to='/login'>
+                            <button className='m-3 mmBtn'>Log In</button>
+                        </NavLink>
                     </div>
                 }
             </div>
