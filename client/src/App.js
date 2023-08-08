@@ -5,7 +5,7 @@ import { Admin } from './components/admin/Admin';
 import { Calendar } from './components/calendar/Calendar';
 import { Engineering } from './components/engineering/Engineering';
 import { Home } from './components/home/Home';
-// import { Inventory } from './components/inventory/Inventory';
+import { Inventory } from './components/inventory/Inventory';
 import { Login } from './components/login/Login';
 import { Maintenance } from './components/maintenance/Maintenance';
 import { Profile } from './components/profile/Profile';
@@ -32,10 +32,10 @@ export const App = () => {
           path='/engineering'
           element={<Engineering />}
         />
-        {/* <Route */}
-          {/* path='/inventory' */}
-          {/* element={<Inventory />} */}
-        {/* /> */}
+        <Route
+          path='/inventory'
+          element={<Inventory />}
+        />
         <Route
           path='/login'
           element={<Login />}
