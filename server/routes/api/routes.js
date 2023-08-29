@@ -4,6 +4,7 @@ let router = express.Router();
 const engineeringController = require('../../controllers/engineeringController');
 const maintenanceController = require('../../controllers/maintenanceController');
 const portalController = require('../../controllers/portalController');
+const scalesController = require('../../controllers/scalesController');
 const shippingController = require('../../controllers/shippingController');
 const todoController = require('../../controllers/todoController');
 const userController = require('../../controllers/userController');
@@ -26,6 +27,8 @@ router.post('/maintenance/denyRequest', maintenanceController.denyRequest);
 router.post('/maintenance/deleteRequest', maintenanceController.deleteRequest);
 router.post('/maintenance/holdRequest', maintenanceController.holdRequest);
 router.post('/maintenance/doneRequest', maintenanceController.doneRequest);
+
+router.get('/scales/getAllScales', scalesController.getAllScales);
 
 router.get('/shipping/getAllOrders', shippingController.getAllOrders);
 router.get('/shipping/getAllCustomers', shippingController.getAllCustomers);
