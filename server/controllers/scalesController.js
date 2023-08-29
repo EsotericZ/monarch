@@ -1,6 +1,6 @@
 const { Scales } = require('../models');
 
-async function getAllScales(req, res) {
+async function getAllPorts(req, res) {
     await Scales.findAll()
     .then((result) => {
         return res.status(200).send({
@@ -13,4 +13,4 @@ async function getAllScales(req, res) {
     })
 }
 
-exports.getAllScales = getAllScales;
+exports.getAllPorts = getAllPorts;

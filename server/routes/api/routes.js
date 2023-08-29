@@ -28,7 +28,7 @@ router.post('/maintenance/deleteRequest', maintenanceController.deleteRequest);
 router.post('/maintenance/holdRequest', maintenanceController.holdRequest);
 router.post('/maintenance/doneRequest', maintenanceController.doneRequest);
 
-router.get('/scales/getAllScales', scalesController.getAllScales);
+router.get('/scales/getAllPorts', scalesController.getAllPorts);
 
 router.get('/shipping/getAllOrders', shippingController.getAllOrders);
 router.get('/shipping/getAllCustomers', shippingController.getAllCustomers);

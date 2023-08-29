@@ -1,46 +1,37 @@
 import { useEffect, useState } from "react";
-import getAllScales from "../../services/scales/getAllScales";
+// import getAllScales from "../../services/scales/getAllScales";
 import getAllChannels from "../../services/scales/getAllChannels";
-
-const liveChannels = [
-    '664579',
-    '667886',
-    '688388',
-    '668290',
-    '666426',
-    '666644',
-    '666620',
-]
+import getAllPorts from "../../services/scales/getAllPorts";
 
 export const Inventory = () => {
-    const [allScales, setAllScales] = useState();
+    // const [allScales, setAllScales] = useState();
     const [allChannels, setAllChannels] = useState();
     const [loadingChannels, setLoadingChannles] = useState(true);
     let activeChannels = []
 
     const fetchData = async () => {
         try {
-            const scales = await getAllScales();
-            setAllScales(scales)
-
+            // const scales = await getAllScales();
+            // setAllScales(scales)
+            
             const channels = await getAllChannels();
             let channelArray = channels.split("\n")
             let newChannelArray = [...new Set(channelArray.map((channel) => channel.slice(0,6)))]
-            
-            console.log(newChannelArray)
-            
-            liveChannels.forEach(e => { 
-                if (newChannelArray.includes(e)) {
-                    console.log(e, 'true')
-                    activeChannels.push({'channel': e, 'active': 'true'})
-                } else {
-                    console.log(e, 'false')
-                    activeChannels.push({'channel': e, 'active': 'false'})
-                }
-            });
+
+            await getAllPorts()
+            .then((res) => {
+                const channels = res.data
+                channels.forEach(channel => {
+                    if (newChannelArray.includes(channel.portNo)) {
+                        activeChannels.push({'channel': channel.portNo, 'rack': channel.rack, 'active': 'true'})
+                    } else {
+                        activeChannels.push({'channel': channel.portNo, 'rack': channel.rack, 'active': 'false'})
+                    }
+                })
+            })
+                    
             setAllChannels(activeChannels);
             setLoadingChannles(false)
-            console.log(activeChannels)
         } catch (err) {
             console.log(err)
         }
@@ -67,7 +58,7 @@ export const Inventory = () => {
                 allChannels?.length
                     ? (
                         <ul>
-                            {allChannels.map((channel, i) => <li key={i}>{channel.channel} // {channel.active}</li>)}
+                            {allChannels.map((channel, i) => <li key={i}>{channel.channel} || {channel.rack} || {channel.active}</li>)}
                         </ul>
                     ) : <p>No Channels</p>
                 

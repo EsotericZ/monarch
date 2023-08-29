@@ -11,13 +11,14 @@ Scales.init(
             primaryKey: true,
         },
         portNo: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
         },
         rack: {
             type: DataTypes.INTEGER,
         },
     }, {
         sequelize,
+        timestamps: false,
         tableName: 'scales',
         modelName: 'Scales',
     }
