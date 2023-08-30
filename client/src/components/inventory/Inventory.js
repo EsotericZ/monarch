@@ -16,6 +16,10 @@ export const Inventory = () => {
     const [loadingChannels, setLoadingChannles] = useState(true);
     let activeChannels = []
 
+    const [searchedValuePort, setSearchedValuePort] = useState('');
+    const [searchedValueRack, setSearchedValueRack] = useState('');
+    const [searchedValueActive, setSearchedValueActive] = useState('');
+
     const fetchData = async () => {
         try {
             // const scales = await getAllScales();
@@ -72,7 +76,7 @@ export const Inventory = () => {
                     </ul>
                 ) : <p>No Scales</p>
             } */}
-            <h1>Channels</h1>
+            <h1 className="text-center m-3">Port Health</h1>
             {loadingChannels 
                 ? <p>Loading</p>
                 :
@@ -101,13 +105,48 @@ export const Inventory = () => {
                         </Modal.Footer>
                     </Modal>
 
-                    {allChannels?.length
-                        ? (
-                            <ul>
-                                {allChannels.map((channel, i) => <li key={i}>{channel.channel} || {channel.rack} || {channel.active}</li>)}
-                            </ul>
-                        ) : <p>No Channels</p>
-                    }
+                    <div className="mx-3">
+                        <Table striped hover>
+                            <thead>
+                                <tr>
+                                    <th className="text-center">Port Number<input onChange={(e) => setSearchedValuePort(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                    <th className="text-center">Rack Location<input onChange={(e) => setSearchedValueRack(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                    <th className="text-center">Active<input onChange={(e) => setSearchedValueActive(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {allChannels
+                                    .filter((row) => 
+                                        !searchedValuePort || row.channel
+                                            .toString()
+                                            .toLowerCase()
+                                            .includes(searchedValuePort.toString().toLowerCase())
+                                    )
+                                    .filter((row) => 
+                                        !searchedValueRack || row.rack
+                                            .toString()
+                                            .toLowerCase()
+                                            .includes(searchedValueRack.toString().toLowerCase())
+                                    )
+                                    .filter((row) => 
+                                        !searchedValueActive || row.active
+                                            .toString()
+                                            .toLowerCase()
+                                            .includes(searchedValueActive.toString().toLowerCase())
+                                    )
+                                    .map((record, index) => {
+                                        return (
+                                            <tr key={index} record={record}>
+                                                <td className="text-center">{record.channel}</td>
+                                                <td className="text-center">{record.rack}</td>
+                                                <td className="text-center">{record.active}</td>
+                                            </tr>
+                                        )
+                                    })
+                                }
+                            </tbody>
+                        </Table>
+                    </div>
 
                     <button className='mmBtn' onClick={handleOpenAdd}>Add Port</button>
                 </>

@@ -1,7 +1,12 @@
 const { Scales } = require('../models');
 
 async function getAllPorts(req, res) {
-    await Scales.findAll()
+    await Scales.findAll({
+        order: [
+            ['rack', 'ASC'],
+            ['portNo', 'ASC']
+        ]
+    })
     .then((result) => {
         return res.status(200).send({
             data: result
@@ -14,7 +19,6 @@ async function getAllPorts(req, res) {
 }
 
 async function createPort(req, res) {
-    let { portNo, rack } = req.body;
     await Scales.create(req.body)
     .then((result) => {
         return res.status(200).send({
