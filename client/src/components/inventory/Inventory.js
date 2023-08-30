@@ -1,10 +1,17 @@
 import { useEffect, useState } from "react";
+import { Button, Dropdown, FloatingLabel, Form, Modal, Tab, Tabs, Table } from 'react-bootstrap';
 // import getAllScales from "../../services/scales/getAllScales";
 import getAllChannels from "../../services/scales/getAllChannels";
 import getAllPorts from "../../services/scales/getAllPorts";
+import createPort from "../../services/scales/createPort";
 
 export const Inventory = () => {
     // const [allScales, setAllScales] = useState();
+    const [newPort, setNewPort] = useState({
+        portNo: '',
+        rack: 0,
+    })
+    const [showAdd, setShowAdd] = useState(false);
     const [allChannels, setAllChannels] = useState();
     const [loadingChannels, setLoadingChannles] = useState(true);
     let activeChannels = []
@@ -37,9 +44,23 @@ export const Inventory = () => {
         }
     }
 
+    const handlePortAdd = (e) => {
+        const { name, value } = e.target;
+        setNewPort((prev) => {
+            return {...prev, [name]: value}
+        })
+    }
+    const handleOpenAdd = () => setShowAdd(true)
+    const handleCloseAdd = () => setShowAdd(false)
+    const handleSave = () => {
+        createPort(newPort)
+        .then(fetchData())
+        .then(setShowAdd(false))
+    }
+
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [showAdd]);
 
     return (
         <>
@@ -53,16 +74,45 @@ export const Inventory = () => {
             } */}
             <h1>Channels</h1>
             {loadingChannels 
-                ?<p>Loading</p>
+                ? <p>Loading</p>
                 :
-                allChannels?.length
-                    ? (
-                        <ul>
-                            {allChannels.map((channel, i) => <li key={i}>{channel.channel} || {channel.rack} || {channel.active}</li>)}
-                        </ul>
-                    ) : <p>No Channels</p>
-                
+                <>
+                    <Modal show={showAdd}>
+                        <Modal.Header>
+                            <Modal.Title>Add Port</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <Form>
+                                <FloatingLabel label="Port Number" className="mb-2">
+                                    <Form.Control name="portNo" onChange={handlePortAdd} />
+                                </FloatingLabel>
+                                <FloatingLabel label="Rack Number" className="mb-2">
+                                    <Form.Control name="rack" onChange={handlePortAdd} />
+                                </FloatingLabel>
+                            </Form>  
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={handleCloseAdd}>
+                                Cancel
+                            </Button>
+                            <Button variant="primary" onClick={handleSave}>
+                                Save
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
+
+                    {allChannels?.length
+                        ? (
+                            <ul>
+                                {allChannels.map((channel, i) => <li key={i}>{channel.channel} || {channel.rack} || {channel.active}</li>)}
+                            </ul>
+                        ) : <p>No Channels</p>
+                    }
+
+                    <button className='mmBtn' onClick={handleOpenAdd}>Add Port</button>
+                </>
             }
+            
         </>
         
     )
