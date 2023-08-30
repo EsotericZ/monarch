@@ -10,7 +10,7 @@ import jwt_decode from 'jwt-decode';
 
 import { Sidebar } from '../sidebar/Sidebar';
 
-export const Inventory = () => {
+export const PortHealth = () => {
     const cookies = new Cookies();
 
     const [cookieData, setCookieData] = useState('');

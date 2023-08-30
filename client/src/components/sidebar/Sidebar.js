@@ -44,10 +44,13 @@ export const Sidebar = () => {
                             <CDBSidebarMenuItem icon="home">Home</CDBSidebarMenuItem>
                         </NavLink>
                         <NavLink exact to='/maintenance'>
-                            <CDBSidebarMenuItem icon="th-large">Maintenance</CDBSidebarMenuItem>
+                            <CDBSidebarMenuItem icon="hammer">Maintenance</CDBSidebarMenuItem>
                         </NavLink>
                         <NavLink exact to='/shipping'>
                             <CDBSidebarMenuItem icon='truck'>Shipping</CDBSidebarMenuItem>
+                        </NavLink>
+                        <NavLink exact to='/inventory'>
+                            <CDBSidebarMenuItem icon='clipboard'>Inventory</CDBSidebarMenuItem>
                         </NavLink>
                     </CDBSidebarMenu>
                     {name ?
