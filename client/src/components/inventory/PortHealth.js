@@ -27,6 +27,7 @@ export const PortHealth = () => {
     const [searchedValuePort, setSearchedValuePort] = useState('');
     const [searchedValueRack, setSearchedValueRack] = useState('');
     const [searchedValueActive, setSearchedValueActive] = useState('');
+    const [count, setCount] = useState(0);
 
     const fetchData = async () => {
         try {
@@ -81,6 +82,15 @@ export const PortHealth = () => {
         }
     }, [loggedIn, showAdd]);
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCount(count + 1);
+            fetchData();
+        }, 60000);
+
+        return () => clearInterval(interval);
+    }, [count])
+
     return (
         <div style={{ display: 'flex' }}>
             <Sidebar />
@@ -114,6 +124,7 @@ export const PortHealth = () => {
                     </Modal>
 
                     <div className="mx-3">
+                        <h1>{count}</h1>
                         <Table striped hover>
                             <thead>
                                 <tr>

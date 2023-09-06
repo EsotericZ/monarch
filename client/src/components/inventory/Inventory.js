@@ -27,6 +27,7 @@ export const Inventory = () => {
     const [searchedValuePort, setSearchedValuePort] = useState('');
     const [searchedValueRack, setSearchedValueRack] = useState('');
     const [searchedValueActive, setSearchedValueActive] = useState('');
+    const [count, setCount] = useState(0);
 
     const fetchData = async () => {
         try {
@@ -80,6 +81,15 @@ export const Inventory = () => {
             setCookieData('');
         }
     }, [loggedIn, showAdd]);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCount(count + 1);
+            fetchData();
+        }, 60000);
+
+        return () => clearInterval(interval);
+    }, [count])
 
     return (
         <div style={{ display: 'flex' }}>
