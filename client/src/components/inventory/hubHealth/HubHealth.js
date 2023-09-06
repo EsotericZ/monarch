@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
-import { Button, Dropdown, FloatingLabel, Form, Modal, Tab, Tabs, Table } from 'react-bootstrap';
-// import getAllScales from "../../services/scales/getAllScales";
-import getAllChannels from "../../services/scales/getAllChannels";
-import getAllPorts from "../../services/scales/getAllPorts";
-import createPort from "../../services/scales/createPort";
+import { Button, FloatingLabel, Form, Modal, Table } from 'react-bootstrap';
+import getAllChannels from "../../../services/scales/getAllChannels";
+import getAllPorts from "../../../services/scales/getAllPorts";
+import createPort from "../../../services/scales/createPort";
 
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 
-import { Sidebar } from '../sidebar/Sidebar';
+import { Sidebar } from '../../sidebar/Sidebar';
 
-export const PortHealth = () => {
+export const HubHealth = () => {
     const cookies = new Cookies();
 
     const [cookieData, setCookieData] = useState('');
@@ -31,9 +30,6 @@ export const PortHealth = () => {
 
     const fetchData = async () => {
         try {
-            // const scales = await getAllScales();
-            // setAllScales(scales)
-            
             const channels = await getAllChannels();
             let channelArray = channels.split("\n")
             let newChannelArray = [...new Set(channelArray.map((channel) => channel.slice(0,6)))]
@@ -98,14 +94,14 @@ export const PortHealth = () => {
                 <p>Loading</p>
                 :
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
-                    <h1 className="text-center m-3">Port Health and Managment</h1>
+                    <h1 className="text-center m-3">Hub Health and Managment</h1>
                     <Modal show={showAdd}>
                         <Modal.Header>
-                            <Modal.Title>Add Port</Modal.Title>
+                            <Modal.Title>Add Hub</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <Form>
-                                <FloatingLabel label="Port Number" className="mb-2">
+                                <FloatingLabel label="Hub Number" className="mb-2">
                                     <Form.Control name="portNo" onChange={handlePortAdd} />
                                 </FloatingLabel>
                                 <FloatingLabel label="Rack Number" className="mb-2">
@@ -124,11 +120,10 @@ export const PortHealth = () => {
                     </Modal>
 
                     <div className="mx-3">
-                        <h1>{count}</h1>
                         <Table striped hover>
                             <thead>
                                 <tr>
-                                    <th className="text-center">Port Number<input onChange={(e) => setSearchedValuePort(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                    <th className="text-center">Hub Number<input onChange={(e) => setSearchedValuePort(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
                                     <th className="text-center">Rack Location<input onChange={(e) => setSearchedValueRack(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
                                     <th className="text-center">Active<input onChange={(e) => setSearchedValueActive(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
                                 </tr>
@@ -165,7 +160,7 @@ export const PortHealth = () => {
                                 }
                             </tbody>
                         </Table>
-                    <button className='mmBtn' onClick={handleOpenAdd}>Add Port</button>
+                    <button className='mmBtn' onClick={handleOpenAdd}>Add Hub</button>
                     </div>
                 </div>
             }
