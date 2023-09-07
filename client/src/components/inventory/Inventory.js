@@ -1,74 +1,51 @@
 import { useEffect, useState } from "react";
-import { Button, Dropdown, FloatingLabel, Form, Modal, Tab, Tabs, Table } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import { Button, Card, Dropdown, FloatingLabel, Form, ListGroup, Modal, ProgressBar, Tab, Tabs, Table } from 'react-bootstrap';
 // import getAllScales from "../../services/scales/getAllScales";
 import getAllChannels from "../../services/scales/getAllChannels";
 import getAllPorts from "../../services/scales/getAllPorts";
-import createPort from "../../services/scales/createPort";
 
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 
+import { Icon } from 'react-icons-kit';
+import {warning} from 'react-icons-kit/fa/warning'
+
 import { Sidebar } from '../sidebar/Sidebar';
+import './inventory.css';
 
 export const Inventory = () => {
     const cookies = new Cookies();
 
     const [cookieData, setCookieData] = useState('');
     const [loggedIn, setLoggedIn] = useState(false);
-    const [newPort, setNewPort] = useState({
-        portNo: '',
-        rack: 0,
-    })
-    const [showAdd, setShowAdd] = useState(false);
-    const [allChannels, setAllChannels] = useState();
-    const [loadingChannels, setLoadingChannles] = useState(true);
-    let activeChannels = []
 
-    const [searchedValuePort, setSearchedValuePort] = useState('');
-    const [searchedValueRack, setSearchedValueRack] = useState('');
-    const [searchedValueActive, setSearchedValueActive] = useState('');
+    const [totalHubs, setTotalHubs] =useState(0);
+    const [activeHubs, setActiveHubs] =useState(0);
+    const [inactiveHubs, setInactiveHubs] =useState(0);
+    const [percentActive, setPercentActive] = useState(0);
+    const [percentInactive, setPercentInactive] = useState(0);
+    const [loadingChannels, setLoadingChannles] = useState(true);
     const [count, setCount] = useState(0);
 
     const fetchData = async () => {
         try {
-            // const scales = await getAllScales();
-            // setAllScales(scales)
-            
             const channels = await getAllChannels();
             let channelArray = channels.split("\n")
             let newChannelArray = [...new Set(channelArray.map((channel) => channel.slice(0,6)))]
+            setActiveHubs(newChannelArray.length);
 
-            await getAllPorts()
-            .then((res) => {
-                const channels = res.data
-                channels.forEach(channel => {
-                    if (newChannelArray.includes(channel.portNo)) {
-                        activeChannels.push({'channel': channel.portNo, 'rack': channel.rack, 'active': 'true'})
-                    } else {
-                        activeChannels.push({'channel': channel.portNo, 'rack': channel.rack, 'active': 'false'})
-                    }
-                })
-            })
+            const ports = await getAllPorts();
+            setTotalHubs(ports.data.length)
+            setInactiveHubs(ports.data.length - newChannelArray.length);
+
+            setPercentActive((newChannelArray.length/ports.data.length)*100);
+            setPercentInactive(100 - (newChannelArray.length/ports.data.length)*100);
                     
-            setAllChannels(activeChannels);
             setLoadingChannles(false)
         } catch (err) {
             console.log(err)
         }
-    }
-
-    const handlePortAdd = (e) => {
-        const { name, value } = e.target;
-        setNewPort((prev) => {
-            return {...prev, [name]: value}
-        })
-    }
-    const handleOpenAdd = () => setShowAdd(true)
-    const handleCloseAdd = () => setShowAdd(false)
-    const handleSave = () => {
-        createPort(newPort)
-        .then(fetchData())
-        .then(setShowAdd(false))
     }
 
     useEffect(() => {
@@ -80,7 +57,7 @@ export const Inventory = () => {
         } catch {
             setCookieData('');
         }
-    }, [loggedIn, showAdd]);
+    }, [loggedIn]);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -98,73 +75,33 @@ export const Inventory = () => {
                 <p>Loading</p>
                 :
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
-                    <h1 className="text-center m-3">Port Health and Managment</h1>
-                    <Modal show={showAdd}>
-                        <Modal.Header>
-                            <Modal.Title>Add Port</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <Form>
-                                <FloatingLabel label="Port Number" className="mb-2">
-                                    <Form.Control name="portNo" onChange={handlePortAdd} />
-                                </FloatingLabel>
-                                <FloatingLabel label="Rack Number" className="mb-2">
-                                    <Form.Control name="rack" onChange={handlePortAdd} />
-                                </FloatingLabel>
-                            </Form>  
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <Button variant="secondary" onClick={handleCloseAdd}>
-                                Cancel
-                            </Button>
-                            <Button variant="primary" onClick={handleSave}>
-                                Save
-                            </Button>
-                        </Modal.Footer>
-                    </Modal>
+                    <h1 className="text-center m-3">Inventory Managment</h1>
 
-                    <div className="mx-3">
-                        <Table striped hover>
-                            <thead>
-                                <tr>
-                                    <th className="text-center">Port Number<input onChange={(e) => setSearchedValuePort(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                    <th className="text-center">Rack Location<input onChange={(e) => setSearchedValueRack(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                    <th className="text-center">Active<input onChange={(e) => setSearchedValueActive(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {allChannels
-                                    .filter((row) => 
-                                        !searchedValuePort || row.channel
-                                            .toString()
-                                            .toLowerCase()
-                                            .includes(searchedValuePort.toString().toLowerCase())
-                                    )
-                                    .filter((row) => 
-                                        !searchedValueRack || row.rack
-                                            .toString()
-                                            .toLowerCase()
-                                            .includes(searchedValueRack.toString().toLowerCase())
-                                    )
-                                    .filter((row) => 
-                                        !searchedValueActive || row.active
-                                            .toString()
-                                            .toLowerCase()
-                                            .includes(searchedValueActive.toString().toLowerCase())
-                                    )
-                                    .map((record, index) => {
-                                        return (
-                                            <tr key={index} record={record}>
-                                                <td className="text-center">{record.channel}</td>
-                                                <td className="text-center">{record.rack}</td>
-                                                <td className="text-center">{record.active}</td>
-                                            </tr>
-                                        )
-                                    })
-                                }
-                            </tbody>
-                        </Table>
-                    <button className='mmBtn' onClick={handleOpenAdd}>Add Port</button>
+                    <div>
+                        <Card style={{ width: '30%' }} className="cards">
+                            <Card.Body>
+                                <Card.Title className="text-center">Hub Health</Card.Title>
+                                <Card.Text className="text-center">Total Hubs: {totalHubs}</Card.Text>
+                                <ProgressBar className="mb-3">
+                                    <ProgressBar variant='success' now={percentActive} />
+                                    <ProgressBar variant='danger' now={percentInactive} />
+                                </ProgressBar>
+                                <ListGroup>
+                                    <ListGroup.Item>{activeHubs} Active</ListGroup.Item>
+                                    <ListGroup.Item>
+                                        <div className="inactive">
+                                            {inactiveHubs} Down
+                                        </div>
+                                        <div className="inactive inicon">
+                                            {inactiveHubs ? <Icon align={'right'} icon={warning} size={18} style={{ color: 'red' }} /> : ''}
+                                        </div>
+                                    </ListGroup.Item>
+                                </ListGroup>
+                                <Link to='/hubHealth'>
+                                    <button className='invBtn'>Manage</button>
+                                </Link>
+                            </Card.Body>
+                        </Card>
                     </div>
                 </div>
             }
