@@ -34,6 +34,7 @@ export const Inventory = () => {
             let channelArray = channels.split("\n")
             let newChannelArray = [...new Set(channelArray.map((channel) => channel.slice(0,6)))]
             setActiveHubs(newChannelArray.length);
+            console.log(newChannelArray)
 
             const ports = await getAllPorts();
             setTotalHubs(ports.data.length)
