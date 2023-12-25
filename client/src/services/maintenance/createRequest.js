@@ -1,4 +1,4 @@
-import api from '../api';
+import api from '../../api/api';
 
 const createRequest = async (newRequest) => {
     const res = await api.post('/maintenance/createRequest', newRequest);

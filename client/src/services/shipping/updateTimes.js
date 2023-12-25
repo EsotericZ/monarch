@@ -1,4 +1,4 @@
-import api from '../api';
+import api from '../../api/api';
 
 const updateTimes = async (updateID, newStart, newEnd) => {
     console.log(updateID, newStart, newEnd)

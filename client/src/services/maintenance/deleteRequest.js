@@ -1,4 +1,4 @@
-import api from '../api';
+import api from '../../api/api';
 
 const deleteRequest = async (record) => {
     const res = await api.post('/maintenance/deleteRequest', {

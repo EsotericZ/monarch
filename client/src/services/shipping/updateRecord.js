@@ -1,4 +1,4 @@
-import api from '../api';
+import api from '../../api/api';
 
 const updateRecord = async (updateRecord, record) => {
     const res = await api.post('/shipping/updateRecord', {

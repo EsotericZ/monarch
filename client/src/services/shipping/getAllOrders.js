@@ -1,4 +1,4 @@
-import api from '../api';
+import api from '../../api/api';
 
 const getAllOrders = async () => {
     const res = await api.get('/shipping/getAllOrders');

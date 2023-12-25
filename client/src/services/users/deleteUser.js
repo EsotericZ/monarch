@@ -1,4 +1,4 @@
-import api  from "../api";
+import api from '../../api/api';
 
 const deleteUser = async (userData) => {
     const res = await api.post('/users/deleteUser', userData);

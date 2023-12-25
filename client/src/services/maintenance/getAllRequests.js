@@ -1,4 +1,4 @@
-import api from '../api';
+import api from '../../api/api';
 
 const getAllRequests = async () => {
     const res = await api.get('/maintenance/getAllRequests');

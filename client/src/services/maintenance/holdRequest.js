@@ -1,4 +1,4 @@
-import api from '../api';
+import api from '../../api/api';
 
 const holdRequest = async (record, requestHold, approvedBy) => {
     const res = await api.post('/maintenance/holdRequest', {

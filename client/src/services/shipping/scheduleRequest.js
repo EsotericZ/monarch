@@ -1,4 +1,4 @@
-import api from '../api';
+import api from '../../api/api';
 
 const scheduleRequest = async (record) => {
     const res = await api.post('/shipping/scheduleRequest', record)

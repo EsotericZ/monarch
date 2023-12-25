@@ -1,4 +1,4 @@
-import api from '../api';
+import api from '../../api/api';
 
 const approveRequest = async (record, approvedBy, requestHold) => {
     const res = await api.post('/maintenance/approveRequest', {

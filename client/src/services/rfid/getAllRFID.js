@@ -1,4 +1,4 @@
-import apiRFID from '../apiRFID';
+import apiRFID from '../../api/apiRFID';
 
 const getAllRFID = async () => {
     const res = await apiRFID.get('/users/getAllUsers');
