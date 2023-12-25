@@ -3,7 +3,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { Admin } from './components/admin/Admin';
 import { Calendar } from './components/calendar/Calendar';
+
 import { Engineering } from './components/engineering/Engineering';
+import { EngJobs } from './components/engineering/EngJobs';
+
+
 import { Home } from './components/home/Home';
 import { Inventory } from './components/inventory/Inventory';
 import { Login } from './components/login/Login';
@@ -32,6 +36,10 @@ export const App = () => {
         <Route
           path='/engineering'
           element={<Engineering />}
+        />
+        <Route
+          path='/engjobs'
+          element={<EngJobs />}
         />
         <Route
           path='/inventory'

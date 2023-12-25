@@ -16,6 +16,8 @@ router.get('/', function (req, res) {
 router.post('/portal/login', portalController.login);
 
 router.get('/engineering/getAllJobs', engineeringController.getAllJobs);
+router.get('/engineering/getTBRJobs', engineeringController.getTBRJobs);
+router.get('/engineering/getFRJobs', engineeringController.getFRJobs);
 router.post('/engineering/updateJob', engineeringController.updateJob);
 
 router.get('/maintenance/getAllRequests', maintenanceController.getAllRequests);
