@@ -71,12 +71,24 @@ export const Sidebar = () => {
                             </NavLink>
                         :
                             <CDBSidebarSubMenu title="Engineering" icon="ghost">
-                                <CDBSidebarMenuItem>Jobs</CDBSidebarMenuItem>
-                                <CDBSidebarMenuItem>Bend Deduction</CDBSidebarMenuItem>
-                                <CDBSidebarMenuItem>Hardware</CDBSidebarMenuItem>
-                                <CDBSidebarMenuItem>Machining</CDBSidebarMenuItem>
-                                <CDBSidebarMenuItem>Nesting</CDBSidebarMenuItem>
-                                <CDBSidebarMenuItem>Tap Chart</CDBSidebarMenuItem>
+                                <NavLink exact to='/engjobs'>
+                                    <CDBSidebarMenuItem>Jobs</CDBSidebarMenuItem>
+                                </NavLink>
+                                <NavLink exact to='/benddeduction'>
+                                    <CDBSidebarMenuItem>Bend Deduction</CDBSidebarMenuItem>
+                                </NavLink>
+                                <NavLink exact to='/hardware'>
+                                    <CDBSidebarMenuItem>Hardware</CDBSidebarMenuItem>
+                                </NavLink>
+                                <NavLink exact to='/machining'>
+                                    <CDBSidebarMenuItem>Machining</CDBSidebarMenuItem>
+                                </NavLink>
+                                <NavLink exact to='/nesting'>
+                                    <CDBSidebarMenuItem>Nesting</CDBSidebarMenuItem>
+                                </NavLink>
+                                <NavLink exact to='/tapchart'>
+                                    <CDBSidebarMenuItem>Tap Chart</CDBSidebarMenuItem>
+                                </NavLink>
                             </CDBSidebarSubMenu>
                         }
 

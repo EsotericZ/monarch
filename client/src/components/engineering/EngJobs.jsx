@@ -105,7 +105,7 @@ export const EngJobs = () => {
             {loading ?
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
                     <h1 className='text-center'>Engineering</h1>
-                    <h2>Loading</h2>
+                    <h2 className='text-center'>Loading</h2>
                 </div>
             :
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>

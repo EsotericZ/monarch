@@ -7,7 +7,11 @@ import { Calendar } from './components/calendar/Calendar';
 
 import { Engineering } from './components/engineering/Engineering';
 import { EngJobs } from './components/engineering/EngJobs';
-
+import { BendDeduction } from './components/engineering/BendDeduction';
+import { Hardware } from './components/engineering/Hardware';
+import { Machining } from './components/engineering/Machining';
+import { Nesting } from './components/engineering/Nesting';
+import { TapChart } from './components/engineering/TapChart';
 
 import { Home } from './components/home/Home';
 import { Inventory } from './components/inventory/Inventory';
@@ -34,6 +38,7 @@ export const App = () => {
           path='/calendar'
           element={<Calendar />}
         />
+
         <Route
           path='/engineering'
           element={<Engineering />}
@@ -42,6 +47,27 @@ export const App = () => {
           path='/engjobs'
           element={<EngJobs />}
         />
+        <Route
+          path='/benddeduction'
+          element={<BendDeduction />}
+        />
+        <Route
+          path='/hardware'
+          element={<Hardware />}
+        />
+        <Route
+          path='/machining'
+          element={<Machining />}
+        />
+        <Route
+          path='/nesting'
+          element={<Nesting />}
+        />
+        <Route
+          path='/tapchart'
+          element={<TapChart />}
+        />
+
         <Route
           path='/inventory'
           element={<Inventory />}
