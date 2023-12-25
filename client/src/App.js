@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'font-awesome/css/font-awesome.min.css';
 
 import { Admin } from './components/admin/Admin';
 import { Calendar } from './components/calendar/Calendar';

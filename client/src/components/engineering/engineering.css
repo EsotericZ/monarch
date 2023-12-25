@@ -1,0 +1,8 @@
+::placeholder {
+    font-weight: bold;
+    color: black;
+}
+
+.searchBox {
+    border: none;
+}

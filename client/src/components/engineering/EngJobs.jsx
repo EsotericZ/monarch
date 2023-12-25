@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, FloatingLabel, Form, Modal, Tab, Tabs, Table } from 'react-bootstrap';
+import { Button, FloatingLabel, Form, Modal, Tab, Tabs, Table, Toast, ToastContainer } from 'react-bootstrap';
 import { format, parseISO } from 'date-fns';
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
@@ -9,6 +9,7 @@ import getTBRJobs from '../../services/engineering/getTBRJobs';
 import getFRJobs from '../../services/engineering/getFRJobs';
 import updateJob from '../../services/engineering/updateJob';
 import { Sidebar } from '../sidebar/Sidebar';
+import './engineering.css';
 
 export const EngJobs = () => {
     const cookies = new Cookies();
@@ -31,6 +32,8 @@ export const EngJobs = () => {
     const [searchedValueEngineer, setSearchedValueEngineer] = useState('');
     const [searchedValueQuote, setSearchedValueQuote] = useState('');
     const [searchedValueStatus, setSearchedValueStatus] = useState('');
+    const [showToast, setShowToast] = useState(false);
+    const [partCopy, setPartCopy] = useState('None');
 
     const [searchedEng, setSearchedEng] = useState([]);
     const [searchedTBR, setSearchedTBR] = useState([]);
@@ -100,10 +103,13 @@ export const EngJobs = () => {
         <div style={{ display: 'flex' }}>
             <Sidebar />
             {loading ?
-                <h1>Loading</h1>
+                <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
+                    <h1 className='text-center'>Engineering</h1>
+                    <h2>Loading</h2>
+                </div>
             :
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
-                    <h1>Welcome</h1>
+                    <h1 className='text-center'>Engineering</h1>
                     <Modal show={show} onHide={handleClose}>
                         <Modal.Header closeButton>
                         <Modal.Title>{jobNoInfo}</Modal.Title>
@@ -149,18 +155,18 @@ export const EngJobs = () => {
                                 <Table striped hover>
                                     <thead>
                                         <tr>
-                                            <th className='text-center'>Job No<input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Step No<input placeholder='.X.' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Part No<input onChange={(e) => setSearchedValuePartNo(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Revision<input placeholder='.X.' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Qty<input placeholder='.X.' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Due Date<input placeholder='.x.' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Customer<input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Type<input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Engineer<input onChange={(e) => setSearchedValueEngineer(e.target.value)} placeholder='.bad.' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Quote<input onChange={(e) => setSearchedValueQuote(e.target.value)} placeholder='.bad.' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Model<input placeholder='.X.' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Status<input onChange={(e) => setSearchedValueStatus(e.target.value)} placeholder='.bad.' className='text-center' style={{width: '100%'}} /></th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='&#xf002;  Job No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'>Step No</th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValuePartNo(e.target.value)} placeholder='&#xf002;  Part No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'>Revision</th>
+                                            <th className='text-center'>Qty</th>
+                                            <th className='text-center'>Due Date</th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='&#xf002;  Customer' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='&#xf002;  Type' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'>Engineer<input onChange={(e) => setSearchedValueEngineer(e.target.value)} placeholder='&#xf002;  .bad.' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'>Quote<input onChange={(e) => setSearchedValueQuote(e.target.value)} placeholder='&#xf002;  .bad.' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'>Model</th>
+                                            <th className='text-center'>Status<input onChange={(e) => setSearchedValueStatus(e.target.value)} placeholder='&#xf002;  .bad.' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             {/* {cookieData.maintenance &&
                                                 <th className='text-center align-middle'>Actions</th>
                                             } */}
@@ -214,23 +220,19 @@ export const EngJobs = () => {
                                             .map((job, index) => {
                                                 if (job.User_Text2 == '2. TBR') {
                                                     return (
-                                                        <tr key={index} job={job} onClick={() => handleShow(job)}>
-                                                            <td className='text-center'>{job.JobNo}</td>
+                                                        <tr key={index} job={job}>
+                                                            <td className='text-center' onClick={() => handleShow(job)}>{job.JobNo}</td>
                                                             <td className='text-center'>{job.StepNo}</td>
-                                                            <td className='text-center'>{job.PartNo}</td>
+                                                            <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td>
                                                             <td className='text-center'>{job.Revision}</td>
                                                             <td className='text-center'>{job.EstimQty}</td>
                                                             <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
                                                             <td className='text-center'>{job.CustCode}</td>
                                                             <td className='text-center'>{job.User_Text3}</td>
                                                             <td className='text-center'>{job.dataValues.engineer}</td>
-                                                            {/* <td>{job.User_Text2}</td> */}
-                                                            {/* <td>{job.User_Number3}</td> */}
                                                             <td className='text-center'>{job.QuoteNo}</td>
                                                             <td className='text-center'></td>
-                                                            {/* <td>{job.OrderNo}</td> */}
                                                             <td className='text-center'>{job.dataValues.jobStatus}</td>
-                                                            {/* <td className='text-center'></td> */}
                                                         </tr>
                                                     )
                                                 }
@@ -238,6 +240,13 @@ export const EngJobs = () => {
                                         }
                                     </tbody>
                                 </Table>
+                                <ToastContainer position="bottom-end" className="p-3" style={{ zIndex: 1 }}>
+                                    <Toast bg='secondary' onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide animation>
+                                        <Toast.Body>
+                                            <strong className="me-auto">{partCopy} Copied To Clipboard </strong>
+                                        </Toast.Body>
+                                    </Toast>
+                                </ToastContainer>
                             </div>
                         </Tab>
 
@@ -251,7 +260,7 @@ export const EngJobs = () => {
                                             <th className='text-center'>Part No<input onChange={(e) => setSearchedValuePartNo(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
                                             <th className='text-center'>Revision<input placeholder='.X.' className='text-center' style={{width: '100%'}} /></th>
                                             <th className='text-center'>Qty<input placeholder='.X.' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Due Date<input placeholder='.x.' className='text-center' style={{width: '100%'}} /></th>
+                                            <th className='text-center'>Due Date</th>
                                             <th className='text-center'>Customer<input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
                                             <th className='text-center'>Type<input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
                                             <th className='text-center'>Engineer<input onChange={(e) => setSearchedValueEngineer(e.target.value)} placeholder='.bad.' className='text-center' style={{width: '100%'}} /></th>
