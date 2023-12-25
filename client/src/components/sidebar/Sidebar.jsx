@@ -48,7 +48,7 @@ export const Sidebar = () => {
     return !loading &&
         <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', position: 'fixed' }}>
             <CDBSidebar toggled={true}>
-                <CDBSidebarHeader prefix={<i className="fa fa-bars" />} onClick={sidebarClick}>Monarch Metal</CDBSidebarHeader>
+                <CDBSidebarHeader prefix={<i className="fa fa-bars" onClick={sidebarClick} />}>Monarch Metal</CDBSidebarHeader>
                 <CDBSidebarContent>
                     <CDBSidebarMenu>
 
