@@ -17,6 +17,7 @@ export const Sidebar = () => {
     const [name, setName] = useState('');
     const [admin, setAdmin] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [open, setOpen] = useState(true);
     let userData
 
     const setData = () => {
@@ -30,6 +31,16 @@ export const Sidebar = () => {
         }
     }
 
+    const sidebarClick = () => {
+        if (open == true) {
+            setOpen(false)
+            console.log('closed')
+        } else {
+            setOpen(true)
+            console.log('open')
+        }
+    }
+
     useEffect(() => {
         setData();
     }, [name, admin])
@@ -37,12 +48,56 @@ export const Sidebar = () => {
     return !loading &&
         <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', position: 'fixed' }}>
             <CDBSidebar toggled={true}>
-                <CDBSidebarHeader prefix={<i className="fa fa-bars" />}>Monarch Metal</CDBSidebarHeader>
+                <CDBSidebarHeader prefix={<i className="fa fa-bars" />} onClick={sidebarClick}>Monarch Metal</CDBSidebarHeader>
                 <CDBSidebarContent>
                     <CDBSidebarMenu>
-                        <NavLink exact to='/'>
-                            <CDBSidebarMenuItem icon="home">Home</CDBSidebarMenuItem>
-                        </NavLink>
+
+                        {open ?
+                            <NavLink exact to='/'>
+                                <CDBSidebarMenuItem icon="home">Home</CDBSidebarMenuItem>
+                            </NavLink>
+                        :
+                            <CDBSidebarSubMenu title="Home" icon="home">
+                                <CDBSidebarMenuItem>Display List</CDBSidebarMenuItem>
+                                <CDBSidebarMenuItem>Directory</CDBSidebarMenuItem>
+                                <CDBSidebarMenuItem>Purchasing</CDBSidebarMenuItem>
+                                <CDBSidebarMenuItem>Supplies</CDBSidebarMenuItem>
+                            </CDBSidebarSubMenu>
+                        }
+
+                        {open ?
+                            <NavLink exact to='/engineering'>
+                                <CDBSidebarMenuItem icon='ghost'>Inventory</CDBSidebarMenuItem>
+                            </NavLink>
+                        :
+                            <CDBSidebarSubMenu title="Engineering" icon="ghost">
+                                <CDBSidebarMenuItem>Jobs</CDBSidebarMenuItem>
+                                <CDBSidebarMenuItem>Bend Deduction</CDBSidebarMenuItem>
+                                <CDBSidebarMenuItem>Hardware</CDBSidebarMenuItem>
+                                <CDBSidebarMenuItem>Machining</CDBSidebarMenuItem>
+                                <CDBSidebarMenuItem>Nesting</CDBSidebarMenuItem>
+                                <CDBSidebarMenuItem>Tap Chart</CDBSidebarMenuItem>
+                            </CDBSidebarSubMenu>
+                        }
+
+                        {open ?
+                            <NavLink exact to='/departments'>
+                                <CDBSidebarMenuItem icon='th'>Departments</CDBSidebarMenuItem>
+                            </NavLink>
+                        :
+                            <CDBSidebarSubMenu title="Departments" icon="th">
+                                <CDBSidebarMenuItem>Fixture Laser</CDBSidebarMenuItem>
+                                <CDBSidebarMenuItem>Forming</CDBSidebarMenuItem>
+                                <CDBSidebarMenuItem>Laser (Enterprise)</CDBSidebarMenuItem>
+                                <CDBSidebarMenuItem>Punch</CDBSidebarMenuItem>
+                                <CDBSidebarMenuItem>Saw</CDBSidebarMenuItem>
+                                <CDBSidebarMenuItem>Shear</CDBSidebarMenuItem>
+                                <CDBSidebarMenuItem>Static Laser</CDBSidebarMenuItem>
+                                <CDBSidebarMenuItem>Tube Laser</CDBSidebarMenuItem>
+                                <CDBSidebarMenuItem>Tube Laser (Material)</CDBSidebarMenuItem>
+                            </CDBSidebarSubMenu>
+                        }
+
                         <NavLink exact to='/maintenance'>
                             <CDBSidebarMenuItem icon="hammer">Maintenance</CDBSidebarMenuItem>
                         </NavLink>
@@ -53,6 +108,7 @@ export const Sidebar = () => {
                             <CDBSidebarMenuItem icon='clipboard'>Inventory</CDBSidebarMenuItem>
                         </NavLink>
                     </CDBSidebarMenu>
+
                     {name ?
                         <CDBSidebarMenu>
                             <NavLink exact to='/profile'>
@@ -66,6 +122,7 @@ export const Sidebar = () => {
                             </NavLink>
                         </CDBSidebarMenu>
                     }
+
                     {admin &&
                         <CDBSidebarMenu>
                             <NavLink exact to='/admin'>
