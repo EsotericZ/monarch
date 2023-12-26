@@ -6,6 +6,7 @@ const maintenanceController = require('../../controllers/maintenanceController')
 const portalController = require('../../controllers/portalController');
 const scalesController = require('../../controllers/scalesController');
 const shippingController = require('../../controllers/shippingController');
+const tlaserController = require('../../controllers/tlaserController');
 const todoController = require('../../controllers/todoController');
 const userController = require('../../controllers/userController');
 
@@ -19,6 +20,8 @@ router.get('/engineering/getAllJobs', engineeringController.getAllJobs);
 router.get('/engineering/getTBRJobs', engineeringController.getTBRJobs);
 router.get('/engineering/getFRJobs', engineeringController.getFRJobs);
 router.post('/engineering/updateJob', engineeringController.updateJob);
+
+router.get('/tlaser/getAllJobs', tlaserController.getAllJobs);
 
 router.get('/maintenance/getAllRequests', maintenanceController.getAllRequests);
 router.get('/maintenance/getAllEquipment', maintenanceController.getAllEquipment);

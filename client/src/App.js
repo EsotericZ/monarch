@@ -13,6 +13,9 @@ import { Machining } from './components/engineering/Machining';
 import { Nesting } from './components/engineering/Nesting';
 import { TapChart } from './components/engineering/TapChart';
 
+import { Departments } from './components/departments/Departments';
+import { TubeLaser } from './components/departments/TubeLaser';
+
 import { Home } from './components/home/Home';
 import { Inventory } from './components/inventory/Inventory';
 import { Login } from './components/login/Login';
@@ -66,6 +69,15 @@ export const App = () => {
         <Route
           path='/tapchart'
           element={<TapChart />}
+        />
+
+        <Route
+          path='/departments'
+          element={<Departments />}
+        />
+        <Route
+          path='/tubelaser'
+          element={<TubeLaser />}
         />
 
         <Route
