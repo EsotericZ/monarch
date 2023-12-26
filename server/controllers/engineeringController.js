@@ -58,6 +58,7 @@ async function getTBRJobs(req, res) {
             records.forEach(item => map.set(item.JobNo, item));
             jobData.forEach(item => map.set(item.jobNo, {...map.get(item.jobNo), ...item}));
             const fullJob = Array.from(map.values());
+            console.log(fullJob)
 
             res.send(fullJob)
         })

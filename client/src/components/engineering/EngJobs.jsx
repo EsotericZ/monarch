@@ -32,6 +32,7 @@ export const EngJobs = () => {
     const [searchedValueEngineer, setSearchedValueEngineer] = useState('');
     const [searchedValueQuote, setSearchedValueQuote] = useState('');
     const [searchedValueStatus, setSearchedValueStatus] = useState('');
+    const [searchedValueArea, setSearchedValueArea] = useState('');
     const [showToast, setShowToast] = useState(false);
     const [partCopy, setPartCopy] = useState('None');
 
@@ -73,6 +74,8 @@ export const EngJobs = () => {
             frData.then((res) => {
                 setSearchedFR(res);
             })
+
+            console.log(searchedEng)
         } catch (err) {
             console.log(err)
         }
@@ -155,18 +158,18 @@ export const EngJobs = () => {
                                 <Table striped hover>
                                     <thead>
                                         <tr>
-                                            <th className='text-center'><input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='&#xf002;  Job No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center'>Step No</th>
-                                            <th className='text-center'><input onChange={(e) => setSearchedValuePartNo(e.target.value)} placeholder='&#xf002;  Part No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center'>Revision</th>
-                                            <th className='text-center'>Qty</th>
-                                            <th className='text-center'>Due Date</th>
-                                            <th className='text-center'><input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='&#xf002;  Customer' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center'><input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='&#xf002;  Type' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center'>Engineer<input onChange={(e) => setSearchedValueEngineer(e.target.value)} placeholder='&#xf002;  .bad.' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center'>Quote<input onChange={(e) => setSearchedValueQuote(e.target.value)} placeholder='&#xf002;  .bad.' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center'>Model</th>
-                                            <th className='text-center'>Status<input onChange={(e) => setSearchedValueStatus(e.target.value)} placeholder='&#xf002;  .bad.' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='7%'><input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='&#xf002;  Job No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='5%'>Step No</th>
+                                            <th className='text-center' width='20%'><input onChange={(e) => setSearchedValuePartNo(e.target.value)} placeholder='&#xf002;  Part No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='5%'>Revision</th>
+                                            <th className='text-center' width='5%'>Qty</th>
+                                            <th className='text-center' width='5%'>Due Date</th>
+                                            <th className='text-center' width='14%'><input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='&#xf002;  Customer' width='8%' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='7%'><input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='&#xf002;  Type' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='8%'>Engineer<input onChange={(e) => setSearchedValueEngineer(e.target.value)} placeholder='&#xf002;  bad' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='7%'>Quote<input onChange={(e) => setSearchedValueQuote(e.target.value)} placeholder='&#xf002;  bad' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='5%'>Model</th>
+                                            <th className='text-center' width='12%'>Status<input onChange={(e) => setSearchedValueStatus(e.target.value)} placeholder='&#xf002;  bad' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             {/* {cookieData.maintenance &&
                                                 <th className='text-center align-middle'>Actions</th>
                                             } */}
@@ -205,6 +208,12 @@ export const EngJobs = () => {
                                                     .toLowerCase()
                                                     .includes(searchedValueEngineer.toString().toLowerCase())
                                             )
+                                            // .filter((row) => 
+                                            //     !searchedValueEngineer || row.dataValues.engineer === null && row.dataValues.engineer
+                                            //         .toString()
+                                            //         .toLowerCase()
+                                            //         .includes(searchedValueEngineer.toString().toLowerCase())
+                                            // )
                                             .filter((row) => 
                                                 !searchedValueQuote || row.QuoteNo
                                                     .toString()
@@ -217,6 +226,12 @@ export const EngJobs = () => {
                                                     .toLowerCase()
                                                     .includes(searchedValueStatus.toString().toLowerCase())
                                             )
+                                            // .filter((row) => 
+                                            //     !searchedValueStatus || (row.dataValues.jobStatus !== null && row.dataValues.jobStatus)
+                                            //         .toString()
+                                            //         .toLowerCase()
+                                            //         .includes(searchedValueStatus.toString().toLowerCase())
+                                            // )
                                             .map((job, index) => {
                                                 if (job.User_Text2 == '2. TBR') {
                                                     return (
@@ -255,18 +270,18 @@ export const EngJobs = () => {
                                 <Table striped hover>
                                     <thead>
                                         <tr>
-                                            <th className='text-center'>Job No<input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Step No<input placeholder='.X.' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Part No<input onChange={(e) => setSearchedValuePartNo(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Revision<input placeholder='.X.' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Qty<input placeholder='.X.' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Due Date</th>
-                                            <th className='text-center'>Customer<input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Type<input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Engineer<input onChange={(e) => setSearchedValueEngineer(e.target.value)} placeholder='.bad.' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Quote<input onChange={(e) => setSearchedValueQuote(e.target.value)} placeholder='.bad.' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Model<input placeholder='.X.' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Status<input onChange={(e) => setSearchedValueStatus(e.target.value)} placeholder='.bad.' className='text-center' style={{width: '100%'}} /></th>
+                                            <th className='text-center' width='7%'><input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='&#xf002;  Job No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='5%'>Step No</th>
+                                            <th className='text-center' width='20%'><input onChange={(e) => setSearchedValuePartNo(e.target.value)} placeholder='&#xf002;  Part No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='5%'>Revision</th>
+                                            <th className='text-center' width='5%'>Qty</th>
+                                            <th className='text-center' width='5%'>Due Date</th>
+                                            <th className='text-center' width='14'><input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='&#xf002;  Customer' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='7%'><input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='&#xf002;  Type' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='8%'>Engineer<input onChange={(e) => setSearchedValueEngineer(e.target.value)} placeholder='&#xf002;  bad' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='7%'>Quote<input onChange={(e) => setSearchedValueQuote(e.target.value)} placeholder='&#xf002;  bad' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='5%'>Model</th>
+                                            <th className='text-center' width='12%'>Status<input onChange={(e) => setSearchedValueStatus(e.target.value)} placeholder='&#xf002;  bad' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             {/* {cookieData.maintenance &&
                                                 <th className='text-center align-middle'>Actions</th>
                                             } */}
@@ -348,16 +363,16 @@ export const EngJobs = () => {
                                 <Table striped hover>
                                     <thead>
                                         <tr>
-                                            <th className='text-center'>Job No<input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Step No<input placeholder='.X.' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Part No<input onChange={(e) => setSearchedValuePartNo(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Revision<input placeholder='.X.' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Qty<input placeholder='.X.' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Due Date<input placeholder='.x.' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Customer<input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Type<input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Next Step<input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Print<input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='&#xf002;  Job No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'>Step No</th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValuePartNo(e.target.value)} placeholder='&#xf002;  Part No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'>Revision</th>
+                                            <th className='text-center'>Qty</th>
+                                            <th className='text-center'>Due Date</th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='&#xf002;  Customer' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'>Type</th>
+                                            <th className='text-center'>Next Step<input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='&#xf002;  bad' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'>Print</th>
                                             {/* {cookieData.maintenance &&
                                                 <th className='text-center align-middle'>Actions</th>
                                             } */}
@@ -433,19 +448,94 @@ export const EngJobs = () => {
                             </div>
                         </Tab>
 
+                        <Tab eventKey="outsource" title={outsource}>
+                            <div className='mx-3'>
+                                <Table striped hover>
+                                    <thead>
+                                        <tr>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='&#xf002;  Job No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValuePartNo(e.target.value)} placeholder='&#xf002;  Part No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'>Revision</th>
+                                            <th className='text-center'>Qty</th>
+                                            <th className='text-center'>Due Date</th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='&#xf002;  Customer' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'>Quote<input onChange={(e) => setSearchedValueQuote(e.target.value)} placeholder='&#xf002;  bad' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='&#xf002;  Type' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'>Print</th>
+                                            {/* {cookieData.maintenance &&
+                                                <th className='text-center align-middle'>Actions</th>
+                                            } */}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {searchedEng
+                                            .filter(row => typeof row.JobNo !== 'undefined')
+                                            .filter((row) => 
+                                                !searchedValueJobNo || row.JobNo
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueJobNo.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValuePartNo || row.PartNo
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValuePartNo.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueCustomer || row.CustCode
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueCustomer.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueQuote || row.QuoteNo
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueQuote.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueType || row.User_Text3
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueType.toString().toLowerCase())
+                                            )
+                                            .map((job, index) => {
+                                                if (job.User_Text2 == '6. OUTSOURCE') {
+                                                    return (
+                                                        <tr key={index} job={job} onClick={() => handleShow(job)}>
+                                                            <td className='text-center'>{job.JobNo}</td>
+                                                            <td className='text-center'>{job.PartNo}</td>
+                                                            <td className='text-center'>{job.Revision}</td>
+                                                            <td className='text-center'>{job.EstimQty}</td>
+                                                            <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
+                                                            <td className='text-center'>{job.CustCode}</td>
+                                                            <td className='text-center'>{job.QuoteNo}</td>
+                                                            <td className='text-center'>{job.User_Text3}</td>
+                                                            <td className='text-center'></td>
+                                                        </tr>
+                                                    )
+                                                }
+                                            })
+                                        }
+                                    </tbody>
+                                </Table>
+                            </div>
+                        </Tab>
+
                         <Tab eventKey="active" title={active}>
                             <div className='mx-3'>
                                 <Table striped hover>
                                     <thead>
                                         <tr>
-                                            <th className='text-center'>Job No<input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Part No<input onChange={(e) => setSearchedValuePartNo(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Revision<input placeholder='.X.' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Qty<input placeholder='.X.' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Due Date<input placeholder='.x.' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Customer<input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Type<input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Area<input onChange={(e) => setSearchedValueStatus(e.target.value)} placeholder='.bad.' className='text-center' style={{width: '100%'}} /></th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='&#xf002;  Job No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValuePartNo(e.target.value)} placeholder='&#xf002;  Part No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'>Revision</th>
+                                            <th className='text-center'>Qty</th>
+                                            <th className='text-center'>Due Date</th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='&#xf002;  Customer' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='&#xf002;  Type' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='&#xf002;  Area' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             {/* {cookieData.maintenance &&
                                                 <th className='text-center align-middle'>Actions</th>
                                             } */}
@@ -478,8 +568,13 @@ export const EngJobs = () => {
                                                     .toLowerCase()
                                                     .includes(searchedValueType.toString().toLowerCase())
                                             )
+                                            .filter((row) => 
+                                                !searchedValueArea || row.User_Text2
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueArea.toString().toLowerCase())
+                                            )
                                             .map((job, index) => {
-                                                // if (job.User_Text2 == '1. OFFICE' && job.User_Text3 == 'NEW' || job.User_Text3 == 'REVISION' || job.User_Text3 == 'REVIEW') {
                                                     return (
                                                         <tr key={index} job={job} onClick={() => handleShow(job)}>
                                                             <td className='text-center'>{job.JobNo}</td>
