@@ -225,7 +225,7 @@ export const TubeLaser = () => {
                                             .map((job, index) => {
                                                 return (
                                                     <tr key={index} job={job}>
-                                                        <td className='text-center' onClick={() => handleShow(job)}>{job.JobNo}</td>
+                                                        <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td>
                                                         <td className='text-center'>{job.StepNo}</td>
                                                         <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td>
                                                         <td className='text-center'>{job.Revision}</td>
@@ -281,7 +281,7 @@ export const TubeLaser = () => {
                                                 if (job.User_Text2 == '1. OFFICE') {
                                                     return (
                                                         <tr key={index} job={job}>
-                                                            <td className='text-center' onClick={() => handleShow(job)}>{job.JobNo}</td>
+                                                            <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td>
                                                             <td className='text-center'>{job.StepNo}</td>
                                                             <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td>
                                                             <td className='text-center'>{job.Revision}</td>
