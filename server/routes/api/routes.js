@@ -23,6 +23,8 @@ router.post('/engineering/updateJob', engineeringController.updateJob);
 router.post('/engineering/updateModel', engineeringController.updateModel);
 
 router.get('/tlaser/getAllJobs', tlaserController.getAllJobs);
+router.get('/tlaser/getTBRJobs', tlaserController.getTBRJobs);
+router.get('/tlaser/getFRJobs', tlaserController.getFRJobs);
 
 router.get('/maintenance/getAllRequests', maintenanceController.getAllRequests);
 router.get('/maintenance/getAllEquipment', maintenanceController.getAllEquipment);
