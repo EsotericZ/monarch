@@ -15,6 +15,7 @@ import { TapChart } from './components/engineering/TapChart';
 
 import { Departments } from './components/departments/Departments';
 import { TubeLaser } from './components/departments/TubeLaser';
+import { Punch } from './components/departments/Punch';
 
 import { Home } from './components/home/Home';
 import { Inventory } from './components/inventory/Inventory';
@@ -78,6 +79,10 @@ export const App = () => {
         <Route
           path='/tubelaser'
           element={<TubeLaser />}
+        />
+        <Route
+          path='/punch'
+          element={<Punch />}
         />
 
         <Route

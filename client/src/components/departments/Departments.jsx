@@ -34,6 +34,7 @@ export const Departments = () => {
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
                     <h1 className='text-center'>Departments</h1>
                     <Link to='/tubelaser'><h3 className='text-center'>Tube Laser</h3></Link>                   
+                    <Link to='/punch'><h3 className='text-center'>Punch</h3></Link>                   
                 </div>
             }
         </div>

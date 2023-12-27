@@ -101,11 +101,15 @@ export const Sidebar = () => {
                                 <CDBSidebarMenuItem>Fixture Laser</CDBSidebarMenuItem>
                                 <CDBSidebarMenuItem>Forming</CDBSidebarMenuItem>
                                 <CDBSidebarMenuItem>Laser (Enterprise)</CDBSidebarMenuItem>
-                                <CDBSidebarMenuItem>Punch</CDBSidebarMenuItem>
+                                <NavLink exact to='/punch'>
+                                    <CDBSidebarMenuItem>Punch</CDBSidebarMenuItem>
+                                </NavLink>
                                 <CDBSidebarMenuItem>Saw</CDBSidebarMenuItem>
                                 <CDBSidebarMenuItem>Shear</CDBSidebarMenuItem>
                                 <CDBSidebarMenuItem>Static Laser</CDBSidebarMenuItem>
-                                <CDBSidebarMenuItem>Tube Laser</CDBSidebarMenuItem>
+                                <NavLink exact to='/tubelaser'>
+                                    <CDBSidebarMenuItem>Tube Laser</CDBSidebarMenuItem>
+                                </NavLink>
                                 <CDBSidebarMenuItem>Tube Laser (Material)</CDBSidebarMenuItem>
                             </CDBSidebarSubMenu>
                         }
