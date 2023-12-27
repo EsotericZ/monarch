@@ -14,8 +14,12 @@ import { Nesting } from './components/engineering/Nesting';
 import { TapChart } from './components/engineering/TapChart';
 
 import { Departments } from './components/departments/Departments';
-import { TubeLaser } from './components/departments/TubeLaser';
+import { FLaser } from './components/departments/FLaser';
 import { Punch } from './components/departments/Punch';
+import { Saw } from './components/departments/Saw';
+import { Shear } from './components/departments/Shear';
+import { SLaser } from './components/departments/SLaser';
+import { TubeLaser } from './components/departments/TubeLaser';
 
 import { Home } from './components/home/Home';
 import { Inventory } from './components/inventory/Inventory';
@@ -77,12 +81,28 @@ export const App = () => {
           element={<Departments />}
         />
         <Route
-          path='/tubelaser'
-          element={<TubeLaser />}
+          path='/fixturelaser'
+          element={<FLaser />}
         />
         <Route
           path='/punch'
           element={<Punch />}
+        />
+        <Route
+          path='/saw'
+          element={<Saw />}
+        />
+        <Route
+          path='/shear'
+          element={<Shear />}
+        />
+        <Route
+          path='/staticlaser'
+          element={<SLaser />}
+        />
+        <Route
+          path='/tubelaser'
+          element={<TubeLaser />}
         />
 
         <Route

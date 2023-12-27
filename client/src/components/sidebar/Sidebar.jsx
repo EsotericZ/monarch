@@ -98,15 +98,23 @@ export const Sidebar = () => {
                             </NavLink>
                         :
                             <CDBSidebarSubMenu title="Departments" icon="th">
+                                <NavLink exact to='/fixturelaser'>
                                 <CDBSidebarMenuItem>Fixture Laser</CDBSidebarMenuItem>
+                                </NavLink>
                                 <CDBSidebarMenuItem>Forming</CDBSidebarMenuItem>
                                 <CDBSidebarMenuItem>Laser (Enterprise)</CDBSidebarMenuItem>
                                 <NavLink exact to='/punch'>
                                     <CDBSidebarMenuItem>Punch</CDBSidebarMenuItem>
                                 </NavLink>
-                                <CDBSidebarMenuItem>Saw</CDBSidebarMenuItem>
-                                <CDBSidebarMenuItem>Shear</CDBSidebarMenuItem>
-                                <CDBSidebarMenuItem>Static Laser</CDBSidebarMenuItem>
+                                <NavLink exact to='/saw'>
+                                    <CDBSidebarMenuItem>Saw</CDBSidebarMenuItem>
+                                </NavLink>
+                                <NavLink exact to='/shear'>
+                                    <CDBSidebarMenuItem>Shear</CDBSidebarMenuItem>
+                                </NavLink>
+                                <NavLink exact to='/staticlaser'>
+                                    <CDBSidebarMenuItem>Static Laser</CDBSidebarMenuItem>
+                                </NavLink>
                                 <NavLink exact to='/tubelaser'>
                                     <CDBSidebarMenuItem>Tube Laser</CDBSidebarMenuItem>
                                 </NavLink>

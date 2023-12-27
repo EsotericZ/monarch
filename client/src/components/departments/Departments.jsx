@@ -33,8 +33,12 @@ export const Departments = () => {
             :
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
                     <h1 className='text-center'>Departments</h1>
-                    <Link to='/tubelaser'><h3 className='text-center'>Tube Laser</h3></Link>                   
+                    <Link to='/fixturelaser'><h3 className='text-center'>Fixture Laser</h3></Link>                   
                     <Link to='/punch'><h3 className='text-center'>Punch</h3></Link>                   
+                    <Link to='/saw'><h3 className='text-center'>Saw</h3></Link>                   
+                    <Link to='/shear'><h3 className='text-center'>Shear</h3></Link>                   
+                    <Link to='/staticlaser'><h3 className='text-center'>Static Laser</h3></Link>                   
+                    <Link to='/tubelaser'><h3 className='text-center'>Tube Laser</h3></Link>                   
                 </div>
             }
         </div>
