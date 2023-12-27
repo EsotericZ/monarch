@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button, FloatingLabel, Form, Modal, Tab, Tabs, Table, Toast, ToastContainer } from 'react-bootstrap';
 import { format, parseISO } from 'date-fns';
+import { RingLoader } from 'react-spinners';
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 
@@ -47,16 +48,10 @@ export const Punch = () => {
     const [engineerInfo, setEngineerInfo] = useState();
     const [jobStatus, setJobStatus] = useState(' ');
 
-    // const [home, setHome] = useState('Home');
     const [jobs, setJobs] = useState('Jobs');
-    // const [future, setFuture] = useState('Future');
-    // const [repeat, setRepeat] = useState('Repeat');
-    // const [active, setActive] = useState('Active');
-    // const [add, setAdd] = useState('Add');
-    // const [outsource, setOutsource] = useState('Outsource');
-    // const [qc, setQc] = useState('QC');
-    // const [hold, setHold] = useState('Hold');
-    // const [all, setAll] = useState('All');
+    const [material, setMaterial] = useState('Add Material');
+    const [order, setOrder] = useState('On Order');
+    const [active, setActive] = useState('Active');
 
     const fetchData = () => {
         try {
@@ -73,7 +68,6 @@ export const Punch = () => {
             frData.then((res) => {
                 setSearchedFR(res);
             })
-            console.log(searchedFR)
         } catch (err) {
             console.log(err)
         }
@@ -106,7 +100,56 @@ export const Punch = () => {
             {loading ?
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
                     <h1 className='text-center'>Punch</h1>
-                    <h2 className='text-center'>Loading</h2>
+                    <Tabs
+                        defaultActiveKey="jobs"
+                        id="justify-tab-example"
+                        className='mb-3'
+                        justify
+                    >
+                        <Tab eventKey="jobs" title={jobs}>
+                            <div className='mx-3'>
+                                <Table striped hover>
+                                    <thead>
+                                        <tr>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='&#xf002;  Job No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'>Step No</th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValuePartNo(e.target.value)} placeholder='&#xf002;  Part No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'>Revision</th>
+                                            <th className='text-center'>Qty</th>
+                                            <th className='text-center'>Due Date</th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='&#xf002;  Customer' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='&#xf002;  Type' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueMaterial(e.target.value)} placeholder='&#xf002;  Materials' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            {/* <th className='text-center'>Engineer<input onChange={(e) => setSearchedValueEngineer(e.target.value)} placeholder='&#xf002;  .bad.' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'>Quote<input onChange={(e) => setSearchedValueQuote(e.target.value)} placeholder='&#xf002;  .bad.' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'>Model</th>
+                                            <th className='text-center'>Status<input onChange={(e) => setSearchedValueStatus(e.target.value)} placeholder='&#xf002;  .bad.' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th> */}
+                                            {/* {cookieData.maintenance &&
+                                                <th className='text-center align-middle'>Actions</th>
+                                            } */}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr className='divide'>
+                                            <td className='text-center' colspan='9'>TBR</td>
+                                        </tr>
+                                        <tr>
+                                            <td className='text-center' colspan='9'>Loading</td>
+                                        </tr>
+                                        <tr className='divide'>
+                                            <td className='text-center' colspan='9'>Future</td>
+                                        </tr>
+                                        <tr>
+                                            <td className='text-center' colspan='9'>Loading</td>
+                                        </tr>
+                                    </tbody>
+                                </Table>
+                            </div>
+                        </Tab>
+                        <Tab eventKey="material" title={material}></Tab>
+                        <Tab eventKey="order" title={order}></Tab>
+                        <Tab eventKey="active" title={active}></Tab>
+                    </Tabs>
                 </div>
             :
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
@@ -311,6 +354,17 @@ export const Punch = () => {
                             </div>
                         </Tab>
 
+                        <Tab eventKey="material" title={material}>
+                            <h1 className='text-center'>Work In Progress</h1>
+                        </Tab>
+
+                        <Tab eventKey="order" title={order}>
+                            <h1 className='text-center'>Work In Progress</h1>
+                        </Tab>
+
+                        <Tab eventKey="active" title={active}>
+                            <h1 className='text-center'>Work In Progress</h1>
+                        </Tab>
                         {/* <Tab eventKey="future" title={future}>
                             <div className='mx-3'>
                                 <Table striped hover>

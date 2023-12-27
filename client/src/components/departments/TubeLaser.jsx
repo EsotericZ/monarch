@@ -47,18 +47,18 @@ export const TubeLaser = () => {
     const [engineerInfo, setEngineerInfo] = useState();
     const [jobStatus, setJobStatus] = useState(' ');
 
-    const [home, setHome] = useState('Home');
-    const [tbr, setTbr] = useState('TBR');
-    const [future, setFuture] = useState('Future');
-    const [repeat, setRepeat] = useState('Repeat');
-    const [active, setActive] = useState('Active');
-    const [add, setAdd] = useState('Add');
-    const [outsource, setOutsource] = useState('Outsource');
-    const [qc, setQc] = useState('QC');
-    const [hold, setHold] = useState('Hold');
-    const [all, setAll] = useState('All');
+    // const [home, setHome] = useState('Home');
+    const [jobs, setJobs] = useState('Jobs');
+    // const [future, setFuture] = useState('Future');
+    // const [repeat, setRepeat] = useState('Repeat');
+    // const [active, setActive] = useState('Active');
+    // const [add, setAdd] = useState('Add');
+    // const [outsource, setOutsource] = useState('Outsource');
+    // const [qc, setQc] = useState('QC');
+    // const [hold, setHold] = useState('Hold');
+    // const [all, setAll] = useState('All');
 
-    const find = () => {
+    const fetchData = () => {
         try {
             let data = getAllJobs();
             data.then((res) => {
@@ -84,7 +84,7 @@ export const TubeLaser = () => {
     const handleSave = () => {
         updateJob(jobNoInfo, engineerInfo, jobStatus);
         setShow(false);
-        find();
+        fetchData();
     };
 
     const handleShow = (job) => {
@@ -97,7 +97,7 @@ export const TubeLaser = () => {
     } ;
     
     useEffect(() => {
-        find();
+        fetchData();
     }, [loading, show]);
 
     return (
@@ -146,12 +146,12 @@ export const TubeLaser = () => {
                     </Modal>
 
                     <Tabs
-                        defaultActiveKey="tbr"
+                        defaultActiveKey="jobs"
                         id="justify-tab-example"
                         className='mb-3'
                         justify
                     >
-                        <Tab eventKey="tbr" title={tbr}>
+                        <Tab eventKey="jobs" title={jobs}>
                             <div className='mx-3'>
                                 <Table striped hover>
                                     <thead>
