@@ -21,6 +21,11 @@ Jobs.init(
         jobStatus: {
             type: DataTypes.STRING,
         },
+        model: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: 0,
+        },
         createdAt : {
             type: DataTypes.DATE,
         },
@@ -28,9 +33,6 @@ Jobs.init(
             type: DataTypes.DATE,
             defaultValue: null,
         },
-        // wip: {
-        //     type: DataTypes.BOOLEAN,
-        // },
         // hold: {
         //     type: DataTypes.BOOLEAN,
         // },

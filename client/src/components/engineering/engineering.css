@@ -3,6 +3,10 @@
     color: black;
 }
 
+.jobBold {
+    font-weight: bold;
+}
+
 .searchBox {
     border: none;
 }

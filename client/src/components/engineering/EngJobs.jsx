@@ -4,10 +4,14 @@ import { format, parseISO } from 'date-fns';
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 
+import { Icon } from 'react-icons-kit';
+import {check} from 'react-icons-kit/entypo/check'
+
 import getAllJobs from '../../services/engineering/getAllJobs';
 import getTBRJobs from '../../services/engineering/getTBRJobs';
 import getFRJobs from '../../services/engineering/getFRJobs';
 import updateJob from '../../services/engineering/updateJob';
+import updateModel from '../../services/engineering/updateModel';
 import { Sidebar } from '../sidebar/Sidebar';
 import './engineering.css';
 
@@ -20,7 +24,7 @@ export const EngJobs = () => {
         cookieData = {
             'name': '',
             'role': 'employee',
-            'maintenance': false,
+            'engineering': false,
         };
     }
 
@@ -35,6 +39,7 @@ export const EngJobs = () => {
     const [searchedValueArea, setSearchedValueArea] = useState('');
     const [showToast, setShowToast] = useState(false);
     const [partCopy, setPartCopy] = useState('None');
+    const [update, setUpdate] = useState('');
 
     const [searchedEng, setSearchedEng] = useState([]);
     const [searchedTBR, setSearchedTBR] = useState([]);
@@ -48,16 +53,11 @@ export const EngJobs = () => {
     const [engineerInfo, setEngineerInfo] = useState();
     const [jobStatus, setJobStatus] = useState(' ');
 
-    const [home, setHome] = useState('Home');
     const [tbr, setTbr] = useState('TBR');
     const [future, setFuture] = useState('Future');
     const [repeat, setRepeat] = useState('Repeat');
-    const [active, setActive] = useState('Active');
-    const [add, setAdd] = useState('Add');
     const [outsource, setOutsource] = useState('Outsource');
-    const [qc, setQc] = useState('QC');
-    const [hold, setHold] = useState('Hold');
-    const [all, setAll] = useState('All');
+    const [active, setActive] = useState('Active');
 
     const find = () => {
         try {
@@ -81,6 +81,11 @@ export const EngJobs = () => {
         }
     };
 
+    async function toggleModel(job) {
+        updateModel(job.dataValues.id);
+        setUpdate(`Model ${job.dataValues.jobNo}`)
+    }
+
     const handleClose = () => setShow(false);
 
     const handleSave = () => {
@@ -100,7 +105,7 @@ export const EngJobs = () => {
     
     useEffect(() => {
         find();
-    }, [loading, show]);
+    }, [loading, show, update]);
 
     return (
         <div style={{ display: 'flex' }}>
@@ -130,6 +135,7 @@ export const EngJobs = () => {
                                     <option></option>
                                     <option>WIP</option>
                                     <option>QC</option>
+                                    <option>REWORK</option>
                                     <option>HOLD</option>
                                     <option>PROTO</option>
                                     <option>DONE</option>
@@ -233,7 +239,7 @@ export const EngJobs = () => {
                                                 if (job.User_Text2 == '2. TBR') {
                                                     return (
                                                         <tr key={index} job={job}>
-                                                            <td className='text-center' onClick={() => handleShow(job)}>{job.JobNo}</td>
+                                                            <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td>
                                                             <td className='text-center'>{job.StepNo}</td>
                                                             <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td>
                                                             <td className='text-center'>{job.Revision}</td>
@@ -243,7 +249,11 @@ export const EngJobs = () => {
                                                             <td className='text-center'>{job.User_Text3}</td>
                                                             <td className='text-center'>{job.dataValues.engineer}</td>
                                                             <td className='text-center'>{job.QuoteNo}</td>
-                                                            <td className='text-center'>-</td>
+                                                            <td className='text-center' onClick={() => toggleModel(job)}>
+                                                                {job.dataValues.model &&
+                                                                    <Icon icon={check}/>
+                                                                }
+                                                            </td>
                                                             <td className='text-center'>{job.dataValues.jobStatus}</td>
                                                                 {/* <Dropdown>
                                                                     <Dropdown.Toggle size="sm">
@@ -353,8 +363,7 @@ export const EngJobs = () => {
                                                 if (job.User_Text2 == '1. OFFICE' && job.User_Text3 != 'REPEAT' && job.User_Text2 != '6. OUTSOURCE') {
                                                     return (
                                                         <tr key={index} job={job}>
-                                                        {/* <tr key={index} job={job} onClick={() => handleShow(job)}> */}
-                                                            <td className='text-center'>{job.JobNo}</td>
+                                                            <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td>
                                                             <td className='text-center'>{job.StepNo}</td>
                                                             <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td>
                                                             <td className='text-center'>{job.Revision}</td>
@@ -364,7 +373,11 @@ export const EngJobs = () => {
                                                             <td className='text-center'>{job.User_Text3}</td>
                                                             <td className='text-center'>{job.dataValues.engineer}</td>
                                                             <td className='text-center'>{job.QuoteNo}</td>
-                                                            <td className='text-center'></td>
+                                                            <td className='text-center' onClick={() => toggleModel(job)}>
+                                                                {job.dataValues.model &&
+                                                                    <Icon icon={check}/>
+                                                                }
+                                                            </td>
                                                             <td className='text-center'>{job.dataValues.jobStatus}</td>
                                                         </tr>
                                                     )
@@ -434,7 +447,7 @@ export const EngJobs = () => {
                                                 if (job.User_Text2 == '1. OFFICE' && job.User_Text3 == 'REPEAT') {
                                                     return (
                                                         <tr key={index} job={job}>
-                                                            <td className='text-center'>{job.JobNo}</td>
+                                                            <td className='text-center jobBold'>{job.JobNo}</td>
                                                             <td className='text-center'>{job.StepNo}</td>
                                                             <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td>
                                                             <td className='text-center'>{job.Revision}</td>
@@ -519,9 +532,8 @@ export const EngJobs = () => {
                                             .map((job, index) => {
                                                 if (job.User_Text2 == '6. OUTSOURCE') {
                                                     return (
-                                                        // <tr key={index} job={job} onClick={() => handleShow(job)}>
                                                         <tr key={index} job={job}>
-                                                            <td className='text-center'>{job.JobNo}</td>
+                                                            <td className='text-center jobBold'>{job.JobNo}</td>
                                                             <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td>
                                                             <td className='text-center'>{job.Revision}</td>
                                                             <td className='text-center'>{job.EstimQty}</td>
@@ -597,9 +609,8 @@ export const EngJobs = () => {
                                             )
                                             .map((job, index) => {
                                                     return (
-                                                        // <tr key={index} job={job} onClick={() => handleShow(job)}>
                                                         <tr key={index} job={job}>
-                                                            <td className='text-center'>{job.JobNo}</td>
+                                                            <td className='text-center jobBold'>{job.JobNo}</td>
                                                             <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td>
                                                             <td className='text-center'>{job.Revision}</td>
                                                             <td className='text-center'>{job.EstimQty}</td>
@@ -609,7 +620,6 @@ export const EngJobs = () => {
                                                             <td className='text-center'>{job.User_Text2}</td>
                                                         </tr>
                                                     )
-                                                // }
                                             })
                                         }
                                     </tbody>

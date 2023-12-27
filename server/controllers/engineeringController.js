@@ -58,7 +58,6 @@ async function getTBRJobs(req, res) {
             records.forEach(item => map.set(item.JobNo, item));
             jobData.forEach(item => map.set(item.jobNo, {...map.get(item.jobNo), ...item}));
             const fullJob = Array.from(map.values());
-            console.log(fullJob)
 
             res.send(fullJob)
         })
@@ -103,7 +102,49 @@ function updateJob(req, res) {
     })
 };
 
+async function updateModel(req, res) {
+    let id = req.body.id
+
+    await Jobs.findOne({
+        where: {id: id}
+    })
+    .then((result) => {
+        if (result.model) {
+            Jobs.update(
+                { model: 0 },
+                { where: { id:id }}
+            ).then((result) => {
+                return res.status(200).send({
+                    data: result
+                })
+            }).catch((err) => {
+                return res.status(500).send({
+                    status: err
+                })
+            })
+        } else {
+            Jobs.update(
+                { model: 1 },
+                { where: { id:id }}
+            ).then((result) => {
+                return res.status(200).send({
+                    data: result
+                })
+            }).catch((err) => {
+                return res.status(500).send({
+                    status: err
+                })
+            })
+        }
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
+
 exports.getAllJobs = getAllJobs;
 exports.getTBRJobs = getTBRJobs;
 exports.getFRJobs = getFRJobs;
 exports.updateJob = updateJob;
+exports.updateModel = updateModel;
