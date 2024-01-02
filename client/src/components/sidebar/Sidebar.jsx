@@ -74,6 +74,9 @@ export const Sidebar = () => {
                                 <NavLink exact to='/engjobs'>
                                     <CDBSidebarMenuItem>Jobs</CDBSidebarMenuItem>
                                 </NavLink>
+                                <NavLink exact to='/quality'>
+                                    <CDBSidebarMenuItem>Quality</CDBSidebarMenuItem>
+                                </NavLink>
                                 <NavLink exact to='/benddeduction'>
                                     <CDBSidebarMenuItem>Bend Deduction</CDBSidebarMenuItem>
                                 </NavLink>

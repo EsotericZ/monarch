@@ -11,6 +11,7 @@ import { BendDeduction } from './components/engineering/BendDeduction';
 import { Hardware } from './components/engineering/Hardware';
 import { Machining } from './components/engineering/Machining';
 import { Nesting } from './components/engineering/Nesting';
+import { Quality } from './components/engineering/Quality';
 import { TapChart } from './components/engineering/TapChart';
 
 import { Departments } from './components/departments/Departments';
@@ -54,6 +55,10 @@ export const App = () => {
         <Route
           path='/engjobs'
           element={<EngJobs />}
+        />
+        <Route
+          path='/quality'
+          element={<Quality />}
         />
         <Route
           path='/benddeduction'

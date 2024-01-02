@@ -51,6 +51,7 @@ export const Engineering = () => {
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
                     <h1 className='text-center'>Engineering</h1>
                     <Link to='/engjobs'><h3 className='text-center'>Active Jobs</h3></Link>                   
+                    <Link to='/quality'><h3 className='text-center'>Quality</h3></Link>                   
                     <Link to='/benddeduction'><h3 className='text-center'>Bend Deduction</h3></Link>                   
                     <Link to='/hardware'><h3 className='text-center'>Hardware</h3></Link>                   
                     <Link to='/machining'><h3 className='text-center'>Machining</h3></Link>                   

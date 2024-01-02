@@ -6,7 +6,11 @@ const maintenanceController = require('../../controllers/maintenanceController')
 const portalController = require('../../controllers/portalController');
 const scalesController = require('../../controllers/scalesController');
 const shippingController = require('../../controllers/shippingController');
-const tlaserController = require('../../controllers/tlaserController');
+const tlaserController = require('../../controllers/tlaserController'); 
+const slaserController = require('../../controllers/slaserController'); 
+const flaserController = require('../../controllers/flaserController'); 
+const sawController = require('../../controllers/sawController'); 
+const shearController = require('../../controllers/shearController'); 
 const punchController = require('../../controllers/punchController');
 const todoController = require('../../controllers/todoController');
 const userController = require('../../controllers/userController');
@@ -26,6 +30,22 @@ router.post('/engineering/updateModel', engineeringController.updateModel);
 router.get('/tlaser/getAllJobs', tlaserController.getAllJobs);
 router.get('/tlaser/getTBRJobs', tlaserController.getTBRJobs);
 router.get('/tlaser/getFRJobs', tlaserController.getFRJobs);
+
+router.get('/slaser/getAllJobs', slaserController.getAllJobs);
+router.get('/slaser/getTBRJobs', slaserController.getTBRJobs);
+router.get('/slaser/getFRJobs', slaserController.getFRJobs);
+
+router.get('/flaser/getAllJobs', flaserController.getAllJobs);
+router.get('/flaser/getTBRJobs', flaserController.getTBRJobs);
+router.get('/flaser/getFRJobs', flaserController.getFRJobs);
+
+router.get('/shear/getAllJobs', shearController.getAllJobs);
+router.get('/shear/getTBRJobs', shearController.getTBRJobs);
+router.get('/shear/getFRJobs', shearController.getFRJobs);
+
+router.get('/saw/getAllJobs', sawController.getAllJobs);
+router.get('/saw/getTBRJobs', sawController.getTBRJobs);
+router.get('/saw/getFRJobs', sawController.getFRJobs);
 
 router.get('/punch/getAllJobs', punchController.getAllJobs);
 router.get('/punch/getTBRJobs', punchController.getTBRJobs);

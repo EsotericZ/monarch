@@ -15,7 +15,7 @@ import updateModel from '../../services/engineering/updateModel';
 import { Sidebar } from '../sidebar/Sidebar';
 import './engineering.css';
 
-export const EngJobs = () => {
+export const Quality = () => {
     const cookies = new Cookies();
     let cookieData
     try {
