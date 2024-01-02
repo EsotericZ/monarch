@@ -236,39 +236,37 @@ export const EngJobs = () => {
                                                     .includes(searchedValueStatus.toString().toLowerCase())
                                             })
                                             .map((job, index) => {
-                                                if (job.User_Text2 == '2. TBR') {
-                                                    return (
-                                                        <tr key={index} job={job}>
-                                                            <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td>
-                                                            <td className='text-center'>{job.StepNo}</td>
-                                                            <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td>
-                                                            <td className='text-center'>{job.Revision}</td>
-                                                            <td className='text-center'>{job.EstimQty}</td>
-                                                            <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
-                                                            <td className='text-center'>{job.CustCode}</td>
-                                                            <td className='text-center'>{job.User_Text3}</td>
-                                                            <td className='text-center'>{job.dataValues.engineer}</td>
-                                                            <td className='text-center'>{job.QuoteNo}</td>
-                                                            <td className='text-center' onClick={() => toggleModel(job)}>
-                                                                {job.dataValues.model &&
-                                                                    <Icon icon={check}/>
-                                                                }
-                                                            </td>
-                                                            <td className='text-center'>{job.dataValues.jobStatus}</td>
-                                                                {/* <Dropdown>
-                                                                    <Dropdown.Toggle size="sm">
-                                                                        {job.dataValues.jobStatus}  
-                                                                    </Dropdown.Toggle>
-                                                                    <Dropdown.Menu>
-                                                                        <Dropdown.Item>Action</Dropdown.Item>
-                                                                        <Dropdown.Item>Another action</Dropdown.Item>
-                                                                        <Dropdown.Item>Something else</Dropdown.Item>
-                                                                    </Dropdown.Menu>
-                                                                </Dropdown>
-                                                            </td> */}
-                                                        </tr>
-                                                    )
-                                                }
+                                                return (
+                                                    <tr key={index} job={job}>
+                                                        <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td>
+                                                        <td className='text-center'>{job.StepNo}</td>
+                                                        <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td>
+                                                        <td className='text-center'>{job.Revision}</td>
+                                                        <td className='text-center'>{job.EstimQty}</td>
+                                                        <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
+                                                        <td className='text-center'>{job.CustCode}</td>
+                                                        <td className='text-center'>{job.User_Text3}</td>
+                                                        <td className='text-center'>{job.dataValues.engineer}</td>
+                                                        <td className='text-center'>{job.QuoteNo}</td>
+                                                        <td className='text-center' onClick={() => toggleModel(job)}>
+                                                            {job.dataValues.model &&
+                                                                <Icon icon={check}/>
+                                                            }
+                                                        </td>
+                                                        <td className='text-center'>{job.dataValues.jobStatus}</td>
+                                                            {/* <Dropdown>
+                                                                <Dropdown.Toggle size="sm">
+                                                                    {job.dataValues.jobStatus}  
+                                                                </Dropdown.Toggle>
+                                                                <Dropdown.Menu>
+                                                                    <Dropdown.Item>Action</Dropdown.Item>
+                                                                    <Dropdown.Item>Another action</Dropdown.Item>
+                                                                    <Dropdown.Item>Something else</Dropdown.Item>
+                                                                </Dropdown.Menu>
+                                                            </Dropdown>
+                                                        </td> */}
+                                                    </tr>
+                                                )
                                             })
                                         }
                                     </tbody>
@@ -360,7 +358,7 @@ export const EngJobs = () => {
                                                     .includes(searchedValueStatus.toString().toLowerCase())
                                             })
                                             .map((job, index) => {
-                                                if (job.User_Text2 == '1. OFFICE' && job.User_Text3 != 'REPEAT' && job.User_Text2 != '6. OUTSOURCE') {
+                                                if (job.User_Text3 != 'REPEAT' && job.User_Text2 != '6. OUTSOURCE') {
                                                     return (
                                                         <tr key={index} job={job}>
                                                             <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td>
@@ -444,7 +442,7 @@ export const EngJobs = () => {
                                                     .includes(searchedValueType.toString().toLowerCase())
                                             )
                                             .map((job, index) => {
-                                                if (job.User_Text2 == '1. OFFICE' && job.User_Text3 == 'REPEAT') {
+                                                if (job.User_Text3 == 'REPEAT') {
                                                     return (
                                                         <tr key={index} job={job}>
                                                             <td className='text-center jobBold'>{job.JobNo}</td>

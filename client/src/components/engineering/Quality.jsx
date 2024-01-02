@@ -236,7 +236,7 @@ export const Quality = () => {
                                                     .includes(searchedValueStatus.toString().toLowerCase())
                                             })
                                             .map((job, index) => {
-                                                if (job.User_Text2 == '2. TBR') {
+                                                // if (job.User_Text2 == '2. TBR') {
                                                     return (
                                                         <tr key={index} job={job}>
                                                             <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td>
@@ -268,7 +268,7 @@ export const Quality = () => {
                                                             </td> */}
                                                         </tr>
                                                     )
-                                                }
+                                                // }
                                             })
                                         }
                                     </tbody>
@@ -360,7 +360,7 @@ export const Quality = () => {
                                                     .includes(searchedValueStatus.toString().toLowerCase())
                                             })
                                             .map((job, index) => {
-                                                if (job.User_Text2 == '1. OFFICE' && job.User_Text3 != 'REPEAT' && job.User_Text2 != '6. OUTSOURCE') {
+                                                if (job.User_Text3 != 'REPEAT' && job.User_Text2 != '6. OUTSOURCE') {
                                                     return (
                                                         <tr key={index} job={job}>
                                                             <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td>
