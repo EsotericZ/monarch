@@ -483,7 +483,9 @@ export const EngJobs = () => {
                                                             <td className='text-center'>{job.CustCode}</td>
                                                             <td className='text-center'>{job.User_Text3}</td>
                                                             <td className='text-center'>{job.WorkCntr}</td>
-                                                            <td className='text-center'></td>
+                                                            <td className='text-center'>{job.DocNumber &&
+                                                                    <Icon icon={check}/>
+                                                                }</td>
                                                         </tr>
                                                     )
                                                 }
