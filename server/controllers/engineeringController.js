@@ -69,9 +69,8 @@ async function getFRJobs(req, res) {
     sql.connect(config, function(err,) {
         if (err) console.error(err);
         let request = new sql.Request();
-
-        request.query("SELECT R.JobNo, D.PartNo, D.Revision, R.EstimQty, D.DueDate, O.CustCode, D.User_Text3, D.User_Text2, D.User_Number3, R.OrderNo, R.StepNo, D.QuoteNo, P.DocNumber\
-            FROM OrderRouting R INNER JOIN OrderDet D ON R.JobNo=D.JobNo INNER JOIN ORDERS O ON D.OrderNo=O.OrderNo INNER JOIN PartFiles P ON P.PartNo=D.PartNo\
+        request.query("SELECT R.JobNo, D.PartNo, D.Revision, R.EstimQty, D.DueDate, O.CustCode, D.User_Text3, D.User_Text2, D.User_Number3, R.OrderNo, R.StepNo, D.QuoteNo\
+            FROM OrderRouting R INNER JOIN OrderDet D ON R.JobNo=D.JobNo INNER JOIN ORDERS O ON D.OrderNo=O.OrderNo\
             WHERE R.WorkCntr='101 ENGIN' AND R.Status!='Finished' AND R.Status!='Closed' AND D.Status='Open' AND O.User_Text3!='UNCONFIRMED' AND D.User_Text2='1. OFFICE'\
             ORDER BY D.DueDate, R.JobNo", 
         
@@ -104,6 +103,23 @@ async function getRepeatJobs(req, res) {
             (D.Status='Open' AND R.Status!='Finished' AND R.Status!='Closed' AND D.User_Text3='REPEAT' AND R.WorkCntr='301 SAW') OR\
             (D.Status='Open' AND R.Status!='Finished' AND R.Status!='Closed' AND D.User_Text3='REPEAT' AND R.WorkCntr='402 WELD')\
             ORDER BY R.Jobno",
+        
+        function(err, recordset) {
+            if (err) console.error(err);
+            let records = recordset.recordsets[0];
+
+            res.send(records)
+        })
+    })
+};
+
+async function getPrints(req, res) {
+    sql.connect(config, function(err,) {
+        if (err) console.error(err);
+        let request = new sql.Request();
+        request.query("SELECT P.PartNo, P.DocNumber, R.JobNo \
+            FROM PartFiles P INNER JOIN OrderDet D ON P.PartNo=D.PartNo INNER JOIN OrderRouting R ON R.JobNo=D.JobNo INNER JOIN ORDERS O ON D.OrderNo=O.OrderNo \
+            WHERE D.Status='Open' AND D.User_Text3='Repeat' AND R.Status!='Finished' AND R.Status!='Closed' AND R.WorkCntr='101 ENGIN' AND O.User_Text3!='UNCONFIRMED'",
         
         function(err, recordset) {
             if (err) console.error(err);
@@ -172,5 +188,6 @@ exports.getAllJobs = getAllJobs;
 exports.getTBRJobs = getTBRJobs;
 exports.getFRJobs = getFRJobs;
 exports.getRepeatJobs = getRepeatJobs;
+exports.getPrints = getPrints;
 exports.updateJob = updateJob;
 exports.updateModel = updateModel;

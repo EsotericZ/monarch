@@ -25,6 +25,7 @@ router.get('/engineering/getAllJobs', engineeringController.getAllJobs);
 router.get('/engineering/getTBRJobs', engineeringController.getTBRJobs);
 router.get('/engineering/getFRJobs', engineeringController.getFRJobs);
 router.get('/engineering/getRepeatJobs', engineeringController.getRepeatJobs);
+router.get('/engineering/getPrints', engineeringController.getPrints);
 router.post('/engineering/updateJob', engineeringController.updateJob);
 router.post('/engineering/updateModel', engineeringController.updateModel);
 

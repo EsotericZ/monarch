@@ -11,6 +11,7 @@ import getAllJobs from '../../services/engineering/getAllJobs';
 import getTBRJobs from '../../services/engineering/getTBRJobs';
 import getFRJobs from '../../services/engineering/getFRJobs';
 import getRepeatJobs from '../../services/engineering/getRepeatJobs';
+import getPrints from '../../services/engineering/getPrints';
 import updateJob from '../../services/engineering/updateJob';
 import updateModel from '../../services/engineering/updateModel';
 import { Sidebar } from '../sidebar/Sidebar';
@@ -47,6 +48,7 @@ export const EngJobs = () => {
     const [searchedTBR, setSearchedTBR] = useState([]);
     const [searchedFR, setSearchedFR] = useState([]);
     const [searchedRepeat, setSearchedRepeat] = useState([]);
+    const [searchedPrints, setSearchedPrints] = useState([]);
     const [searchedTest, setSearchedTest] = useState([]);
     const [loading, setLoading] = useState(true);
     const [show, setShow] = useState(false);
@@ -82,19 +84,27 @@ export const EngJobs = () => {
             repeatData.then((res) => {
                 setSearchedRepeat(res);
             })
-            console.log(searchedFR)
-            console.log(searchedRepeat)
+            let printsData = getPrints();
+            printsData.then((res) => {
+                setSearchedPrints(res);
+            })
 
             setSearchedTest(searchedFR.map( v => {
-                let obj = searchedRepeat.find(o => o.JobNo == v.JobNo)
-                if (obj) {
-                    v.WorkCntr = obj.WorkCntr
+                let obj1 = searchedRepeat.find(o => o.JobNo == v.JobNo)
+                if (obj1) {
+                    v.WorkCntr = obj1.WorkCntr
                 }
+
+                let obj = searchedPrints.find(x => x.PartNo == v.PartNo)
+                if (obj) {
+                    v.DocNumber = obj.DocNumber
+                } else {
+                    v.DocNumber = ''
+                }
+
                 setSearchedTest(v)
                 return v
             }))
-
-            console.log(searchedTest)
 
         } catch (err) {
             console.log(err)
@@ -483,9 +493,7 @@ export const EngJobs = () => {
                                                             <td className='text-center'>{job.CustCode}</td>
                                                             <td className='text-center'>{job.User_Text3}</td>
                                                             <td className='text-center'>{job.WorkCntr}</td>
-                                                            <td className='text-center'>{job.DocNumber &&
-                                                                    <Icon icon={check}/>
-                                                                }</td>
+                                                            <td className='text-center'>{job.DocNumber && <Icon icon={check}/> }</td>
                                                         </tr>
                                                     )
                                                 }
