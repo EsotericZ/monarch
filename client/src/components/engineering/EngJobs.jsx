@@ -10,6 +10,7 @@ import {check} from 'react-icons-kit/entypo/check'
 import getAllJobs from '../../services/engineering/getAllJobs';
 import getTBRJobs from '../../services/engineering/getTBRJobs';
 import getFRJobs from '../../services/engineering/getFRJobs';
+import getRepeatJobs from '../../services/engineering/getRepeatJobs';
 import updateJob from '../../services/engineering/updateJob';
 import updateModel from '../../services/engineering/updateModel';
 import { Sidebar } from '../sidebar/Sidebar';
@@ -33,6 +34,7 @@ export const EngJobs = () => {
     const [searchedValueDueDate, setSearchedValueDueDate] = useState('');
     const [searchedValueCustomer, setSearchedValueCustomer] = useState('');
     const [searchedValueType, setSearchedValueType] = useState('');
+    const [searchedValueStep, setSearchedValueStep] = useState('');
     const [searchedValueEngineer, setSearchedValueEngineer] = useState('');
     const [searchedValueQuote, setSearchedValueQuote] = useState('');
     const [searchedValueStatus, setSearchedValueStatus] = useState('');
@@ -44,6 +46,8 @@ export const EngJobs = () => {
     const [searchedEng, setSearchedEng] = useState([]);
     const [searchedTBR, setSearchedTBR] = useState([]);
     const [searchedFR, setSearchedFR] = useState([]);
+    const [searchedRepeat, setSearchedRepeat] = useState([]);
+    const [searchedTest, setSearchedTest] = useState([]);
     const [loading, setLoading] = useState(true);
     const [show, setShow] = useState(false);
 
@@ -74,8 +78,24 @@ export const EngJobs = () => {
             frData.then((res) => {
                 setSearchedFR(res);
             })
+            let repeatData = getRepeatJobs();
+            repeatData.then((res) => {
+                setSearchedRepeat(res);
+            })
+            console.log(searchedFR)
+            console.log(searchedRepeat)
 
-            console.log(searchedEng)
+            setSearchedTest(searchedFR.map( v => {
+                let obj = searchedRepeat.find(o => o.JobNo == v.JobNo)
+                if (obj) {
+                    v.WorkCntr = obj.WorkCntr
+                }
+                setSearchedTest(v)
+                return v
+            }))
+
+            console.log(searchedTest)
+
         } catch (err) {
             console.log(err)
         }
@@ -407,7 +427,7 @@ export const EngJobs = () => {
                                             <th className='text-center' width='10%'>Due Date</th>
                                             <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='&#xf002;  Customer' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center' width='10%'>Type</th>
-                                            <th className='text-center' width='10%'>Next Step<input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='&#xf002;  bad' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueStep(e.target.value)} placeholder='&#xf002;  Next Step' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center' width='5%'>Print</th>
                                             {/* {cookieData.maintenance &&
                                                 <th className='text-center align-middle'>Actions</th>
@@ -415,7 +435,7 @@ export const EngJobs = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {searchedFR
+                                        {searchedTest
                                             .filter(row => typeof row.JobNo !== 'undefined')
                                             .filter((row) => 
                                                 !searchedValueJobNo || row.JobNo
@@ -441,6 +461,15 @@ export const EngJobs = () => {
                                                     .toLowerCase()
                                                     .includes(searchedValueType.toString().toLowerCase())
                                             )
+                                            .filter((row) => {
+                                                if (!searchedValueStep) { return true; }
+                                                if (!row || !row.WorkCntr) { return false; }
+                                                
+                                                return row.WorkCntr
+                                                    .toString() 
+                                                    .toLowerCase()                                           
+                                                    .includes(searchedValueStep.toString().toLowerCase())
+                                            })
                                             .map((job, index) => {
                                                 if (job.User_Text3 == 'REPEAT') {
                                                     return (
@@ -453,7 +482,7 @@ export const EngJobs = () => {
                                                             <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
                                                             <td className='text-center'>{job.CustCode}</td>
                                                             <td className='text-center'>{job.User_Text3}</td>
-                                                            <td className='text-center'>{job.dataValues.jobStatus}</td>
+                                                            <td className='text-center'>{job.WorkCntr}</td>
                                                             <td className='text-center'></td>
                                                         </tr>
                                                     )

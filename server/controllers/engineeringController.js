@@ -89,6 +89,37 @@ async function getFRJobs(req, res) {
     })
 };
 
+async function getRepeatJobs(req, res) {
+    // const jobData = await Jobs.findAll();
+    sql.connect(config, function(err,) {
+        if (err) console.error(err);
+        let request = new sql.Request();
+        request.query("SELECT R.JobNo, R.WorkCntr\
+            FROM OrderRouting R INNER JOIN OrderDet D ON R.JobNo=D.JobNo INNER JOIN ORDERS O ON D.OrderNo=O.OrderNo\
+            WHERE (D.Status='Open' AND R.Status!='Finished' AND R.Status!='Closed' AND D.User_Text3='REPEAT' AND R.WorkCntr='203 LASER') OR\
+            (D.Status='Open' AND R.Status!='Finished' AND R.Status!='Closed' AND D.User_Text3='REPEAT' AND R.WorkCntr='211 TLASER') OR\
+            (D.Status='Open' AND R.Status!='Finished' AND R.Status!='Closed' AND D.User_Text3='REPEAT' AND R.WorkCntr='201 SHEAR') OR\
+            (D.Status='Open' AND R.Status!='Finished' AND R.Status!='Closed' AND D.User_Text3='REPEAT' AND R.WorkCntr='202 PUNCH') OR\
+            (D.Status='Open' AND R.Status!='Finished' AND R.Status!='Closed' AND D.User_Text3='REPEAT' AND R.WorkCntr='212 FLASER') OR\
+            (D.Status='Open' AND R.Status!='Finished' AND R.Status!='Closed' AND D.User_Text3='REPEAT' AND R.WorkCntr='213 SLASER') OR\
+            (D.Status='Open' AND R.Status!='Finished' AND R.Status!='Closed' AND D.User_Text3='REPEAT' AND R.WorkCntr='301 SAW') OR\
+            (D.Status='Open' AND R.Status!='Finished' AND R.Status!='Closed' AND D.User_Text3='REPEAT' AND R.WorkCntr='402 WELD')\
+            ORDER BY R.Jobno",
+        
+        function(err, recordset) {
+            if (err) console.error(err);
+            let records = recordset.recordsets[0];
+
+            // const map = new Map();
+            // records.forEach(item => map.set(item.JobNo, item));
+            // jobData.forEach(item => map.set(item.jobNo, {...map.get(item.jobNo), ...item}));
+            // const fullJob = Array.from(map.values());
+
+            res.send(records)
+        })
+    })
+};
+
 function updateJob(req, res) {
     let jobNo = req.body.jobNo;
     let engineer = req.body.engineer;
@@ -146,5 +177,6 @@ async function updateModel(req, res) {
 exports.getAllJobs = getAllJobs;
 exports.getTBRJobs = getTBRJobs;
 exports.getFRJobs = getFRJobs;
+exports.getRepeatJobs = getRepeatJobs;
 exports.updateJob = updateJob;
 exports.updateModel = updateModel;

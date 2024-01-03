@@ -24,6 +24,7 @@ router.post('/portal/login', portalController.login);
 router.get('/engineering/getAllJobs', engineeringController.getAllJobs);
 router.get('/engineering/getTBRJobs', engineeringController.getTBRJobs);
 router.get('/engineering/getFRJobs', engineeringController.getFRJobs);
+router.get('/engineering/getRepeatJobs', engineeringController.getRepeatJobs);
 router.post('/engineering/updateJob', engineeringController.updateJob);
 router.post('/engineering/updateModel', engineeringController.updateModel);
 
