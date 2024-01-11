@@ -14,6 +14,8 @@ import { Nesting } from './components/engineering/Nesting';
 import { Quality } from './components/engineering/Quality';
 import { TapChart } from './components/engineering/TapChart';
 
+import { Forming } from './components/forming/Forming';
+
 import { Departments } from './components/departments/Departments';
 import { FLaser } from './components/departments/FLaser';
 import { Punch } from './components/departments/Punch';
@@ -79,6 +81,11 @@ export const App = () => {
         <Route
           path='/tapchart'
           element={<TapChart />}
+        />
+
+        <Route
+          path='/forming'
+          element={<Forming />}
         />
 
         <Route
