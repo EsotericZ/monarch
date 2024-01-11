@@ -10,7 +10,7 @@ import {check} from 'react-icons-kit/entypo/check'
 import getAllJobs from '../../services/engineering/getAllJobs';
 import getTBRJobs from '../../services/engineering/getTBRJobs';
 import getFRJobs from '../../services/engineering/getFRJobs';
-import updateJob from '../../services/engineering/updateJob';
+import updateJob from '../../services/forming/updateJob';
 import updateModel from '../../services/engineering/updateModel';
 import { Sidebar } from '../sidebar/Sidebar';
 import '../engineering/engineering.css';
@@ -50,12 +50,13 @@ export const Forming = () => {
     const [jobNoInfo, setJobNoInfo] = useState();
     const [custInfo, setCustInfo] = useState();
     const [partNoInfo, setParNoInfo] = useState();
-    const [programmerInfo, setProgrammerInfo] = useState();
+    const [formProgrammer, setFormProgrammer] = useState();
     const [jobStatus, setJobStatus] = useState(' ');
+    const [formStatus, setFormStatus] = useState(' ');
 
     const [tbr, setTbr] = useState('TBR');
     const [future, setFuture] = useState('Future');
-    const [proto, setProto] = useState('Prototype');
+    const [BDTest, setBDTest] = useState('BD Test');
 
     const fetchData = () => {
         try {
@@ -72,8 +73,6 @@ export const Forming = () => {
             frData.then((res) => {
                 setSearchedFR(res);
             })
-
-            console.log(searchedEng)
         } catch (err) {
             console.log(err)
         }
@@ -87,7 +86,7 @@ export const Forming = () => {
     const handleClose = () => setShow(false);
 
     const handleSave = () => {
-        updateJob(jobNoInfo, programmerInfo, jobStatus);
+        updateJob(jobNoInfo, formProgrammer, formStatus);
         setShow(false);
         fetchData();
     };
@@ -97,7 +96,7 @@ export const Forming = () => {
         setJobNoInfo(job.JobNo);
         setCustInfo(job.CustCode);
         setParNoInfo(job.PartNo);
-        setProgrammerInfo(job.dataValues.engineer);
+        setFormProgrammer(job.dataValues.formProgrammer);
         setJobStatus(job.dataValues.jobStatus);
     } ;
     
@@ -125,11 +124,11 @@ export const Forming = () => {
                             <FloatingLabel label="Customer Code" className="mb-3">
                                 <Form.Control defaultValue={custInfo} disabled />
                             </FloatingLabel>
-                            <FloatingLabel controlId="floatingInput" label="Engineer" className="mb-3">
-                                <Form.Control placeholder="Programmer" defaultValue={programmerInfo} onChange={(e) => {setProgrammerInfo(e.target.value)}} />
+                            <FloatingLabel controlId="floatingInput" label="Programmer" className="mb-3">
+                                <Form.Control placeholder="Programmer" defaultValue={formProgrammer} onChange={(e) => {setFormProgrammer(e.target.value)}} />
                             </FloatingLabel>
                             <FloatingLabel controlId="floatingInput" label="Status" className="mb-3">
-                                <Form.Select placeholder="Status" defaultValue={jobStatus} onChange={(e) => {setJobStatus(e.target.value)}} >
+                                <Form.Select placeholder="Status" defaultValue={formStatus} onChange={(e) => {setFormStatus(e.target.value)}} >
                                     <option></option>
                                     <option>WIP</option>
                                     <option>BD TEST</option>
@@ -365,7 +364,7 @@ export const Forming = () => {
                             </div>
                         </Tab>
 
-                        <Tab eventKey="proto" title={proto}>
+                        <Tab eventKey="proto" title={BDTest}>
                             <div className='mx-3'>
                                 <Table striped hover>
                                     <thead>

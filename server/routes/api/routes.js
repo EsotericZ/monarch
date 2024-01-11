@@ -14,6 +14,7 @@ const shearController = require('../../controllers/shearController');
 const punchController = require('../../controllers/punchController');
 const todoController = require('../../controllers/todoController');
 const userController = require('../../controllers/userController');
+const formingController = require('../../controllers/formingController');
 
 router.get('/', function (req, res) {
     res.send('Welcome to the API');
@@ -28,6 +29,8 @@ router.get('/engineering/getRepeatJobs', engineeringController.getRepeatJobs);
 router.get('/engineering/getPrints', engineeringController.getPrints);
 router.post('/engineering/updateJob', engineeringController.updateJob);
 router.post('/engineering/updateModel', engineeringController.updateModel);
+
+router.post('/forming/updateJob', formingController.updateJob);
 
 router.get('/tlaser/getAllJobs', tlaserController.getAllJobs);
 router.get('/tlaser/getTBRJobs', tlaserController.getTBRJobs);
