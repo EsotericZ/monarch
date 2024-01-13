@@ -21,6 +21,18 @@ Jobs.init(
         jobStatus: {
             type: DataTypes.STRING,
         },
+        formProgrammer: {
+            type: DataTypes.STRING,
+        },
+        formStatus: {
+            type: DataTypes.STRING,
+        },
+        inspector: {
+            type: DataTypes.STRING,
+        },
+        notes: {
+            type: DataTypes.STRING,
+        },
         model: {
             type: DataTypes.BOOLEAN,
             allowNull: false,

@@ -34,6 +34,7 @@ export const Forming = () => {
     const [searchedValueCustomer, setSearchedValueCustomer] = useState('');
     const [searchedValueType, setSearchedValueType] = useState('');
     const [searchedValueEngineer, setSearchedValueEngineer] = useState('');
+    const [searchedValueProgrammer, setSearchedValueProgrammer] = useState('');
     const [searchedValueQuote, setSearchedValueQuote] = useState('');
     const [searchedValueStatus, setSearchedValueStatus] = useState('');
     const [searchedValueArea, setSearchedValueArea] = useState('');
@@ -53,6 +54,7 @@ export const Forming = () => {
     const [formProgrammer, setFormProgrammer] = useState();
     const [jobStatus, setJobStatus] = useState(' ');
     const [formStatus, setFormStatus] = useState(' ');
+    const [notes, setNotes] = useState(' ');
 
     const [tbr, setTbr] = useState('TBR');
     const [future, setFuture] = useState('Future');
@@ -86,7 +88,7 @@ export const Forming = () => {
     const handleClose = () => setShow(false);
 
     const handleSave = () => {
-        updateJob(jobNoInfo, formProgrammer, formStatus);
+        updateJob(jobNoInfo, formProgrammer, formStatus, notes);
         setShow(false);
         fetchData();
     };
@@ -98,6 +100,8 @@ export const Forming = () => {
         setParNoInfo(job.PartNo);
         setFormProgrammer(job.dataValues.formProgrammer);
         setJobStatus(job.dataValues.jobStatus);
+        setFormStatus(job.dataValues.formStatus);
+        setNotes(job.dataValues.notes);
     } ;
     
     useEffect(() => {
@@ -135,6 +139,9 @@ export const Forming = () => {
                                     <option>DONE</option>
                                 </Form.Select>
                             </FloatingLabel>
+                            <FloatingLabel controlId="floatingInput" label="Notes" className="mb-3">
+                                <Form.Control placeholder="Notes" defaultValue={notes} onChange={(e) => {setNotes(e.target.value)}} />
+                            </FloatingLabel>
                         </Form>
                         </Modal.Body>
                         <Modal.Footer>
@@ -166,8 +173,8 @@ export const Forming = () => {
                                             <th className='text-center' width='14%'><input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='&#xf002;  Customer' width='8%' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center' width='7%'><input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='&#xf002;  Type' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueEngineer(e.target.value)} placeholder='&#xf002;  Engineer' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            {/* <th className='text-center' width='7%'><input onChange={(e) => setSearchedValueQuote(e.target.value)} placeholder='&#xf002;  Quote' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th> */}
-                                            <th className='text-center' width='5%'>Model</th>
+                                            <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueProgrammer(e.target.value)} placeholder='&#xf002;  Programmer' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueStatus(e.target.value)} placeholder='&#xf002;  Status' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             {/* {cookieData.maintenance &&
                                                 <th className='text-center align-middle'>Actions</th>
                                             } */}
@@ -209,6 +216,24 @@ export const Forming = () => {
                                                     .toLowerCase()                                           
                                                     .includes(searchedValueEngineer.toString().toLowerCase())
                                             })
+                                            .filter((row) => {
+                                                if (!searchedValueProgrammer) { return true; }
+                                                if (!row || !row.dataValues || !row.dataValues.formProgrammer) { return false; }
+                                                
+                                                return row.dataValues.formProgrammer
+                                                    .toString()
+                                                    .toLowerCase()                                           
+                                                    .includes(searchedValueProgrammer.toString().toLowerCase())
+                                            })
+                                            .filter((row) => {
+                                                if (!searchedValueStatus) { return true; }
+                                                if (!row || !row.dataValues || !row.dataValues.formStatus) { return false; }
+                                                
+                                                return row.dataValues.formStatus
+                                                    .toString()
+                                                    .toLowerCase()                                           
+                                                    .includes(searchedValueStatus.toString().toLowerCase())
+                                            })
                                             // .filter((row) => {
                                             //     if (!searchedValueQuote) { return true; }
                                             //     if (!row || !row.QuoteNo ) { return false; }
@@ -219,7 +244,7 @@ export const Forming = () => {
                                             //         .includes(searchedValueQuote.toString().toLowerCase())
                                             // })
                                             .map((job, index) => {
-                                                if (job.dataValues.jobStatus == 'QC') {
+                                                if (job.dataValues.jobStatus == 'FORMING') {
                                                     return (
                                                         <tr key={index} job={job}>
                                                             <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td>
@@ -230,12 +255,8 @@ export const Forming = () => {
                                                             <td className='text-center'>{job.CustCode}</td>
                                                             <td className='text-center'>{job.User_Text3}</td>
                                                             <td className='text-center'>{job.dataValues.engineer}</td>
-                                                            {/* <td className='text-center'>{job.QuoteNo}</td> */}
-                                                            <td className='text-center' onClick={() => toggleModel(job)}>
-                                                                {job.dataValues.model &&
-                                                                    <Icon icon={check}/>
-                                                                }
-                                                            </td>
+                                                            <td className='text-center'>{job.dataValues.formProgrammer}</td>
+                                                            <td className='text-center'>{job.dataValues.formStatus}</td>
                                                                 {/* <Dropdown>
                                                                     <Dropdown.Toggle size="sm">
                                                                         {job.dataValues.jobStatus}  
@@ -277,8 +298,8 @@ export const Forming = () => {
                                             <th className='text-center' width='14'><input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='&#xf002;  Customer' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center' width='7%'><input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='&#xf002;  Type' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueEngineer(e.target.value)} placeholder='&#xf002;  Engineer' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            {/* <th className='text-center' width='7%'><input onChange={(e) => setSearchedValueQuote(e.target.value)} placeholder='&#xf002;  Quote' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th> */}
-                                            <th className='text-center' width='5%'>Model</th>
+                                            <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueProgrammer(e.target.value)} placeholder='&#xf002;  Programmer' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueStatus(e.target.value)} placeholder='&#xf002;  Status' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             {/* {cookieData.maintenance &&
                                                 <th className='text-center align-middle'>Actions</th>
                                             } */}
@@ -320,6 +341,24 @@ export const Forming = () => {
                                                     .toLowerCase()                                           
                                                     .includes(searchedValueEngineer.toString().toLowerCase())
                                             })
+                                            .filter((row) => {
+                                                if (!searchedValueProgrammer) { return true; }
+                                                if (!row || !row.dataValues || !row.dataValues.formProgrammer) { return false; }
+                                                
+                                                return row.dataValues.formProgrammer
+                                                    .toString()
+                                                    .toLowerCase()                                           
+                                                    .includes(searchedValueProgrammer.toString().toLowerCase())
+                                            })
+                                            .filter((row) => {
+                                                if (!searchedValueStatus) { return true; }
+                                                if (!row || !row.dataValues || !row.dataValues.formStatus) { return false; }
+                                                
+                                                return row.dataValues.formStatus
+                                                    .toString()
+                                                    .toLowerCase()                                           
+                                                    .includes(searchedValueStatus.toString().toLowerCase())
+                                            })
                                             // .filter((row) => {
                                             //     if (!searchedValueQuote) { return true; }
                                             //     if (!row || !row.QuoteNo ) { return false; }
@@ -330,7 +369,7 @@ export const Forming = () => {
                                             //         .includes(searchedValueQuote.toString().toLowerCase())
                                             // })
                                             .map((job, index) => {
-                                                if (job.User_Text3 != 'REPEAT' && job.User_Text2 != '6. OUTSOURCE' && job.dataValues.jobStatus == 'QC') {
+                                                if (job.User_Text3 != 'REPEAT' && job.User_Text2 != '6. OUTSOURCE' && job.dataValues.jobStatus == 'FORMING') {
                                                     return (
                                                         <tr key={index} job={job}>
                                                             <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td>
@@ -341,12 +380,8 @@ export const Forming = () => {
                                                             <td className='text-center'>{job.CustCode}</td>
                                                             <td className='text-center'>{job.User_Text3}</td>
                                                             <td className='text-center'>{job.dataValues.engineer}</td>
-                                                            {/* <td className='text-center'>{job.QuoteNo}</td> */}
-                                                            <td className='text-center' onClick={() => toggleModel(job)}>
-                                                                {job.dataValues.model &&
-                                                                    <Icon icon={check}/>
-                                                                }
-                                                            </td>
+                                                            <td className='text-center'>{job.dataValues.formProgrammer}</td>
+                                                            <td className='text-center'>{job.dataValues.formStatus}</td>
                                                         </tr>
                                                     )
                                                 }
@@ -369,14 +404,15 @@ export const Forming = () => {
                                 <Table striped hover>
                                     <thead>
                                         <tr>
-                                            <th className='text-center' width='11%'><input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='&#xf002;  Job No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center' width='23%'><input onChange={(e) => setSearchedValuePartNo(e.target.value)} placeholder='&#xf002;  Part No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center' width='11%'>Revision</th>
-                                            <th className='text-center' width='11%'>Qty</th>
-                                            <th className='text-center' width='11%'>Due Date</th>
-                                            <th className='text-center' width='11%'><input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='&#xf002;  Customer' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center' width='11%'><input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='&#xf002;  Type' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center' width='11%'><input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='&#xf002;  Area' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='7%'><input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='&#xf002;  Job No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='20%'><input onChange={(e) => setSearchedValuePartNo(e.target.value)} placeholder='&#xf002;  Part No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='5%'>Revision</th>
+                                            <th className='text-center' width='5%'>Qty</th>
+                                            <th className='text-center' width='5%'>Due Date</th>
+                                            <th className='text-center' width='14%'><input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='&#xf002;  Customer' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='7%'><input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='&#xf002;  Type' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='&#xf002;  Area' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='20%'>Notes</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -413,10 +449,10 @@ export const Forming = () => {
                                                     .includes(searchedValueArea.toString().toLowerCase())
                                             )
                                             .map((job, index) => {
-                                                if (job.dataValues.jobStatus == 'PROTO') {
+                                                if (job.dataValues.jobStatus == 'FORMING' && job.dataValues.formStatus == 'BD TEST') {
                                                     return (
                                                         <tr key={index} job={job}>
-                                                            <td className='text-center jobBold'>{job.JobNo}</td>
+                                                            <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td>
                                                             <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td>
                                                             <td className='text-center'>{job.Revision}</td>
                                                             <td className='text-center'>{job.EstimQty}</td>
@@ -424,6 +460,7 @@ export const Forming = () => {
                                                             <td className='text-center'>{job.CustCode}</td>
                                                             <td className='text-center'>{job.User_Text3}</td>
                                                             <td className='text-center'>{job.User_Text2}</td>
+                                                            <td className='text-center'>{job.dataValues.notes}</td>
                                                         </tr>
                                                     )
                                                 }
