@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
-import { Button, Dropdown, FloatingLabel, Form, Modal, Nav, NavDropdown, Tab, Tabs, Table, Toast, ToastContainer } from 'react-bootstrap';
+import { Button, FloatingLabel, Form, Modal, Tab, Tabs, Table, Toast, ToastContainer } from 'react-bootstrap';
 import { format, parseISO } from 'date-fns';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 
 import { Icon } from 'react-icons-kit';
-import {check} from 'react-icons-kit/entypo/check'
+import { check } from 'react-icons-kit/entypo/check'
+import { refresh } from 'react-icons-kit/fa/refresh'
 
 import getAllJobs from '../../services/engineering/getAllJobs';
 import getTBRJobs from '../../services/engineering/getTBRJobs';
@@ -116,17 +118,6 @@ export const EngJobs = () => {
         setUpdate(`Model ${job.dataValues.jobNo}`)
     }
 
-    const copyText = (job) => {
-        navigator.clipboard.writeText(`${job.PartNo}`)
-        .then(() => {
-            setPartCopy(`${job.PartNo}`)
-            setShowToast(true)
-        })
-        .catch(() => {
-            console.log('Failed to copy')
-        })
-    }
-
     const handleClose = () => setShow(false);
 
     const handleSave = () => {
@@ -219,9 +210,6 @@ export const EngJobs = () => {
                                             <th className='text-center' width='7%'><input onChange={(e) => setSearchedValueQuote(e.target.value)} placeholder='&#xf002;  Quote' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center' width='5%'>Model</th>
                                             <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueStatus(e.target.value)} placeholder='&#xf002;  Status' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            {/* {cookieData.maintenance &&
-                                                <th className='text-center align-middle'>Actions</th>
-                                            } */}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -283,8 +271,9 @@ export const EngJobs = () => {
                                                     <tr key={index} job={job}>
                                                         <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td>
                                                         <td className='text-center'>{job.StepNo}</td>
-                                                        {/* <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td> */}
-                                                        <td className='text-center' onClick={() => copyText(job)}>{job.PartNo}</td>
+                                                        <CopyToClipboard text={job.PartNo} onCopy={() => { setShowToast(true); setPartCopy(`${job.PartNo}`) }}>
+                                                            <td className='text-center'>{job.PartNo}</td>
+                                                        </CopyToClipboard>
                                                         <td className='text-center'>{job.Revision}</td>
                                                         <td className='text-center'>{job.EstimQty}</td>
                                                         <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
@@ -298,27 +287,19 @@ export const EngJobs = () => {
                                                             }
                                                         </td>
                                                         <td className='text-center'>{job.dataValues.jobStatus}</td>
-                                                            {/* <Dropdown>
-                                                                <Dropdown.Toggle size="sm">
-                                                                    {job.dataValues.jobStatus}  
-                                                                </Dropdown.Toggle>
-                                                                <Dropdown.Menu>
-                                                                    <Dropdown.Item>Action</Dropdown.Item>
-                                                                    <Dropdown.Item>Another action</Dropdown.Item>
-                                                                    <Dropdown.Item>Something else</Dropdown.Item>
-                                                                </Dropdown.Menu>
-                                                            </Dropdown>
-                                                        </td> */}
                                                     </tr>
                                                 )
                                             })
                                         }
                                     </tbody>
                                 </Table>
-                                <ToastContainer position="bottom-end" className="p-3" style={{ zIndex: 1 }}>
-                                    <Toast bg='secondary' onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide animation>
+                                <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
+                                    <Icon size={24} icon={refresh}/>
+                                </Button>
+                                <ToastContainer className="toastCopy" style={{ zIndex: 1 }}>
+                                    <Toast bg='success' onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide animation>
                                         <Toast.Body>
-                                            <strong className="me-auto">{partCopy} Copied To Clipboard </strong>
+                                            <strong className="mx-auto me-auto">{partCopy} Copied To Clipboard </strong>
                                         </Toast.Body>
                                     </Toast>
                                 </ToastContainer>
@@ -407,7 +388,10 @@ export const EngJobs = () => {
                                                         <tr key={index} job={job}>
                                                             <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td>
                                                             <td className='text-center'>{job.StepNo}</td>
-                                                            <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td>
+                                                            {/* <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td> */}
+                                                            <CopyToClipboard text={job.PartNo} onCopy={() => { setShowToast(true); setPartCopy(`${job.PartNo}`) }}>
+                                                                <td className='text-center'>{job.PartNo}</td>
+                                                            </CopyToClipboard>
                                                             <td className='text-center'>{job.Revision}</td>
                                                             <td className='text-center'>{job.EstimQty}</td>
                                                             <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
@@ -428,10 +412,13 @@ export const EngJobs = () => {
                                         }
                                     </tbody>
                                 </Table>
-                                <ToastContainer position="bottom-end" className="p-3" style={{ zIndex: 1 }}>
-                                    <Toast bg='secondary' onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide animation>
+                                <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
+                                    <Icon size={24} icon={refresh}/>
+                                </Button>
+                                <ToastContainer className="toastCopy" style={{ zIndex: 1 }}>
+                                    <Toast bg='success' onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide animation>
                                         <Toast.Body>
-                                            <strong className="me-auto">{partCopy} Copied To Clipboard </strong>
+                                            <strong className="mx-auto me-auto">{partCopy} Copied To Clipboard </strong>
                                         </Toast.Body>
                                     </Toast>
                                 </ToastContainer>
@@ -500,7 +487,10 @@ export const EngJobs = () => {
                                                         <tr key={index} job={job}>
                                                             <td className='text-center jobBold'>{job.JobNo}</td>
                                                             <td className='text-center'>{job.StepNo}</td>
-                                                            <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td>
+                                                            {/* <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td> */}
+                                                            <CopyToClipboard text={job.PartNo} onCopy={() => { setShowToast(true); setPartCopy(`${job.PartNo}`) }}>
+                                                                <td className='text-center'>{job.PartNo}</td>
+                                                            </CopyToClipboard>
                                                             <td className='text-center'>{job.Revision}</td>
                                                             <td className='text-center'>{job.EstimQty}</td>
                                                             <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
@@ -515,10 +505,13 @@ export const EngJobs = () => {
                                         }
                                     </tbody>
                                 </Table>
-                                <ToastContainer position="bottom-end" className="p-3" style={{ zIndex: 1 }}>
-                                    <Toast bg='secondary' onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide animation>
+                                <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
+                                    <Icon size={24} icon={refresh}/>
+                                </Button>
+                                <ToastContainer className="toastCopy" style={{ zIndex: 1 }}>
+                                    <Toast bg='success' onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide animation>
                                         <Toast.Body>
-                                            <strong className="me-auto">{partCopy} Copied To Clipboard </strong>
+                                            <strong className="mx-auto me-auto">{partCopy} Copied To Clipboard </strong>
                                         </Toast.Body>
                                     </Toast>
                                 </ToastContainer>
@@ -587,7 +580,10 @@ export const EngJobs = () => {
                                                         <tr key={index} job={job}>
                                                             <td className='text-center jobBold'>{job.JobNo}</td>
                                                             <td className='text-center jobBold'>{job.StepNo}</td>
-                                                            <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td>
+                                                            {/* <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td> */}
+                                                            <CopyToClipboard text={job.PartNo} onCopy={() => { setShowToast(true); setPartCopy(`${job.PartNo}`) }}>
+                                                                <td className='text-center'>{job.PartNo}</td>
+                                                            </CopyToClipboard>
                                                             <td className='text-center'>{job.Revision}</td>
                                                             <td className='text-center'>{job.EstimQty}</td>
                                                             <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
@@ -602,10 +598,13 @@ export const EngJobs = () => {
                                         }
                                     </tbody>
                                 </Table>
-                                <ToastContainer position="bottom-end" className="p-3" style={{ zIndex: 1 }}>
-                                    <Toast bg='secondary' onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide animation>
+                                <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
+                                    <Icon size={24} icon={refresh}/>
+                                </Button>
+                                <ToastContainer className="toastCopy" style={{ zIndex: 1 }}>
+                                    <Toast bg='success' onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide animation>
                                         <Toast.Body>
-                                            <strong className="me-auto">{partCopy} Copied To Clipboard </strong>
+                                            <strong className="mx-auto me-auto">{partCopy} Copied To Clipboard </strong>
                                         </Toast.Body>
                                     </Toast>
                                 </ToastContainer>
@@ -664,7 +663,10 @@ export const EngJobs = () => {
                                                     return (
                                                         <tr key={index} job={job}>
                                                             <td className='text-center jobBold'>{job.JobNo}</td>
-                                                            <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td>
+                                                            {/* <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td> */}
+                                                            <CopyToClipboard text={job.PartNo} onCopy={() => { setShowToast(true); setPartCopy(`${job.PartNo}`) }}>
+                                                                <td className='text-center'>{job.PartNo}</td>
+                                                            </CopyToClipboard>
                                                             <td className='text-center'>{job.Revision}</td>
                                                             <td className='text-center'>{job.EstimQty}</td>
                                                             <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
@@ -677,10 +679,13 @@ export const EngJobs = () => {
                                         }
                                     </tbody>
                                 </Table>
-                                <ToastContainer position="bottom-end" className="p-3" style={{ zIndex: 1 }}>
-                                    <Toast bg='secondary' onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide animation>
+                                <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
+                                    <Icon size={24} icon={refresh}/>
+                                </Button>
+                                <ToastContainer className="toastCopy" style={{ zIndex: 1 }}>
+                                    <Toast bg='success' onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide animation>
                                         <Toast.Body>
-                                            <strong className="me-auto">{partCopy} Copied To Clipboard </strong>
+                                            <strong className="mx-auto me-auto">{partCopy} Copied To Clipboard </strong>
                                         </Toast.Body>
                                     </Toast>
                                 </ToastContainer>

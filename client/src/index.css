@@ -68,3 +68,8 @@ code {
   -webkit-transition: all .4s ease-in-out;
   transition: all .4s ease-in-out;
 }
+
+.modal-open {
+  overflow-y: scroll !important;
+  padding-right: 0 !important;
+}

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Button, Dropdown, FloatingLabel, Form, Modal, Nav, NavDropdown, Tab, Tabs, Table, Toast, ToastContainer } from 'react-bootstrap';
+import { Button, FloatingLabel, Form, Modal, Tab, Tabs, Table, Toast, ToastContainer } from 'react-bootstrap';
 import { format, parseISO } from 'date-fns';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 
@@ -227,7 +228,10 @@ export const Quality = () => {
                                                     return (
                                                         <tr key={index} job={job}>
                                                             <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td>
-                                                            <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td>
+                                                            {/* <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td> */}
+                                                            <CopyToClipboard text={job.PartNo} onCopy={() => { setShowToast(true); setPartCopy(`${job.PartNo}`) }}>
+                                                                <td className='text-center'>{job.PartNo}</td>
+                                                            </CopyToClipboard>
                                                             <td className='text-center'>{job.Revision}</td>
                                                             <td className='text-center'>{job.EstimQty}</td>
                                                             <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
@@ -258,10 +262,10 @@ export const Quality = () => {
                                         }
                                     </tbody>
                                 </Table>
-                                <ToastContainer position="bottom-end" className="p-3" style={{ zIndex: 1 }}>
-                                    <Toast bg='secondary' onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide animation>
+                                <ToastContainer className="toastCopy" style={{ zIndex: 1 }}>
+                                    <Toast bg='success' onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide animation>
                                         <Toast.Body>
-                                            <strong className="me-auto">{partCopy} Copied To Clipboard </strong>
+                                            <strong className="mx-auto me-auto">{partCopy} Copied To Clipboard </strong>
                                         </Toast.Body>
                                     </Toast>
                                 </ToastContainer>
@@ -338,7 +342,10 @@ export const Quality = () => {
                                                     return (
                                                         <tr key={index} job={job}>
                                                             <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td>
-                                                            <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td>
+                                                            {/* <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td> */}
+                                                            <CopyToClipboard text={job.PartNo} onCopy={() => { setShowToast(true); setPartCopy(`${job.PartNo}`) }}>
+                                                                <td className='text-center'>{job.PartNo}</td>
+                                                            </CopyToClipboard>
                                                             <td className='text-center'>{job.Revision}</td>
                                                             <td className='text-center'>{job.EstimQty}</td>
                                                             <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
@@ -358,10 +365,10 @@ export const Quality = () => {
                                         }
                                     </tbody>
                                 </Table>
-                                <ToastContainer position="bottom-end" className="p-3" style={{ zIndex: 1 }}>
-                                    <Toast bg='secondary' onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide animation>
+                                <ToastContainer className="toastCopy" style={{ zIndex: 1 }}>
+                                    <Toast bg='success' onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide animation>
                                         <Toast.Body>
-                                            <strong className="me-auto">{partCopy} Copied To Clipboard </strong>
+                                            <strong className="mx-auto me-auto">{partCopy} Copied To Clipboard </strong>
                                         </Toast.Body>
                                     </Toast>
                                 </ToastContainer>
@@ -421,7 +428,10 @@ export const Quality = () => {
                                                     return (
                                                         <tr key={index} job={job}>
                                                             <td className='text-center jobBold'>{job.JobNo}</td>
-                                                            <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td>
+                                                            {/* <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td> */}
+                                                            <CopyToClipboard text={job.PartNo} onCopy={() => { setShowToast(true); setPartCopy(`${job.PartNo}`) }}>
+                                                                <td className='text-center'>{job.PartNo}</td>
+                                                            </CopyToClipboard>
                                                             <td className='text-center'>{job.Revision}</td>
                                                             <td className='text-center'>{job.EstimQty}</td>
                                                             <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
@@ -435,10 +445,10 @@ export const Quality = () => {
                                         }
                                     </tbody>
                                 </Table>
-                                <ToastContainer position="bottom-end" className="p-3" style={{ zIndex: 1 }}>
-                                    <Toast bg='secondary' onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide animation>
+                                <ToastContainer className="toastCopy" style={{ zIndex: 1 }}>
+                                    <Toast bg='success' onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide animation>
                                         <Toast.Body>
-                                            <strong className="me-auto">{partCopy} Copied To Clipboard </strong>
+                                            <strong className="mx-auto me-auto">{partCopy} Copied To Clipboard </strong>
                                         </Toast.Body>
                                     </Toast>
                                 </ToastContainer>
