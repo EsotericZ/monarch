@@ -140,7 +140,12 @@ export const Forming = () => {
                                 </Form.Select>
                             </FloatingLabel>
                             <FloatingLabel controlId="floatingInput" label="Notes" className="mb-3">
-                                <Form.Control placeholder="Notes" defaultValue={notes} onChange={(e) => {setNotes(e.target.value)}} />
+                                {notes == 'null' ?
+                                    <Form.Control placeholder="Notes" defaultValue='' onChange={(e) => {setNotes(e.target.value)}} />
+                                :
+                                    <Form.Control placeholder="Notes" defaultValue={notes} onChange={(e) => {setNotes(e.target.value)}} />
+                                }
+                                {/* <Form.Control placeholder="Notes" defaultValue={notes} onChange={(e) => {setNotes(e.target.value)}} /> */}
                             </FloatingLabel>
                         </Form>
                         </Modal.Body>
@@ -255,8 +260,16 @@ export const Forming = () => {
                                                             <td className='text-center'>{job.CustCode}</td>
                                                             <td className='text-center'>{job.User_Text3}</td>
                                                             <td className='text-center'>{job.dataValues.engineer}</td>
-                                                            <td className='text-center'>{job.dataValues.formProgrammer}</td>
-                                                            <td className='text-center'>{job.dataValues.formStatus}</td>
+                                                            {job.dataValues.formProgrammer == 'null' ?
+                                                                <td className='text-center'></td>
+                                                            :
+                                                                <td className='text-center'>{job.dataValues.formProgrammer}</td>
+                                                            }
+                                                            {job.dataValues.formStatus == 'null' ?
+                                                                <td className='text-center'></td>
+                                                            :
+                                                                <td className='text-center'>{job.dataValues.formStatus}</td>
+                                                            }
                                                                 {/* <Dropdown>
                                                                     <Dropdown.Toggle size="sm">
                                                                         {job.dataValues.jobStatus}  
@@ -380,8 +393,16 @@ export const Forming = () => {
                                                             <td className='text-center'>{job.CustCode}</td>
                                                             <td className='text-center'>{job.User_Text3}</td>
                                                             <td className='text-center'>{job.dataValues.engineer}</td>
-                                                            <td className='text-center'>{job.dataValues.formProgrammer}</td>
-                                                            <td className='text-center'>{job.dataValues.formStatus}</td>
+                                                            {job.dataValues.formProgrammer == 'null' ?
+                                                                <td className='text-center'></td>
+                                                            :
+                                                                <td className='text-center'>{job.dataValues.formProgrammer}</td>
+                                                            }
+                                                            {job.dataValues.formStatus == 'null' ?
+                                                                <td className='text-center'></td>
+                                                            :
+                                                                <td className='text-center'>{job.dataValues.formStatus}</td>
+                                                            }
                                                         </tr>
                                                     )
                                                 }
