@@ -50,6 +50,7 @@ export const EngJobs = () => {
 
     const [searchedEng, setSearchedEng] = useState([]);
     const [searchedTBR, setSearchedTBR] = useState([]);
+    // const [countTBR, setCountTBR] = useState(0);
     const [searchedFuture, setSearchedFuture] = useState([]);
     const [searchedRepeat, setSearchedRepeat] = useState([]);
     const [searchedOutsource, setSearchedOutsource] = useState([]);
@@ -66,60 +67,78 @@ export const EngJobs = () => {
     const [engineerInfo, setEngineerInfo] = useState();
     const [jobStatus, setJobStatus] = useState(' ');
 
-    const [tbr, setTbr] = useState('TBR');
-    const [future, setFuture] = useState('Future');
-    const [repeat, setRepeat] = useState('Repeat');
-    const [outsource, setOutsource] = useState('Outsource');
+    const [tbr, setTbr] = useState('');
+    const [future, setFuture] = useState('');
+    const [repeat, setRepeat] = useState('');
+    const [outsource, setOutsource] = useState('');
     const [active, setActive] = useState('Active');
 
     const fetchData = () => {
         try {
-            let data = getAllJobs();
-            data.then((res) => {
-                setSearchedEng(res);
+            getAllJobs()
+                .then((res) => {
+                    setSearchedEng(res);
             })
-            let tbrData = getTBRJobs();
-            tbrData.then((res) => {
-                setSearchedTBR(res);
-            })
-            let futureData = getFutureJobs();
-            futureData.then((res) => {
-                setSearchedFuture(res);
-            })
-            let repeatData = getRepeatJobs();
-            repeatData.then((res) => {
-                setSearchedRepeat(res);
-            })
-            let outsourceData = getOutsourceJobs();
-            outsourceData.then((res) => {
-                setSearchedOutsource(res);
-            })
-            let nextStepData = getNextStep();
-            nextStepData.then((res) => {
-                setSearchedNextStep(res);
-            })
-            let printsData = getPrints();
-            printsData.then((res) => {
-                setSearchedPrints(res);
-            })
+
+            getTBRJobs()
+                .then((res) => {
+                    setSearchedTBR(res);
+                })
+                .then(() => {
+                    let tbrCount = ((searchedTBR.filter(row => typeof row.JobNo !== 'undefined')).length);
+                    (tbrCount > 0) ? setTbr(`TBR (${tbrCount})`) : setTbr('TBR');
+                })
+                
+            getFutureJobs()
+                .then((res) => {
+                    setSearchedFuture(res);
+                })
+                .then(() => {
+                    let futureCount = ((searchedFuture.filter(row => typeof row.JobNo !== 'undefined')).length);
+                    (futureCount > 0) ? setFuture(`Future (${futureCount})`) : setFuture('Future');
+                })
+                
+            getNextStep()
+                .then((res) => {
+                    setSearchedNextStep(res);
+                })
+
+            getPrints()
+                .then((res) => {
+                    setSearchedPrints(res);
+                })
+
+            getRepeatJobs()
+                .then((res) => {
+                    setSearchedRepeat(res);
+                    let repeatCount = searchedRepeat.length;
+                    (repeatCount > 0) ? setRepeat(`Repeat (${repeatCount})`) : setRepeat('Repeat');
+                })
 
             setFullRepeats(searchedRepeat.map( v => {
                 let obj1 = searchedNextStep.find(o => o.JobNo == v.JobNo)
                 if (obj1) {
                     v.WorkCntr = obj1.WorkCntr
                 }
-
+                
                 let obj = searchedPrints.find(x => x.PartNo == v.PartNo)
                 if (obj) {
                     v.DocNumber = obj.DocNumber
                 } else {
                     v.DocNumber = ''
                 }
-
+                
                 setFullRepeats(v)
                 return v
             }))
-
+                
+            getOutsourceJobs()
+                .then((res) => {
+                    setSearchedOutsource(res);
+                    let outsourceCount = searchedOutsource.length;
+                    (outsourceCount > 0) ? setOutsource(`Outsource (${outsourceCount})`) : setOutsource('Outsource');
+                })
+            
             setFullOutsource(searchedOutsource.map( v => {
                 let obj = searchedPrints.find(x => x.PartNo == v.PartNo)
                 if (obj) {
@@ -131,12 +150,12 @@ export const EngJobs = () => {
                 setFullOutsource(v)
                 return v
             }))
-
-            setLoading(false);
-
         } catch (err) {
             console.log(err)
         }
+        setTimeout(() => {
+            setLoading(false)
+        }, "1000")
     };
 
     async function toggleModel(job) {
