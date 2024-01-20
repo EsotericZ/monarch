@@ -106,6 +106,24 @@ async function getRepeatJobs(req, res) {
     })
 };
 
+async function getOutsourceJobs(req, res) {
+    sql.connect(config, function(err,) {
+        if (err) console.error(err);
+        let request = new sql.Request();
+        request.query("SELECT R.JobNo, D.PartNo, D.Revision, R.EstimQty, D.DueDate, O.CustCode, D.User_Text3, D.User_Text2, D.User_Number3, R.OrderNo, R.StepNo, D.QuoteNo\
+            FROM OrderRouting R INNER JOIN OrderDet D ON R.JobNo=D.JobNo INNER JOIN ORDERS O ON D.OrderNo=O.OrderNo\
+            WHERE R.WorkCntr='101 ENGIN' AND R.Status!='Finished' AND R.Status!='Closed' AND D.Status='Open' AND O.User_Text3!='UNCONFIRMED' AND D.User_Text2='6. OUTSOURCE'\
+            ORDER BY D.DueDate, R.JobNo", 
+        
+        function(err, recordset) {
+            if (err) console.error(err);
+            let records = recordset.recordsets[0];
+
+            res.send(records)
+        })
+    })
+};
+
 async function getNextStep(req, res) {
     sql.connect(config, function(err,) {
         if (err) console.error(err);
@@ -208,6 +226,7 @@ module.exports = {
     getFRJobs,
     getRepeatJobs,
     getNextStep,
+    getOutsourceJobs,
     getPrints,
     updateJob,
     updateModel,

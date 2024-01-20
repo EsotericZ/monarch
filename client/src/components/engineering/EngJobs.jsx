@@ -13,6 +13,7 @@ import getAllJobs from '../../services/engineering/getAllJobs';
 import getTBRJobs from '../../services/engineering/getTBRJobs';
 import getFRJobs from '../../services/engineering/getFRJobs';
 import getRepeatJobs from '../../services/engineering/getRepeatJobs';
+import getOutsourceJobs from '../../services/engineering/getOutsourceJobs';
 import getNextStep from '../../services/engineering/getNextStep';
 import getPrints from '../../services/engineering/getPrints';
 import updateJob from '../../services/engineering/updateJob';
@@ -51,9 +52,11 @@ export const EngJobs = () => {
     const [searchedTBR, setSearchedTBR] = useState([]);
     const [searchedFR, setSearchedFR] = useState([]);
     const [searchedRepeat, setSearchedRepeat] = useState([]);
+    const [searchedOutsource, setSearchedOutsource] = useState([]);
     const [searchedNextStep, setSearchedNextStep] = useState([]);
     const [searchedPrints, setSearchedPrints] = useState([]);
     const [fullRepeats, setFullRepeats] = useState([]);
+    const [fullOutsource, setFullOutsource] = useState([]);
     const [loading, setLoading] = useState(true);
     const [show, setShow] = useState(false);
 
@@ -87,6 +90,10 @@ export const EngJobs = () => {
             repeatData.then((res) => {
                 setSearchedRepeat(res);
             })
+            let outsourceData = getOutsourceJobs();
+            outsourceData.then((res) => {
+                setSearchedOutsource(res);
+            })
             let nextStepData = getNextStep();
             nextStepData.then((res) => {
                 setSearchedNextStep(res);
@@ -112,6 +119,19 @@ export const EngJobs = () => {
                 setFullRepeats(v)
                 return v
             }))
+
+            setFullOutsource(searchedOutsource.map( v => {
+                let obj = searchedPrints.find(x => x.PartNo == v.PartNo)
+                if (obj) {
+                    v.DocNumber = obj.DocNumber
+                } else {
+                    v.DocNumber = ''
+                }
+
+                setFullOutsource(v)
+                return v
+            }))
+
             setLoading(false);
 
         } catch (err) {
@@ -532,7 +552,7 @@ export const EngJobs = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {searchedEng
+                                        {fullOutsource
                                             .filter(row => typeof row.JobNo !== 'undefined')
                                             .filter((row) => 
                                                 !searchedValueJobNo || row.JobNo
@@ -568,24 +588,22 @@ export const EngJobs = () => {
                                                     .includes(searchedValueType.toString().toLowerCase())
                                             )
                                             .map((job, index) => {
-                                                if (job.User_Text2 == '6. OUTSOURCE') {
-                                                    return (
-                                                        <tr key={index} job={job}>
-                                                            <td className='text-center jobBold'>{job.JobNo}</td>
-                                                            <td className='text-center jobBold'>{job.StepNo}</td>
-                                                            <CopyToClipboard text={job.PartNo} onCopy={() => { setShowToast(true); setPartCopy(`${job.PartNo}`) }}>
-                                                                <td className='text-center'>{job.PartNo}</td>
-                                                            </CopyToClipboard>
-                                                            <td className='text-center'>{job.Revision}</td>
-                                                            <td className='text-center'>{job.EstimQty}</td>
-                                                            <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
-                                                            <td className='text-center'>{job.CustCode}</td>
-                                                            <td className='text-center'>{job.QuoteNo}</td>
-                                                            <td className='text-center'>{job.User_Text3}</td>
-                                                            <td className='text-center'></td>
-                                                        </tr>
-                                                    )
-                                                }
+                                                return (
+                                                    <tr key={index} job={job}>
+                                                        <td className='text-center jobBold'>{job.JobNo}</td>
+                                                        <td className='text-center jobBold'>{job.StepNo}</td>
+                                                        <CopyToClipboard text={job.PartNo} onCopy={() => { setShowToast(true); setPartCopy(`${job.PartNo}`) }}>
+                                                            <td className='text-center'>{job.PartNo}</td>
+                                                        </CopyToClipboard>
+                                                        <td className='text-center'>{job.Revision}</td>
+                                                        <td className='text-center'>{job.EstimQty}</td>
+                                                        <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
+                                                        <td className='text-center'>{job.CustCode}</td>
+                                                        <td className='text-center'>{job.QuoteNo}</td>
+                                                        <td className='text-center'>{job.User_Text3}</td>
+                                                        <td className='text-center'>{job.DocNumber && <Icon icon={check}/> }</td>
+                                                    </tr>
+                                                )
                                             })
                                         }
                                     </tbody>
