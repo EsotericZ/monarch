@@ -64,7 +64,7 @@ async function getTBRJobs(req, res) {
     })
 };
 
-async function getFRJobs(req, res) {
+async function getFutureJobs(req, res) {
     const jobData = await Jobs.findAll();
     sql.connect(config, function(err,) {
         if (err) console.error(err);
@@ -222,19 +222,12 @@ async function updateModel(req, res) {
 
 module.exports = {
     getAllJobs,
-    getTBRJobs,
-    getFRJobs,
+    getFutureJobs,
     getRepeatJobs,
     getNextStep,
     getOutsourceJobs,
     getPrints,
+    getTBRJobs,
     updateJob,
     updateModel,
 }
-// exports.getAllJobs = getAllJobs;
-// exports.getTBRJobs = getTBRJobs;
-// exports.getFRJobs = getFRJobs;
-// exports.getRepeatJobs = getRepeatJobs;
-// exports.getPrints = getPrints;
-// exports.updateJob = updateJob;
-// exports.updateModel = updateModel;

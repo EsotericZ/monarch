@@ -1,16 +1,13 @@
 import { useEffect, useState } from 'react';
-import { Button, Dropdown, FloatingLabel, Form, Modal, Nav, NavDropdown, Tab, Tabs, Table, Toast, ToastContainer } from 'react-bootstrap';
+import { Button, FloatingLabel, Form, Modal, Tab, Tabs, Table, Toast, ToastContainer } from 'react-bootstrap';
 import { format, parseISO } from 'date-fns';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 
-import { Icon } from 'react-icons-kit';
-import {check} from 'react-icons-kit/entypo/check'
-
 import getAllJobs from '../../services/engineering/getAllJobs';
 import getTBRJobs from '../../services/engineering/getTBRJobs';
-import getFRJobs from '../../services/engineering/getFRJobs';
+import getFutureJobs from '../../services/engineering/getFutureJobs';
 import updateJob from '../../services/forming/updateJob';
 import updateModel from '../../services/engineering/updateModel';
 import { Sidebar } from '../sidebar/Sidebar';
@@ -46,7 +43,7 @@ export const Forming = () => {
 
     const [searchedEng, setSearchedEng] = useState([]);
     const [searchedTBR, setSearchedTBR] = useState([]);
-    const [searchedFR, setSearchedFR] = useState([]);
+    const [searchedFuture, setSearchedFuture] = useState([]);
     const [loading, setLoading] = useState(true);
     const [show, setShow] = useState(false);
 
@@ -73,9 +70,9 @@ export const Forming = () => {
             tbrData.then((res) => {
                 setSearchedTBR(res);
             })
-            let frData = getFRJobs();
-            frData.then((res) => {
-                setSearchedFR(res);
+            let futureData = getFutureJobs();
+            futureData.then((res) => {
+                setSearchedFuture(res);
             })
         } catch (err) {
             console.log(err)
@@ -181,9 +178,6 @@ export const Forming = () => {
                                             <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueEngineer(e.target.value)} placeholder='&#xf002;  Engineer' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueProgrammer(e.target.value)} placeholder='&#xf002;  Programmer' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueStatus(e.target.value)} placeholder='&#xf002;  Status' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            {/* {cookieData.maintenance &&
-                                                <th className='text-center align-middle'>Actions</th>
-                                            } */}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -240,21 +234,11 @@ export const Forming = () => {
                                                     .toLowerCase()                                           
                                                     .includes(searchedValueStatus.toString().toLowerCase())
                                             })
-                                            // .filter((row) => {
-                                            //     if (!searchedValueQuote) { return true; }
-                                            //     if (!row || !row.QuoteNo ) { return false; }
-                                                
-                                            //     return row.QuoteNo
-                                            //         .toString()
-                                            //         .toLowerCase()                                           
-                                            //         .includes(searchedValueQuote.toString().toLowerCase())
-                                            // })
                                             .map((job, index) => {
                                                 if (job.dataValues.jobStatus == 'FORMING') {
                                                     return (
                                                         <tr key={index} job={job}>
                                                             <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td>
-                                                            {/* <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td> */}
                                                             <CopyToClipboard text={job.PartNo} onCopy={() => { setShowToast(true); setPartCopy(`${job.PartNo}`) }}>
                                                                 <td className='text-center'>{job.PartNo}</td>
                                                             </CopyToClipboard>
@@ -274,17 +258,6 @@ export const Forming = () => {
                                                             :
                                                                 <td className='text-center'>{job.dataValues.formStatus}</td>
                                                             }
-                                                                {/* <Dropdown>
-                                                                    <Dropdown.Toggle size="sm">
-                                                                        {job.dataValues.jobStatus}  
-                                                                    </Dropdown.Toggle>
-                                                                    <Dropdown.Menu>
-                                                                        <Dropdown.Item>Action</Dropdown.Item>
-                                                                        <Dropdown.Item>Another action</Dropdown.Item>
-                                                                        <Dropdown.Item>Something else</Dropdown.Item>
-                                                                    </Dropdown.Menu>
-                                                                </Dropdown>
-                                                            </td> */}
                                                         </tr>
                                                     )
                                                 }
@@ -317,13 +290,10 @@ export const Forming = () => {
                                             <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueEngineer(e.target.value)} placeholder='&#xf002;  Engineer' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueProgrammer(e.target.value)} placeholder='&#xf002;  Programmer' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueStatus(e.target.value)} placeholder='&#xf002;  Status' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            {/* {cookieData.maintenance &&
-                                                <th className='text-center align-middle'>Actions</th>
-                                            } */}
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {searchedFR
+                                        {searchedFuture
                                             .filter(row => typeof row.JobNo !== 'undefined')
                                             .filter((row) => 
                                                 !searchedValueJobNo || row.JobNo
@@ -376,21 +346,11 @@ export const Forming = () => {
                                                     .toLowerCase()                                           
                                                     .includes(searchedValueStatus.toString().toLowerCase())
                                             })
-                                            // .filter((row) => {
-                                            //     if (!searchedValueQuote) { return true; }
-                                            //     if (!row || !row.QuoteNo ) { return false; }
-                                                
-                                            //     return row.QuoteNo
-                                            //         .toString()
-                                            //         .toLowerCase()                                           
-                                            //         .includes(searchedValueQuote.toString().toLowerCase())
-                                            // })
                                             .map((job, index) => {
                                                 if (job.User_Text3 != 'REPEAT' && job.User_Text2 != '6. OUTSOURCE' && job.dataValues.jobStatus == 'FORMING') {
                                                     return (
                                                         <tr key={index} job={job}>
                                                             <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td>
-                                                            {/* <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td> */}
                                                             <CopyToClipboard text={job.PartNo} onCopy={() => { setShowToast(true); setPartCopy(`${job.PartNo}`) }}>
                                                                 <td className='text-center'>{job.PartNo}</td>
                                                             </CopyToClipboard>
@@ -481,7 +441,6 @@ export const Forming = () => {
                                                     return (
                                                         <tr key={index} job={job}>
                                                             <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td>
-                                                            {/* <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td> */}
                                                             <CopyToClipboard text={job.PartNo} onCopy={() => { setShowToast(true); setPartCopy(`${job.PartNo}`) }}>
                                                                 <td className='text-center'>{job.PartNo}</td>
                                                             </CopyToClipboard>

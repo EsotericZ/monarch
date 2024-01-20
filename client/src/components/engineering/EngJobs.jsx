@@ -11,7 +11,7 @@ import { refresh } from 'react-icons-kit/fa/refresh';
 
 import getAllJobs from '../../services/engineering/getAllJobs';
 import getTBRJobs from '../../services/engineering/getTBRJobs';
-import getFRJobs from '../../services/engineering/getFRJobs';
+import getFutureJobs from '../../services/engineering/getFutureJobs';
 import getRepeatJobs from '../../services/engineering/getRepeatJobs';
 import getOutsourceJobs from '../../services/engineering/getOutsourceJobs';
 import getNextStep from '../../services/engineering/getNextStep';
@@ -50,7 +50,7 @@ export const EngJobs = () => {
 
     const [searchedEng, setSearchedEng] = useState([]);
     const [searchedTBR, setSearchedTBR] = useState([]);
-    const [searchedFR, setSearchedFR] = useState([]);
+    const [searchedFuture, setSearchedFuture] = useState([]);
     const [searchedRepeat, setSearchedRepeat] = useState([]);
     const [searchedOutsource, setSearchedOutsource] = useState([]);
     const [searchedNextStep, setSearchedNextStep] = useState([]);
@@ -82,9 +82,9 @@ export const EngJobs = () => {
             tbrData.then((res) => {
                 setSearchedTBR(res);
             })
-            let frData = getFRJobs();
-            frData.then((res) => {
-                setSearchedFR(res);
+            let futureData = getFutureJobs();
+            futureData.then((res) => {
+                setSearchedFuture(res);
             })
             let repeatData = getRepeatJobs();
             repeatData.then((res) => {
@@ -352,7 +352,7 @@ export const EngJobs = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {searchedFR
+                                        {searchedFuture
                                             .filter(row => typeof row.JobNo !== 'undefined')
                                             .filter((row) => 
                                                 !searchedValueJobNo || row.JobNo
