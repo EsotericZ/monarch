@@ -6,13 +6,14 @@ import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 
 import { Icon } from 'react-icons-kit';
-import { check } from 'react-icons-kit/entypo/check'
-import { refresh } from 'react-icons-kit/fa/refresh'
+import { check } from 'react-icons-kit/entypo/check';
+import { refresh } from 'react-icons-kit/fa/refresh';
 
 import getAllJobs from '../../services/engineering/getAllJobs';
 import getTBRJobs from '../../services/engineering/getTBRJobs';
 import getFRJobs from '../../services/engineering/getFRJobs';
 import getRepeatJobs from '../../services/engineering/getRepeatJobs';
+import getNextStep from '../../services/engineering/getNextStep';
 import getPrints from '../../services/engineering/getPrints';
 import updateJob from '../../services/engineering/updateJob';
 import updateModel from '../../services/engineering/updateModel';
@@ -50,14 +51,15 @@ export const EngJobs = () => {
     const [searchedTBR, setSearchedTBR] = useState([]);
     const [searchedFR, setSearchedFR] = useState([]);
     const [searchedRepeat, setSearchedRepeat] = useState([]);
+    const [searchedNextStep, setSearchedNextStep] = useState([]);
     const [searchedPrints, setSearchedPrints] = useState([]);
-    const [searchedTest, setSearchedTest] = useState([]);
+    const [fullRepeats, setFullRepeats] = useState([]);
     const [loading, setLoading] = useState(true);
     const [show, setShow] = useState(false);
 
     const [jobNoInfo, setJobNoInfo] = useState();
     const [custInfo, setCustInfo] = useState();
-    const [partNoInfo, setParNoInfo] = useState();
+    const [partNoInfo, setPartNoInfo] = useState();
     const [engineerInfo, setEngineerInfo] = useState();
     const [jobStatus, setJobStatus] = useState(' ');
 
@@ -72,7 +74,6 @@ export const EngJobs = () => {
             let data = getAllJobs();
             data.then((res) => {
                 setSearchedEng(res);
-                setLoading(false);
             })
             let tbrData = getTBRJobs();
             tbrData.then((res) => {
@@ -86,13 +87,17 @@ export const EngJobs = () => {
             repeatData.then((res) => {
                 setSearchedRepeat(res);
             })
+            let nextStepData = getNextStep();
+            nextStepData.then((res) => {
+                setSearchedNextStep(res);
+            })
             let printsData = getPrints();
             printsData.then((res) => {
                 setSearchedPrints(res);
             })
 
-            setSearchedTest(searchedFR.map( v => {
-                let obj1 = searchedRepeat.find(o => o.JobNo == v.JobNo)
+            setFullRepeats(searchedRepeat.map( v => {
+                let obj1 = searchedNextStep.find(o => o.JobNo == v.JobNo)
                 if (obj1) {
                     v.WorkCntr = obj1.WorkCntr
                 }
@@ -104,9 +109,10 @@ export const EngJobs = () => {
                     v.DocNumber = ''
                 }
 
-                setSearchedTest(v)
+                setFullRepeats(v)
                 return v
             }))
+            setLoading(false);
 
         } catch (err) {
             console.log(err)
@@ -130,7 +136,7 @@ export const EngJobs = () => {
         setShow(true);
         setJobNoInfo(job.JobNo);
         setCustInfo(job.CustCode);
-        setParNoInfo(job.PartNo);
+        setPartNoInfo(job.PartNo);
         setEngineerInfo(job.dataValues.engineer);
         setJobStatus(job.dataValues.jobStatus);
     } ;
@@ -167,7 +173,7 @@ export const EngJobs = () => {
                                     <option></option>
                                     <option>WIP</option>
                                     <option>FORMING</option>
-                                    <option>FINALIZE</option>
+                                    {/* <option>FINALIZE</option> */}
                                     <option>QC</option>
                                     <option>REWORK</option>
                                     <option>HOLD</option>
@@ -323,9 +329,6 @@ export const EngJobs = () => {
                                             <th className='text-center' width='7%'><input onChange={(e) => setSearchedValueQuote(e.target.value)} placeholder='&#xf002;  Quote' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center' width='5%'>Model</th>
                                             <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueStatus(e.target.value)} placeholder='&#xf002;  Status' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            {/* {cookieData.maintenance &&
-                                                <th className='text-center align-middle'>Actions</th>
-                                            } */}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -388,7 +391,6 @@ export const EngJobs = () => {
                                                         <tr key={index} job={job}>
                                                             <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td>
                                                             <td className='text-center'>{job.StepNo}</td>
-                                                            {/* <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td> */}
                                                             <CopyToClipboard text={job.PartNo} onCopy={() => { setShowToast(true); setPartCopy(`${job.PartNo}`) }}>
                                                                 <td className='text-center'>{job.PartNo}</td>
                                                             </CopyToClipboard>
@@ -440,13 +442,10 @@ export const EngJobs = () => {
                                             <th className='text-center' width='10%'>Type</th>
                                             <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueStep(e.target.value)} placeholder='&#xf002;  Next Step' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center' width='5%'>Print</th>
-                                            {/* {cookieData.maintenance &&
-                                                <th className='text-center align-middle'>Actions</th>
-                                            } */}
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {searchedTest
+                                        {fullRepeats
                                             .filter(row => typeof row.JobNo !== 'undefined')
                                             .filter((row) => 
                                                 !searchedValueJobNo || row.JobNo
@@ -482,25 +481,22 @@ export const EngJobs = () => {
                                                     .includes(searchedValueStep.toString().toLowerCase())
                                             })
                                             .map((job, index) => {
-                                                if (job.User_Text3 == 'REPEAT') {
-                                                    return (
-                                                        <tr key={index} job={job}>
-                                                            <td className='text-center jobBold'>{job.JobNo}</td>
-                                                            <td className='text-center'>{job.StepNo}</td>
-                                                            {/* <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td> */}
-                                                            <CopyToClipboard text={job.PartNo} onCopy={() => { setShowToast(true); setPartCopy(`${job.PartNo}`) }}>
-                                                                <td className='text-center'>{job.PartNo}</td>
-                                                            </CopyToClipboard>
-                                                            <td className='text-center'>{job.Revision}</td>
-                                                            <td className='text-center'>{job.EstimQty}</td>
-                                                            <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
-                                                            <td className='text-center'>{job.CustCode}</td>
-                                                            <td className='text-center'>{job.User_Text3}</td>
-                                                            <td className='text-center'>{job.WorkCntr}</td>
-                                                            <td className='text-center'>{job.DocNumber && <Icon icon={check}/> }</td>
-                                                        </tr>
-                                                    )
-                                                }
+                                                return (
+                                                    <tr key={index} job={job}>
+                                                        <td className='text-center jobBold'>{job.JobNo}</td>
+                                                        <td className='text-center'>{job.StepNo}</td>
+                                                        <CopyToClipboard text={job.PartNo} onCopy={() => { setShowToast(true); setPartCopy(`${job.PartNo}`) }}>
+                                                            <td className='text-center'>{job.PartNo}</td>
+                                                        </CopyToClipboard>
+                                                        <td className='text-center'>{job.Revision}</td>
+                                                        <td className='text-center'>{job.EstimQty}</td>
+                                                        <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
+                                                        <td className='text-center'>{job.CustCode}</td>
+                                                        <td className='text-center'>{job.User_Text3}</td>
+                                                        <td className='text-center'>{job.WorkCntr}</td>
+                                                        <td className='text-center'>{job.DocNumber && <Icon icon={check}/> }</td>
+                                                    </tr>
+                                                )
                                             })
                                         }
                                     </tbody>
@@ -533,9 +529,6 @@ export const EngJobs = () => {
                                             <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueQuote(e.target.value)} placeholder='&#xf002;  Quote' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='&#xf002;  Type' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center' width='5%'>Print</th>
-                                            {/* {cookieData.maintenance &&
-                                                <th className='text-center align-middle'>Actions</th>
-                                            } */}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -580,7 +573,6 @@ export const EngJobs = () => {
                                                         <tr key={index} job={job}>
                                                             <td className='text-center jobBold'>{job.JobNo}</td>
                                                             <td className='text-center jobBold'>{job.StepNo}</td>
-                                                            {/* <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td> */}
                                                             <CopyToClipboard text={job.PartNo} onCopy={() => { setShowToast(true); setPartCopy(`${job.PartNo}`) }}>
                                                                 <td className='text-center'>{job.PartNo}</td>
                                                             </CopyToClipboard>
@@ -663,7 +655,6 @@ export const EngJobs = () => {
                                                     return (
                                                         <tr key={index} job={job}>
                                                             <td className='text-center jobBold'>{job.JobNo}</td>
-                                                            {/* <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td> */}
                                                             <CopyToClipboard text={job.PartNo} onCopy={() => { setShowToast(true); setPartCopy(`${job.PartNo}`) }}>
                                                                 <td className='text-center'>{job.PartNo}</td>
                                                             </CopyToClipboard>
