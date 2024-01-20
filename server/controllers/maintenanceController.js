@@ -179,12 +179,14 @@ async function doneRequest(req, res) {
     })
 }
 
-exports.getAllRequests = getAllRequests;
-exports.getAllEquipment = getAllEquipment;
-exports.createRequest = createRequest;
-exports.updateRequest = updateRequest;
-exports.approveRequest = approveRequest;
-exports.denyRequest = denyRequest;
-exports.deleteRequest = deleteRequest;
-exports.holdRequest = holdRequest;
-exports.doneRequest = doneRequest;
+module.exports = {
+    getAllRequests,
+    getAllEquipment,
+    createRequest,
+    updateRequest,
+    approveRequest,
+    denyRequest,
+    deleteRequest,
+    holdRequest,
+    doneRequest,
+}

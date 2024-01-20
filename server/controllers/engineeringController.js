@@ -184,10 +184,19 @@ async function updateModel(req, res) {
     })
 }
 
-exports.getAllJobs = getAllJobs;
-exports.getTBRJobs = getTBRJobs;
-exports.getFRJobs = getFRJobs;
-exports.getRepeatJobs = getRepeatJobs;
-exports.getPrints = getPrints;
-exports.updateJob = updateJob;
-exports.updateModel = updateModel;
+module.exports = {
+    getAllJobs,
+    getTBRJobs,
+    getFRJobs,
+    getRepeatJobs,
+    getPrints,
+    updateJob,
+    updateModel,
+}
+// exports.getAllJobs = getAllJobs;
+// exports.getTBRJobs = getTBRJobs;
+// exports.getFRJobs = getFRJobs;
+// exports.getRepeatJobs = getRepeatJobs;
+// exports.getPrints = getPrints;
+// exports.updateJob = updateJob;
+// exports.updateModel = updateModel;

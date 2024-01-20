@@ -228,11 +228,13 @@ async function updateShipping(req, res) {
     })
 }
 
-exports.getAllUsers = getAllUsers;
-exports.getUserPassword = getUserPassword;
-exports.createUser = createUser;
-exports.deleteUser = deleteUser;
-exports.updateUser = updateUser;
-exports.updateEngineering = updateEngineering;
-exports.updateMaintenance = updateMaintenance;
-exports.updateShipping = updateShipping;
+module.exports = {
+    getAllUsers,
+    getUserPassword,
+    createUser,
+    deleteUser,
+    updateUser,
+    updateEngineering,
+    updateMaintenance,
+    updateShipping,
+}

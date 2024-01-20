@@ -107,7 +107,9 @@ function updateJob(req, res) {
     })
 };
 
-exports.getAllJobs = getAllJobs;
-exports.getTBRJobs = getTBRJobs;
-exports.getFRJobs = getFRJobs;
-exports.updateJob = updateJob;
+module.exports = {
+    getAllJobs,
+    getTBRJobs,
+    getFRJobs,
+    updateJob,
+}

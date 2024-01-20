@@ -23,4 +23,6 @@ function updateJob(req, res) {
     })
 };
 
-exports.updateJob = updateJob;
+module.exports = {
+    updateJob,
+}

@@ -179,12 +179,14 @@ async function updateTimes(req, res) {
     })
 }
 
-exports.getAllOrders = getAllOrders;
-exports.getAllCustomers = getAllCustomers;
-exports.getAllVendors = getAllVendors;
-exports.createRequest = createRequest;
-exports.updateRecord = updateRecord;
-exports.scheduleRequest = scheduleRequest;
-exports.deleteSchedule = deleteSchedule;
-exports.completeRequest = completeRequest;
-exports.updateTimes = updateTimes;
+module.exports = {
+    getAllOrders,
+    getAllCustomers,
+    getAllVendors,
+    createRequest,
+    updateRecord,
+    scheduleRequest,
+    deleteSchedule,
+    completeRequest,
+    updateTimes,
+}

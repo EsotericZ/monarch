@@ -50,6 +50,8 @@ async function updateTodo(req, res) {
     })
 }
 
-exports.getAllTodos = getAllTodos;
-exports.createTodo = createTodo;
-exports.updateTodo = updateTodo;
+module.exports = {
+    getAllTodos,
+    createTodo,
+    updateTodo,
+}

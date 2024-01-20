@@ -31,5 +31,7 @@ async function createPort(req, res) {
     })
 } 
 
-exports.getAllPorts = getAllPorts;
-exports.createPort = createPort;
+module.exports = {
+    getAllPorts,
+    createPort,
+}
