@@ -15,7 +15,6 @@ import updateJob from '../../services/forming/updateJob';
 import updateModel from '../../services/engineering/updateModel';
 import { Sidebar } from '../sidebar/Sidebar';
 import '../engineering/engineering.css';
-import './forming.css';
 
 export const Forming = () => {
     const cookies = new Cookies();
@@ -58,28 +57,39 @@ export const Forming = () => {
     const [formStatus, setFormStatus] = useState(' ');
     const [notes, setNotes] = useState(' ');
 
-    const [tbr, setTbr] = useState('TBR');
-    const [future, setFuture] = useState('Future');
-    const [BDTest, setBDTest] = useState('BD Test');
+    const [tbr, setTbr] = useState('');
+    const [future, setFuture] = useState('');
+    const [BDTest, setBDTest] = useState('');
 
     const fetchData = () => {
         try {
-            let data = getAllJobs();
-            data.then((res) => {
-                setSearchedEng(res);
-                setLoading(false);
-            })
-            let tbrData = getTBRJobs();
-            tbrData.then((res) => {
-                setSearchedTBR(res);
-            })
-            let futureData = getFutureJobs();
-            futureData.then((res) => {
-                setSearchedFuture(res);
-            })
+            getAllJobs()
+                .then((res) => {
+                    setSearchedEng(res);
+                    setLoading(false);
+                    let bdCount = ((searchedEng.filter(row => (typeof row.JobNo !== 'undefined' && row.dataValues.formStatus == 'BD TEST'))).length);
+                    (bdCount > 0) ? setBDTest(`BD Test (${bdCount})`) : setBDTest('BD Test');
+                })
+
+            getTBRJobs()
+                .then((res) => {
+                    setSearchedTBR(res);
+                    let tbrCount = ((searchedTBR.filter(row => (typeof row.JobNo !== 'undefined' && row.dataValues.jobStatus == 'FORMING'))).length);
+                    (tbrCount > 0) ? setTbr(`TBR (${tbrCount})`) : setTbr('TBR');
+                })
+            
+            getFutureJobs()
+                .then((res) => {
+                    setSearchedFuture(res);
+                    let futureCount = ((searchedFuture.filter(row => (typeof row.JobNo !== 'undefined' && row.dataValues.jobStatus == 'FORMING'))).length);
+                    (futureCount > 0) ? setFuture(`Future (${futureCount})`) : setFuture('Future');
+                })
         } catch (err) {
             console.log(err)
         }
+        setTimeout(() => {
+            setLoading(false)
+        }, "750");
     };
 
     async function toggleModel(job) {
