@@ -36,3 +36,12 @@
     bottom: 22.5px;
     right: 100px;
 }
+
+.dropDowns {
+    border: inherit;
+    margin-bottom: -1px !important;
+}
+
+.dropDownItem {
+    width: 80%;
+}

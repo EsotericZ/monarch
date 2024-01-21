@@ -30,6 +30,9 @@ Jobs.init(
         inspector: {
             type: DataTypes.STRING,
         },
+        qcNotes: {
+            type: DataTypes.STRING,
+        },
         notes: {
             type: DataTypes.STRING,
         },
@@ -45,21 +48,6 @@ Jobs.init(
             type: DataTypes.DATE,
             defaultValue: null,
         },
-        // hold: {
-        //     type: DataTypes.BOOLEAN,
-        // },
-        // holdNotes: {
-        //     type: DataTypes.STRING,
-        // },
-        // qc: {
-        //     type: DataTypes.BOOLEAN,
-        // },
-        // qcNotes: {
-        //     type: DataTypes.STRING,
-        // },
-        // approved: {
-        //     type: DataTypes.BOOLEAN,
-        // }
     },
     {
         sequelize,

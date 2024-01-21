@@ -66,7 +66,6 @@ export const Forming = () => {
             getAllJobs()
                 .then((res) => {
                     setSearchedEng(res);
-                    setLoading(false);
                     let bdCount = ((searchedEng.filter(row => (typeof row.JobNo !== 'undefined' && row.dataValues.formStatus == 'BD TEST'))).length);
                     (bdCount > 0) ? setBDTest(`BD Test (${bdCount})`) : setBDTest('BD Test');
                 })
