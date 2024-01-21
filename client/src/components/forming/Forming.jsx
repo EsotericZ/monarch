@@ -5,6 +5,9 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 
+import { Icon } from 'react-icons-kit';
+import { refresh } from 'react-icons-kit/fa/refresh';
+
 import getAllJobs from '../../services/engineering/getAllJobs';
 import getTBRJobs from '../../services/engineering/getTBRJobs';
 import getFutureJobs from '../../services/engineering/getFutureJobs';
@@ -265,7 +268,10 @@ export const Forming = () => {
                                         }
                                     </tbody>
                                 </Table>
-                                <ToastContainer className="toastCopyForming" style={{ zIndex: 1 }}>
+                                <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
+                                    <Icon size={24} icon={refresh}/>
+                                </Button>
+                                <ToastContainer className="toastCopy" style={{ zIndex: 1 }}>
                                     <Toast bg='success' onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide animation>
                                         <Toast.Body>
                                             <strong className="mx-auto me-auto">{partCopy} Copied To Clipboard </strong>
@@ -377,7 +383,10 @@ export const Forming = () => {
                                         }
                                     </tbody>
                                 </Table>
-                                <ToastContainer className="toastCopyForming" style={{ zIndex: 1 }}>
+                                <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
+                                    <Icon size={24} icon={refresh}/>
+                                </Button>
+                                <ToastContainer className="toastCopy" style={{ zIndex: 1 }}>
                                     <Toast bg='success' onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide animation>
                                         <Toast.Body>
                                             <strong className="mx-auto me-auto">{partCopy} Copied To Clipboard </strong>
@@ -458,7 +467,10 @@ export const Forming = () => {
                                         }
                                     </tbody>
                                 </Table>
-                                <ToastContainer className="toastCopyForming" style={{ zIndex: 1 }}>
+                                <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
+                                    <Icon size={24} icon={refresh}/>
+                                </Button>
+                                <ToastContainer className="toastCopy" style={{ zIndex: 1 }}>
                                     <Toast bg='success' onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide animation>
                                         <Toast.Body>
                                             <strong className="mx-auto me-auto">{partCopy} Copied To Clipboard </strong>

@@ -50,7 +50,6 @@ export const EngJobs = () => {
 
     const [searchedEng, setSearchedEng] = useState([]);
     const [searchedTBR, setSearchedTBR] = useState([]);
-    // const [countTBR, setCountTBR] = useState(0);
     const [searchedFuture, setSearchedFuture] = useState([]);
     const [searchedRepeat, setSearchedRepeat] = useState([]);
     const [searchedOutsource, setSearchedOutsource] = useState([]);
@@ -155,7 +154,7 @@ export const EngJobs = () => {
         }
         setTimeout(() => {
             setLoading(false)
-        }, "1000")
+        }, "1000");
     };
 
     async function toggleModel(job) {

@@ -6,7 +6,8 @@ import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 
 import { Icon } from 'react-icons-kit';
-import {check} from 'react-icons-kit/entypo/check'
+import {check} from 'react-icons-kit/entypo/check';
+import { refresh } from 'react-icons-kit/fa/refresh';
 
 import getAllJobs from '../../services/engineering/getAllJobs';
 import getTBRJobs from '../../services/engineering/getTBRJobs';
@@ -54,30 +55,39 @@ export const Quality = () => {
     const [engineerInfo, setEngineerInfo] = useState();
     const [jobStatus, setJobStatus] = useState(' ');
 
-    const [tbr, setTbr] = useState('TBR');
-    const [future, setFuture] = useState('Future');
-    const [proto, setProto] = useState('Prototype');
+    const [tbr, setTbr] = useState('');
+    const [future, setFuture] = useState('');
+    const [proto, setProto] = useState('');
 
     const fetchData = () => {
         try {
-            let data = getAllJobs();
-            data.then((res) => {
-                setSearchedEng(res);
-                setLoading(false);
-            })
-            let tbrData = getTBRJobs();
-            tbrData.then((res) => {
-                setSearchedTBR(res);
-            })
-            let futureData = getFutureJobs();
-            futureData.then((res) => {
-                setSearchedFuture(res);
-            })
+            getAllJobs()
+                .then((res) => {
+                    setSearchedEng(res);
+                    let protoCount = ((searchedEng.filter(row => (typeof row.JobNo !== 'undefined' && row.dataValues.jobStatus == 'PROTO'))).length);
+                    (protoCount > 0) ? setProto(`Prototype (${protoCount})`) : setProto('Prototype');
+                })
+            
+            getTBRJobs()
+                .then((res) => {
+                    setSearchedTBR(res);
+                    let tbrCount = ((searchedTBR.filter(row => (typeof row.JobNo !== 'undefined' && row.dataValues.jobStatus == 'QC'))).length);
+                    (tbrCount > 0) ? setTbr(`TBR (${tbrCount})`) : setTbr('TBR');
+                })
+            
+            getFutureJobs()
+                .then((res) => {
+                    setSearchedFuture(res);
+                    let futureCount = ((searchedFuture.filter(row => (typeof row.JobNo !== 'undefined' && row.dataValues.jobStatus == 'QC'))).length);
+                    (futureCount > 0) ? setFuture(`Future (${futureCount})`) : setFuture('Future');
+                })
 
-            console.log(searchedEng)
         } catch (err) {
             console.log(err)
         }
+        setTimeout(() => {
+            setLoading(false)
+        }, "750");
     };
 
     async function toggleModel(job) {
@@ -132,11 +142,11 @@ export const Quality = () => {
                             <FloatingLabel controlId="floatingInput" label="Status" className="mb-3">
                                 <Form.Select placeholder="Status" defaultValue={jobStatus} onChange={(e) => {setJobStatus(e.target.value)}} >
                                     <option></option>
-                                    <option>WIP</option>
-                                    <option>QC</option>
+                                    {/* <option>WIP</option> */}
+                                    {/* <option>QC</option> */}
                                     <option>REWORK</option>
-                                    <option>HOLD</option>
-                                    <option>PROTO</option>
+                                    {/* <option>HOLD</option> */}
+                                    {/* <option>PROTO</option> */}
                                     <option>DONE</option>
                                 </Form.Select>
                             </FloatingLabel>
@@ -236,6 +246,9 @@ export const Quality = () => {
                                         }
                                     </tbody>
                                 </Table>
+                                <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
+                                    <Icon size={24} icon={refresh}/>
+                                </Button>
                                 <ToastContainer className="toastCopy" style={{ zIndex: 1 }}>
                                     <Toast bg='success' onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide animation>
                                         <Toast.Body>
@@ -324,6 +337,9 @@ export const Quality = () => {
                                         }
                                     </tbody>
                                 </Table>
+                                <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
+                                    <Icon size={24} icon={refresh}/>
+                                </Button>
                                 <ToastContainer className="toastCopy" style={{ zIndex: 1 }}>
                                     <Toast bg='success' onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide animation>
                                         <Toast.Body>
@@ -386,7 +402,7 @@ export const Quality = () => {
                                                 if (job.dataValues.jobStatus == 'PROTO') {
                                                     return (
                                                         <tr key={index} job={job}>
-                                                            <td className='text-center jobBold'>{job.JobNo}</td>
+                                                            <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td>
                                                             <CopyToClipboard text={job.PartNo} onCopy={() => { setShowToast(true); setPartCopy(`${job.PartNo}`) }}>
                                                                 <td className='text-center'>{job.PartNo}</td>
                                                             </CopyToClipboard>
@@ -403,6 +419,9 @@ export const Quality = () => {
                                         }
                                     </tbody>
                                 </Table>
+                                <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
+                                    <Icon size={24} icon={refresh}/>
+                                </Button>
                                 <ToastContainer className="toastCopy" style={{ zIndex: 1 }}>
                                     <Toast bg='success' onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide animation>
                                         <Toast.Body>
