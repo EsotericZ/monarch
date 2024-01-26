@@ -15,19 +15,21 @@ let config = {
 };
 
 async function getTest(req, res) {
+    let jobNo = req.params.jobno;
     sql.connect(config, function(err,) {
         if (err) console.error(err);
         let request = new sql.Request();
 
-        request.query("SELECT R.JobNo, O.CustCode, R.PartNo, J.PartNo, R.EstimQty, R.StepNo, R.EstimEndDate, R.Status \
+        //change to BOM toget J.PartNo/J.StepNo
+        request.query(`SELECT R.JobNo, O.CustCode, R.PartNo, J.PartNo, J.StepNo, R.EstimQty, D.QtyOrdered, R.StepNo, R.WorkCntr, R.ActualEndDate, R.Status \
             FROM OrderRouting R INNER JOIN OrderDet D ON R.JobNo=D.JobNo INNER JOIN ORDERS O ON D.OrderNo=O.OrderNo INNER JOIN JobReq J ON R.JobNo = J.JobNo \
-            WHERE R.JobNo='149949'", 
+            WHERE R.JobNo='${jobNo}'`, 
         
         function(err, recordset) {
             if (err) console.error(err);
             let records = recordset.recordsets[0];
             
-            console.log(records)
+            // console.log(records)
             res.json(records)
         })
     })
@@ -36,3 +38,10 @@ async function getTest(req, res) {
 module.exports = {
     getTest,
 }
+
+// request.query(`SELECT R.JobNo, O.CustCode, R.PartNo, J.PartNo, J.StepNo, R.EstimQty, D.QtyOrdered, R.StepNo, R.WorkCntr, R.ActualEndDate, R.Status \
+// FROM OrderRouting R INNER JOIN OrderDet D ON R.JobNo=D.JobNo INNER JOIN ORDERS O ON D.OrderNo=O.OrderNo INNER JOIN JobReq J ON R.JobNo = J.JobNo \
+// WHERE R.JobNo='${jobNo}'`,  
+// request.query(`SELECT PartNo, StepNo  \
+//             FROM JobReq  \
+//             WHERE JobNo='${jobNo}'`,  

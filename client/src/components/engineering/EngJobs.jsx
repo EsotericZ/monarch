@@ -178,6 +178,13 @@ export const EngJobs = () => {
         setEngineerInfo(job.dataValues.engineer);
         setJobStatus(job.dataValues.jobStatus);
     } ;
+
+    // const toggleRefreshData = () => {
+    //     fetchData();
+    //     setTimeout(() => {
+    //         fetchData();
+    //     }, "100");
+    // } 
     
     useEffect(() => {
         fetchData();

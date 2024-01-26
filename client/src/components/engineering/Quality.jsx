@@ -89,7 +89,7 @@ export const Quality = () => {
         }
         setTimeout(() => {
             setLoading(false)
-        }, "750");
+        }, "1000");
     };
 
     const handleClose = () => setShow(false);
