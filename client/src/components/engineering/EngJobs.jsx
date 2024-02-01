@@ -16,6 +16,7 @@ import getRepeatJobs from '../../services/engineering/getRepeatJobs';
 import getOutsourceJobs from '../../services/engineering/getOutsourceJobs';
 import getNextStep from '../../services/engineering/getNextStep';
 import getPrints from '../../services/engineering/getPrints';
+import getOutsourcePrints from '../../services/engineering/getOutsourcePrints';
 import updateJob from '../../services/engineering/updateJob';
 import updateModel from '../../services/engineering/updateModel';
 import { Sidebar } from '../sidebar/Sidebar';
@@ -55,6 +56,7 @@ export const EngJobs = () => {
     const [searchedOutsource, setSearchedOutsource] = useState([]);
     const [searchedNextStep, setSearchedNextStep] = useState([]);
     const [searchedPrints, setSearchedPrints] = useState([]);
+    const [searchedOutsourcePrints, setSearchedOutsourcePrints] = useState([]);
     const [fullRepeats, setFullRepeats] = useState([]);
     const [fullOutsource, setFullOutsource] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -106,14 +108,14 @@ export const EngJobs = () => {
                 .then((res) => {
                     setSearchedPrints(res);
                 })
-
+                
             getRepeatJobs()
                 .then((res) => {
                     setSearchedRepeat(res);
                     let repeatCount = searchedRepeat.length;
                     (repeatCount > 0) ? setRepeat(`Repeat (${repeatCount})`) : setRepeat('Repeat');
                 })
-
+                
             setFullRepeats(searchedRepeat.map( v => {
                 let obj1 = searchedNextStep.find(o => o.JobNo == v.JobNo)
                 if (obj1) {
@@ -130,6 +132,11 @@ export const EngJobs = () => {
                 setFullRepeats(v)
                 return v
             }))
+               
+            getOutsourcePrints()
+                .then((res) => {
+                    setSearchedOutsourcePrints(res);
+                })
                 
             getOutsourceJobs()
                 .then((res) => {
@@ -139,7 +146,7 @@ export const EngJobs = () => {
                 })
             
             setFullOutsource(searchedOutsource.map( v => {
-                let obj = searchedPrints.find(x => x.PartNo == v.PartNo)
+                let obj = searchedOutsourcePrints.find(x => x.PartNo == v.PartNo)
                 if (obj) {
                     v.DocNumber = obj.DocNumber
                 } else {

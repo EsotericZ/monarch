@@ -166,6 +166,23 @@ async function getPrints(req, res) {
     })
 };
 
+async function getOutsourcePrints(req, res) {
+    sql.connect(config, function(err,) {
+        if (err) console.error(err);
+        let request = new sql.Request();
+        request.query("SELECT P.PartNo, P.DocNumber, R.JobNo \
+            FROM PartFiles P INNER JOIN OrderDet D ON P.PartNo=D.PartNo INNER JOIN OrderRouting R ON R.JobNo=D.JobNo INNER JOIN ORDERS O ON D.OrderNo=O.OrderNo \
+            WHERE D.Status='Open' AND D.User_Text2='6. OUTSOURCE' AND R.Status!='Finished' AND R.Status!='Closed' AND R.WorkCntr='101 ENGIN' AND O.User_Text3!='UNCONFIRMED'",
+        
+        function(err, recordset) {
+            if (err) console.error(err);
+            let records = recordset.recordsets[0];
+
+            res.send(records)
+        })
+    })
+};
+
 function updateJob(req, res) {
     let jobNo = req.body.jobNo;
     let engineer = req.body.engineer;
@@ -227,6 +244,7 @@ module.exports = {
     getNextStep,
     getOutsourceJobs,
     getPrints,
+    getOutsourcePrints,
     getTBRJobs,
     updateJob,
     updateModel,

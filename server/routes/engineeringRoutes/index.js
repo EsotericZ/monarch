@@ -10,6 +10,7 @@ router.get('/getRepeatJobs', engineeringController.getRepeatJobs);
 router.get('/getNextStep', engineeringController.getNextStep);
 router.get('/getOutsourceJobs', engineeringController.getOutsourceJobs);
 router.get('/getPrints', engineeringController.getPrints);
+router.get('/getOutsourcePrints', engineeringController.getOutsourcePrints);
 router.post('/updateJob', engineeringController.updateJob);
 router.post('/updateModel', engineeringController.updateModel);
 
