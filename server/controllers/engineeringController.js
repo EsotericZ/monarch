@@ -237,6 +237,19 @@ async function updateModel(req, res) {
     })
 }
 
+function updateEngineer(req, res) {
+    let jobNo = req.body.jobNo;
+    let engineer = req.body.engineer;
+    console.log(jobNo, engineer)
+    let sql = `UPDATE jobs SET engineer='${engineer}' WHERE jobNo='${jobNo}'`;
+    sequelize.query(sql, function(err, result) {
+        return res.status(200).json({
+            status: 'success',
+            response: result
+        })
+    })
+};
+
 module.exports = {
     getAllJobs,
     getFutureJobs,
@@ -248,4 +261,5 @@ module.exports = {
     getTBRJobs,
     updateJob,
     updateModel,
+    updateEngineer,
 }

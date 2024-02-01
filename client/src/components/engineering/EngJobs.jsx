@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, FloatingLabel, Form, Modal, Tab, Tabs, Table, Toast, ToastContainer } from 'react-bootstrap';
+import { Button, Dropdown, DropdownButton, FloatingLabel, Form, Modal, Tab, Tabs, Table, Toast, ToastContainer } from 'react-bootstrap';
 import { format, parseISO } from 'date-fns';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Cookies from 'universal-cookie';
@@ -19,6 +19,7 @@ import getPrints from '../../services/engineering/getPrints';
 import getOutsourcePrints from '../../services/engineering/getOutsourcePrints';
 import updateJob from '../../services/engineering/updateJob';
 import updateModel from '../../services/engineering/updateModel';
+import updateEngineer from '../../services/engineering/updateEngineer';
 import { Sidebar } from '../sidebar/Sidebar';
 import './engineering.css';
 
@@ -74,12 +75,23 @@ export const EngJobs = () => {
     const [outsource, setOutsource] = useState('');
     const [active, setActive] = useState('Active');
 
+    const updateData = () => {
+        try {
+            getTBRJobs()
+                .then((res) => {
+                    setSearchedTBR(res);
+                })
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
     const fetchData = () => {
         try {
             getAllJobs()
                 .then((res) => {
                     setSearchedEng(res);
-            })
+                })
 
             getTBRJobs()
                 .then((res) => {
@@ -95,7 +107,7 @@ export const EngJobs = () => {
                     setSearchedFuture(res);
                 })
                 .then(() => {
-                    let futureCount = ((searchedFuture.filter(row => typeof row.JobNo !== 'undefined')).length);
+                    let futureCount = ((searchedFuture.filter(row => typeof row.JobNo !== 'undefined' && row.User_Text3 !=='REPEAT')).length);
                     (futureCount > 0) ? setFuture(`Future (${futureCount})`) : setFuture('Future');
                 })
                 
@@ -115,7 +127,7 @@ export const EngJobs = () => {
                     let repeatCount = searchedRepeat.length;
                     (repeatCount > 0) ? setRepeat(`Repeat (${repeatCount})`) : setRepeat('Repeat');
                 })
-                
+
             setFullRepeats(searchedRepeat.map( v => {
                 let obj1 = searchedNextStep.find(o => o.JobNo == v.JobNo)
                 if (obj1) {
@@ -186,16 +198,16 @@ export const EngJobs = () => {
         setJobStatus(job.dataValues.jobStatus);
     } ;
 
-    // const toggleRefreshData = () => {
-    //     fetchData();
-    //     setTimeout(() => {
-    //         fetchData();
-    //     }, "100");
-    // } 
+    const handleEngineer = (job, engineer) => {
+        updateEngineer(job.dataValues.jobNo, engineer);
+        setTimeout(() => {
+            updateData();
+        }, "5");
+    }
     
     useEffect(() => {
         fetchData();
-    }, [loading, show, update]);
+    }, [loading, show, update, updateEngineer]);
 
     return (
         <div style={{ display: 'flex' }}>
@@ -337,7 +349,13 @@ export const EngJobs = () => {
                                                         <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
                                                         <td className='text-center'>{job.CustCode}</td>
                                                         <td className='text-center'>{job.User_Text3}</td>
-                                                        <td className='text-center'>{job.dataValues.engineer}</td>
+                                                        {/* <td className='text-center'>{job.dataValues.engineer}</td> */}
+                                                        <DropdownButton title={job.dataValues.engineer} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                            <Dropdown.Item onClick={() => handleEngineer(job, 'CJ')} className='dropDownItem'>CJ</Dropdown.Item>
+                                                            <Dropdown.Item onClick={() => handleEngineer(job, 'Ramon')} className='dropDownItem'>Ramon</Dropdown.Item>
+                                                            <Dropdown.Divider />
+                                                            <Dropdown.Item onClick={() => handleEngineer(job, '')} className='dropDownItem'>None</Dropdown.Item>
+                                                        </DropdownButton>
                                                         <td className='text-center'>{job.QuoteNo}</td>
                                                         <td className='text-center' onClick={() => toggleModel(job)}>
                                                             {job.dataValues.model &&
