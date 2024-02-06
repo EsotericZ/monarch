@@ -86,94 +86,70 @@ export const EngJobs = () => {
         }
     }
 
-    const fetchData = () => {
+    const fetchData = async () => {
         try {
-            getAllJobs()
-                .then((res) => {
-                    setSearchedEng(res);
-                })
+            const [engRes, tbrRes, futureRes, nextStepRes, printsRes, repeatRes, outsourcePrintsRes, outsourceRes] = await Promise.all([
+                getAllJobs(),
+                getTBRJobs(),
+                getFutureJobs(),
+                getNextStep(),
+                getPrints(),
+                getRepeatJobs(),
+                getOutsourcePrints(),
+                getOutsourceJobs(),
+            ]);
+    
+            setSearchedEng(engRes);
+    
+            setSearchedTBR(tbrRes);
+            let tbrCount = tbrRes.filter(row => typeof row.JobNo !== 'undefined').length;
+            setTbr(tbrCount > 0 ? `TBR (${tbrCount})` : 'TBR');
+    
+            setSearchedFuture(futureRes);
+            let futureCount = futureRes.filter(row => typeof row.JobNo !== 'undefined' && row.User_Text3 !== 'REPEAT').length;
+            setFuture(futureCount > 0 ? `Future (${futureCount})` : 'Future');
+    
+            setSearchedNextStep(nextStepRes);
+    
+            setSearchedPrints(printsRes);
+    
+            setSearchedRepeat(repeatRes);
+            let repeatCount = repeatRes.length;
+            setRepeat(repeatCount > 0 ? `Repeat (${repeatCount})` : 'Repeat');
+        
+            setFullRepeats(
+                repeatRes.map(v => {
+                    let obj1 = nextStepRes.find(o => o.JobNo === v.JobNo);
+                    if (obj1) {
+                    v.WorkCntr = obj1.WorkCntr;
+                    }
 
-            getTBRJobs()
-                .then((res) => {
-                    setSearchedTBR(res);
-                })
-                .then(() => {
-                    let tbrCount = ((searchedTBR.filter(row => typeof row.JobNo !== 'undefined')).length);
-                    (tbrCount > 0) ? setTbr(`TBR (${tbrCount})`) : setTbr('TBR');
-                })
-                
-            getFutureJobs()
-                .then((res) => {
-                    setSearchedFuture(res);
-                })
-                .then(() => {
-                    let futureCount = ((searchedFuture.filter(row => typeof row.JobNo !== 'undefined' && row.User_Text3 !=='REPEAT')).length);
-                    (futureCount > 0) ? setFuture(`Future (${futureCount})`) : setFuture('Future');
-                })
-                
-            getNextStep()
-                .then((res) => {
-                    setSearchedNextStep(res);
-                })
+                    let obj = printsRes.find(x => x.PartNo === v.PartNo);
+                    v.DocNumber = obj ? obj.DocNumber : '';
 
-            getPrints()
-                .then((res) => {
-                    setSearchedPrints(res);
+                    return v;
                 })
-                
-            getRepeatJobs()
-                .then((res) => {
-                    setSearchedRepeat(res);
-                    let repeatCount = searchedRepeat.length;
-                    (repeatCount > 0) ? setRepeat(`Repeat (${repeatCount})`) : setRepeat('Repeat');
-                })
+            );
+        
+            setSearchedOutsourcePrints(outsourcePrintsRes);
+    
+            setSearchedOutsource(outsourceRes);
+            let outsourceCount = outsourceRes.length;
+            setOutsource(outsourceCount > 0 ? `Outsource (${outsourceCount})` : 'Outsource');
+        
+            setFullOutsource(
+                outsourceRes.map(v => {
+                    let obj = outsourcePrintsRes.find(x => x.PartNo === v.PartNo);
+                    v.DocNumber = obj ? obj.DocNumber : '';
 
-            setFullRepeats(searchedRepeat.map( v => {
-                let obj1 = searchedNextStep.find(o => o.JobNo == v.JobNo)
-                if (obj1) {
-                    v.WorkCntr = obj1.WorkCntr
-                }
-                
-                let obj = searchedPrints.find(x => x.PartNo == v.PartNo)
-                if (obj) {
-                    v.DocNumber = obj.DocNumber
-                } else {
-                    v.DocNumber = ''
-                }
-                
-                setFullRepeats(v)
-                return v
-            }))
-               
-            getOutsourcePrints()
-                .then((res) => {
-                    setSearchedOutsourcePrints(res);
+                    return v;
                 })
-                
-            getOutsourceJobs()
-                .then((res) => {
-                    setSearchedOutsource(res);
-                    let outsourceCount = searchedOutsource.length;
-                    (outsourceCount > 0) ? setOutsource(`Outsource (${outsourceCount})`) : setOutsource('Outsource');
-                })
-            
-            setFullOutsource(searchedOutsource.map( v => {
-                let obj = searchedOutsourcePrints.find(x => x.PartNo == v.PartNo)
-                if (obj) {
-                    v.DocNumber = obj.DocNumber
-                } else {
-                    v.DocNumber = ''
-                }
-
-                setFullOutsource(v)
-                return v
-            }))
+            );
         } catch (err) {
-            console.log(err)
+            console.error(err);
+        } finally {
+            setLoading(false);
         }
-        setTimeout(() => {
-            setLoading(false)
-        }, "1000");
     };
 
     async function toggleModel(job) {
