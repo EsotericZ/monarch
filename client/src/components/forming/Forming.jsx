@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, FloatingLabel, Form, Modal, Tab, Tabs, Table, Toast, ToastContainer } from 'react-bootstrap';
+import { Button, Dropdown, DropdownButton, FloatingLabel, Form, Modal, Tab, Tabs, Table, Toast, ToastContainer } from 'react-bootstrap';
 import { format, parseISO } from 'date-fns';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Cookies from 'universal-cookie';
@@ -12,7 +12,8 @@ import getAllJobs from '../../services/engineering/getAllJobs';
 import getTBRJobs from '../../services/engineering/getTBRJobs';
 import getFutureJobs from '../../services/engineering/getFutureJobs';
 import updateJob from '../../services/forming/updateJob';
-import updateModel from '../../services/engineering/updateModel';
+import updateFormStatus from '../../services/forming/updateFormStatus';
+import updateFormProgrammer from '../../services/forming/updateFormProgrammer';
 import { Sidebar } from '../sidebar/Sidebar';
 import '../engineering/engineering.css';
 
@@ -47,15 +48,15 @@ export const Forming = () => {
     const [searchedTBR, setSearchedTBR] = useState([]);
     const [searchedFuture, setSearchedFuture] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [show, setShow] = useState(false);
+    // const [show, setShow] = useState(false);
 
-    const [jobNoInfo, setJobNoInfo] = useState();
-    const [custInfo, setCustInfo] = useState();
-    const [partNoInfo, setParNoInfo] = useState();
-    const [formProgrammer, setFormProgrammer] = useState();
-    const [jobStatus, setJobStatus] = useState(' ');
-    const [formStatus, setFormStatus] = useState(' ');
-    const [notes, setNotes] = useState(' ');
+    // const [jobNoInfo, setJobNoInfo] = useState();
+    // const [custInfo, setCustInfo] = useState();
+    // const [partNoInfo, setParNoInfo] = useState();
+    // const [formProgrammer, setFormProgrammer] = useState();
+    // const [jobStatus, setJobStatus] = useState(' ');
+    // const [formStatus, setFormStatus] = useState(' ');
+    // const [notes, setNotes] = useState(' ');
 
     const [tbr, setTbr] = useState('');
     const [future, setFuture] = useState('');
@@ -88,28 +89,68 @@ export const Forming = () => {
         }
     };
 
-    const handleClose = () => setShow(false);
+    // const handleClose = () => setShow(false);
 
-    const handleSave = () => {
-        updateJob(jobNoInfo, formProgrammer, formStatus, notes);
-        setShow(false);
-        fetchData();
+    // const handleSave = () => {
+    //     updateJob(jobNoInfo, formProgrammer, formStatus, notes);
+    //     setShow(false);
+    //     fetchData();
+    // };
+
+    // const handleShow = (job) => {
+    //     setShow(true);
+    //     setJobNoInfo(job.JobNo);
+    //     setCustInfo(job.CustCode);
+    //     setParNoInfo(job.PartNo);
+    //     setFormProgrammer(job.dataValues.formProgrammer);
+    //     setJobStatus(job.dataValues.jobStatus);
+    //     setFormStatus(job.dataValues.formStatus);
+    //     setNotes(job.dataValues.notes);
+    // } ;
+    
+    const handleTBRFormProgrammer = async (job, formProgrammer) => {
+        try {
+            await updateFormProgrammer(job.dataValues.jobNo, formProgrammer);
+            const res = await getTBRJobs();
+            setSearchedTBR(res);
+        } catch (err) {
+            console.log(err);
+        }
     };
-
-    const handleShow = (job) => {
-        setShow(true);
-        setJobNoInfo(job.JobNo);
-        setCustInfo(job.CustCode);
-        setParNoInfo(job.PartNo);
-        setFormProgrammer(job.dataValues.formProgrammer);
-        setJobStatus(job.dataValues.jobStatus);
-        setFormStatus(job.dataValues.formStatus);
-        setNotes(job.dataValues.notes);
-    } ;
+    
+    const handleTBRJobStatus = async (job, formStatus) => {
+        try {
+            await updateFormStatus(job.dataValues.jobNo, formStatus);
+            const res = await getTBRJobs();
+            setSearchedTBR(res);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+    
+    const handleFutureFormProgrammer = async (job, formProgrammer) => {
+        try {
+            await updateFormProgrammer(job.dataValues.jobNo, formProgrammer);
+            const res = await getFutureJobs();
+            setSearchedFuture(res);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+        
+    const handleFutureJobStatus = async (job, jobStatus) => {
+        try {
+            await updateFormStatus(job.dataValues.jobNo, jobStatus);
+            const res = await getFutureJobs();
+            setSearchedFuture(res);
+        } catch (err) {
+            console.log(err);
+        }
+    };
     
     useEffect(() => {
         fetchData();
-    }, [loading, show, update]);
+    }, [loading, update]);
 
     return (
         <div style={{ display: 'flex' }}>
@@ -122,7 +163,7 @@ export const Forming = () => {
             :
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
                     <h1 className='text-center'>Forming</h1>
-                    <Modal show={show} onHide={handleClose}>
+                    {/* <Modal show={show} onHide={handleClose}>
                         <Modal.Header closeButton>
                         <Modal.Title>{jobNoInfo}</Modal.Title>
                         </Modal.Header>
@@ -159,7 +200,7 @@ export const Forming = () => {
                             Save Changes
                         </Button>
                         </Modal.Footer>
-                    </Modal>
+                    </Modal> */}
 
                     <Tabs
                         defaultActiveKey="tbr"
@@ -243,7 +284,8 @@ export const Forming = () => {
                                                     const rowClass = job.dataValues.expedite ? 'expedite-row' : '';
                                                     return (
                                                         <tr key={index} job={job} className={rowClass}>
-                                                            <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td>
+                                                            {/* <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td> */}
+                                                            <td className='text-center jobBold'>{job.JobNo}</td>
                                                             <CopyToClipboard text={job.PartNo} onCopy={() => { setShowToast(true); setPartCopy(`${job.PartNo}`) }}>
                                                                 <td className='text-center'>{job.PartNo}</td>
                                                             </CopyToClipboard>
@@ -253,16 +295,22 @@ export const Forming = () => {
                                                             <td className='text-center'>{job.CustCode}</td>
                                                             <td className='text-center'>{job.User_Text3}</td>
                                                             <td className='text-center'>{job.dataValues.engineer}</td>
-                                                            {job.dataValues.formProgrammer == 'null' ?
-                                                                <td className='text-center'></td>
-                                                            :
-                                                                <td className='text-center'>{job.dataValues.formProgrammer}</td>
-                                                            }
-                                                            {job.dataValues.formStatus == 'null' ?
-                                                                <td className='text-center'></td>
-                                                            :
-                                                                <td className='text-center'>{job.dataValues.formStatus}</td>
-                                                            }
+                                                            <td className='text-center'>
+                                                                <DropdownButton title={job.dataValues.formProgrammer} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                    <Dropdown.Item onClick={() => handleTBRFormProgrammer(job, 'Grant')} className='dropDownItem'>Grant</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={() => handleTBRFormProgrammer(job, 'Stan')} className='dropDownItem'>Stan</Dropdown.Item>
+                                                                    <Dropdown.Divider />
+                                                                    <Dropdown.Item onClick={() => handleTBRFormProgrammer(job, '')} className='dropDownItem'>None</Dropdown.Item>
+                                                                </DropdownButton>
+                                                            </td>
+                                                            <td className='text-center'>
+                                                                <DropdownButton title={job.dataValues.formStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                    <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'WIP')} className='dropDownItem'>WIP</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'BD TEST')} className='dropDownItem'>BD TEST</Dropdown.Item>
+                                                                    <Dropdown.Divider />
+                                                                    <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'DONE')} className='dropDownItem'>DONE</Dropdown.Item>
+                                                                </DropdownButton>
+                                                            </td>
                                                         </tr>
                                                     )
                                                 }
@@ -359,7 +407,8 @@ export const Forming = () => {
                                                     const rowClass = job.dataValues.expedite ? 'expedite-row' : '';
                                                     return (
                                                         <tr key={index} job={job} className={rowClass}>
-                                                            <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td>
+                                                            {/* <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td> */}
+                                                            <td className='text-center jobBold'>{job.JobNo}</td>
                                                             <CopyToClipboard text={job.PartNo} onCopy={() => { setShowToast(true); setPartCopy(`${job.PartNo}`) }}>
                                                                 <td className='text-center'>{job.PartNo}</td>
                                                             </CopyToClipboard>
@@ -369,16 +418,22 @@ export const Forming = () => {
                                                             <td className='text-center'>{job.CustCode}</td>
                                                             <td className='text-center'>{job.User_Text3}</td>
                                                             <td className='text-center'>{job.dataValues.engineer}</td>
-                                                            {job.dataValues.formProgrammer == 'null' ?
-                                                                <td className='text-center'></td>
-                                                            :
-                                                                <td className='text-center'>{job.dataValues.formProgrammer}</td>
-                                                            }
-                                                            {job.dataValues.formStatus == 'null' ?
-                                                                <td className='text-center'></td>
-                                                            :
-                                                                <td className='text-center'>{job.dataValues.formStatus}</td>
-                                                            }
+                                                            <td className='text-center'>
+                                                                <DropdownButton title={job.dataValues.formProgrammer} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                    <Dropdown.Item onClick={() => handleFutureFormProgrammer(job, 'Grant')} className='dropDownItem'>Grant</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={() => handleFutureFormProgrammer(job, 'Stan')} className='dropDownItem'>Stan</Dropdown.Item>
+                                                                    <Dropdown.Divider />
+                                                                    <Dropdown.Item onClick={() => handleFutureFormProgrammer(job, '')} className='dropDownItem'>None</Dropdown.Item>
+                                                                </DropdownButton>
+                                                            </td>
+                                                            <td className='text-center'>
+                                                                <DropdownButton title={job.dataValues.formStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                    <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'WIP')} className='dropDownItem'>WIP</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'BD TEST')} className='dropDownItem'>BD TEST</Dropdown.Item>
+                                                                    <Dropdown.Divider />
+                                                                    <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'DONE')} className='dropDownItem'>DONE</Dropdown.Item>
+                                                                </DropdownButton>
+                                                            </td>
                                                         </tr>
                                                     )
                                                 }
@@ -452,7 +507,8 @@ export const Forming = () => {
                                                 if (job.dataValues.jobStatus == 'FORMING' && job.dataValues.formStatus == 'BD TEST') {
                                                     return (
                                                         <tr key={index} job={job}>
-                                                            <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td>
+                                                            {/* <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td> */}
+                                                            <td className='text-center jobBold'>{job.JobNo}</td>
                                                             <CopyToClipboard text={job.PartNo} onCopy={() => { setShowToast(true); setPartCopy(`${job.PartNo}`) }}>
                                                                 <td className='text-center'>{job.PartNo}</td>
                                                             </CopyToClipboard>

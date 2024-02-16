@@ -230,25 +230,29 @@ export const Quality = () => {
                                                             <td className='text-center'>{job.CustCode}</td>
                                                             <td className='text-center'>{job.User_Text3}</td>
                                                             <td className='text-center'>{job.dataValues.engineer}</td>
-                                                            <DropdownButton title={job.dataValues.inspector} align={{ lg: 'start' }} className='text-center dropDowns'>
-                                                                <Dropdown.Item onClick={() => handleTBRInspector(job, 'Joe')} className='dropDownItem'>Joe</Dropdown.Item>
-                                                                <Dropdown.Item onClick={() => handleTBRInspector(job, 'Ramon')} className='dropDownItem'>Ramon</Dropdown.Item>
-                                                                <Dropdown.Item onClick={() => handleTBRInspector(job, 'CJ')} className='dropDownItem'>CJ</Dropdown.Item>
-                                                                <Dropdown.Divider />
-                                                                <Dropdown.Item onClick={() => handleTBRInspector(job, '')} className='dropDownItem'>None</Dropdown.Item>
-                                                            </DropdownButton>
+                                                            <td className='text-center'>
+                                                                <DropdownButton title={job.dataValues.inspector} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                    <Dropdown.Item onClick={() => handleTBRInspector(job, 'Joe')} className='dropDownItem'>Joe</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={() => handleTBRInspector(job, 'Ramon')} className='dropDownItem'>Ramon</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={() => handleTBRInspector(job, 'CJ')} className='dropDownItem'>CJ</Dropdown.Item>
+                                                                    <Dropdown.Divider />
+                                                                    <Dropdown.Item onClick={() => handleTBRInspector(job, '')} className='dropDownItem'>None</Dropdown.Item>
+                                                                </DropdownButton>
+                                                            </td>
                                                             <td className='text-center'>
                                                                 {job.dataValues.model &&
                                                                     <Icon icon={check}/>
                                                                 }
                                                             </td>
-                                                            <DropdownButton title={job.dataValues.jobStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
-                                                                <Dropdown.Item onClick={() => handleTBRStatus(job, 'CHECKING')} className='dropDownItem'>CHECKING</Dropdown.Item>
-                                                                <Dropdown.Item onClick={() => handleTBRStatus(job, 'REWORK')} className='dropDownItem'>REWORK</Dropdown.Item>
-                                                                <Dropdown.Item onClick={() => handleTBRStatus(job, 'DONE')} className='dropDownItem'>DONE</Dropdown.Item>
-                                                                <Dropdown.Divider />
-                                                                <Dropdown.Item onClick={() => handleTBRStatus(job, 'QC')} className='dropDownItem'>QC</Dropdown.Item>
-                                                            </DropdownButton>
+                                                            <td className='text-center'>
+                                                                <DropdownButton title={job.dataValues.jobStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                    <Dropdown.Item onClick={() => handleTBRStatus(job, 'CHECKING')} className='dropDownItem'>CHECKING</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={() => handleTBRStatus(job, 'REWORK')} className='dropDownItem'>REWORK</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={() => handleTBRStatus(job, 'DONE')} className='dropDownItem'>DONE</Dropdown.Item>
+                                                                    <Dropdown.Divider />
+                                                                    <Dropdown.Item onClick={() => handleTBRStatus(job, 'QC')} className='dropDownItem'>QC</Dropdown.Item>
+                                                                </DropdownButton>
+                                                            </td>
                                                         </tr>
                                                     )
                                                 }
@@ -356,25 +360,29 @@ export const Quality = () => {
                                                             <td className='text-center'>{job.CustCode}</td>
                                                             <td className='text-center'>{job.User_Text3}</td>
                                                             <td className='text-center'>{job.dataValues.engineer}</td>
-                                                            <DropdownButton title={job.dataValues.inspector} align={{ lg: 'start' }} className='text-center dropDowns'>
-                                                                <Dropdown.Item onClick={() => handleFutureInspector(job, 'Joe')} className='dropDownItem'>Joe</Dropdown.Item>
-                                                                <Dropdown.Item onClick={() => handleFutureInspector(job, 'Ramon')} className='dropDownItem'>Ramon</Dropdown.Item>
-                                                                <Dropdown.Item onClick={() => handleFutureInspector(job, 'CJ')} className='dropDownItem'>CJ</Dropdown.Item>
-                                                                <Dropdown.Divider />
-                                                                <Dropdown.Item onClick={() => handleFutureInspector(job, '')} className='dropDownItem'>None</Dropdown.Item>
-                                                            </DropdownButton>
+                                                            <td className='text-center'>
+                                                                <DropdownButton title={job.dataValues.inspector} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                    <Dropdown.Item onClick={() => handleFutureInspector(job, 'Joe')} className='dropDownItem'>Joe</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={() => handleFutureInspector(job, 'Ramon')} className='dropDownItem'>Ramon</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={() => handleFutureInspector(job, 'CJ')} className='dropDownItem'>CJ</Dropdown.Item>
+                                                                    <Dropdown.Divider />
+                                                                    <Dropdown.Item onClick={() => handleFutureInspector(job, '')} className='dropDownItem'>None</Dropdown.Item>
+                                                                </DropdownButton>
+                                                            </td>
                                                             <td className='text-center'>
                                                                 {job.dataValues.model &&
                                                                     <Icon icon={check}/>
                                                                 }
                                                             </td>
-                                                            <DropdownButton title={job.dataValues.jobStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
-                                                                <Dropdown.Item onClick={() => handleFutureStatus(job, 'CHECKING')} className='dropDownItem'>CHECKING</Dropdown.Item>
-                                                                <Dropdown.Item onClick={() => handleFutureStatus(job, 'REWORK')} className='dropDownItem'>REWORK</Dropdown.Item>
-                                                                <Dropdown.Item onClick={() => handleFutureStatus(job, 'DONE')} className='dropDownItem'>DONE</Dropdown.Item>
-                                                                <Dropdown.Divider />
-                                                                <Dropdown.Item onClick={() => handleFutureStatus(job, 'QC')} className='dropDownItem'>QC</Dropdown.Item>
-                                                            </DropdownButton>
+                                                            <td className='text-center'>
+                                                                <DropdownButton title={job.dataValues.jobStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                    <Dropdown.Item onClick={() => handleFutureStatus(job, 'CHECKING')} className='dropDownItem'>CHECKING</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={() => handleFutureStatus(job, 'REWORK')} className='dropDownItem'>REWORK</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={() => handleFutureStatus(job, 'DONE')} className='dropDownItem'>DONE</Dropdown.Item>
+                                                                    <Dropdown.Divider />
+                                                                    <Dropdown.Item onClick={() => handleFutureStatus(job, 'QC')} className='dropDownItem'>QC</Dropdown.Item>
+                                                                </DropdownButton>
+                                                            </td>
                                                         </tr>
                                                     )
                                                 }

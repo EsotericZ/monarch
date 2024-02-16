@@ -294,12 +294,14 @@ export const EngJobs = () => {
                                                         <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
                                                         <td className='text-center'>{job.CustCode}</td>
                                                         <td className='text-center'>{job.User_Text3}</td>
-                                                        <DropdownButton title={job.dataValues.engineer} align={{ lg: 'start' }} className='text-center dropDowns'>
-                                                            <Dropdown.Item onClick={() => handleTBREngineer(job, 'CJ')} className='dropDownItem'>CJ</Dropdown.Item>
-                                                            <Dropdown.Item onClick={() => handleTBREngineer(job, 'Ramon')} className='dropDownItem'>Ramon</Dropdown.Item>
-                                                            <Dropdown.Divider />
-                                                            <Dropdown.Item onClick={() => handleTBREngineer(job, '')} className='dropDownItem'>None</Dropdown.Item>
-                                                        </DropdownButton>
+                                                        <td className='text-center'>
+                                                            <DropdownButton title={job.dataValues.engineer} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                <Dropdown.Item onClick={() => handleTBREngineer(job, 'CJ')} className='dropDownItem'>CJ</Dropdown.Item>
+                                                                <Dropdown.Item onClick={() => handleTBREngineer(job, 'Ramon')} className='dropDownItem'>Ramon</Dropdown.Item>
+                                                                <Dropdown.Divider />
+                                                                <Dropdown.Item onClick={() => handleTBREngineer(job, '')} className='dropDownItem'>None</Dropdown.Item>
+                                                            </DropdownButton>
+                                                        </td>
                                                         <td className='text-center'>{job.QuoteNo}</td>
                                                         <td className='text-center' onClick={() => toggleModel(job)}>
                                                             {job.dataValues.model &&
@@ -307,18 +309,20 @@ export const EngJobs = () => {
                                                             }
                                                         </td>
                                                         {cookieData.engineering ?
-                                                            <DropdownButton title={job.dataValues.jobStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
-                                                                <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'WIP')} className='dropDownItem'>WIP</Dropdown.Item>
-                                                                <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'FORMING')} className='dropDownItem'>FORMING</Dropdown.Item>
-                                                                <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'FINALIZE')} className='dropDownItem'>FINALIZE</Dropdown.Item>
-                                                                <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'QC')} className='dropDownItem'>QC</Dropdown.Item>
-                                                                <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'REWORK')} className='dropDownItem'>REWORK</Dropdown.Item>
-                                                                <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'HOLD')} className='dropDownItem'>HOLD</Dropdown.Item>
-                                                                <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'PROTO')} className='dropDownItem'>PROTO</Dropdown.Item>
-                                                                <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'DONE')} className='dropDownItem'>DONE</Dropdown.Item>
-                                                                <Dropdown.Divider />
-                                                                <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'CLOCK')} className='dropDownItem'>CLOCK</Dropdown.Item>
-                                                            </DropdownButton>
+                                                            <td className='text-center'>
+                                                                <DropdownButton title={job.dataValues.jobStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                    <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'WIP')} className='dropDownItem'>WIP</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'FORMING')} className='dropDownItem'>FORMING</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'FINALIZE')} className='dropDownItem'>FINALIZE</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'QC')} className='dropDownItem'>QC</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'REWORK')} className='dropDownItem'>REWORK</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'HOLD')} className='dropDownItem'>HOLD</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'PROTO')} className='dropDownItem'>PROTO</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'DONE')} className='dropDownItem'>DONE</Dropdown.Item>
+                                                                    <Dropdown.Divider />
+                                                                    <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'CLOCK')} className='dropDownItem'>CLOCK</Dropdown.Item>
+                                                                </DropdownButton>
+                                                            </td>
                                                         :
                                                             <td className='text-center'>{job.dataValues.jobStatus}</td>
                                                         }
@@ -429,12 +433,14 @@ export const EngJobs = () => {
                                                             <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
                                                             <td className='text-center'>{job.CustCode}</td>
                                                             <td className='text-center'>{job.User_Text3}</td>
-                                                            <DropdownButton title={job.dataValues.engineer} align={{ lg: 'start' }} className='text-center dropDowns'>
-                                                                <Dropdown.Item onClick={() => handleFutureEngineer(job, 'CJ')} className='dropDownItem'>CJ</Dropdown.Item>
-                                                                <Dropdown.Item onClick={() => handleFutureEngineer(job, 'FORMING')} className='dropDownItem'>FORMING</Dropdown.Item>
-                                                                <Dropdown.Divider />
-                                                                <Dropdown.Item onClick={() => handleFutureEngineer(job, '')} className='dropDownItem'>None</Dropdown.Item>
-                                                            </DropdownButton>
+                                                            <td className='text-center'>
+                                                                <DropdownButton title={job.dataValues.engineer} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                    <Dropdown.Item onClick={() => handleFutureEngineer(job, 'CJ')} className='dropDownItem'>CJ</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={() => handleFutureEngineer(job, 'FORMING')} className='dropDownItem'>FORMING</Dropdown.Item>
+                                                                    <Dropdown.Divider />
+                                                                    <Dropdown.Item onClick={() => handleFutureEngineer(job, '')} className='dropDownItem'>None</Dropdown.Item>
+                                                                </DropdownButton>
+                                                            </td>
                                                             <td className='text-center'>{job.QuoteNo}</td>
                                                             <td className='text-center' onClick={() => toggleModel(job)}>
                                                                 {job.dataValues.model &&
@@ -442,18 +448,20 @@ export const EngJobs = () => {
                                                                 }
                                                             </td>
                                                             {cookieData.engineering ?
-                                                                <DropdownButton title={job.dataValues.jobStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
-                                                                    <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'WIP')} className='dropDownItem'>WIP</Dropdown.Item>
-                                                                    <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'FORMING')} className='dropDownItem'>FORMING</Dropdown.Item>
-                                                                    <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'FINALIZE')} className='dropDownItem'>FINALIZE</Dropdown.Item>
-                                                                    <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'QC')} className='dropDownItem'>QC</Dropdown.Item>
-                                                                    <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'REWORK')} className='dropDownItem'>REWORK</Dropdown.Item>
-                                                                    <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'HOLD')} className='dropDownItem'>HOLD</Dropdown.Item>
-                                                                    <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'PROTO')} className='dropDownItem'>PROTO</Dropdown.Item>
-                                                                    <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'DONE')} className='dropDownItem'>DONE</Dropdown.Item>
-                                                                    <Dropdown.Divider />
-                                                                    <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'CLOCK')} className='dropDownItem'>CLOCK</Dropdown.Item>
-                                                                </DropdownButton>
+                                                                <td className='text-center'>
+                                                                    <DropdownButton title={job.dataValues.jobStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                        <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'WIP')} className='dropDownItem'>WIP</Dropdown.Item>
+                                                                        <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'FORMING')} className='dropDownItem'>FORMING</Dropdown.Item>
+                                                                        <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'FINALIZE')} className='dropDownItem'>FINALIZE</Dropdown.Item>
+                                                                        <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'QC')} className='dropDownItem'>QC</Dropdown.Item>
+                                                                        <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'REWORK')} className='dropDownItem'>REWORK</Dropdown.Item>
+                                                                        <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'HOLD')} className='dropDownItem'>HOLD</Dropdown.Item>
+                                                                        <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'PROTO')} className='dropDownItem'>PROTO</Dropdown.Item>
+                                                                        <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'DONE')} className='dropDownItem'>DONE</Dropdown.Item>
+                                                                        <Dropdown.Divider />
+                                                                        <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'CLOCK')} className='dropDownItem'>CLOCK</Dropdown.Item>
+                                                                    </DropdownButton>
+                                                                </td>
                                                             :
                                                                 <td className='text-center'>{job.dataValues.jobStatus}</td>
                                                             }
