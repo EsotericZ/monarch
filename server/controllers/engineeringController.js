@@ -237,10 +237,50 @@ async function updateModel(req, res) {
     })
 }
 
+async function updateExpedite(req, res) {
+    let id = req.body.id
+
+    await Jobs.findOne({
+        where: {id: id}
+    })
+    .then((result) => {
+        if (result.expedite) {
+            Jobs.update(
+                { expedite: 0 },
+                { where: { id:id }}
+            ).then((result) => {
+                return res.status(200).send({
+                    data: result
+                })
+            }).catch((err) => {
+                return res.status(500).send({
+                    status: err
+                })
+            })
+        } else {
+            Jobs.update(
+                { expedite: 1 },
+                { where: { id:id }}
+            ).then((result) => {
+                return res.status(200).send({
+                    data: result
+                })
+            }).catch((err) => {
+                return res.status(500).send({
+                    status: err
+                })
+            })
+        }
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
+
 function updateEngineer(req, res) {
     let jobNo = req.body.jobNo;
     let engineer = req.body.engineer;
-    console.log(jobNo, engineer)
     let sql = `UPDATE jobs SET engineer='${engineer}' WHERE jobNo='${jobNo}'`;
     sequelize.query(sql, function(err, result) {
         return res.status(200).json({
@@ -249,6 +289,19 @@ function updateEngineer(req, res) {
         })
     })
     res.send(engineer)
+};
+
+function updateJobStatus(req, res) {
+    let jobNo = req.body.jobNo;
+    let jobStatus = req.body.jobStatus;
+    let sql = `UPDATE jobs SET jobStatus='${jobStatus}' WHERE jobNo='${jobNo}'`;
+    sequelize.query(sql, function(err, result) {
+        return res.status(200).json({
+            status: 'success',
+            response: result
+        })
+    })
+    res.send(jobStatus)
 };
 
 module.exports = {
@@ -262,5 +315,7 @@ module.exports = {
     getTBRJobs,
     updateJob,
     updateModel,
+    updateExpedite,
     updateEngineer,
+    updateJobStatus
 }

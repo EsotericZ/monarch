@@ -41,6 +41,11 @@ Jobs.init(
             allowNull: false,
             defaultValue: 0,
         },
+        expedite: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: 0,
+        },
         createdAt : {
             type: DataTypes.DATE,
         },

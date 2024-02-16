@@ -13,6 +13,8 @@ router.get('/getPrints', engineeringController.getPrints);
 router.get('/getOutsourcePrints', engineeringController.getOutsourcePrints);
 router.post('/updateJob', engineeringController.updateJob);
 router.post('/updateModel', engineeringController.updateModel);
+router.post('/updateExpedite', engineeringController.updateExpedite);
 router.post('/updateEngineer', engineeringController.updateEngineer);
+router.post('/updateJobStatus', engineeringController.updateJobStatus);
 
 module.exports = router;

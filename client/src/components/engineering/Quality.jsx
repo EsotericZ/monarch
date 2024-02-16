@@ -245,8 +245,9 @@ export const Quality = () => {
                                             })
                                             .map((job, index) => {
                                                 if (job.dataValues.jobStatus == 'QC' || job.dataValues.jobStatus == 'CHECKING') {
+                                                    const rowClass = job.dataValues.expedite ? 'expedite-row' : '';
                                                     return (
-                                                        <tr key={index} job={job}>
+                                                        <tr key={index} job={job} className={rowClass}>
                                                             <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td>
                                                             <CopyToClipboard text={job.PartNo} onCopy={() => { setShowToast(true); setPartCopy(`${job.PartNo}`) }}>
                                                                 <td className='text-center'>{job.PartNo}</td>
@@ -370,8 +371,9 @@ export const Quality = () => {
                                             })
                                             .map((job, index) => {
                                                 if (job.User_Text3 != 'REPEAT' && job.User_Text2 != '6. OUTSOURCE' && job.dataValues.jobStatus == 'QC' || job.dataValues.jobStatus == 'CHECKING') {
+                                                    const rowClass = job.dataValues.expedite ? 'expedite-row' : '';
                                                     return (
-                                                        <tr key={index} job={job}>
+                                                        <tr key={index} job={job} className={rowClass}>
                                                             <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td>
                                                             <CopyToClipboard text={job.PartNo} onCopy={() => { setShowToast(true); setPartCopy(`${job.PartNo}`) }}>
                                                                 <td className='text-center'>{job.PartNo}</td>

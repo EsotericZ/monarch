@@ -17,9 +17,10 @@ import getOutsourceJobs from '../../services/engineering/getOutsourceJobs';
 import getNextStep from '../../services/engineering/getNextStep';
 import getPrints from '../../services/engineering/getPrints';
 import getOutsourcePrints from '../../services/engineering/getOutsourcePrints';
-import updateJob from '../../services/engineering/updateJob';
 import updateModel from '../../services/engineering/updateModel';
+import updateExpedite from '../../services/engineering/updateExpedite';
 import updateEngineer from '../../services/engineering/updateEngineer';
+import updateJobStatus from '../../services/engineering/updateJobStatus';
 import { Sidebar } from '../sidebar/Sidebar';
 import './engineering.css';
 
@@ -61,13 +62,6 @@ export const EngJobs = () => {
     const [fullRepeats, setFullRepeats] = useState([]);
     const [fullOutsource, setFullOutsource] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [show, setShow] = useState(false);
-
-    const [jobNoInfo, setJobNoInfo] = useState();
-    const [custInfo, setCustInfo] = useState();
-    const [partNoInfo, setPartNoInfo] = useState();
-    const [engineerInfo, setEngineerInfo] = useState();
-    const [jobStatus, setJobStatus] = useState(' ');
 
     const [tbr, setTbr] = useState('');
     const [future, setFuture] = useState('');
@@ -146,22 +140,10 @@ export const EngJobs = () => {
         setUpdate(`Model ${job.dataValues.jobNo}`)
     }
 
-    const handleClose = () => setShow(false);
-
-    const handleSave = () => {
-        updateJob(jobNoInfo, engineerInfo, jobStatus);
-        setShow(false);
-        fetchData();
-    };
-
-    const handleShow = (job) => {
-        setShow(true);
-        setJobNoInfo(job.JobNo);
-        setCustInfo(job.CustCode);
-        setPartNoInfo(job.PartNo);
-        setEngineerInfo(job.dataValues.engineer);
-        setJobStatus(job.dataValues.jobStatus);
-    } ;
+    const toggleExpedite = async (job) => {
+        updateExpedite(job.dataValues.id);
+        setUpdate(`Expedite ${job.dataValues.jobNo}`)
+    }
 
     const handleTBREngineer = async (job, engineer) => {
         try {
@@ -173,6 +155,16 @@ export const EngJobs = () => {
         }
     };
 
+    const handleTBRJobStatus = async (job, jobStatus) => {
+        try {
+            await updateJobStatus(job.dataValues.jobNo, jobStatus);
+            const res = await getTBRJobs();
+            setSearchedTBR(res);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+    
     const handleFutureEngineer = async (job, engineer) => {
         try {
             await updateEngineer(job.dataValues.jobNo, engineer);
@@ -183,9 +175,19 @@ export const EngJobs = () => {
         }
     }
     
+    const handleFutureJobStatus = async (job, jobStatus) => {
+        try {
+            await updateJobStatus(job.dataValues.jobNo, jobStatus);
+            const res = await getFutureJobs();
+            setSearchedFuture(res);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+    
     useEffect(() => {
         fetchData();
-    }, [loading, show, update]);
+    }, [loading, update]);
 
     return (
         <div style={{ display: 'flex' }}>
@@ -198,42 +200,6 @@ export const EngJobs = () => {
             :
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
                     <h1 className='text-center'>Engineering</h1>
-                    <Modal show={show} onHide={handleClose}>
-                        <Modal.Header closeButton>
-                        <Modal.Title>{jobNoInfo}</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                        <Form>
-                            <FloatingLabel label="Customer Code" className="mb-3">
-                                <Form.Control defaultValue={custInfo} disabled />
-                            </FloatingLabel>
-                            <FloatingLabel controlId="floatingInput" label="Engineer" className="mb-3">
-                                <Form.Control placeholder="Engineer" defaultValue={engineerInfo} onChange={(e) => {setEngineerInfo(e.target.value)}} />
-                            </FloatingLabel>
-                            <FloatingLabel controlId="floatingInput" label="Status" className="mb-3">
-                                <Form.Select placeholder="Status" defaultValue={jobStatus} onChange={(e) => {setJobStatus(e.target.value)}} >
-                                    <option></option>
-                                    <option>WIP</option>
-                                    <option>FORMING</option>
-                                    {/* <option>FINALIZE</option> */}
-                                    <option>QC</option>
-                                    <option>REWORK</option>
-                                    <option>HOLD</option>
-                                    <option>PROTO</option>
-                                    <option>DONE</option>
-                                </Form.Select>
-                            </FloatingLabel>
-                        </Form>
-                        </Modal.Body>
-                        <Modal.Footer>
-                        <Button variant="secondary" onClick={handleClose}>
-                            Close
-                        </Button>
-                        <Button variant="primary" onClick={handleSave}>
-                            Save Changes
-                        </Button>
-                        </Modal.Footer>
-                    </Modal>
 
                     <Tabs
                         defaultActiveKey="tbr"
@@ -315,9 +281,10 @@ export const EngJobs = () => {
                                                     .includes(searchedValueStatus.toString().toLowerCase())
                                             })
                                             .map((job, index) => {
+                                                const rowClass = job.dataValues.expedite ? 'expedite-row' : '';
                                                 return (
-                                                    <tr key={index} job={job}>
-                                                        <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td>
+                                                    <tr key={index} job={job} className={rowClass}>
+                                                        <td className='text-center jobBold' onClick={() => toggleExpedite(job)}>{job.JobNo}</td>
                                                         <td className='text-center'>{job.StepNo}</td>
                                                         <CopyToClipboard text={job.PartNo} onCopy={() => { setShowToast(true); setPartCopy(`${job.PartNo}`) }}>
                                                             <td className='text-center'>{job.PartNo}</td>
@@ -327,7 +294,6 @@ export const EngJobs = () => {
                                                         <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
                                                         <td className='text-center'>{job.CustCode}</td>
                                                         <td className='text-center'>{job.User_Text3}</td>
-                                                        {/* <td className='text-center'>{job.dataValues.engineer}</td> */}
                                                         <DropdownButton title={job.dataValues.engineer} align={{ lg: 'start' }} className='text-center dropDowns'>
                                                             <Dropdown.Item onClick={() => handleTBREngineer(job, 'CJ')} className='dropDownItem'>CJ</Dropdown.Item>
                                                             <Dropdown.Item onClick={() => handleTBREngineer(job, 'Ramon')} className='dropDownItem'>Ramon</Dropdown.Item>
@@ -340,7 +306,22 @@ export const EngJobs = () => {
                                                                 <Icon icon={check}/>
                                                             }
                                                         </td>
-                                                        <td className='text-center'>{job.dataValues.jobStatus}</td>
+                                                        {cookieData.engineering ?
+                                                            <DropdownButton title={job.dataValues.jobStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'WIP')} className='dropDownItem'>WIP</Dropdown.Item>
+                                                                <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'FORMING')} className='dropDownItem'>FORMING</Dropdown.Item>
+                                                                <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'FINALIZE')} className='dropDownItem'>FINALIZE</Dropdown.Item>
+                                                                <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'QC')} className='dropDownItem'>QC</Dropdown.Item>
+                                                                <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'REWORK')} className='dropDownItem'>REWORK</Dropdown.Item>
+                                                                <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'HOLD')} className='dropDownItem'>HOLD</Dropdown.Item>
+                                                                <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'PROTO')} className='dropDownItem'>PROTO</Dropdown.Item>
+                                                                <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'DONE')} className='dropDownItem'>DONE</Dropdown.Item>
+                                                                <Dropdown.Divider />
+                                                                <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'CLOCK')} className='dropDownItem'>CLOCK</Dropdown.Item>
+                                                            </DropdownButton>
+                                                        :
+                                                            <td className='text-center'>{job.dataValues.jobStatus}</td>
+                                                        }
                                                     </tr>
                                                 )
                                             })
@@ -435,9 +416,10 @@ export const EngJobs = () => {
                                             })
                                             .map((job, index) => {
                                                 if (job.User_Text3 != 'REPEAT' && job.User_Text2 != '6. OUTSOURCE') {
+                                                    const rowClass = job.dataValues.expedite ? 'expedite-row' : '';
                                                     return (
-                                                        <tr key={index} job={job}>
-                                                            <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td>
+                                                        <tr key={index} job={job} className={rowClass}>
+                                                            <td className='text-center jobBold' onClick={() => toggleExpedite(job)}>{job.JobNo}</td>
                                                             <td className='text-center'>{job.StepNo}</td>
                                                             <CopyToClipboard text={job.PartNo} onCopy={() => { setShowToast(true); setPartCopy(`${job.PartNo}`) }}>
                                                                 <td className='text-center'>{job.PartNo}</td>
@@ -449,7 +431,7 @@ export const EngJobs = () => {
                                                             <td className='text-center'>{job.User_Text3}</td>
                                                             <DropdownButton title={job.dataValues.engineer} align={{ lg: 'start' }} className='text-center dropDowns'>
                                                                 <Dropdown.Item onClick={() => handleFutureEngineer(job, 'CJ')} className='dropDownItem'>CJ</Dropdown.Item>
-                                                                <Dropdown.Item onClick={() => handleFutureEngineer(job, 'Ramon')} className='dropDownItem'>Ramon</Dropdown.Item>
+                                                                <Dropdown.Item onClick={() => handleFutureEngineer(job, 'FORMING')} className='dropDownItem'>FORMING</Dropdown.Item>
                                                                 <Dropdown.Divider />
                                                                 <Dropdown.Item onClick={() => handleFutureEngineer(job, '')} className='dropDownItem'>None</Dropdown.Item>
                                                             </DropdownButton>
@@ -459,7 +441,22 @@ export const EngJobs = () => {
                                                                     <Icon icon={check}/>
                                                                 }
                                                             </td>
-                                                            <td className='text-center'>{job.dataValues.jobStatus}</td>
+                                                            {cookieData.engineering ?
+                                                                <DropdownButton title={job.dataValues.jobStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                    <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'WIP')} className='dropDownItem'>WIP</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'FORMING')} className='dropDownItem'>FORMING</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'FINALIZE')} className='dropDownItem'>FINALIZE</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'QC')} className='dropDownItem'>QC</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'REWORK')} className='dropDownItem'>REWORK</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'HOLD')} className='dropDownItem'>HOLD</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'PROTO')} className='dropDownItem'>PROTO</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'DONE')} className='dropDownItem'>DONE</Dropdown.Item>
+                                                                    <Dropdown.Divider />
+                                                                    <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'CLOCK')} className='dropDownItem'>CLOCK</Dropdown.Item>
+                                                                </DropdownButton>
+                                                            :
+                                                                <td className='text-center'>{job.dataValues.jobStatus}</td>
+                                                            }
                                                         </tr>
                                                     )
                                                 }
