@@ -49,13 +49,6 @@ export const Quality = () => {
     const [searchedTBR, setSearchedTBR] = useState([]);
     const [searchedFuture, setSearchedFuture] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [show, setShow] = useState(false);
-
-    const [jobNoInfo, setJobNoInfo] = useState();
-    const [custInfo, setCustInfo] = useState();
-    const [partNoInfo, setParNoInfo] = useState();
-    const [engineerInfo, setEngineerInfo] = useState();
-    const [jobStatus, setJobStatus] = useState(' ');
 
     const [tbr, setTbr] = useState('');
     const [future, setFuture] = useState('');
@@ -88,40 +81,49 @@ export const Quality = () => {
         }
     };
 
-    const handleClose = () => setShow(false);
-
-    const handleSave = () => {
-        updateJob(jobNoInfo, engineerInfo, jobStatus);
-        setShow(false);
-        fetchData();
-    };
-
-    const handleShow = (job) => {
-        setShow(true);
-        setJobNoInfo(job.JobNo);
-        setCustInfo(job.CustCode);
-        setParNoInfo(job.PartNo);
-        setEngineerInfo(job.dataValues.engineer);
-        setJobStatus(job.dataValues.jobStatus);
-    } ;
-
-    const handleInspector = (job, inspector) => {
-        updateInspector(job.dataValues.jobNo, inspector);
-        setTimeout(() => {
-            fetchData();
-        }, "5");
+    const handleTBRInspector = async (job, inspector) => {
+        try {
+            await updateInspector(job.dataValues.jobNo, inspector);
+            const res = await getTBRJobs();
+            setSearchedTBR(res);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    
+    const handleTBRStatus = async (job, jobStatus) => {
+        try {
+            await updateStatus(job.dataValues.jobNo, jobStatus);
+            const res = await getTBRJobs();
+            setSearchedTBR(res);
+        } catch (err) {
+            console.log(err);
+        }
     }
 
-    const handleStatus = (job, jobStatus) => {
-        updateStatus(job.dataValues.jobNo, jobStatus);
-        setTimeout(() => {
-            fetchData();
-        }, "5");
+    const handleFutureInspector = async (job, inspector) => {
+        try {
+            await updateInspector(job.dataValues.jobNo, inspector);
+            const res = await getFutureJobs();
+            setSearchedFuture(res);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const handleFutureStatus = async (job, jobStatus) => {
+        try {
+            await updateStatus(job.dataValues.jobNo, jobStatus);
+            const res = await getFutureJobs();
+            setSearchedFuture(res);
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     useEffect(() => {
         fetchData();
-    }, [loading, show, update]);
+    }, [loading, update]);
 
     return (
         <div style={{ display: 'flex' }}>
@@ -134,36 +136,6 @@ export const Quality = () => {
             :
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
                     <h1 className='text-center'>Quality</h1>
-                    <Modal show={show} onHide={handleClose}>
-                        <Modal.Header closeButton>
-                        <Modal.Title>{jobNoInfo}</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                        <Form>
-                            <FloatingLabel label="Customer Code" className="mb-3">
-                                <Form.Control defaultValue={custInfo} disabled />
-                            </FloatingLabel>
-                            {/* <FloatingLabel controlId="floatingInput" label="Engineer" className="mb-3">
-                                <Form.Control placeholder="Engineer" defaultValue={engineerInfo} onChange={(e) => {setEngineerInfo(e.target.value)}} />
-                            </FloatingLabel> */}
-                            {/* <FloatingLabel controlId="floatingInput" label="Status" className="mb-3">
-                                <Form.Select placeholder="Status" defaultValue={jobStatus} onChange={(e) => {setJobStatus(e.target.value)}} >
-                                    <option></option>
-                                    <option>REWORK</option>
-                                    <option>DONE</option>
-                                </Form.Select>
-                            </FloatingLabel> */}
-                        </Form>
-                        </Modal.Body>
-                        <Modal.Footer>
-                        <Button variant="secondary" onClick={handleClose}>
-                            Close
-                        </Button>
-                        <Button variant="primary" onClick={handleSave}>
-                            Save Changes
-                        </Button>
-                        </Modal.Footer>
-                    </Modal>
 
                     <Tabs
                         defaultActiveKey="tbr"
@@ -248,7 +220,7 @@ export const Quality = () => {
                                                     const rowClass = job.dataValues.expedite ? 'expedite-row' : '';
                                                     return (
                                                         <tr key={index} job={job} className={rowClass}>
-                                                            <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td>
+                                                            <td className='text-center jobBold'>{job.JobNo}</td>
                                                             <CopyToClipboard text={job.PartNo} onCopy={() => { setShowToast(true); setPartCopy(`${job.PartNo}`) }}>
                                                                 <td className='text-center'>{job.PartNo}</td>
                                                             </CopyToClipboard>
@@ -259,11 +231,11 @@ export const Quality = () => {
                                                             <td className='text-center'>{job.User_Text3}</td>
                                                             <td className='text-center'>{job.dataValues.engineer}</td>
                                                             <DropdownButton title={job.dataValues.inspector} align={{ lg: 'start' }} className='text-center dropDowns'>
-                                                                <Dropdown.Item onClick={() => handleInspector(job, 'Joe')} className='dropDownItem'>Joe</Dropdown.Item>
-                                                                <Dropdown.Item onClick={() => handleInspector(job, 'Ramon')} className='dropDownItem'>Ramon</Dropdown.Item>
-                                                                <Dropdown.Item onClick={() => handleInspector(job, 'CJ')} className='dropDownItem'>CJ</Dropdown.Item>
+                                                                <Dropdown.Item onClick={() => handleTBRInspector(job, 'Joe')} className='dropDownItem'>Joe</Dropdown.Item>
+                                                                <Dropdown.Item onClick={() => handleTBRInspector(job, 'Ramon')} className='dropDownItem'>Ramon</Dropdown.Item>
+                                                                <Dropdown.Item onClick={() => handleTBRInspector(job, 'CJ')} className='dropDownItem'>CJ</Dropdown.Item>
                                                                 <Dropdown.Divider />
-                                                                <Dropdown.Item onClick={() => handleInspector(job, '')} className='dropDownItem'>None</Dropdown.Item>
+                                                                <Dropdown.Item onClick={() => handleTBRInspector(job, '')} className='dropDownItem'>None</Dropdown.Item>
                                                             </DropdownButton>
                                                             <td className='text-center'>
                                                                 {job.dataValues.model &&
@@ -271,11 +243,11 @@ export const Quality = () => {
                                                                 }
                                                             </td>
                                                             <DropdownButton title={job.dataValues.jobStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
-                                                                <Dropdown.Item onClick={() => handleStatus(job, 'CHECKING')} className='dropDownItem'>CHECKING</Dropdown.Item>
-                                                                <Dropdown.Item onClick={() => handleStatus(job, 'REWORK')} className='dropDownItem'>REWORK</Dropdown.Item>
-                                                                <Dropdown.Item onClick={() => handleStatus(job, 'DONE')} className='dropDownItem'>DONE</Dropdown.Item>
+                                                                <Dropdown.Item onClick={() => handleTBRStatus(job, 'CHECKING')} className='dropDownItem'>CHECKING</Dropdown.Item>
+                                                                <Dropdown.Item onClick={() => handleTBRStatus(job, 'REWORK')} className='dropDownItem'>REWORK</Dropdown.Item>
+                                                                <Dropdown.Item onClick={() => handleTBRStatus(job, 'DONE')} className='dropDownItem'>DONE</Dropdown.Item>
                                                                 <Dropdown.Divider />
-                                                                <Dropdown.Item onClick={() => handleStatus(job, 'QC')} className='dropDownItem'>QC</Dropdown.Item>
+                                                                <Dropdown.Item onClick={() => handleTBRStatus(job, 'QC')} className='dropDownItem'>QC</Dropdown.Item>
                                                             </DropdownButton>
                                                         </tr>
                                                     )
@@ -374,7 +346,7 @@ export const Quality = () => {
                                                     const rowClass = job.dataValues.expedite ? 'expedite-row' : '';
                                                     return (
                                                         <tr key={index} job={job} className={rowClass}>
-                                                            <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td>
+                                                            <td className='text-center jobBold'>{job.JobNo}</td>
                                                             <CopyToClipboard text={job.PartNo} onCopy={() => { setShowToast(true); setPartCopy(`${job.PartNo}`) }}>
                                                                 <td className='text-center'>{job.PartNo}</td>
                                                             </CopyToClipboard>
@@ -385,11 +357,11 @@ export const Quality = () => {
                                                             <td className='text-center'>{job.User_Text3}</td>
                                                             <td className='text-center'>{job.dataValues.engineer}</td>
                                                             <DropdownButton title={job.dataValues.inspector} align={{ lg: 'start' }} className='text-center dropDowns'>
-                                                                <Dropdown.Item onClick={() => handleInspector(job, 'Joe')} className='dropDownItem'>Joe</Dropdown.Item>
-                                                                <Dropdown.Item onClick={() => handleInspector(job, 'Ramon')} className='dropDownItem'>Ramon</Dropdown.Item>
-                                                                <Dropdown.Item onClick={() => handleInspector(job, 'CJ')} className='dropDownItem'>CJ</Dropdown.Item>
+                                                                <Dropdown.Item onClick={() => handleFutureInspector(job, 'Joe')} className='dropDownItem'>Joe</Dropdown.Item>
+                                                                <Dropdown.Item onClick={() => handleFutureInspector(job, 'Ramon')} className='dropDownItem'>Ramon</Dropdown.Item>
+                                                                <Dropdown.Item onClick={() => handleFutureInspector(job, 'CJ')} className='dropDownItem'>CJ</Dropdown.Item>
                                                                 <Dropdown.Divider />
-                                                                <Dropdown.Item onClick={() => handleInspector(job, '')} className='dropDownItem'>None</Dropdown.Item>
+                                                                <Dropdown.Item onClick={() => handleFutureInspector(job, '')} className='dropDownItem'>None</Dropdown.Item>
                                                             </DropdownButton>
                                                             <td className='text-center'>
                                                                 {job.dataValues.model &&
@@ -397,11 +369,11 @@ export const Quality = () => {
                                                                 }
                                                             </td>
                                                             <DropdownButton title={job.dataValues.jobStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
-                                                                <Dropdown.Item onClick={() => handleStatus(job, 'CHECKING')} className='dropDownItem'>CHECKING</Dropdown.Item>
-                                                                <Dropdown.Item onClick={() => handleStatus(job, 'REWORK')} className='dropDownItem'>REWORK</Dropdown.Item>
-                                                                <Dropdown.Item onClick={() => handleStatus(job, 'DONE')} className='dropDownItem'>DONE</Dropdown.Item>
+                                                                <Dropdown.Item onClick={() => handleFutureStatus(job, 'CHECKING')} className='dropDownItem'>CHECKING</Dropdown.Item>
+                                                                <Dropdown.Item onClick={() => handleFutureStatus(job, 'REWORK')} className='dropDownItem'>REWORK</Dropdown.Item>
+                                                                <Dropdown.Item onClick={() => handleFutureStatus(job, 'DONE')} className='dropDownItem'>DONE</Dropdown.Item>
                                                                 <Dropdown.Divider />
-                                                                <Dropdown.Item onClick={() => handleStatus(job, 'QC')} className='dropDownItem'>QC</Dropdown.Item>
+                                                                <Dropdown.Item onClick={() => handleFutureStatus(job, 'QC')} className='dropDownItem'>QC</Dropdown.Item>
                                                             </DropdownButton>
                                                         </tr>
                                                     )
@@ -485,7 +457,7 @@ export const Quality = () => {
                                                 if (job.dataValues.jobStatus == 'PROTO') {
                                                     return (
                                                         <tr key={index} job={job}>
-                                                            <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td>
+                                                            <td className='text-center jobBold'>{job.JobNo}</td>
                                                             <CopyToClipboard text={job.PartNo} onCopy={() => { setShowToast(true); setPartCopy(`${job.PartNo}`) }}>
                                                                 <td className='text-center'>{job.PartNo}</td>
                                                             </CopyToClipboard>

@@ -8,7 +8,6 @@ let sequelize = require('../config/index');
 function updateInspector(req, res) {
     let jobNo = req.body.jobNo;
     let inspector = req.body.inspector;
-    console.log(jobNo, inspector)
     let sql = `UPDATE jobs SET inspector='${inspector}' WHERE jobNo='${jobNo}'`;
     sequelize.query(sql, function(err, result) {
         return res.status(200).json({
@@ -16,6 +15,7 @@ function updateInspector(req, res) {
             response: result
         })
     })
+    res.send(inspector)
 };
 
 function updateStatus(req, res) {
@@ -28,6 +28,7 @@ function updateStatus(req, res) {
             response: result
         })
     })
+    res.send(jobStatus)
 };
 
 module.exports = {

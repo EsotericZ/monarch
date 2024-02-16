@@ -135,7 +135,7 @@ export const EngJobs = () => {
         }
     };
 
-    async function toggleModel(job) {
+    const toggleModel = async (job) => {
         updateModel(job.dataValues.id);
         setUpdate(`Model ${job.dataValues.jobNo}`)
     }

@@ -5,7 +5,7 @@ const updateInspector = async (jobNo, inspector) => {
         jobNo: jobNo, 
         inspector: inspector,
     });
-    return res.data;
+    return res;
 }
 
 export default updateInspector;
