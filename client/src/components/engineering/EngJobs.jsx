@@ -75,17 +75,6 @@ export const EngJobs = () => {
     const [outsource, setOutsource] = useState('');
     const [active, setActive] = useState('Active');
 
-    const updateData = () => {
-        try {
-            getTBRJobs()
-                .then((res) => {
-                    setSearchedTBR(res);
-                })
-        } catch (err) {
-            console.log(err)
-        }
-    }
-
     const fetchData = async () => {
         try {
             const [engRes, tbrRes, futureRes, nextStepRes, printsRes, repeatRes, outsourcePrintsRes, outsourceRes] = await Promise.all([
@@ -174,16 +163,29 @@ export const EngJobs = () => {
         setJobStatus(job.dataValues.jobStatus);
     } ;
 
-    const handleEngineer = (job, engineer) => {
-        updateEngineer(job.dataValues.jobNo, engineer);
-        setTimeout(() => {
-            updateData();
-        }, "5");
+    const handleTBREngineer = async (job, engineer) => {
+        try {
+            await updateEngineer(job.dataValues.jobNo, engineer);
+            const res = await getTBRJobs();
+            setSearchedTBR(res);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const handleFutureEngineer = async (job, engineer) => {
+        try {
+            await updateEngineer(job.dataValues.jobNo, engineer);
+            const res = await getFutureJobs();
+            setSearchedFuture(res);
+        } catch (err) {
+            console.log(err)
+        }
     }
     
     useEffect(() => {
         fetchData();
-    }, [loading, show, update, updateEngineer]);
+    }, [loading, show, update]);
 
     return (
         <div style={{ display: 'flex' }}>
@@ -327,10 +329,10 @@ export const EngJobs = () => {
                                                         <td className='text-center'>{job.User_Text3}</td>
                                                         {/* <td className='text-center'>{job.dataValues.engineer}</td> */}
                                                         <DropdownButton title={job.dataValues.engineer} align={{ lg: 'start' }} className='text-center dropDowns'>
-                                                            <Dropdown.Item onClick={() => handleEngineer(job, 'CJ')} className='dropDownItem'>CJ</Dropdown.Item>
-                                                            <Dropdown.Item onClick={() => handleEngineer(job, 'Ramon')} className='dropDownItem'>Ramon</Dropdown.Item>
+                                                            <Dropdown.Item onClick={() => handleTBREngineer(job, 'CJ')} className='dropDownItem'>CJ</Dropdown.Item>
+                                                            <Dropdown.Item onClick={() => handleTBREngineer(job, 'Ramon')} className='dropDownItem'>Ramon</Dropdown.Item>
                                                             <Dropdown.Divider />
-                                                            <Dropdown.Item onClick={() => handleEngineer(job, '')} className='dropDownItem'>None</Dropdown.Item>
+                                                            <Dropdown.Item onClick={() => handleTBREngineer(job, '')} className='dropDownItem'>None</Dropdown.Item>
                                                         </DropdownButton>
                                                         <td className='text-center'>{job.QuoteNo}</td>
                                                         <td className='text-center' onClick={() => toggleModel(job)}>
@@ -445,7 +447,12 @@ export const EngJobs = () => {
                                                             <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
                                                             <td className='text-center'>{job.CustCode}</td>
                                                             <td className='text-center'>{job.User_Text3}</td>
-                                                            <td className='text-center'>{job.dataValues.engineer}</td>
+                                                            <DropdownButton title={job.dataValues.engineer} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                <Dropdown.Item onClick={() => handleFutureEngineer(job, 'CJ')} className='dropDownItem'>CJ</Dropdown.Item>
+                                                                <Dropdown.Item onClick={() => handleFutureEngineer(job, 'Ramon')} className='dropDownItem'>Ramon</Dropdown.Item>
+                                                                <Dropdown.Divider />
+                                                                <Dropdown.Item onClick={() => handleFutureEngineer(job, '')} className='dropDownItem'>None</Dropdown.Item>
+                                                            </DropdownButton>
                                                             <td className='text-center'>{job.QuoteNo}</td>
                                                             <td className='text-center' onClick={() => toggleModel(job)}>
                                                                 {job.dataValues.model &&

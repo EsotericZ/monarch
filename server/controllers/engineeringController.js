@@ -248,6 +248,7 @@ function updateEngineer(req, res) {
             response: result
         })
     })
+    res.send(engineer)
 };
 
 module.exports = {
