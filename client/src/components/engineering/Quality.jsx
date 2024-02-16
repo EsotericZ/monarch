@@ -63,33 +63,29 @@ export const Quality = () => {
 
     const fetchData = () => {
         try {
-            getAllJobs()
-                .then((res) => {
-                    setSearchedEng(res);
-                    let protoCount = ((searchedEng.filter(row => (typeof row.JobNo !== 'undefined' && row.dataValues.jobStatus == 'PROTO'))).length);
-                    (protoCount > 0) ? setProto(`Prototype (${protoCount})`) : setProto('Prototype');
-                })
-            
-            getTBRJobs()
-                .then((res) => {
-                    setSearchedTBR(res);
-                    let tbrCount = ((searchedTBR.filter(row => (typeof row.JobNo !== 'undefined' && (row.dataValues.jobStatus == 'QC' || row.dataValues.jobStatus == 'CHECKING')))).length);
-                    (tbrCount > 0) ? setTbr(`TBR (${tbrCount})`) : setTbr('TBR');
-                })
-            
-            getFutureJobs()
-                .then((res) => {
-                    setSearchedFuture(res);
-                    let futureCount = ((searchedFuture.filter(row => (typeof row.JobNo !== 'undefined' && (row.dataValues.jobStatus == 'QC' || row.dataValues.jobStatus == 'CHECKING')))).length);
-                    (futureCount > 0) ? setFuture(`Future (${futureCount})`) : setFuture('Future');
-                })
-
+            Promise.all([
+                getAllJobs(),
+                getTBRJobs(),
+                getFutureJobs()
+            ]).then(([res1, res2, res3]) => {
+                setSearchedEng(res1);
+                setSearchedTBR(res2);
+                setSearchedFuture(res3);
+    
+                let protoCount = ((res1.filter(row => (typeof row.JobNo !== 'undefined' && row.dataValues.jobStatus == 'PROTO'))).length);
+                (protoCount > 0) ? setProto(`Prototype (${protoCount})`) : setProto('Prototype');
+    
+                let tbrCount = ((res2.filter(row => (typeof row.JobNo !== 'undefined' && (row.dataValues.jobStatus == 'QC' || row.dataValues.jobStatus == 'CHECKING')))).length);
+                (tbrCount > 0) ? setTbr(`TBR (${tbrCount})`) : setTbr('TBR');
+    
+                let futureCount = ((res3.filter(row => (typeof row.JobNo !== 'undefined' && (row.dataValues.jobStatus == 'QC' || row.dataValues.jobStatus == 'CHECKING')))).length);
+                (futureCount > 0) ? setFuture(`Future (${futureCount})`) : setFuture('Future');
+    
+                setLoading(false);
+            });
         } catch (err) {
-            console.log(err)
+            console.log(err);
         }
-        setTimeout(() => {
-            setLoading(false)
-        }, "1000");
     };
 
     const handleClose = () => setShow(false);

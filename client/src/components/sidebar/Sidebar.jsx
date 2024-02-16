@@ -31,24 +31,28 @@ export const Sidebar = () => {
         }
     }
 
-    const sidebarClick = () => {
-        if (open == true) {
-            setOpen(false)
-            console.log('closed')
-        } else {
-            setOpen(true)
-            console.log('open')
-        }
-    }
+    const toggleSidebar = () => {
+        setOpen(prevState => !prevState);
+    };
 
     useEffect(() => {
         setData();
     }, [name, admin])
 
+    useEffect(() => {
+        const handleResize = () => {
+            setOpen(true);
+        };
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
     return !loading &&
         <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', position: 'fixed' }}>
-            <CDBSidebar toggled={true}>
-                <CDBSidebarHeader prefix={<i className="fa fa-bars" onClick={sidebarClick} />}>Monarch Metal</CDBSidebarHeader>
+            <CDBSidebar toggled={open}>
+                <CDBSidebarHeader prefix={<i className="fa fa-bars" onClick={toggleSidebar} />}>Monarch Metal</CDBSidebarHeader>
                 <CDBSidebarContent>
                     <CDBSidebarMenu>
 
