@@ -700,9 +700,10 @@ export const EngJobs = () => {
                                                     .includes(searchedValueArea.toString().toLowerCase())
                                             )
                                             .map((job, index) => {
+                                                    const rowClass = job.dataValues.expedite ? 'expedite-row' : '';
                                                     return (
-                                                        <tr key={index} job={job}>
-                                                            <td className='text-center jobBold'>{job.JobNo}</td>
+                                                        <tr key={index} job={job} className={rowClass}>
+                                                            <td className='text-center jobBold' onClick={() => toggleExpedite(job)}>{job.JobNo}</td>
                                                             <CopyToClipboard text={job.PartNo} onCopy={() => { setShowToast(true); setPartCopy(`${job.PartNo}`) }}>
                                                                 <td className='text-center'>{job.PartNo}</td>
                                                             </CopyToClipboard>
