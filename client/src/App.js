@@ -25,6 +25,7 @@ import { SLaser } from './components/departments/SLaser';
 import { TubeLaser } from './components/departments/TubeLaser';
 
 import { Home } from './components/home/Home';
+import { Requests } from './components/home/Requests';
 import { Inventory } from './components/inventory/Inventory';
 import { Login } from './components/login/Login';
 import { Maintenance } from './components/maintenance/Maintenance';
@@ -40,6 +41,10 @@ export const App = () => {
         <Route
           path='/'
           element={<Home />}
+        />
+        <Route
+          path='/requests'
+          element={<Requests />}
         />
         <Route
           path='/admin'

@@ -108,7 +108,9 @@ export const Sidebar = () => {
                                 <NavLink exact to='/fixturelaser'>
                                 <CDBSidebarMenuItem>Fixture Laser</CDBSidebarMenuItem>
                                 </NavLink>
-                                <CDBSidebarMenuItem>Forming</CDBSidebarMenuItem>
+                                <NavLink exact to='/forming'>
+                                    <CDBSidebarMenuItem>Forming</CDBSidebarMenuItem>
+                                </NavLink>
                                 <CDBSidebarMenuItem>Laser (Enterprise)</CDBSidebarMenuItem>
                                 <NavLink exact to='/punch'>
                                     <CDBSidebarMenuItem>Punch</CDBSidebarMenuItem>
