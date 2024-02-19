@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react';
-import { Button, Form, FloatingLabel, Modal, Table } from 'react-bootstrap';
 
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 import { NavLink } from 'react-router-dom';
 
+import { Bar, Doughnut } from 'react-chartjs-2';
 import getAllJobs from '../../services/engineering/getAllJobs';
 import getTBRJobs from '../../services/engineering/getTBRJobs';
 import getFutureJobs from '../../services/engineering/getFutureJobs';
 import getRepeatJobs from '../../services/engineering/getRepeatJobs';
 import getOutsourceJobs from '../../services/engineering/getOutsourceJobs';
 import { Sidebar } from '../sidebar/Sidebar';
+import './home.css';
 
 export const Home = () => {
     const cookies = new Cookies();
@@ -54,6 +55,7 @@ export const Home = () => {
             setQCTbr(((tbrRes.filter(row => (typeof row.JobNo !== 'undefined' && (row.dataValues.jobStatus == 'QC' || row.dataValues.jobStatus == 'CHECKING')))).length));
             setQCFuture(((futureRes.filter(row => (typeof row.JobNo !== 'undefined' && (row.dataValues.jobStatus == 'QC' || row.dataValues.jobStatus == 'CHECKING')))).length));
             setProto(((engRes.filter(row => (typeof row.JobNo !== 'undefined' && row.dataValues.jobStatus == 'PROTO'))).length));
+
         } catch (err) {
             console.error(err);
         } finally {
@@ -74,6 +76,62 @@ export const Home = () => {
         fetchData();
     }, []);
 
+    const options = {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'bottom',
+          },
+          title: {
+            display: true,
+            text: 'Chart.js Bar Chart',
+          },
+        },
+    };
+    
+    const labels = ['Engineering', 'Forming', 'QC'];
+    
+    const data = {
+        labels,
+        datasets: [
+            {
+                label: 'TBR',
+                data: [(engTbr-formTbr-qcTbr), formTbr, qcTbr],
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+            },
+            {
+                label: 'Future',
+                data: [(engFuture-formFuture-qcFuture), formFuture, qcFuture],
+                backgroundColor: 'rgba(53, 162, 235, 0.5)',
+            },
+        ],
+    };
+
+    const donutData = {
+        labels: ['Eng', 'Form', 'QC'],
+        datasets: [
+            {
+                label: 'Jobs',
+                data: [
+                    ((engTbr-formTbr-qcTbr)+(engFuture-formFuture-qcFuture)),
+                    (formTbr+formFuture),
+                    (qcTbr+qcFuture)
+                ],
+                backgroundColor: [
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(255, 206, 86, 1)',
+                ],
+                borderWidth: 1,
+            }
+        ]
+    }
+
     return (
         <div style={{ display: 'flex' }}>
             <Sidebar />
@@ -84,22 +142,53 @@ export const Home = () => {
                     <h1 className='text-center m-3'>Monarch Metal</h1>
                     {cookieData ?
                         <>
-                            <h5 className='text-center m-3'>User: {cookieData.name}</h5>
-                            <br></br>
                             <div className='mx-3'>
-                                <h1 className='text-center m-3'>Engineering</h1>
-                                <h2>Total: {engTotal}</h2>
-                                <h2>TBR: {engTbr}</h2>
-                                <h2>Future: {engFuture}</h2>
-                                <h2>Repeats: {engRepeat}</h2>
-                                <h2>Outsource: {engOutsource}</h2>
-                                <h2>F TBR: {formTbr}</h2>
-                                <h2>F Future: {formFuture}</h2>
-                                <h2>BD Test: {testBD}</h2>
-                                <h2>QC TBR: {qcTbr}</h2>
-                                <h2>QC Future: {qcFuture}</h2>
-                                <h2>Prototype: {proto}</h2>
+                                <h1 className='text-center m-3'>Front End Jobs</h1>
+                                <div className="row homeFlex">
+                                    <div className="homeLeft">
+                                        <div className="row homeBox">
+                                            <table>
+                                                <tr>
+                                                    <td className='text-end tableKey'>Total</td>
+                                                    <td className='text-start tableValue'>{engTotal}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td className='text-end tableKey'>TBR</td>
+                                                    <td className='text-start tableValue'>{engTbr}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td className='text-end tableKey'>Future</td>
+                                                    <td className='text-start tableValue'>{engFuture}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td className='text-end tableKey'>Repeats</td>
+                                                    <td className='text-start tableValue'>{engRepeat}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td className='text-end tableKey'>Outsource</td>
+                                                    <td className='text-start tableValue'>{engOutsource}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td className='text-end tableKey'>BD Test</td>
+                                                    <td className='text-start tableValue'>{testBD}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td className='text-end tableKey'>Prototype</td>
+                                                    <td className='text-start tableValue'>{proto}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div className="row homeBox homeBottom">
+                                            <Doughnut data={donutData} />
+                                        </div>
+                                    </div>
+                                    <div className="homeRight homeBox">
+                                        <Bar options={options} data={data} />
+                                    </div>
+                                </div>
                             </div>
+
+
                             <div className='text-center m-3'>
                                 <NavLink exact to='/requests'>
                                     Website Requests
