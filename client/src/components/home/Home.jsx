@@ -1,10 +1,15 @@
 import { useEffect, useState } from 'react';
+import { Button } from 'react-bootstrap';
 
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 import { NavLink } from 'react-router-dom';
 
+import { Icon } from 'react-icons-kit';
+import { check } from 'react-icons-kit/entypo/check';
+import { refresh } from 'react-icons-kit/fa/refresh';
 import { Bar, Doughnut } from 'react-chartjs-2';
+
 import getAllJobs from '../../services/engineering/getAllJobs';
 import getTBRJobs from '../../services/engineering/getTBRJobs';
 import getFutureJobs from '../../services/engineering/getFutureJobs';
@@ -194,6 +199,9 @@ export const Home = () => {
                                     Website Requests
                                 </NavLink>
                             </div>
+                            <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
+                                <Icon size={24} icon={refresh}/>
+                            </Button>
                         </>
                     :
                         <div className='text-center m-3'>

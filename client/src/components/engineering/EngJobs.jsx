@@ -436,7 +436,7 @@ export const EngJobs = () => {
                                                             <td className='text-center'>
                                                                 <DropdownButton title={job.dataValues.engineer} align={{ lg: 'start' }} className='text-center dropDowns'>
                                                                     <Dropdown.Item onClick={() => handleFutureEngineer(job, 'CJ')} className='dropDownItem'>CJ</Dropdown.Item>
-                                                                    <Dropdown.Item onClick={() => handleFutureEngineer(job, 'FORMING')} className='dropDownItem'>FORMING</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={() => handleFutureEngineer(job, 'Ramon')} className='dropDownItem'>Ramon</Dropdown.Item>
                                                                     <Dropdown.Divider />
                                                                     <Dropdown.Item onClick={() => handleFutureEngineer(job, '')} className='dropDownItem'>None</Dropdown.Item>
                                                                 </DropdownButton>
