@@ -13,6 +13,7 @@ import { Machining } from './components/engineering/Machining';
 import { Nesting } from './components/engineering/Nesting';
 import { Quality } from './components/engineering/Quality';
 import { TapChart } from './components/engineering/TapChart';
+import { TLaserProg } from './components/engineering/TLaserProg';
 
 import { Forming } from './components/forming/Forming';
 
@@ -86,6 +87,10 @@ export const App = () => {
         <Route
           path='/tapchart'
           element={<TapChart />}
+        />
+        <Route
+          path='/tlaserprog'
+          element={<TLaserProg />}
         />
 
         <Route

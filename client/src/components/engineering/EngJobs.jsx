@@ -314,6 +314,7 @@ export const EngJobs = () => {
                                                                     <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'WIP')} className='dropDownItem'>WIP</Dropdown.Item>
                                                                     <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'FORMING')} className='dropDownItem'>FORMING</Dropdown.Item>
                                                                     <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'FINALIZE')} className='dropDownItem'>FINALIZE</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'TLASER')} className='dropDownItem'>TLASER</Dropdown.Item>
                                                                     <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'QC')} className='dropDownItem'>QC</Dropdown.Item>
                                                                     <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'REWORK')} className='dropDownItem'>REWORK</Dropdown.Item>
                                                                     <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'HOLD')} className='dropDownItem'>HOLD</Dropdown.Item>
@@ -453,6 +454,7 @@ export const EngJobs = () => {
                                                                         <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'WIP')} className='dropDownItem'>WIP</Dropdown.Item>
                                                                         <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'FORMING')} className='dropDownItem'>FORMING</Dropdown.Item>
                                                                         <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'FINALIZE')} className='dropDownItem'>FINALIZE</Dropdown.Item>
+                                                                        <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'TLASER')} className='dropDownItem'>TLASER</Dropdown.Item>
                                                                         <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'QC')} className='dropDownItem'>QC</Dropdown.Item>
                                                                         <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'REWORK')} className='dropDownItem'>REWORK</Dropdown.Item>
                                                                         <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'HOLD')} className='dropDownItem'>HOLD</Dropdown.Item>

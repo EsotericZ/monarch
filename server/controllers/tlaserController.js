@@ -107,9 +107,45 @@ function updateJob(req, res) {
     })
 };
 
+function updateTLProgrammer(req, res) {
+    let jobNo = req.body.jobNo;
+    let tlProgrammer = req.body.tlProgrammer;
+    let sql = `UPDATE jobs SET tlProgrammer='${tlProgrammer}' WHERE jobNo='${jobNo}'`;
+    sequelize.query(sql, function(err, result) {
+            return res.status(200).json({
+                    status: 'success',
+                    response: result
+                })
+            })
+            res.send(tlProgrammer)
+        };
+        
+function updateTLStatus(req, res) {
+    let jobNo = req.body.jobNo;
+    let tlStatus = req.body.tlStatus;
+    let jobStatus
+
+    if (tlStatus == 'DONE') {
+        jobStatus = 'FINALIZE'
+    } else {
+        jobStatus = 'TLASER'
+    }
+
+    let sql = `UPDATE jobs SET tlStatus='${tlStatus}', jobStatus='${jobStatus}' WHERE jobNo='${jobNo}'`;
+    sequelize.query(sql, function(err, result) {
+        return res.status(200).json({
+            status: 'success',
+            response: result
+        })
+    })
+    res.send(tlStatus)
+};
+
 module.exports = {
     getAllJobs,
     getTBRJobs,
     getFRJobs,
     updateJob,
+    updateTLProgrammer,
+    updateTLStatus,
 }

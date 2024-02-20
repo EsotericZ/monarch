@@ -37,7 +37,6 @@ function updateFormProgrammer(req, res) {
 };
 
 function updateFormStatus(req, res) {
-    console.log('hit')
     let jobNo = req.body.jobNo;
     let formStatus = req.body.formStatus;
     let jobStatus

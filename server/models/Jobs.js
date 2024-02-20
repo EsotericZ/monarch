@@ -27,6 +27,12 @@ Jobs.init(
         formStatus: {
             type: DataTypes.STRING,
         },
+        tlProgrammer: {
+            type: DataTypes.STRING,
+        },
+        tlStatus: {
+            type: DataTypes.STRING,
+        },
         inspector: {
             type: DataTypes.STRING,
         },
