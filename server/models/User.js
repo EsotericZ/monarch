@@ -43,6 +43,10 @@ User.init(
             type: DataTypes.BOOLEAN,
             defaultValue: false,
         },
+        tlaser: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
     }, {
         sequelize,
         tableName: 'users',

@@ -32,6 +32,8 @@ export const Home = () => {
     const [engOutsource, setEngOutsource] = useState(0);
     const [formTbr, setFormTbr] = useState(0);
     const [formFuture, setFormFuture] = useState(0);
+    const [tlTbr, setTLTbr] = useState(0);
+    const [tlFuture, setTLFuture] = useState(0);
     const [testBD, setTestBD] = useState(0);
     const [qcTbr, setQCTbr] = useState(0);
     const [qcFuture, setQCFuture] = useState(0);
@@ -56,6 +58,9 @@ export const Home = () => {
             setFormTbr(((tbrRes.filter(row => (typeof row.JobNo !== 'undefined' && row.dataValues.jobStatus == 'FORMING'))).length));
             setFormFuture(((futureRes.filter(row => (typeof row.JobNo !== 'undefined' && row.dataValues.jobStatus == 'FORMING'))).length));
             setTestBD(((engRes.filter(row => (typeof row.JobNo !== 'undefined' && row.dataValues.formStatus == 'BD TEST'))).length));
+            
+            setTLTbr(((tbrRes.filter(row => (typeof row.JobNo !== 'undefined' && row.dataValues.jobStatus == 'TLASER'))).length));
+            setTLFuture(((futureRes.filter(row => (typeof row.JobNo !== 'undefined' && row.dataValues.jobStatus == 'TLASER'))).length));
 
             setQCTbr(((tbrRes.filter(row => (typeof row.JobNo !== 'undefined' && (row.dataValues.jobStatus == 'QC' || row.dataValues.jobStatus == 'CHECKING')))).length));
             setQCFuture(((futureRes.filter(row => (typeof row.JobNo !== 'undefined' && (row.dataValues.jobStatus == 'QC' || row.dataValues.jobStatus == 'CHECKING')))).length));
@@ -94,43 +99,46 @@ export const Home = () => {
         },
     };
     
-    const labels = ['Engineering', 'Forming', 'QC'];
+    const labels = ['Engineering', 'Forming', 'TLaser', 'QC'];
     
     const data = {
         labels,
         datasets: [
             {
                 label: 'TBR',
-                data: [(engTbr-formTbr-qcTbr), formTbr, qcTbr],
+                data: [(engTbr-formTbr-tlTbr-qcTbr), formTbr, tlTbr, qcTbr],
                 backgroundColor: 'rgba(255, 99, 132, 0.5)',
             },
             {
                 label: 'Future',
-                data: [(engFuture-formFuture-qcFuture), formFuture, qcFuture],
+                data: [(engFuture-formFuture-tlFuture-qcFuture), formFuture, tlFuture, qcFuture],
                 backgroundColor: 'rgba(53, 162, 235, 0.5)',
             },
         ],
     };
 
     const donutData = {
-        labels: ['Eng', 'Form', 'QC'],
+        labels: ['Eng', 'Form', 'TL', 'QC'],
         datasets: [
             {
                 label: 'Jobs',
                 data: [
-                    ((engTbr-formTbr-qcTbr)+(engFuture-formFuture-qcFuture)),
+                    ((engTbr-formTbr-tlTbr-qcTbr)+(engFuture-formFuture-tlFuture-qcFuture)),
                     (formTbr+formFuture),
+                    (tlTbr+tlFuture),
                     (qcTbr+qcFuture)
                 ],
                 backgroundColor: [
                     'rgba(153, 102, 255, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
                     'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
                 ],
                 borderColor: [
                     'rgba(153, 102, 255, 1)',
-                    'rgba(75, 192, 192, 1)',
                     'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(255, 159, 64, 1)',
                 ],
                 borderWidth: 1,
             }

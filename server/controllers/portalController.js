@@ -32,6 +32,7 @@ async function login(req, res) {
                     maintenance: userInfo.maintenance,
                     shipping: userInfo.shipping,
                     engineering: userInfo.engineering,
+                    tlaser: userInfo.tlaser,
                 },
                 process.env.JWT_SECRET_KEY || 'pass',
                 { expiresIn: '1d' }

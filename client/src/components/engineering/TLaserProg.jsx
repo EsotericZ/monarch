@@ -223,22 +223,30 @@ export const TLaserProg = () => {
                                                             <td className='text-center'>{job.CustCode}</td>
                                                             <td className='text-center'>{job.User_Text3}</td>
                                                             <td className='text-center'>{job.dataValues.engineer}</td>
-                                                            <td className='text-center'>
-                                                                <DropdownButton title={job.dataValues.tlProgrammer} align={{ lg: 'start' }} className='text-center dropDowns'>
-                                                                    <Dropdown.Item onClick={() => handleTBRTLProgrammer(job, 'Jason')} className='dropDownItem'>Jason</Dropdown.Item>
-                                                                    <Dropdown.Item onClick={() => handleTBRTLProgrammer(job, 'CJ')} className='dropDownItem'>CJ</Dropdown.Item>
-                                                                    <Dropdown.Divider />
-                                                                    <Dropdown.Item onClick={() => handleTBRTLProgrammer(job, '')} className='dropDownItem'>None</Dropdown.Item>
-                                                                </DropdownButton>
-                                                            </td>
-                                                            <td className='text-center'>
-                                                                <DropdownButton title={job.dataValues.tlStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
-                                                                    <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'WIP')} className='dropDownItem'>WIP</Dropdown.Item>
-                                                                    <Dropdown.Item onClick={() => handleTBRJobStatus(job, '')} className='dropDownItem'>None</Dropdown.Item>
-                                                                    <Dropdown.Divider />
-                                                                    <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'DONE')} className='dropDownItem'>DONE</Dropdown.Item>
-                                                                </DropdownButton>
-                                                            </td>
+                                                            {cookieData.tlaser ?
+                                                                <td className='text-center'>
+                                                                    <DropdownButton title={job.dataValues.tlProgrammer} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                        <Dropdown.Item onClick={() => handleTBRTLProgrammer(job, 'Jason')} className='dropDownItem'>Jason</Dropdown.Item>
+                                                                        <Dropdown.Item onClick={() => handleTBRTLProgrammer(job, 'CJ')} className='dropDownItem'>CJ</Dropdown.Item>
+                                                                        <Dropdown.Divider />
+                                                                        <Dropdown.Item onClick={() => handleTBRTLProgrammer(job, '')} className='dropDownItem'>None</Dropdown.Item>
+                                                                    </DropdownButton>
+                                                                </td>
+                                                            :
+                                                                <td className='text-center'>{job.dataValues.tlProgrammer}</td>
+                                                            }
+                                                            {cookieData.tlaser ?
+                                                                <td className='text-center'>
+                                                                    <DropdownButton title={job.dataValues.tlStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                        <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'WIP')} className='dropDownItem'>WIP</Dropdown.Item>
+                                                                        <Dropdown.Item onClick={() => handleTBRJobStatus(job, '')} className='dropDownItem'>None</Dropdown.Item>
+                                                                        <Dropdown.Divider />
+                                                                        <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'DONE')} className='dropDownItem'>DONE</Dropdown.Item>
+                                                                    </DropdownButton>
+                                                                </td>
+                                                            :
+                                                                <td className='text-center'>{job.dataValues.tlStatus}</td>
+                                                            }
                                                         </tr>
                                                     )
                                                 }
@@ -345,22 +353,30 @@ export const TLaserProg = () => {
                                                             <td className='text-center'>{job.CustCode}</td>
                                                             <td className='text-center'>{job.User_Text3}</td>
                                                             <td className='text-center'>{job.dataValues.engineer}</td>
-                                                            <td className='text-center'>
-                                                                <DropdownButton title={job.dataValues.tlProgrammer} align={{ lg: 'start' }} className='text-center dropDowns'>
-                                                                    <Dropdown.Item onClick={() => handleFutureTLProgrammer(job, 'Jason')} className='dropDownItem'>Jason</Dropdown.Item>
-                                                                    <Dropdown.Item onClick={() => handleFutureTLProgrammer(job, 'CJ')} className='dropDownItem'>CJ</Dropdown.Item>
-                                                                    <Dropdown.Divider />
-                                                                    <Dropdown.Item onClick={() => handleFutureTLProgrammer(job, '')} className='dropDownItem'>None</Dropdown.Item>
-                                                                </DropdownButton>
-                                                            </td>
-                                                            <td className='text-center'>
-                                                                <DropdownButton title={job.dataValues.tlStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
-                                                                    <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'WIP')} className='dropDownItem'>WIP</Dropdown.Item>
-                                                                    <Dropdown.Item onClick={() => handleFutureJobStatus(job, '')} className='dropDownItem'>None</Dropdown.Item>
-                                                                    <Dropdown.Divider />
-                                                                    <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'DONE')} className='dropDownItem'>DONE</Dropdown.Item>
-                                                                </DropdownButton>
-                                                            </td>
+                                                            {cookieData.tlaser ?
+                                                                <td className='text-center'>
+                                                                    <DropdownButton title={job.dataValues.tlProgrammer} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                        <Dropdown.Item onClick={() => handleFutureTLProgrammer(job, 'Jason')} className='dropDownItem'>Jason</Dropdown.Item>
+                                                                        <Dropdown.Item onClick={() => handleFutureTLProgrammer(job, 'CJ')} className='dropDownItem'>CJ</Dropdown.Item>
+                                                                        <Dropdown.Divider />
+                                                                        <Dropdown.Item onClick={() => handleFutureTLProgrammer(job, '')} className='dropDownItem'>None</Dropdown.Item>
+                                                                    </DropdownButton>
+                                                                </td>
+                                                            :
+                                                                <td className='text-center'>{job.dataValues.tlProgrammer}</td>
+                                                            }
+                                                            {cookieData.tlaser ?
+                                                                <td className='text-center'>
+                                                                    <DropdownButton title={job.dataValues.tlStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                        <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'WIP')} className='dropDownItem'>WIP</Dropdown.Item>
+                                                                        <Dropdown.Item onClick={() => handleFutureJobStatus(job, '')} className='dropDownItem'>None</Dropdown.Item>
+                                                                        <Dropdown.Divider />
+                                                                        <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'DONE')} className='dropDownItem'>DONE</Dropdown.Item>
+                                                                    </DropdownButton>
+                                                                </td>
+                                                            :
+                                                                <td className='text-center'>{job.dataValues.tlStatus}</td>
+                                                            }
                                                         </tr>
                                                     )
                                                 }

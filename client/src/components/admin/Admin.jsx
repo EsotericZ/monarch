@@ -17,6 +17,7 @@ import updateUser from '../../services/users/updateUser';
 import updateEngineering from '../../services/users/updateEngineering';
 import updateShipping from '../../services/users/updateShipping';
 import updateMaintenance from '../../services/users/updateMaintenance';
+import updateTLaser from '../../services/users/updateTLaser';
 import getAllRFID from '../../services/rfid/getAllRFID';
 import { Sidebar } from '../sidebar/Sidebar';
 
@@ -46,6 +47,7 @@ export const Admin = () => {
         maintenance: 0,
         shipping: 0,
         engineering: 0,
+        tlaser: 0,
     });
     const [updateSingleUser, setUpdateSingleUser] = useState({
         id: '',
@@ -98,6 +100,11 @@ export const Admin = () => {
     async function toggleEngineering(user) {
         updateEngineering(user.id)
         setUpdate('Engineering')
+    }
+
+    async function toggleTLaser(user) {
+        updateTLaser(user.id)
+        setUpdate('Tube Laser')
     }
 
     const handleChangeAdd = (e) => {
@@ -247,6 +254,7 @@ export const Admin = () => {
                                         <th className='text-center'>Maintenance</th>
                                         <th className='text-center'>Shipping</th>
                                         <th className='text-center'>Engineering</th>
+                                        <th className='text-center'>Tube Laser</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -282,6 +290,15 @@ export const Admin = () => {
                                                     </td>
                                                 :
                                                     <td className='text-center' onClick={() => toggleEngineering(user)}>
+                                                        <Icon icon={circle_minus} style={{ color: '#CC0202' }} />
+                                                    </td>
+                                                }
+                                                {user.tlaser ?
+                                                    <td className='text-center' onClick={() => toggleTLaser(user)}>
+                                                        <Icon icon={circle_ok} style={{ color: '#5BC326' }} />
+                                                    </td>
+                                                :
+                                                    <td className='text-center' onClick={() => toggleTLaser(user)}>
                                                         <Icon icon={circle_minus} style={{ color: '#CC0202' }} />
                                                     </td>
                                                 }

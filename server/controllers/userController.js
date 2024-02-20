@@ -228,6 +228,47 @@ async function updateShipping(req, res) {
     })
 }
 
+async function updateTLaser(req, res) {
+    let id = req.body.id
+
+    await User.findOne({
+        where: {id: id}
+    })
+    .then((result) => {
+        if (result.tlaser) {
+            User.update(
+                { tlaser: 0 },
+                { where: { id:id }}
+            ).then((result) => {
+                return res.status(200).send({
+                    data: result
+                })
+            }).catch((err) => {
+                return res.status(500).send({
+                    status: err
+                })
+            })
+        } else {
+            User.update(
+                { tlaser: 1 },
+                { where: { id:id }}
+            ).then((result) => {
+                return res.status(200).send({
+                    data: result
+                })
+            }).catch((err) => {
+                return res.status(500).send({
+                    status: err
+                })
+            })
+        }
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
+
 module.exports = {
     getAllUsers,
     getUserPassword,
@@ -237,4 +278,5 @@ module.exports = {
     updateEngineering,
     updateMaintenance,
     updateShipping,
+    updateTLaser,
 }

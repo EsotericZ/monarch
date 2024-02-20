@@ -11,5 +11,6 @@ router.post('/updateUser', userController.updateUser);
 router.post('/updateEngineering', userController.updateEngineering);
 router.post('/updateMaintenance', userController.updateMaintenance);
 router.post('/updateShipping', userController.updateShipping);
+router.post('/updateTLaser', userController.updateTLaser);
 
 module.exports = router;
