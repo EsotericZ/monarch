@@ -12,5 +12,7 @@ router.post('/updateEngineering', userController.updateEngineering);
 router.post('/updateMaintenance', userController.updateMaintenance);
 router.post('/updateShipping', userController.updateShipping);
 router.post('/updateTLaser', userController.updateTLaser);
+router.post('/updateQuality', userController.updateQuality);
+router.post('/updateForming', userController.updateForming);
 
 module.exports = router;

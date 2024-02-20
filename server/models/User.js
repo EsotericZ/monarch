@@ -47,6 +47,14 @@ User.init(
             type: DataTypes.BOOLEAN,
             defaultValue: false,
         },
+        quality: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
+        forming: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
     }, {
         sequelize,
         tableName: 'users',

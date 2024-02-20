@@ -18,6 +18,8 @@ import updateEngineering from '../../services/users/updateEngineering';
 import updateShipping from '../../services/users/updateShipping';
 import updateMaintenance from '../../services/users/updateMaintenance';
 import updateTLaser from '../../services/users/updateTLaser';
+import updateQuality from '../../services/users/updateQuality';
+import updateForming from '../../services/users/updateForming';
 import getAllRFID from '../../services/rfid/getAllRFID';
 import { Sidebar } from '../sidebar/Sidebar';
 
@@ -48,6 +50,8 @@ export const Admin = () => {
         shipping: 0,
         engineering: 0,
         tlaser: 0,
+        quality: 0,
+        forming: 0,
     });
     const [updateSingleUser, setUpdateSingleUser] = useState({
         id: '',
@@ -105,6 +109,16 @@ export const Admin = () => {
     async function toggleTLaser(user) {
         updateTLaser(user.id)
         setUpdate('Tube Laser')
+    }
+
+    async function toggleQuality(user) {
+        updateQuality(user.id)
+        setUpdate('Quality')
+    }
+
+    async function toggleForming(user) {
+        updateForming(user.id)
+        setUpdate('Forming')
     }
 
     const handleChangeAdd = (e) => {
@@ -251,10 +265,12 @@ export const Admin = () => {
                                         <th className='text-center'>Number</th>
                                         <th className='text-center'>Role</th>
                                         <th className='text-center'>RFID</th>
-                                        <th className='text-center'>Maintenance</th>
-                                        <th className='text-center'>Shipping</th>
-                                        <th className='text-center'>Engineering</th>
-                                        <th className='text-center'>Tube Laser</th>
+                                        <th className='text-center' width='75px'>Eng</th>
+                                        <th className='text-center' width='75px'>Form</th>
+                                        <th className='text-center' width='75px'>TL</th>
+                                        <th className='text-center' width='75px'>QC</th>
+                                        <th className='text-center' width='75px'>Maint</th>
+                                        <th className='text-center' width='75px'>Ship</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -266,6 +282,42 @@ export const Admin = () => {
                                                 <td onClick={() => handleOpenUpdate(user)} className='text-center'>{user.number}</td>
                                                 <td className='text-center'>{user.role}</td>
                                                 <td className='text-center'><a href='http://10.0.1.45:3000/' target='__blank'>{user.etch}</a></td>
+                                                {user.engineering ?
+                                                    <td className='text-center' onClick={() => toggleEngineering(user)}>
+                                                        <Icon icon={circle_ok} style={{ color: '#5BC326' }} />
+                                                    </td>
+                                                :
+                                                    <td className='text-center' onClick={() => toggleEngineering(user)}>
+                                                        <Icon icon={circle_minus} style={{ color: '#CC0202' }} />
+                                                    </td>
+                                                }
+                                                {user.forming ?
+                                                    <td className='text-center' onClick={() => toggleForming(user)}>
+                                                        <Icon icon={circle_ok} style={{ color: '#5BC326' }} />
+                                                    </td>
+                                                :
+                                                    <td className='text-center' onClick={() => toggleForming(user)}>
+                                                        <Icon icon={circle_minus} style={{ color: '#CC0202' }} />
+                                                    </td>
+                                                }
+                                                {user.tlaser ?
+                                                    <td className='text-center' onClick={() => toggleTLaser(user)}>
+                                                        <Icon icon={circle_ok} style={{ color: '#5BC326' }} />
+                                                    </td>
+                                                :
+                                                    <td className='text-center' onClick={() => toggleTLaser(user)}>
+                                                        <Icon icon={circle_minus} style={{ color: '#CC0202' }} />
+                                                    </td>
+                                                }
+                                                {user.quality ?
+                                                    <td className='text-center' onClick={() => toggleQuality(user)}>
+                                                        <Icon icon={circle_ok} style={{ color: '#5BC326' }} />
+                                                    </td>
+                                                :
+                                                    <td className='text-center' onClick={() => toggleQuality(user)}>
+                                                        <Icon icon={circle_minus} style={{ color: '#CC0202' }} />
+                                                    </td>
+                                                }
                                                 {user.maintenance ?
                                                     <td className='text-center' onClick={() => toggleMaintenance(user)}>
                                                         <Icon icon={circle_ok} style={{ color: '#5BC326' }} />
@@ -281,24 +333,6 @@ export const Admin = () => {
                                                     </td>
                                                 :
                                                     <td className='text-center' onClick={() => toggleShipping(user)}>
-                                                        <Icon icon={circle_minus} style={{ color: '#CC0202' }} />
-                                                    </td>
-                                                }
-                                                {user.engineering ?
-                                                    <td className='text-center' onClick={() => toggleEngineering(user)}>
-                                                        <Icon icon={circle_ok} style={{ color: '#5BC326' }} />
-                                                    </td>
-                                                :
-                                                    <td className='text-center' onClick={() => toggleEngineering(user)}>
-                                                        <Icon icon={circle_minus} style={{ color: '#CC0202' }} />
-                                                    </td>
-                                                }
-                                                {user.tlaser ?
-                                                    <td className='text-center' onClick={() => toggleTLaser(user)}>
-                                                        <Icon icon={circle_ok} style={{ color: '#5BC326' }} />
-                                                    </td>
-                                                :
-                                                    <td className='text-center' onClick={() => toggleTLaser(user)}>
                                                         <Icon icon={circle_minus} style={{ color: '#CC0202' }} />
                                                     </td>
                                                 }

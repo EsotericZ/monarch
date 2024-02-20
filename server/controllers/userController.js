@@ -84,7 +84,6 @@ async function updateUser(req, res) {
     const userInfo = await User.findOne({ 
         where: { id: id },
     });
-    console.log("!!!!!!!!!!!!!!!!!", userInfo)
     let encryptedPassword = CryptoJS.AES.encrypt(
         password,
         process.env.SECRET_KEY || '1234'
@@ -269,6 +268,88 @@ async function updateTLaser(req, res) {
     })
 }
 
+async function updateQuality(req, res) {
+    let id = req.body.id
+
+    await User.findOne({
+        where: {id: id}
+    })
+    .then((result) => {
+        if (result.quality) {
+            User.update(
+                { quality: 0 },
+                { where: { id:id }}
+            ).then((result) => {
+                return res.status(200).send({
+                    data: result
+                })
+            }).catch((err) => {
+                return res.status(500).send({
+                    status: err
+                })
+            })
+        } else {
+            User.update(
+                { quality: 1 },
+                { where: { id:id }}
+            ).then((result) => {
+                return res.status(200).send({
+                    data: result
+                })
+            }).catch((err) => {
+                return res.status(500).send({
+                    status: err
+                })
+            })
+        }
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
+
+async function updateForming(req, res) {
+    let id = req.body.id
+
+    await User.findOne({
+        where: {id: id}
+    })
+    .then((result) => {
+        if (result.forming) {
+            User.update(
+                { forming: 0 },
+                { where: { id:id }}
+            ).then((result) => {
+                return res.status(200).send({
+                    data: result
+                })
+            }).catch((err) => {
+                return res.status(500).send({
+                    status: err
+                })
+            })
+        } else {
+            User.update(
+                { forming: 1 },
+                { where: { id:id }}
+            ).then((result) => {
+                return res.status(200).send({
+                    data: result
+                })
+            }).catch((err) => {
+                return res.status(500).send({
+                    status: err
+                })
+            })
+        }
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
+
 module.exports = {
     getAllUsers,
     getUserPassword,
@@ -279,4 +360,6 @@ module.exports = {
     updateMaintenance,
     updateShipping,
     updateTLaser,
+    updateQuality,
+    updateForming,
 }
