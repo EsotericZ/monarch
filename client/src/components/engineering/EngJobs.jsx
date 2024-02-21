@@ -300,21 +300,33 @@ export const EngJobs = () => {
                                                         <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
                                                         <td className='text-center'>{job.CustCode}</td>
                                                         <td className='text-center'>{job.User_Text3}</td>
-                                                        <td className='text-center'>
-                                                            <DropdownButton title={job.dataValues.engineer} align={{ lg: 'start' }} className='text-center dropDowns'>
-                                                                {engineeringUsers.map((user, n) => (
-                                                                    <Dropdown.Item key={n} onClick={() => handleTBREngineer(job, user)} className='dropDownItem'>{user}</Dropdown.Item>
-                                                                ))}
-                                                                <Dropdown.Divider />
-                                                                <Dropdown.Item onClick={() => handleTBREngineer(job, '')} className='dropDownItem'>None</Dropdown.Item>
-                                                            </DropdownButton>
-                                                        </td>
+                                                        {cookieData.engineering ?
+                                                            <td className='text-center'>
+                                                                <DropdownButton title={job.dataValues.engineer} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                    {engineeringUsers.map((user, n) => (
+                                                                        <Dropdown.Item key={n} onClick={() => handleTBREngineer(job, user)} className='dropDownItem'>{user}</Dropdown.Item>
+                                                                    ))}
+                                                                    <Dropdown.Divider />
+                                                                    <Dropdown.Item onClick={() => handleTBREngineer(job, '')} className='dropDownItem'>None</Dropdown.Item>
+                                                                </DropdownButton>
+                                                            </td>
+                                                        :
+                                                            <td className='text-center'>{job.dataValues.engineer}</td>
+                                                        }
                                                         <td className='text-center'>{job.QuoteNo}</td>
-                                                        <td className='text-center' onClick={() => toggleModel(job)}>
-                                                            {job.dataValues.model &&
-                                                                <Icon icon={check}/>
-                                                            }
-                                                        </td>
+                                                        {cookieData.engineering ?
+                                                            <td className='text-center' onClick={() => toggleModel(job)}>
+                                                                {job.dataValues.model &&
+                                                                    <Icon icon={check}/>
+                                                                }
+                                                            </td>
+                                                        :
+                                                            <td className='text-center'>
+                                                                {job.dataValues.model &&
+                                                                    <Icon icon={check}/>
+                                                                }
+                                                            </td>
+                                                        }
                                                         {cookieData.engineering ?
                                                             <td className='text-center'>
                                                                 <DropdownButton title={job.dataValues.jobStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
@@ -441,21 +453,33 @@ export const EngJobs = () => {
                                                             <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
                                                             <td className='text-center'>{job.CustCode}</td>
                                                             <td className='text-center'>{job.User_Text3}</td>
-                                                            <td className='text-center'>
-                                                                <DropdownButton title={job.dataValues.engineer} align={{ lg: 'start' }} className='text-center dropDowns'>
-                                                                    {engineeringUsers.map((user, n) => (
-                                                                        <Dropdown.Item key={n} onClick={() => handleFutureEngineer(job, user)} className='dropDownItem'>{user}</Dropdown.Item>
-                                                                    ))}
-                                                                    <Dropdown.Divider />
-                                                                    <Dropdown.Item onClick={() => handleFutureEngineer(job, '')} className='dropDownItem'>None</Dropdown.Item>
-                                                                </DropdownButton>
-                                                            </td>
+                                                            {cookieData.engineering ?
+                                                                <td className='text-center'>
+                                                                    <DropdownButton title={job.dataValues.engineer} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                        {engineeringUsers.map((user, n) => (
+                                                                            <Dropdown.Item key={n} onClick={() => handleFutureEngineer(job, user)} className='dropDownItem'>{user}</Dropdown.Item>
+                                                                        ))}
+                                                                        <Dropdown.Divider />
+                                                                        <Dropdown.Item onClick={() => handleFutureEngineer(job, '')} className='dropDownItem'>None</Dropdown.Item>
+                                                                    </DropdownButton>
+                                                                </td>
+                                                            :
+                                                                <td className='text-center'>{job.dataValues.engineer}</td>
+                                                            }
                                                             <td className='text-center'>{job.QuoteNo}</td>
-                                                            <td className='text-center' onClick={() => toggleModel(job)}>
-                                                                {job.dataValues.model &&
-                                                                    <Icon icon={check}/>
-                                                                }
-                                                            </td>
+                                                            {cookieData.engineering ?
+                                                                <td className='text-center' onClick={() => toggleModel(job)}>
+                                                                    {job.dataValues.model &&
+                                                                        <Icon icon={check}/>
+                                                                    }
+                                                                </td>
+                                                            :
+                                                                <td className='text-center'>
+                                                                    {job.dataValues.model &&
+                                                                        <Icon icon={check}/>
+                                                                    }
+                                                                </td>
+                                                            }
                                                             {cookieData.engineering ?
                                                                 <td className='text-center'>
                                                                     <DropdownButton title={job.dataValues.jobStatus} align={{ lg: 'start' }} className='text-center dropDowns'>

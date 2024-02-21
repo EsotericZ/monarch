@@ -12,7 +12,7 @@ import { refresh } from 'react-icons-kit/fa/refresh';
 import getAllJobs from '../../services/engineering/getAllJobs';
 import getTBRJobs from '../../services/engineering/getTBRJobs';
 import getFutureJobs from '../../services/engineering/getFutureJobs';
-import updateJob from '../../services/engineering/updateJob';
+import getAllUsers from '../../services/users/getAllUsers';
 import updateInspector from '../../services/quality/updateInspector';
 import updateStatus from '../../services/quality/updateStatus';
 import { Sidebar } from '../sidebar/Sidebar';
@@ -27,7 +27,7 @@ export const Quality = () => {
         cookieData = {
             'name': '',
             'role': 'employee',
-            'engineering': false,
+            'quality': false,
         };
     }
 
@@ -48,6 +48,7 @@ export const Quality = () => {
     const [searchedEng, setSearchedEng] = useState([]);
     const [searchedTBR, setSearchedTBR] = useState([]);
     const [searchedFuture, setSearchedFuture] = useState([]);
+    const [qualityUsers, setQualityUsers] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const [tbr, setTbr] = useState('');
@@ -59,8 +60,9 @@ export const Quality = () => {
             Promise.all([
                 getAllJobs(),
                 getTBRJobs(),
-                getFutureJobs()
-            ]).then(([res1, res2, res3]) => {
+                getFutureJobs(),
+                getAllUsers()
+            ]).then(([res1, res2, res3, res4]) => {
                 setSearchedEng(res1);
                 setSearchedTBR(res2);
                 setSearchedFuture(res3);
@@ -74,6 +76,8 @@ export const Quality = () => {
                 let futureCount = ((res3.filter(row => (typeof row.JobNo !== 'undefined' && (row.dataValues.jobStatus == 'QC' || row.dataValues.jobStatus == 'CHECKING')))).length);
                 (futureCount > 0) ? setFuture(`Future (${futureCount})`) : setFuture('Future');
     
+                setQualityUsers(res4.data.filter(user => user.quality).map(user => user.name.split(' ')[0]));
+
                 setLoading(false);
             });
         } catch (err) {
@@ -230,29 +234,37 @@ export const Quality = () => {
                                                             <td className='text-center'>{job.CustCode}</td>
                                                             <td className='text-center'>{job.User_Text3}</td>
                                                             <td className='text-center'>{job.dataValues.engineer}</td>
-                                                            <td className='text-center'>
-                                                                <DropdownButton title={job.dataValues.inspector} align={{ lg: 'start' }} className='text-center dropDowns'>
-                                                                    <Dropdown.Item onClick={() => handleTBRInspector(job, 'Joe')} className='dropDownItem'>Joe</Dropdown.Item>
-                                                                    <Dropdown.Item onClick={() => handleTBRInspector(job, 'Ramon')} className='dropDownItem'>Ramon</Dropdown.Item>
-                                                                    <Dropdown.Item onClick={() => handleTBRInspector(job, 'CJ')} className='dropDownItem'>CJ</Dropdown.Item>
-                                                                    <Dropdown.Divider />
-                                                                    <Dropdown.Item onClick={() => handleTBRInspector(job, '')} className='dropDownItem'>None</Dropdown.Item>
-                                                                </DropdownButton>
-                                                            </td>
+                                                            {cookieData.quality ?
+                                                                <td className='text-center'>
+                                                                    <DropdownButton title={job.dataValues.inspector} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                        {qualityUsers.map((user, n) => (
+                                                                            <Dropdown.Item key={n} onClick={() => handleTBRInspector(job, user)} className='dropDownItem'>{user}</Dropdown.Item>
+                                                                        ))}
+                                                                        <Dropdown.Divider />
+                                                                        <Dropdown.Item onClick={() => handleTBRInspector(job, '')} className='dropDownItem'>None</Dropdown.Item>
+                                                                    </DropdownButton>
+                                                                </td>
+                                                            :
+                                                                <td className='text-center'>{job.dataValues.inspector}</td>
+                                                            }
                                                             <td className='text-center'>
                                                                 {job.dataValues.model &&
                                                                     <Icon icon={check}/>
                                                                 }
                                                             </td>
-                                                            <td className='text-center'>
-                                                                <DropdownButton title={job.dataValues.jobStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
-                                                                    <Dropdown.Item onClick={() => handleTBRStatus(job, 'CHECKING')} className='dropDownItem'>CHECKING</Dropdown.Item>
-                                                                    <Dropdown.Item onClick={() => handleTBRStatus(job, 'REWORK')} className='dropDownItem'>REWORK</Dropdown.Item>
-                                                                    <Dropdown.Item onClick={() => handleTBRStatus(job, 'DONE')} className='dropDownItem'>DONE</Dropdown.Item>
-                                                                    <Dropdown.Divider />
-                                                                    <Dropdown.Item onClick={() => handleTBRStatus(job, 'QC')} className='dropDownItem'>QC</Dropdown.Item>
-                                                                </DropdownButton>
-                                                            </td>
+                                                            {cookieData.quality ?
+                                                                <td className='text-center'>
+                                                                    <DropdownButton title={job.dataValues.jobStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                        <Dropdown.Item onClick={() => handleTBRStatus(job, 'CHECKING')} className='dropDownItem'>CHECKING</Dropdown.Item>
+                                                                        <Dropdown.Item onClick={() => handleTBRStatus(job, 'REWORK')} className='dropDownItem'>REWORK</Dropdown.Item>
+                                                                        <Dropdown.Item onClick={() => handleTBRStatus(job, 'DONE')} className='dropDownItem'>DONE</Dropdown.Item>
+                                                                        <Dropdown.Divider />
+                                                                        <Dropdown.Item onClick={() => handleTBRStatus(job, 'QC')} className='dropDownItem'>QC</Dropdown.Item>
+                                                                    </DropdownButton>
+                                                                </td>
+                                                            :
+                                                                <td className='text-center'>{job.dataValues.jobStatus}</td>
+                                                            }
                                                         </tr>
                                                     )
                                                 }
@@ -360,29 +372,37 @@ export const Quality = () => {
                                                             <td className='text-center'>{job.CustCode}</td>
                                                             <td className='text-center'>{job.User_Text3}</td>
                                                             <td className='text-center'>{job.dataValues.engineer}</td>
-                                                            <td className='text-center'>
-                                                                <DropdownButton title={job.dataValues.inspector} align={{ lg: 'start' }} className='text-center dropDowns'>
-                                                                    <Dropdown.Item onClick={() => handleFutureInspector(job, 'Joe')} className='dropDownItem'>Joe</Dropdown.Item>
-                                                                    <Dropdown.Item onClick={() => handleFutureInspector(job, 'Ramon')} className='dropDownItem'>Ramon</Dropdown.Item>
-                                                                    <Dropdown.Item onClick={() => handleFutureInspector(job, 'CJ')} className='dropDownItem'>CJ</Dropdown.Item>
-                                                                    <Dropdown.Divider />
-                                                                    <Dropdown.Item onClick={() => handleFutureInspector(job, '')} className='dropDownItem'>None</Dropdown.Item>
-                                                                </DropdownButton>
-                                                            </td>
+                                                            {cookieData.quality ?
+                                                                <td className='text-center'>
+                                                                    <DropdownButton title={job.dataValues.inspector} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                        {qualityUsers.map((user, n) => (
+                                                                            <Dropdown.Item key={n} onClick={() => handleFutureInspector(job, user)} className='dropDownItem'>{user}</Dropdown.Item>
+                                                                        ))}
+                                                                        <Dropdown.Divider />
+                                                                        <Dropdown.Item onClick={() => handleFutureInspector(job, '')} className='dropDownItem'>None</Dropdown.Item>
+                                                                    </DropdownButton>
+                                                                </td>
+                                                            :
+                                                                <td className='text-center'>{job.dataValues.inspector}</td>
+                                                            }
                                                             <td className='text-center'>
                                                                 {job.dataValues.model &&
                                                                     <Icon icon={check}/>
                                                                 }
                                                             </td>
-                                                            <td className='text-center'>
-                                                                <DropdownButton title={job.dataValues.jobStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
-                                                                    <Dropdown.Item onClick={() => handleFutureStatus(job, 'CHECKING')} className='dropDownItem'>CHECKING</Dropdown.Item>
-                                                                    <Dropdown.Item onClick={() => handleFutureStatus(job, 'REWORK')} className='dropDownItem'>REWORK</Dropdown.Item>
-                                                                    <Dropdown.Item onClick={() => handleFutureStatus(job, 'DONE')} className='dropDownItem'>DONE</Dropdown.Item>
-                                                                    <Dropdown.Divider />
-                                                                    <Dropdown.Item onClick={() => handleFutureStatus(job, 'QC')} className='dropDownItem'>QC</Dropdown.Item>
-                                                                </DropdownButton>
-                                                            </td>
+                                                            {cookieData.quality ?
+                                                                <td className='text-center'>
+                                                                    <DropdownButton title={job.dataValues.jobStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                        <Dropdown.Item onClick={() => handleFutureStatus(job, 'CHECKING')} className='dropDownItem'>CHECKING</Dropdown.Item>
+                                                                        <Dropdown.Item onClick={() => handleFutureStatus(job, 'REWORK')} className='dropDownItem'>REWORK</Dropdown.Item>
+                                                                        <Dropdown.Item onClick={() => handleFutureStatus(job, 'DONE')} className='dropDownItem'>DONE</Dropdown.Item>
+                                                                        <Dropdown.Divider />
+                                                                        <Dropdown.Item onClick={() => handleFutureStatus(job, 'QC')} className='dropDownItem'>QC</Dropdown.Item>
+                                                                    </DropdownButton>
+                                                                </td>
+                                                            :
+                                                                <td className='text-center'>{job.dataValues.jobStatus}</td>
+                                                            }
                                                         </tr>
                                                     )
                                                 }

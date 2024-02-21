@@ -26,7 +26,7 @@ export const Forming = () => {
         cookieData = {
             'name': '',
             'role': 'employee',
-            'engineering': false,
+            'forming': false,
         };
     }
 
@@ -232,23 +232,31 @@ export const Forming = () => {
                                                             <td className='text-center'>{job.CustCode}</td>
                                                             <td className='text-center'>{job.User_Text3}</td>
                                                             <td className='text-center'>{job.dataValues.engineer}</td>
-                                                            <td className='text-center'>
-                                                                <DropdownButton title={job.dataValues.formProgrammer} align={{ lg: 'start' }} className='text-center dropDowns'>
-                                                                    {formingUsers.map((user, n) => (
-                                                                        <Dropdown.Item key={n} onClick={() => handleTBRFormProgrammer(job, user)} className='dropDownItem'>{user}</Dropdown.Item>
-                                                                    ))}
-                                                                    <Dropdown.Divider />
-                                                                    <Dropdown.Item onClick={() => handleTBRFormProgrammer(job, '')} className='dropDownItem'>None</Dropdown.Item>
-                                                                </DropdownButton>
-                                                            </td>
-                                                            <td className='text-center'>
-                                                                <DropdownButton title={job.dataValues.formStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
-                                                                    <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'WIP')} className='dropDownItem'>WIP</Dropdown.Item>
-                                                                    <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'BD TEST')} className='dropDownItem'>BD TEST</Dropdown.Item>
-                                                                    <Dropdown.Divider />
-                                                                    <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'DONE')} className='dropDownItem'>DONE</Dropdown.Item>
-                                                                </DropdownButton>
-                                                            </td>
+                                                            {cookieData.forming ?
+                                                                <td className='text-center'>
+                                                                    <DropdownButton title={job.dataValues.formProgrammer} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                        {formingUsers.map((user, n) => (
+                                                                            <Dropdown.Item key={n} onClick={() => handleTBRFormProgrammer(job, user)} className='dropDownItem'>{user}</Dropdown.Item>
+                                                                        ))}
+                                                                        <Dropdown.Divider />
+                                                                        <Dropdown.Item onClick={() => handleTBRFormProgrammer(job, '')} className='dropDownItem'>None</Dropdown.Item>
+                                                                    </DropdownButton>
+                                                                </td>
+                                                            :
+                                                                <td className='text-center'>{job.dataValues.formProgrammer}</td>
+                                                            }
+                                                            {cookieData.forming ?
+                                                                <td className='text-center'>
+                                                                    <DropdownButton title={job.dataValues.formStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                        <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'WIP')} className='dropDownItem'>WIP</Dropdown.Item>
+                                                                        <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'BD TEST')} className='dropDownItem'>BD TEST</Dropdown.Item>
+                                                                        <Dropdown.Divider />
+                                                                        <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'DONE')} className='dropDownItem'>DONE</Dropdown.Item>
+                                                                    </DropdownButton>
+                                                                </td>
+                                                            :
+                                                            <td className='text-center'>{job.dataValues.formStatus}</td>
+                                                            }
                                                         </tr>
                                                     )
                                                 }
@@ -355,23 +363,31 @@ export const Forming = () => {
                                                             <td className='text-center'>{job.CustCode}</td>
                                                             <td className='text-center'>{job.User_Text3}</td>
                                                             <td className='text-center'>{job.dataValues.engineer}</td>
-                                                            <td className='text-center'>
-                                                                <DropdownButton title={job.dataValues.formProgrammer} align={{ lg: 'start' }} className='text-center dropDowns'>
-                                                                    {formingUsers.map((user, n) => (
-                                                                        <Dropdown.Item key={n} onClick={() => handleFutureFormProgrammer(job, user)} className='dropDownItem'>{user}</Dropdown.Item>
-                                                                    ))}
-                                                                    <Dropdown.Divider />
-                                                                    <Dropdown.Item onClick={() => handleFutureFormProgrammer(job, '')} className='dropDownItem'>None</Dropdown.Item>
-                                                                </DropdownButton>
-                                                            </td>
-                                                            <td className='text-center'>
-                                                                <DropdownButton title={job.dataValues.formStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
-                                                                    <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'WIP')} className='dropDownItem'>WIP</Dropdown.Item>
-                                                                    <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'BD TEST')} className='dropDownItem'>BD TEST</Dropdown.Item>
-                                                                    <Dropdown.Divider />
-                                                                    <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'DONE')} className='dropDownItem'>DONE</Dropdown.Item>
-                                                                </DropdownButton>
-                                                            </td>
+                                                            {cookieData.forming ?
+                                                                <td className='text-center'>
+                                                                    <DropdownButton title={job.dataValues.formProgrammer} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                        {formingUsers.map((user, n) => (
+                                                                            <Dropdown.Item key={n} onClick={() => handleFutureFormProgrammer(job, user)} className='dropDownItem'>{user}</Dropdown.Item>
+                                                                        ))}
+                                                                        <Dropdown.Divider />
+                                                                        <Dropdown.Item onClick={() => handleFutureFormProgrammer(job, '')} className='dropDownItem'>None</Dropdown.Item>
+                                                                    </DropdownButton>
+                                                                </td>
+                                                            :
+                                                                <td className='text-center'>{job.dataValues.formProgrammer}</td>
+                                                            }
+                                                            {cookieData.forming ?
+                                                                <td className='text-center'>
+                                                                    <DropdownButton title={job.dataValues.formStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                        <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'WIP')} className='dropDownItem'>WIP</Dropdown.Item>
+                                                                        <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'BD TEST')} className='dropDownItem'>BD TEST</Dropdown.Item>
+                                                                        <Dropdown.Divider />
+                                                                        <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'DONE')} className='dropDownItem'>DONE</Dropdown.Item>
+                                                                    </DropdownButton>
+                                                                </td>
+                                                            :
+                                                                <td className='text-center'>{job.dataValues.formStatus}</td>
+                                                            }
                                                         </tr>
                                                     )
                                                 }
