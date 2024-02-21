@@ -11,6 +11,7 @@ import { refresh } from 'react-icons-kit/fa/refresh';
 import getAllJobs from '../../services/engineering/getAllJobs';
 import getTBRJobs from '../../services/engineering/getTBRJobs';
 import getFutureJobs from '../../services/engineering/getFutureJobs';
+import getAllUsers from '../../services/users/getAllUsers';
 import updateTLStatus from '../../services/tlaser/updateTLStatus';
 import updateTLProgrammer from '../../services/tlaser/updateTLProgrammer';
 import { Sidebar } from '../sidebar/Sidebar';
@@ -46,6 +47,7 @@ export const TLaserProg = () => {
     const [searchedEng, setSearchedEng] = useState([]);
     const [searchedTBR, setSearchedTBR] = useState([]);
     const [searchedFuture, setSearchedFuture] = useState([]);
+    const [tlaserUsers, setTlaserUsers] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const [tbr, setTbr] = useState('');
@@ -56,8 +58,9 @@ export const TLaserProg = () => {
             Promise.all([
                 getAllJobs(),
                 getTBRJobs(),
-                getFutureJobs()
-            ]).then(([res1, res2, res3]) => {
+                getFutureJobs(),
+                getAllUsers()
+            ]).then(([res1, res2, res3, res4]) => {
                 setSearchedEng(res1);
                 setSearchedTBR(res2);
                 setSearchedFuture(res3);
@@ -67,7 +70,9 @@ export const TLaserProg = () => {
     
                 let futureCount = ((res3.filter(row => (typeof row.JobNo !== 'undefined' && row.dataValues.jobStatus == 'TLASER'))).length);
                 (futureCount > 0) ? setFuture(`Future (${futureCount})`) : setFuture('Future');
-    
+
+                setTlaserUsers(res4.data.filter(user => user.tlaser).map(user => user.name.split(' ')[0]));
+
                 setLoading(false);
             });
         } catch (err) {
@@ -226,8 +231,9 @@ export const TLaserProg = () => {
                                                             {cookieData.tlaser ?
                                                                 <td className='text-center'>
                                                                     <DropdownButton title={job.dataValues.tlProgrammer} align={{ lg: 'start' }} className='text-center dropDowns'>
-                                                                        <Dropdown.Item onClick={() => handleTBRTLProgrammer(job, 'Jason')} className='dropDownItem'>Jason</Dropdown.Item>
-                                                                        <Dropdown.Item onClick={() => handleTBRTLProgrammer(job, 'CJ')} className='dropDownItem'>CJ</Dropdown.Item>
+                                                                        {tlaserUsers.map((user, n) => (
+                                                                            <Dropdown.Item key={n} onClick={() => handleTBRTLProgrammer(job, user)} className='dropDownItem'>{user}</Dropdown.Item>
+                                                                        ))}
                                                                         <Dropdown.Divider />
                                                                         <Dropdown.Item onClick={() => handleTBRTLProgrammer(job, '')} className='dropDownItem'>None</Dropdown.Item>
                                                                     </DropdownButton>
@@ -356,8 +362,9 @@ export const TLaserProg = () => {
                                                             {cookieData.tlaser ?
                                                                 <td className='text-center'>
                                                                     <DropdownButton title={job.dataValues.tlProgrammer} align={{ lg: 'start' }} className='text-center dropDowns'>
-                                                                        <Dropdown.Item onClick={() => handleFutureTLProgrammer(job, 'Jason')} className='dropDownItem'>Jason</Dropdown.Item>
-                                                                        <Dropdown.Item onClick={() => handleFutureTLProgrammer(job, 'CJ')} className='dropDownItem'>CJ</Dropdown.Item>
+                                                                        {tlaserUsers.map((user, n) => (
+                                                                            <Dropdown.Item key={n} onClick={() => handleFutureTLProgrammer(job, user)} className='dropDownItem'>{user}</Dropdown.Item>
+                                                                        ))}
                                                                         <Dropdown.Divider />
                                                                         <Dropdown.Item onClick={() => handleFutureTLProgrammer(job, '')} className='dropDownItem'>None</Dropdown.Item>
                                                                     </DropdownButton>

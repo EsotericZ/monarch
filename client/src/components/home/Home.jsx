@@ -6,7 +6,6 @@ import jwt_decode from 'jwt-decode';
 import { NavLink } from 'react-router-dom';
 
 import { Icon } from 'react-icons-kit';
-import { check } from 'react-icons-kit/entypo/check';
 import { refresh } from 'react-icons-kit/fa/refresh';
 import { Bar, Doughnut } from 'react-chartjs-2';
 
@@ -99,13 +98,23 @@ export const Home = () => {
     const options = {
         responsive: true,
         plugins: {
-          legend: {
-            position: 'bottom',
-          },
-          title: {
-            display: true,
-            text: 'Chart.js Bar Chart',
-          },
+            legend: {
+                position: 'bottom',
+            },
+            title: {
+                display: true,
+                text: 'Chart.js Bar Chart',
+            },
+        },
+        onClick: function(event, element) {
+            console.log(element)
+            // console.log(event)
+            // const chart = element[0]._chart;
+            // const elements = chart.getElementAtEvent(event)[0];
+            // const dataset = chart.data.datasets[element._datasetIndex];
+            // // const xLabel = chart.data.labels[element._index];
+            // // const value = dataset.data[element._index];
+            // console.log(chart)
         },
     };
     
@@ -181,7 +190,7 @@ export const Home = () => {
                                             <div className="row">
                                                 <div className="jobBox">
                                                     <table>
-                                                                                                                <tr>
+                                                        <tr>
                                                             <td className='text-end tableKey'>TBR</td>
                                                             <td className='text-start tableValue'>{engTbr}</td>
                                                         </tr>
@@ -227,7 +236,10 @@ export const Home = () => {
                                         </div>
                                     </div>
                                     <div className="homeRight homeBox">
-                                        <Bar options={options} data={data} />
+                                        <Bar 
+                                            options={options} 
+                                            data={data} 
+                                        />
                                     </div>
                                 </div>
                             </div>
