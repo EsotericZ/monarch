@@ -17,6 +17,7 @@ import getOutsourceJobs from '../../services/engineering/getOutsourceJobs';
 import getNextStep from '../../services/engineering/getNextStep';
 import getPrints from '../../services/engineering/getPrints';
 import getOutsourcePrints from '../../services/engineering/getOutsourcePrints';
+import getAllUsers from '../../services/users/getAllUsers';
 import updateModel from '../../services/engineering/updateModel';
 import updateExpedite from '../../services/engineering/updateExpedite';
 import updateEngineer from '../../services/engineering/updateEngineer';
@@ -61,6 +62,7 @@ export const EngJobs = () => {
     const [searchedOutsourcePrints, setSearchedOutsourcePrints] = useState([]);
     const [fullRepeats, setFullRepeats] = useState([]);
     const [fullOutsource, setFullOutsource] = useState([]);
+    const [engineeringUsers, setEngineeringUsers] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const [tbr, setTbr] = useState('');
@@ -71,7 +73,7 @@ export const EngJobs = () => {
 
     const fetchData = async () => {
         try {
-            const [engRes, tbrRes, futureRes, nextStepRes, printsRes, repeatRes, outsourcePrintsRes, outsourceRes] = await Promise.all([
+            const [engRes, tbrRes, futureRes, nextStepRes, printsRes, repeatRes, outsourcePrintsRes, outsourceRes, userRes] = await Promise.all([
                 getAllJobs(),
                 getTBRJobs(),
                 getFutureJobs(),
@@ -80,6 +82,7 @@ export const EngJobs = () => {
                 getRepeatJobs(),
                 getOutsourcePrints(),
                 getOutsourceJobs(),
+                getAllUsers(),
             ]);
     
             setSearchedEng(engRes);
@@ -128,6 +131,9 @@ export const EngJobs = () => {
                     return v;
                 })
             );
+
+            setEngineeringUsers(userRes.data.filter(user => user.engineering).map(user => user.name.split(' ')[0]));
+
         } catch (err) {
             console.error(err);
         } finally {
@@ -296,8 +302,9 @@ export const EngJobs = () => {
                                                         <td className='text-center'>{job.User_Text3}</td>
                                                         <td className='text-center'>
                                                             <DropdownButton title={job.dataValues.engineer} align={{ lg: 'start' }} className='text-center dropDowns'>
-                                                                <Dropdown.Item onClick={() => handleTBREngineer(job, 'CJ')} className='dropDownItem'>CJ</Dropdown.Item>
-                                                                <Dropdown.Item onClick={() => handleTBREngineer(job, 'Ramon')} className='dropDownItem'>Ramon</Dropdown.Item>
+                                                                {engineeringUsers.map((user, n) => (
+                                                                    <Dropdown.Item key={n} onClick={() => handleTBREngineer(job, user)} className='dropDownItem'>{user}</Dropdown.Item>
+                                                                ))}
                                                                 <Dropdown.Divider />
                                                                 <Dropdown.Item onClick={() => handleTBREngineer(job, '')} className='dropDownItem'>None</Dropdown.Item>
                                                             </DropdownButton>
@@ -436,8 +443,9 @@ export const EngJobs = () => {
                                                             <td className='text-center'>{job.User_Text3}</td>
                                                             <td className='text-center'>
                                                                 <DropdownButton title={job.dataValues.engineer} align={{ lg: 'start' }} className='text-center dropDowns'>
-                                                                    <Dropdown.Item onClick={() => handleFutureEngineer(job, 'CJ')} className='dropDownItem'>CJ</Dropdown.Item>
-                                                                    <Dropdown.Item onClick={() => handleFutureEngineer(job, 'Ramon')} className='dropDownItem'>Ramon</Dropdown.Item>
+                                                                    {engineeringUsers.map((user, n) => (
+                                                                        <Dropdown.Item key={n} onClick={() => handleFutureEngineer(job, user)} className='dropDownItem'>{user}</Dropdown.Item>
+                                                                    ))}
                                                                     <Dropdown.Divider />
                                                                     <Dropdown.Item onClick={() => handleFutureEngineer(job, '')} className='dropDownItem'>None</Dropdown.Item>
                                                                 </DropdownButton>
