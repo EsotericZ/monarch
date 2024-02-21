@@ -11,7 +11,7 @@ import { refresh } from 'react-icons-kit/fa/refresh';
 import getAllJobs from '../../services/engineering/getAllJobs';
 import getTBRJobs from '../../services/engineering/getTBRJobs';
 import getFutureJobs from '../../services/engineering/getFutureJobs';
-import updateJob from '../../services/forming/updateJob';
+import getAllUsers from '../../services/users/getAllUsers';
 import updateFormStatus from '../../services/forming/updateFormStatus';
 import updateFormProgrammer from '../../services/forming/updateFormProgrammer';
 import { Sidebar } from '../sidebar/Sidebar';
@@ -47,6 +47,7 @@ export const Forming = () => {
     const [searchedEng, setSearchedEng] = useState([]);
     const [searchedTBR, setSearchedTBR] = useState([]);
     const [searchedFuture, setSearchedFuture] = useState([]);
+    const [formingUsers, setFormingUsers] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const [tbr, setTbr] = useState('');
@@ -58,8 +59,9 @@ export const Forming = () => {
             Promise.all([
                 getAllJobs(),
                 getTBRJobs(),
-                getFutureJobs()
-            ]).then(([res1, res2, res3]) => {
+                getFutureJobs(),
+                getAllUsers()
+            ]).then(([res1, res2, res3, res4]) => {
                 setSearchedEng(res1);
                 setSearchedTBR(res2);
                 setSearchedFuture(res3);
@@ -73,6 +75,8 @@ export const Forming = () => {
                 let futureCount = ((res3.filter(row => (typeof row.JobNo !== 'undefined' && row.dataValues.jobStatus == 'FORMING'))).length);
                 (futureCount > 0) ? setFuture(`Future (${futureCount})`) : setFuture('Future');
     
+                setFormingUsers(res4.data.filter(user => user.forming).map(user => user.name.split(' ')[0]));
+
                 setLoading(false);
             });
         } catch (err) {
@@ -218,7 +222,6 @@ export const Forming = () => {
                                                     const rowClass = job.WorkCode == 'HOT' ? 'expedite-row' : '';
                                                     return (
                                                         <tr key={index} job={job} className={rowClass}>
-                                                            {/* <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td> */}
                                                             <td className='text-center jobBold'>{job.JobNo}</td>
                                                             <CopyToClipboard text={job.PartNo} onCopy={() => { setShowToast(true); setPartCopy(`${job.PartNo}`) }}>
                                                                 <td className='text-center'>{job.PartNo}</td>
@@ -231,8 +234,9 @@ export const Forming = () => {
                                                             <td className='text-center'>{job.dataValues.engineer}</td>
                                                             <td className='text-center'>
                                                                 <DropdownButton title={job.dataValues.formProgrammer} align={{ lg: 'start' }} className='text-center dropDowns'>
-                                                                    <Dropdown.Item onClick={() => handleTBRFormProgrammer(job, 'Grant')} className='dropDownItem'>Grant</Dropdown.Item>
-                                                                    <Dropdown.Item onClick={() => handleTBRFormProgrammer(job, 'Stan')} className='dropDownItem'>Stan</Dropdown.Item>
+                                                                    {formingUsers.map((user, n) => (
+                                                                        <Dropdown.Item key={n} onClick={() => handleTBRFormProgrammer(job, user)} className='dropDownItem'>{user}</Dropdown.Item>
+                                                                    ))}
                                                                     <Dropdown.Divider />
                                                                     <Dropdown.Item onClick={() => handleTBRFormProgrammer(job, '')} className='dropDownItem'>None</Dropdown.Item>
                                                                 </DropdownButton>
@@ -341,7 +345,6 @@ export const Forming = () => {
                                                     const rowClass = job.WorkCode == 'HOT' ? 'expedite-row' : '';
                                                     return (
                                                         <tr key={index} job={job} className={rowClass}>
-                                                            {/* <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td> */}
                                                             <td className='text-center jobBold'>{job.JobNo}</td>
                                                             <CopyToClipboard text={job.PartNo} onCopy={() => { setShowToast(true); setPartCopy(`${job.PartNo}`) }}>
                                                                 <td className='text-center'>{job.PartNo}</td>
@@ -354,8 +357,9 @@ export const Forming = () => {
                                                             <td className='text-center'>{job.dataValues.engineer}</td>
                                                             <td className='text-center'>
                                                                 <DropdownButton title={job.dataValues.formProgrammer} align={{ lg: 'start' }} className='text-center dropDowns'>
-                                                                    <Dropdown.Item onClick={() => handleFutureFormProgrammer(job, 'Grant')} className='dropDownItem'>Grant</Dropdown.Item>
-                                                                    <Dropdown.Item onClick={() => handleFutureFormProgrammer(job, 'Stan')} className='dropDownItem'>Stan</Dropdown.Item>
+                                                                    {formingUsers.map((user, n) => (
+                                                                        <Dropdown.Item key={n} onClick={() => handleFutureFormProgrammer(job, user)} className='dropDownItem'>{user}</Dropdown.Item>
+                                                                    ))}
                                                                     <Dropdown.Divider />
                                                                     <Dropdown.Item onClick={() => handleFutureFormProgrammer(job, '')} className='dropDownItem'>None</Dropdown.Item>
                                                                 </DropdownButton>
