@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Dropdown, DropdownButton, FloatingLabel, Form, Modal, Tab, Tabs, Table, Toast, ToastContainer } from 'react-bootstrap';
+import { Button, Dropdown, DropdownButton, Tab, Tabs, Table, Toast, ToastContainer } from 'react-bootstrap';
 import { format, parseISO } from 'date-fns';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Cookies from 'universal-cookie';
@@ -48,15 +48,6 @@ export const Forming = () => {
     const [searchedTBR, setSearchedTBR] = useState([]);
     const [searchedFuture, setSearchedFuture] = useState([]);
     const [loading, setLoading] = useState(true);
-    // const [show, setShow] = useState(false);
-
-    // const [jobNoInfo, setJobNoInfo] = useState();
-    // const [custInfo, setCustInfo] = useState();
-    // const [partNoInfo, setParNoInfo] = useState();
-    // const [formProgrammer, setFormProgrammer] = useState();
-    // const [jobStatus, setJobStatus] = useState(' ');
-    // const [formStatus, setFormStatus] = useState(' ');
-    // const [notes, setNotes] = useState(' ');
 
     const [tbr, setTbr] = useState('');
     const [future, setFuture] = useState('');
@@ -89,25 +80,6 @@ export const Forming = () => {
         }
     };
 
-    // const handleClose = () => setShow(false);
-
-    // const handleSave = () => {
-    //     updateJob(jobNoInfo, formProgrammer, formStatus, notes);
-    //     setShow(false);
-    //     fetchData();
-    // };
-
-    // const handleShow = (job) => {
-    //     setShow(true);
-    //     setJobNoInfo(job.JobNo);
-    //     setCustInfo(job.CustCode);
-    //     setParNoInfo(job.PartNo);
-    //     setFormProgrammer(job.dataValues.formProgrammer);
-    //     setJobStatus(job.dataValues.jobStatus);
-    //     setFormStatus(job.dataValues.formStatus);
-    //     setNotes(job.dataValues.notes);
-    // } ;
-    
     const handleTBRFormProgrammer = async (job, formProgrammer) => {
         try {
             await updateFormProgrammer(job.dataValues.jobNo, formProgrammer);
@@ -163,44 +135,6 @@ export const Forming = () => {
             :
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
                     <h1 className='text-center'>Forming</h1>
-                    {/* <Modal show={show} onHide={handleClose}>
-                        <Modal.Header closeButton>
-                        <Modal.Title>{jobNoInfo}</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                        <Form>
-                            <FloatingLabel label="Customer Code" className="mb-3">
-                                <Form.Control defaultValue={custInfo} disabled />
-                            </FloatingLabel>
-                            <FloatingLabel controlId="floatingInput" label="Programmer" className="mb-3">
-                                <Form.Control placeholder="Programmer" defaultValue={formProgrammer} onChange={(e) => {setFormProgrammer(e.target.value)}} />
-                            </FloatingLabel>
-                            <FloatingLabel controlId="floatingInput" label="Status" className="mb-3">
-                                <Form.Select placeholder="Status" defaultValue={formStatus} onChange={(e) => {setFormStatus(e.target.value)}} >
-                                    <option></option>
-                                    <option>WIP</option>
-                                    <option>BD TEST</option>
-                                    <option>DONE</option>
-                                </Form.Select>
-                            </FloatingLabel>
-                            <FloatingLabel controlId="floatingInput" label="Notes" className="mb-3">
-                                {notes == 'null' ?
-                                    <Form.Control placeholder="Notes" defaultValue='' onChange={(e) => {setNotes(e.target.value)}} />
-                                :
-                                    <Form.Control placeholder="Notes" defaultValue={notes} onChange={(e) => {setNotes(e.target.value)}} />
-                                }
-                            </FloatingLabel>
-                        </Form>
-                        </Modal.Body>
-                        <Modal.Footer>
-                        <Button variant="secondary" onClick={handleClose}>
-                            Close
-                        </Button>
-                        <Button variant="primary" onClick={handleSave}>
-                            Save Changes
-                        </Button>
-                        </Modal.Footer>
-                    </Modal> */}
 
                     <Tabs
                         defaultActiveKey="tbr"
@@ -281,7 +215,7 @@ export const Forming = () => {
                                             })
                                             .map((job, index) => {
                                                 if (job.dataValues.jobStatus == 'FORMING') {
-                                                    const rowClass = job.dataValues.expedite ? 'expedite-row' : '';
+                                                    const rowClass = job.WorkCode == 'HOT' ? 'expedite-row' : '';
                                                     return (
                                                         <tr key={index} job={job} className={rowClass}>
                                                             {/* <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td> */}
@@ -404,7 +338,7 @@ export const Forming = () => {
                                             })
                                             .map((job, index) => {
                                                 if (job.User_Text3 != 'REPEAT' && job.User_Text2 != '6. OUTSOURCE' && job.dataValues.jobStatus == 'FORMING') {
-                                                    const rowClass = job.dataValues.expedite ? 'expedite-row' : '';
+                                                    const rowClass = job.WorkCode == 'HOT' ? 'expedite-row' : '';
                                                     return (
                                                         <tr key={index} job={job} className={rowClass}>
                                                             {/* <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td> */}

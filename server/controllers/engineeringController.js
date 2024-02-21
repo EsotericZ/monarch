@@ -20,7 +20,7 @@ async function getAllJobs(req, res) {
         if (err) console.error(err);
         let request = new sql.Request();
 
-        request.query("SELECT R.JobNo, D.PartNo, D.Revision, R.EstimQty, D.DueDate, O.CustCode, D.User_Text3, D.User_Text2, D.User_Number3, R.OrderNo, R.StepNo, D.QuoteNo\
+        request.query("SELECT R.JobNo, D.PartNo, D.Revision, R.EstimQty, D.DueDate, O.CustCode, D.User_Text3, D.User_Text2, D.User_Number3, R.OrderNo, R.StepNo, D.QuoteNo, D.WorkCode\
             FROM OrderRouting R INNER JOIN OrderDet D ON R.JobNo=D.JobNo INNER JOIN ORDERS O ON D.OrderNo=O.OrderNo\
             WHERE R.WorkCntr='101 ENGIN' AND R.Status!='Finished' AND R.Status!='Closed' AND D.Status='Open' AND O.User_Text3!='UNCONFIRMED'\
             ORDER BY R.JobNo", 
@@ -28,6 +28,7 @@ async function getAllJobs(req, res) {
         function(err, recordset) {
             if (err) console.error(err);
             let records = recordset.recordsets[0];
+            console.log(records)
 
             const map = new Map();
             records.forEach(item => map.set(item.JobNo, item));
@@ -39,13 +40,33 @@ async function getAllJobs(req, res) {
     })
 };
 
+async function getUnconfirmedJobs(req, res) {
+    sql.connect(config, function(err,) {
+        if (err) console.error(err);
+        let request = new sql.Request();
+
+        request.query("SELECT R.JobNo, D.PartNo, D.Revision, R.EstimQty, D.DueDate, O.CustCode, D.User_Text3, D.User_Text2, D.User_Number3, R.OrderNo, R.StepNo, D.QuoteNo, D.WorkCode\
+            FROM OrderRouting R INNER JOIN OrderDet D ON R.JobNo=D.JobNo INNER JOIN ORDERS O ON D.OrderNo=O.OrderNo\
+            WHERE R.WorkCntr='101 ENGIN' AND R.Status!='Finished' AND R.Status!='Closed' AND D.Status='Open' AND O.User_Text3='UNCONFIRMED'\
+            ORDER BY R.JobNo", 
+        
+        function(err, recordset) {
+            if (err) console.error(err);
+            let records = recordset.recordsets[0];
+            console.log(records)
+
+            res.send(records)
+        })
+    })
+};
+
 async function getTBRJobs(req, res) {
     const jobData = await Jobs.findAll();
     sql.connect(config, function(err,) {
         if (err) console.error(err);
         let request = new sql.Request();
 
-        request.query("SELECT R.JobNo, D.PartNo, D.Revision, R.EstimQty, D.DueDate, O.CustCode, D.User_Text3, D.User_Text2, D.User_Number3, R.OrderNo, R.StepNo, D.QuoteNo\
+        request.query("SELECT R.JobNo, D.PartNo, D.Revision, R.EstimQty, D.DueDate, O.CustCode, D.User_Text3, D.User_Text2, D.User_Number3, R.OrderNo, R.StepNo, D.QuoteNo, D.WorkCode\
             FROM OrderRouting R INNER JOIN OrderDet D ON R.JobNo=D.JobNo INNER JOIN ORDERS O ON D.OrderNo=O.OrderNo\
             WHERE R.WorkCntr='101 ENGIN' AND R.Status!='Finished' AND R.Status!='Closed' AND D.Status='Open' AND O.User_Text3!='UNCONFIRMED' AND D.User_Text2='2. TBR'\
             ORDER BY D.User_Number3", 
@@ -69,7 +90,7 @@ async function getFutureJobs(req, res) {
     sql.connect(config, function(err,) {
         if (err) console.error(err);
         let request = new sql.Request();
-        request.query("SELECT R.JobNo, D.PartNo, D.Revision, R.EstimQty, D.DueDate, O.CustCode, D.User_Text3, D.User_Text2, D.User_Number3, R.OrderNo, R.StepNo, D.QuoteNo\
+        request.query("SELECT R.JobNo, D.PartNo, D.Revision, R.EstimQty, D.DueDate, O.CustCode, D.User_Text3, D.User_Text2, D.User_Number3, R.OrderNo, R.StepNo, D.QuoteNo, D.WorkCode\
             FROM OrderRouting R INNER JOIN OrderDet D ON R.JobNo=D.JobNo INNER JOIN ORDERS O ON D.OrderNo=O.OrderNo\
             WHERE R.WorkCntr='101 ENGIN' AND R.Status!='Finished' AND R.Status!='Closed' AND D.Status='Open' AND O.User_Text3!='UNCONFIRMED' AND D.User_Text2='1. OFFICE'\
             ORDER BY D.DueDate, R.JobNo", 
@@ -306,6 +327,7 @@ function updateJobStatus(req, res) {
 
 module.exports = {
     getAllJobs,
+    getUnconfirmedJobs,
     getFutureJobs,
     getRepeatJobs,
     getNextStep,

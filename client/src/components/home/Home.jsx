@@ -15,6 +15,7 @@ import getTBRJobs from '../../services/engineering/getTBRJobs';
 import getFutureJobs from '../../services/engineering/getFutureJobs';
 import getRepeatJobs from '../../services/engineering/getRepeatJobs';
 import getOutsourceJobs from '../../services/engineering/getOutsourceJobs';
+import getUnconfirmedJobs from '../../services/engineering/getUnconfirmedJobs';
 import { Sidebar } from '../sidebar/Sidebar';
 import './home.css';
 
@@ -26,6 +27,7 @@ export const Home = () => {
     const [loading, setLoading] = useState(true);
 
     const [engTotal, setEngTotal] = useState(0);
+    const [expedite, setExpedite] = useState(0);
     const [engTbr, setEngTbr] = useState(0);
     const [engFuture, setEngFuture] = useState(0);
     const [engRepeat, setEngRepeat] = useState(0);
@@ -38,18 +40,23 @@ export const Home = () => {
     const [qcTbr, setQCTbr] = useState(0);
     const [qcFuture, setQCFuture] = useState(0);
     const [proto, setProto] = useState(0);
+    const [unconfirmedTotal, setUnconfirmedTotal] = useState(0);
+
+    const [unconfirmedJobs, setUnconfirmedJobs] = useState([]);
 
     const fetchData = async () => {
         try {
-            const [engRes, tbrRes, futureRes, repeatRes, outsourceRes] = await Promise.all([
+            const [engRes, tbrRes, futureRes, repeatRes, outsourceRes, unconfirmedRes] = await Promise.all([
                 getAllJobs(),
                 getTBRJobs(),
                 getFutureJobs(),
                 getRepeatJobs(),
                 getOutsourceJobs(),
+                getUnconfirmedJobs(),
             ]);
     
             setEngTotal(engRes.filter(row => typeof row.JobNo !== 'undefined').length);
+            setExpedite(engRes.filter(row => typeof row.JobNo !== 'undefined' && row.WorkCode == 'HOT').length);
             setEngTbr(tbrRes.filter(row => typeof row.JobNo !== 'undefined').length);
             setEngFuture(futureRes.filter(row => typeof row.JobNo !== 'undefined' && row.User_Text3 !== 'REPEAT').length);
             setEngRepeat(repeatRes.length);
@@ -65,6 +72,9 @@ export const Home = () => {
             setQCTbr(((tbrRes.filter(row => (typeof row.JobNo !== 'undefined' && (row.dataValues.jobStatus == 'QC' || row.dataValues.jobStatus == 'CHECKING')))).length));
             setQCFuture(((futureRes.filter(row => (typeof row.JobNo !== 'undefined' && (row.dataValues.jobStatus == 'QC' || row.dataValues.jobStatus == 'CHECKING')))).length));
             setProto(((engRes.filter(row => (typeof row.JobNo !== 'undefined' && row.dataValues.jobStatus == 'PROTO'))).length));
+
+            setUnconfirmedJobs(unconfirmedRes);
+            setUnconfirmedTotal(unconfirmedRes.length);
 
         } catch (err) {
             console.error(err);
@@ -160,36 +170,57 @@ export const Home = () => {
                                 <div className="row homeFlex">
                                     <div className="homeLeft">
                                         <div className="row homeBox">
-                                            <table>
-                                                <tr>
-                                                    <td className='text-end tableKey'>Total</td>
-                                                    <td className='text-start tableValue'>{engTotal}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td className='text-end tableKey'>TBR</td>
-                                                    <td className='text-start tableValue'>{engTbr}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td className='text-end tableKey'>Future</td>
-                                                    <td className='text-start tableValue'>{engFuture}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td className='text-end tableKey'>Repeats</td>
-                                                    <td className='text-start tableValue'>{engRepeat}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td className='text-end tableKey'>Outsource</td>
-                                                    <td className='text-start tableValue'>{engOutsource}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td className='text-end tableKey'>BD Test</td>
-                                                    <td className='text-start tableValue'>{testBD}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td className='text-end tableKey'>Prototype</td>
-                                                    <td className='text-start tableValue'>{proto}</td>
-                                                </tr>
-                                            </table>
+                                            <div className="row jobTitle">
+                                                <table>
+                                                    <tr>
+                                                        <td className='text-end tableKey'>Total</td>
+                                                        <td className='text-start tableValue'>{engTotal}</td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div className="row">
+                                                <div className="jobBox">
+                                                    <table>
+                                                                                                                <tr>
+                                                            <td className='text-end tableKey'>TBR</td>
+                                                            <td className='text-start tableValue'>{engTbr}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td className='text-end tableKey'>Future</td>
+                                                            <td className='text-start tableValue'>{engFuture}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td className='text-end tableKey'>Expedite</td>
+                                                            <td className='text-start tableValue'>{expedite}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td className='text-end tableKey'>Repeats</td>
+                                                            <td className='text-start tableValue'>{engRepeat}</td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                                <div className="jobBox">
+                                                    <table>
+                                                        <tr>
+                                                            <td className='text-end tableKey'>Outsource</td>
+                                                            <td className='text-start tableValue'>{engOutsource}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td className='text-end tableKey'>BD Test</td>
+                                                            <td className='text-start tableValue'>{testBD}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td className='text-end tableKey'>Prototype</td>
+                                                            <td className='text-start tableValue'>{proto}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td className='text-end tableKey'>Unconfirmed</td>
+                                                            <td className='text-start tableValue'>{unconfirmedTotal}</td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            
                                         </div>
                                         <div className="row homeBox homeBottom">
                                             <Doughnut data={donutData} />

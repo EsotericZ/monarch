@@ -217,7 +217,7 @@ export const Quality = () => {
                                             })
                                             .map((job, index) => {
                                                 if (job.dataValues.jobStatus == 'QC' || job.dataValues.jobStatus == 'CHECKING') {
-                                                    const rowClass = job.dataValues.expedite ? 'expedite-row' : '';
+                                                    const rowClass = job.WorkCode == 'HOT' ? 'expedite-row' : '';
                                                     return (
                                                         <tr key={index} job={job} className={rowClass}>
                                                             <td className='text-center jobBold'>{job.JobNo}</td>
@@ -347,7 +347,7 @@ export const Quality = () => {
                                             })
                                             .map((job, index) => {
                                                 if (job.User_Text3 != 'REPEAT' && job.User_Text2 != '6. OUTSOURCE' && job.dataValues.jobStatus == 'QC' || job.dataValues.jobStatus == 'CHECKING') {
-                                                    const rowClass = job.dataValues.expedite ? 'expedite-row' : '';
+                                                    const rowClass = job.WorkCode == 'HOT' ? 'expedite-row' : '';
                                                     return (
                                                         <tr key={index} job={job} className={rowClass}>
                                                             <td className='text-center jobBold'>{job.JobNo}</td>

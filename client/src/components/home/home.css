@@ -6,6 +6,16 @@
     width: 68%;
 }
 
+.jobTitle {
+    font-size: 20px !important;
+}
+
+.jobBox {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+}
+
 .homeBox {
     border: 1px solid grey;
     border-radius: 15px;

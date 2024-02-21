@@ -4,6 +4,7 @@ let router = express.Router();
 const engineeringController = require('../../controllers/engineeringController');
 
 router.get('/getAllJobs', engineeringController.getAllJobs);
+router.get('/getUnconfirmedJobs', engineeringController.getUnconfirmedJobs);
 router.get('/getTBRJobs', engineeringController.getTBRJobs);
 router.get('/getFutureJobs', engineeringController.getFutureJobs);
 router.get('/getRepeatJobs', engineeringController.getRepeatJobs);
