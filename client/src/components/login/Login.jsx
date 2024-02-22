@@ -21,7 +21,7 @@ export const Login = () => {
             cookies.set('jwt', res.accessToken);
             setCookieData(jwt_decode(cookies.get('jwt')));
             setLoggedIn(true);
-            window.location.href = '/profile';
+            window.location.href = '/';
         })
         .catch((res) => {
             console.log('fail')
