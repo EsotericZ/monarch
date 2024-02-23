@@ -4,10 +4,14 @@ import { format, parseISO } from 'date-fns';
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 
+import { Icon } from 'react-icons-kit';
+import { plus } from 'react-icons-kit/fa/plus'
+
 import getAllJobs from '../../services/tlaser/getAllJobs';
 import getTBRJobs from '../../services/tlaser/getTBRJobs';
 import getFRJobs from '../../services/tlaser/getFRJobs';
 import updateJob from '../../services/engineering/updateJob';
+import createMaterial from '../../services/material/createMaterial';
 import { Sidebar } from '../sidebar/Sidebar';
 import './departments.css';
 
@@ -41,14 +45,15 @@ export const TubeLaser = () => {
     const [loading, setLoading] = useState(true);
     const [show, setShow] = useState(false);
 
-    const [jobNoInfo, setJobNoInfo] = useState();
-    const [custInfo, setCustInfo] = useState();
-    const [partNoInfo, setParNoInfo] = useState();
-    const [engineerInfo, setEngineerInfo] = useState();
+    const [programNo, setProgramNo] = useState();
+    const [materialType, setMaterialType] = useState();
+    const [area, setArea] = useState(' ');
+    const [jobNo, setJobNo] = useState(' ');
     const [jobStatus, setJobStatus] = useState(' ');
 
     // const [home, setHome] = useState('Home');
     const [jobs, setJobs] = useState('Jobs');
+    const [programs, setPrograms] = useState('Programs');
     // const [future, setFuture] = useState('Future');
     // const [repeat, setRepeat] = useState('Repeat');
     // const [active, setActive] = useState('Active');
@@ -82,18 +87,13 @@ export const TubeLaser = () => {
     const handleClose = () => setShow(false);
 
     const handleSave = () => {
-        updateJob(jobNoInfo, engineerInfo, jobStatus);
+        createMaterial(programNo, materialType, jobNo, 'tlaser')
         setShow(false);
         fetchData();
     };
 
-    const handleShow = (job) => {
+    const handleShow = () => {
         setShow(true);
-        setJobNoInfo(job.JobNo);
-        setCustInfo(job.CustCode);
-        setParNoInfo(job.PartNo);
-        setEngineerInfo(job.dataValues.engineer);
-        setJobStatus(job.dataValues.jobStatus);
     } ;
     
     useEffect(() => {
@@ -113,25 +113,21 @@ export const TubeLaser = () => {
                     <h1 className='text-center'>Tube Laser</h1>
                     <Modal show={show} onHide={handleClose}>
                         <Modal.Header closeButton>
-                        <Modal.Title>{jobNoInfo}</Modal.Title>
+                        <Modal.Title>Add Program</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                         <Form>
-                            <FloatingLabel label="Customer Code" className="mb-3">
-                                <Form.Control defaultValue={custInfo} disabled />
+                            <FloatingLabel label="Program No" className="mb-3">
+                                <Form.Control onChange={(e) => {setProgramNo(e.target.value)}} />
                             </FloatingLabel>
-                            <FloatingLabel controlId="floatingInput" label="Engineer" className="mb-3">
-                                <Form.Control placeholder="Engineer" defaultValue={engineerInfo} onChange={(e) => {setEngineerInfo(e.target.value)}} />
+                            <FloatingLabel controlId="floatingInput" label="Material" className="mb-3">
+                                <Form.Control onChange={(e) => {setMaterialType(e.target.value)}} />
                             </FloatingLabel>
-                            <FloatingLabel controlId="floatingInput" label="Status" className="mb-3">
-                                <Form.Select placeholder="Status" defaultValue={jobStatus} onChange={(e) => {setJobStatus(e.target.value)}} >
-                                    <option></option>
-                                    <option>WIP</option>
-                                    <option>QC</option>
-                                    <option>HOLD</option>
-                                    <option>PROTO</option>
-                                    <option>DONE</option>
-                                </Form.Select>
+                            <FloatingLabel controlId="floatingInput" label="Jobs" className="mb-3">
+                                <Form.Control onChange={(e) => {setJobNo(e.target.value)}} />
+                            </FloatingLabel>
+                            <FloatingLabel label="Area" className="mb-3">
+                                <Form.Control defaultValue="Tube Laser" disabled />
                             </FloatingLabel>
                         </Form>
                         </Modal.Body>
@@ -165,13 +161,6 @@ export const TubeLaser = () => {
                                             <th className='text-center'><input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='&#xf002;  Customer' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center'><input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='&#xf002;  Type' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center'><input onChange={(e) => setSearchedValueMaterial(e.target.value)} placeholder='&#xf002;  Materials' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            {/* <th className='text-center'>Engineer<input onChange={(e) => setSearchedValueEngineer(e.target.value)} placeholder='&#xf002;  .bad.' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center'>Quote<input onChange={(e) => setSearchedValueQuote(e.target.value)} placeholder='&#xf002;  .bad.' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center'>Model</th>
-                                            <th className='text-center'>Status<input onChange={(e) => setSearchedValueStatus(e.target.value)} placeholder='&#xf002;  .bad.' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th> */}
-                                            {/* {cookieData.maintenance &&
-                                                <th className='text-center align-middle'>Actions</th>
-                                            } */}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -210,22 +199,11 @@ export const TubeLaser = () => {
                                                     .toLowerCase()
                                                     .includes(searchedValueMaterial.toString().toLowerCase())
                                             )
-                                            // .filter((row) => 
-                                            //     !searchedValueQuote || row.QuoteNo
-                                            //         .toString()
-                                            //         .toLowerCase()
-                                            //         .includes(searchedValueQuote.toString().toLowerCase())
-                                            // )
-                                            // .filter((row) => 
-                                            //     !searchedValueStatus || row.dataValues.jobStatus
-                                            //         .toString()
-                                            //         .toLowerCase()
-                                            //         .includes(searchedValueStatus.toString().toLowerCase())
-                                            // )
                                             .map((job, index) => {
                                                 return (
                                                     <tr key={index} job={job}>
-                                                        <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td>
+                                                        <td className='text-center jobBold'>{job.JobNo}</td>
+                                                        {/* <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td> */}
                                                         <td className='text-center'>{job.StepNo}</td>
                                                         <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td>
                                                         <td className='text-center'>{job.Revision}</td>
@@ -234,10 +212,6 @@ export const TubeLaser = () => {
                                                         <td className='text-center'>{job.CustCode}</td>
                                                         <td className='text-center'>{job.User_Text3}</td>
                                                         <td className='text-center'>{job.SubPartNo}</td>
-                                                        {/* <td className='text-center'>{job.dataValues.engineer}</td> */}
-                                                        {/* <td className='text-center'>{job.QuoteNo}</td> */}
-                                                        {/* <td className='text-center'></td> */}
-                                                        {/* <td className='text-center'>{job.dataValues.jobStatus}</td> */}
                                                     </tr>
                                                 )
                                             })
@@ -281,7 +255,8 @@ export const TubeLaser = () => {
                                                 if (job.User_Text2 == '1. OFFICE') {
                                                     return (
                                                         <tr key={index} job={job}>
-                                                            <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td>
+                                                            <td className='text-center jobBold'>{job.JobNo}</td>
+                                                            {/* <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td> */}
                                                             <td className='text-center'>{job.StepNo}</td>
                                                             <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td>
                                                             <td className='text-center'>{job.Revision}</td>
@@ -290,10 +265,6 @@ export const TubeLaser = () => {
                                                             <td className='text-center'>{job.CustCode}</td>
                                                             <td className='text-center'>{job.User_Text3}</td>
                                                             <td className='text-center'>{job.SubPartNo}</td>
-                                                            {/* <td className='text-center'>{job.dataValues.engineer}</td> */}
-                                                            {/* <td className='text-center'>{job.QuoteNo}</td> */}
-                                                            {/* <td className='text-center'></td> */}
-                                                            {/* <td className='text-center'>{job.dataValues.jobStatus}</td> */}
                                                         </tr>
                                                     )
                                                 }
@@ -301,6 +272,9 @@ export const TubeLaser = () => {
                                         }
                                     </tbody>
                                 </Table>
+                                <Button className='rounded-circle refreshBtn' onClick={() => handleShow()}>
+                                    <Icon size={24} icon={plus}/>
+                                </Button>
                                 <ToastContainer position="bottom-end" className="p-3" style={{ zIndex: 1 }}>
                                     <Toast bg='secondary' onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide animation>
                                         <Toast.Body>
@@ -311,29 +285,78 @@ export const TubeLaser = () => {
                             </div>
                         </Tab>
 
-                        {/* <Tab eventKey="future" title={future}>
+                        <Tab eventKey="programs" title={programs}>
                             <div className='mx-3'>
-                                <Table striped hover>
+                            <Table striped hover>
                                     <thead>
                                         <tr>
-                                            <th className='text-center'>Job No<input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Step No<input placeholder='.X.' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Part No<input onChange={(e) => setSearchedValuePartNo(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Revision<input placeholder='.X.' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Qty<input placeholder='.X.' className='text-center' style={{width: '100%'}} /></th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='&#xf002;  Job No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'>Step No</th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValuePartNo(e.target.value)} placeholder='&#xf002;  Part No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'>Revision</th>
+                                            <th className='text-center'>Qty</th>
                                             <th className='text-center'>Due Date</th>
-                                            <th className='text-center'>Customer<input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Type<input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Engineer<input onChange={(e) => setSearchedValueEngineer(e.target.value)} placeholder='.bad.' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Quote<input onChange={(e) => setSearchedValueQuote(e.target.value)} placeholder='.bad.' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Model<input placeholder='.X.' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Status<input onChange={(e) => setSearchedValueStatus(e.target.value)} placeholder='.bad.' className='text-center' style={{width: '100%'}} /></th>
-                                            {cookieData.maintenance &&
-                                                <th className='text-center align-middle'>Actions</th>
-                                            }
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='&#xf002;  Customer' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='&#xf002;  Type' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueMaterial(e.target.value)} placeholder='&#xf002;  Materials' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <tr className='divide'>
+                                            <td className='text-center' colspan='9'>TBR</td>
+                                        </tr>
+                                        {searchedTBR
+                                            .filter(row => typeof row.JobNo !== 'undefined')
+                                            .filter((row) => 
+                                                !searchedValueJobNo || row.JobNo
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueJobNo.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValuePartNo || row.PartNo
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValuePartNo.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueCustomer || row.CustCode
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueCustomer.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueType || row.User_Text3
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueType.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueMaterial || row.SubPartNo
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueMaterial.toString().toLowerCase())
+                                            )
+                                            .map((job, index) => {
+                                                return (
+                                                    <tr key={index} job={job}>
+                                                        <td className='text-center jobBold'>{job.JobNo}</td>
+                                                        {/* <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td> */}
+                                                        <td className='text-center'>{job.StepNo}</td>
+                                                        <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td>
+                                                        <td className='text-center'>{job.Revision}</td>
+                                                        <td className='text-center'>{job.EstimQty}</td>
+                                                        <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
+                                                        <td className='text-center'>{job.CustCode}</td>
+                                                        <td className='text-center'>{job.User_Text3}</td>
+                                                        <td className='text-center'>{job.SubPartNo}</td>
+                                                    </tr>
+                                                )
+                                            })
+                                        }
+                                        <tr className='divide'>
+                                            <td className='text-center' colspan='9'>FUTURE</td>
+                                        </tr>
                                         {searchedFR
                                             .filter(row => typeof row.JobNo !== 'undefined')
                                             .filter((row) => 
@@ -361,39 +384,25 @@ export const TubeLaser = () => {
                                                     .includes(searchedValueType.toString().toLowerCase())
                                             )
                                             .filter((row) => 
-                                                !searchedValueEngineer || row.dataValues.engineer
+                                                !searchedValueMaterial || row.SubPartNo
                                                     .toString()
                                                     .toLowerCase()
-                                                    .includes(searchedValueEngineer.toString().toLowerCase())
-                                            )
-                                            .filter((row) => 
-                                                !searchedValueQuote || row.QuoteNo
-                                                    .toString()
-                                                    .toLowerCase()
-                                                    .includes(searchedValueQuote.toString().toLowerCase())
-                                            )
-                                            .filter((row) => 
-                                                !searchedValueStatus || row.dataValues.jobStatus
-                                                    .toString()
-                                                    .toLowerCase()
-                                                    .includes(searchedValueStatus.toString().toLowerCase())
+                                                    .includes(searchedValueMaterial.toString().toLowerCase())
                                             )
                                             .map((job, index) => {
-                                                if (job.User_Text2 == '1. OFFICE' && job.User_Text3 != 'REPEAT' && job.User_Text2 != '6. OUTSOURCE') {
+                                                if (job.User_Text2 == '1. OFFICE') {
                                                     return (
-                                                        <tr key={index} job={job} onClick={() => handleShow(job)}>
-                                                            <td className='text-center'>{job.JobNo}</td>
+                                                        <tr key={index} job={job}>
+                                                            <td className='text-center jobBold'>{job.JobNo}</td>
+                                                            {/* <td className='text-center jobBold' onClick={() => handleShow(job)}>{job.JobNo}</td> */}
                                                             <td className='text-center'>{job.StepNo}</td>
-                                                            <td className='text-center'>{job.PartNo}</td>
+                                                            <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td>
                                                             <td className='text-center'>{job.Revision}</td>
                                                             <td className='text-center'>{job.EstimQty}</td>
                                                             <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
                                                             <td className='text-center'>{job.CustCode}</td>
                                                             <td className='text-center'>{job.User_Text3}</td>
-                                                            <td className='text-center'>{job.dataValues.engineer}</td>
-                                                            <td className='text-center'>{job.QuoteNo}</td>
-                                                            <td className='text-center'></td>
-                                                            <td className='text-center'>{job.dataValues.jobStatus}</td>
+                                                            <td className='text-center'>{job.SubPartNo}</td>
                                                         </tr>
                                                     )
                                                 }
@@ -401,8 +410,18 @@ export const TubeLaser = () => {
                                         }
                                     </tbody>
                                 </Table>
+                                <Button className='rounded-circle refreshBtn' onClick={() => handleShow()}>
+                                    <Icon size={24} icon={plus}/>
+                                </Button>
+                                <ToastContainer position="bottom-end" className="p-3" style={{ zIndex: 1 }}>
+                                    <Toast bg='secondary' onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide animation>
+                                        <Toast.Body>
+                                            <strong className="me-auto">{partCopy} Copied To Clipboard </strong>
+                                        </Toast.Body>
+                                    </Toast>
+                                </ToastContainer>
                             </div>
-                        </Tab> */}
+                        </Tab>
 
                         {/* <Tab eventKey="repeat" title={repeat}>
                             <div className='mx-3'>
