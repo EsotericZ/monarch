@@ -6,9 +6,9 @@ class Material extends Model {}
 Material.init(
     {
         id: {
-            type: DataTypes.UUID,
-            defaultValue: UUIDV4,
+            type: DataTypes.INTEGER,
             primaryKey: true,
+            autoIncrement: true,
         },
         programNo: {
             type: DataTypes.STRING,
@@ -18,6 +18,9 @@ Material.init(
         material: {
             type: DataTypes.STRING,
             allowNull: false,
+        },
+        jobNo: {
+            type: DataTypes.STRING,
         },
         area: {
             type: DataTypes.STRING,
@@ -42,17 +45,9 @@ Material.init(
             type: DataTypes.BOOLEAN,
             defaultValue: false,
         },
-        createdAt : {
-            type: DataTypes.DATE,
-        },
-        updatedAt : {
-            type: DataTypes.DATE,
-            defaultValue: null,
-        },
     },
     {
         sequelize,
-        timestamps: true,
         freezeTableName: true,
         modelName: 'material',
     }

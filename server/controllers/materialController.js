@@ -1,5 +1,4 @@
 const { Material } = require('../models');
-let sql = require('mssql');
 require("dotenv").config();
 
 async function getAllRequests(req, res) {
@@ -16,17 +15,25 @@ async function getAllRequests(req, res) {
 }
 
 async function createMaterial(req, res) {
+    console.log('!!!!!!!!!!!!!!!!!!!!! HIT !!!!!!!!!!!!!!!!!!!!!!')
     console.log(req.body)
-    // await Material.create(req.body)
-    // .then((result) => {
-    //     return res.status(200).send({
-    //         data: result
-    //     })
-    // }).catch((err) => {
-    //     return res.status(500).send({
-    //         status: err
-    //     })
+    // await Material.create({
+    //     id: 123,
+    //     programNo: req.body.programNo,
+    //     material: req.body.material,
+    //     jobNo: req.body.jobNo,
+    //     area: req.body.area,
     // })
+    await Material.create(req.body)
+    .then((result) => {
+        return res.status(200).send({
+            data: result
+        })
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
 }
 
 async function updateRequest(req, res) {

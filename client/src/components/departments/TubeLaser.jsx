@@ -46,7 +46,7 @@ export const TubeLaser = () => {
     const [show, setShow] = useState(false);
 
     const [programNo, setProgramNo] = useState();
-    const [materialType, setMaterialType] = useState();
+    const [material, setMaterial] = useState();
     const [area, setArea] = useState(' ');
     const [jobNo, setJobNo] = useState(' ');
     const [jobStatus, setJobStatus] = useState(' ');
@@ -78,7 +78,6 @@ export const TubeLaser = () => {
             frData.then((res) => {
                 setSearchedFR(res);
             })
-            console.log(searchedFR)
         } catch (err) {
             console.log(err)
         }
@@ -87,9 +86,9 @@ export const TubeLaser = () => {
     const handleClose = () => setShow(false);
 
     const handleSave = () => {
-        createMaterial(programNo, materialType, jobNo, 'tlaser')
+        createMaterial(programNo, material, jobNo, 'tlaser')
         setShow(false);
-        fetchData();
+        // fetchData();
     };
 
     const handleShow = () => {
@@ -121,7 +120,7 @@ export const TubeLaser = () => {
                                 <Form.Control onChange={(e) => {setProgramNo(e.target.value)}} />
                             </FloatingLabel>
                             <FloatingLabel controlId="floatingInput" label="Material" className="mb-3">
-                                <Form.Control onChange={(e) => {setMaterialType(e.target.value)}} />
+                                <Form.Control onChange={(e) => {setMaterial(e.target.value)}} />
                             </FloatingLabel>
                             <FloatingLabel controlId="floatingInput" label="Jobs" className="mb-3">
                                 <Form.Control onChange={(e) => {setJobNo(e.target.value)}} />
