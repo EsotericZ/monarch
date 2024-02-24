@@ -13,6 +13,13 @@ import getTBRJobs from '../../services/tlaser/getTBRJobs';
 import getFRJobs from '../../services/tlaser/getFRJobs';
 import createMaterial from '../../services/material/createMaterial';
 import getAllTLMaterials from '../../services/material/getAllTLMaterials';
+
+import updateCheck from '../../services/material/updateCheck';
+import updateComplete from '../../services/material/updateComplete';
+import updateNeed from '../../services/material/updateNeed';
+import updateOnOrder from '../../services/material/updateOnOrder';
+import updateVerified from '../../services/material/updateVerified';
+
 import { Sidebar } from '../sidebar/Sidebar';
 import './departments.css';
 
@@ -37,6 +44,9 @@ export const TubeLaser = () => {
     const [searchedValueProgramNo, setSearchedValueProgramNo] = useState('');
     const [showToast, setShowToast] = useState(false);
     const [partCopy, setPartCopy] = useState('None');
+    const [jobProgramNo, setJobProgramNo] = useState('None');
+    const [jobId, setJobId] = useState(0);
+    const [update, setUpdate] = useState('');
 
     const [searchedTL, setSearchedTL] = useState([]);
     const [searchedTBR, setSearchedTBR] = useState([]);
@@ -44,6 +54,7 @@ export const TubeLaser = () => {
     const [searchedTLPrograms, setSearchedTLPrograms] = useState([]);
     const [loading, setLoading] = useState(true);
     const [show, setShow] = useState(false);
+    const [showComplete, setShowComplete] = useState(false);
 
     const [programNo, setProgramNo] = useState();
     const [material, setMaterial] = useState();
@@ -53,27 +64,22 @@ export const TubeLaser = () => {
     const [programMatl, setProgramMatl] = useState('Material');
     const [programs, setPrograms] = useState('Programs');
 
-    const fetchData = () => {
+    const fetchData = async () => {
         try {
-            let data = getAllJobs();
-            data.then((res) => {
-                setSearchedTL(res);
-                setLoading(false);
-            })
-            let tbrData = getTBRJobs();
-            tbrData.then((res) => {
-                setSearchedTBR(res);
-            })
-            let frData = getFRJobs();
-            frData.then((res) => {
-                setSearchedFR(res);
-            })
-            let tlPrograms = getAllTLMaterials()
-            tlPrograms.then((res) => {
-                setSearchedTLPrograms(res.data);
-            })
+            const [allJobs, tbrJobs, frJobs, tlMaterials] = await Promise.all([
+                getAllJobs(),
+                getTBRJobs(),
+                getFRJobs(),
+                getAllTLMaterials()
+            ]);
+    
+            setSearchedTL(allJobs);
+            setSearchedTBR(tbrJobs);
+            setSearchedFR(frJobs);
+            setSearchedTLPrograms(tlMaterials.data);
+            setLoading(false);
         } catch (err) {
-            console.log(err)
+            console.error(err);
         }
     };
 
@@ -88,10 +94,65 @@ export const TubeLaser = () => {
     const handleShow = () => {
         setShow(true);
     } ;
+
+    const toggleCheck = async (job) => {
+        try {
+            await updateCheck(job.id)
+            setUpdate(`Check ${job.id}`)
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const handleShowComplete = (job) => {
+        setShowComplete(true);
+        setJobProgramNo(job.programNo);
+        setJobId(job.id);
+    } ;
+
+    const handleCloseComplete = () => setShowComplete(false);
+
+    const toggleComplete = async () => {
+        console.log(jobId)
+        setShowComplete(false);
+        try {
+            await updateComplete(jobId)
+            setUpdate(`Complete ${jobId}`)
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const toggleNeed = async (job) => {
+        try {
+            await updateNeed(job.id)
+            setUpdate(`Need Matl ${job.id}`)
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const toggleOnOrder = async (job) => {
+        try {
+            await updateOnOrder(job.id)
+            setUpdate(`On Order ${job.id}`)
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const toggleVerified = async (job) => {
+        try {
+            await updateVerified(job.id)
+            setUpdate(`Verified ${job.id}`)
+        } catch (err) {
+            console.log(err);
+        }
+    }
     
     useEffect(() => {
         fetchData();
-    }, [loading, show]);
+    }, [loading, show, update]);
 
     return (
         <div style={{ display: 'flex' }}>
@@ -106,32 +167,46 @@ export const TubeLaser = () => {
                     <h1 className='text-center'>Tube Laser</h1>
                     <Modal show={show} onHide={handleClose}>
                         <Modal.Header closeButton>
-                        <Modal.Title>Add Program</Modal.Title>
+                            <Modal.Title className="justify-content-center">Add Program</Modal.Title>
                         </Modal.Header>
-                        <Modal.Body>
-                        <Form>
-                            <FloatingLabel label="Program No" className="mb-3">
-                                <Form.Control onChange={(e) => {setProgramNo(e.target.value)}} />
-                            </FloatingLabel>
-                            <FloatingLabel controlId="floatingInput" label="Material" className="mb-3">
-                                <Form.Control onChange={(e) => {setMaterial(e.target.value)}} />
-                            </FloatingLabel>
-                            <FloatingLabel controlId="floatingInput" label="Jobs" className="mb-3">
-                                <Form.Control onChange={(e) => {setJobNo(e.target.value)}} />
-                            </FloatingLabel>
-                            <FloatingLabel label="Area" className="mb-3">
-                                <Form.Control defaultValue="Tube Laser" disabled />
-                            </FloatingLabel>
-                        </Form>
+                        <Modal.Body className="text-center">
+                            <Form>
+                                <FloatingLabel label="Program No" className="mb-3">
+                                    <Form.Control onChange={(e) => {setProgramNo(e.target.value)}} />
+                                </FloatingLabel>
+                                <FloatingLabel controlId="floatingInput" label="Material" className="mb-3">
+                                    <Form.Control onChange={(e) => {setMaterial(e.target.value)}} />
+                                </FloatingLabel>
+                                <FloatingLabel controlId="floatingInput" label="Jobs" className="mb-3">
+                                    <Form.Control onChange={(e) => {setJobNo(e.target.value)}} />
+                                </FloatingLabel>
+                                <FloatingLabel label="Area" className="mb-3">
+                                    <Form.Control defaultValue="Tube Laser" disabled />
+                                </FloatingLabel>
+                            </Form>
                         </Modal.Body>
-                        <Modal.Footer>
-                        <Button variant="secondary" onClick={handleClose}>
-                            Close
-                        </Button>
-                        <Button variant="primary" onClick={handleSave}>
-                            Save Changes
-                        </Button>
+                        <Modal.Footer className="justify-content-center">
+                            <Button className='modalBtnCancel' variant="secondary" onClick={handleClose}>
+                                Cancel
+                            </Button>
+                            <Button className='modalBtnVerify' variant="primary" onClick={handleSave}>
+                                Save
+                            </Button>
                         </Modal.Footer>
+                    </Modal>
+
+                    <Modal show={showComplete} onHide={handleCloseComplete}>
+                        <Modal.Body className="text-center">
+                            <Modal.Title>Complete Program {jobProgramNo}</Modal.Title>
+                            <div className="mt-3">
+                                <Button className='modalBtnCancel' variant="secondary" onClick={handleCloseComplete}>
+                                    Cancel
+                                </Button>
+                                <Button className='modalBtnVerify' variant="primary" onClick={toggleComplete}>
+                                    Verify
+                                </Button>
+                            </div>
+                        </Modal.Body>
                     </Modal>
 
                     <Tabs
@@ -316,22 +391,22 @@ export const TubeLaser = () => {
                                                         <td className='text-center jobBold'>{job.programNo}</td>
                                                         <td className='text-center'>{job.material}</td>
                                                         <td className='text-center'>{job.jobNo}</td>
-                                                        <td className='text-center'>
+                                                        <td className='text-center' onClick={() => toggleCheck(job)}>
                                                             {job.checkMatl &&
                                                                 <Icon icon={check}/>
                                                             }
                                                         </td>
-                                                        <td className='text-center'>
+                                                        <td className='text-center' onClick={() => toggleNeed(job)}>
                                                             {job.needMatl &&
                                                                 <Icon icon={check}/>
                                                             }
                                                         </td>
-                                                        <td className='text-center'>
+                                                        <td className='text-center' onClick={() => toggleOnOrder(job)}>
                                                             {job.onOrder &&
                                                                 <Icon icon={check}/>
                                                             }
                                                         </td>
-                                                        <td className='text-center'>
+                                                        <td className='text-center' onClick={() => toggleVerified(job)}>
                                                             {job.verified &&
                                                                 <Icon icon={check}/>
                                                             }
@@ -345,13 +420,60 @@ export const TubeLaser = () => {
                                 <Button className='rounded-circle refreshBtn' onClick={() => handleShow()}>
                                     <Icon size={24} icon={plus}/>
                                 </Button>
-                                <ToastContainer position="bottom-end" className="p-3" style={{ zIndex: 1 }}>
-                                    <Toast bg='success' onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide animation>
-                                        <Toast.Body>
-                                            <strong className="me-auto">{partCopy} Copied To Clipboard </strong>
-                                        </Toast.Body>
-                                    </Toast>
-                                </ToastContainer>
+                            </div>
+                        </Tab>
+
+                        <Tab eventKey="programs" title={programs}>
+                            <div className='mx-3'>
+                            <Table striped hover>
+                                    <thead>
+                                        <tr>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueProgramNo(e.target.value)} placeholder='&#xf002;  Program No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueMaterial(e.target.value)} placeholder='&#xf002;  Material' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='&#xf002;  Job No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'>Completed</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {searchedTLPrograms
+                                            .filter((row) => 
+                                                !searchedValueProgramNo || row.programNo
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueProgramNo.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueMaterial || row.material
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueMaterial.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueJobNo || row.jobNo
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueJobNo.toString().toLowerCase())
+                                            )
+                                            .map((job, index) => {
+                                                if (job.verified) {
+                                                    return (
+                                                        <tr key={index} job={job}>
+                                                            <td className='text-center jobBold'>{job.programNo}</td>
+                                                            <td className='text-center'>{job.material}</td>
+                                                            <td className='text-center'>{job.jobNo}</td>
+                                                            <td className='text-center' onClick={() => handleShowComplete(job)}>
+                                                                <Icon icon={check}/>
+                                                            </td>
+                                                        </tr>
+                                                    )
+                                                }
+                                            })
+                                        }
+                                    </tbody>
+                                </Table>
+                                <Button className='rounded-circle refreshBtn' onClick={() => handleShow()}>
+                                    <Icon size={24} icon={plus}/>
+                                </Button>
                             </div>
                         </Tab>
 
