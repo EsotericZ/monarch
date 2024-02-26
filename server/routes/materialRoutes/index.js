@@ -6,6 +6,7 @@ const materialController = require('../../controllers/materialController');
 router.get('/getAllTLMaterials', materialController.getAllTLMaterials);
 router.get('/getAllLaserMaterials', materialController.getAllLaserMaterials);
 router.get('/getAllSLMaterials', materialController.getAllSLMaterials);
+router.get('/getAllSawMaterials', materialController.getAllSawMaterials);
 router.post('/createMaterial', materialController.createMaterial);
 router.post('/updateCheck', materialController.updateCheck);
 router.post('/updateComplete', materialController.updateComplete);

@@ -196,7 +196,7 @@ export const SLaser = () => {
                                     </Form.Control>
                                 </FloatingLabel>
                                 <FloatingLabel label="Area" className="mb-3">
-                                    <Form.Control defaultValue="Laser" disabled />
+                                    <Form.Control defaultValue="Static Laser" disabled />
                                 </FloatingLabel>
                             </Form>
                         </Modal.Body>

@@ -64,6 +64,27 @@ async function getAllSLMaterials(req, res) {
     })
 }
 
+async function getAllSawMaterials(req, res) {
+    await Material.findAll({
+        where: {
+            area: 'saw',
+            completed: 0,
+        },
+        order: [
+            ['programNo', 'ASC']
+        ],
+    })
+    .then((result) => {
+        return res.status(200).send({
+            data: result
+        })
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
+
 async function createMaterial(req, res) {
     await Material.create(req.body)
     .then((result) => {
@@ -256,6 +277,7 @@ module.exports = {
     getAllTLMaterials,
     getAllLaserMaterials,
     getAllSLMaterials,
+    getAllSawMaterials,
     createMaterial,
     updateCheck,
     updateComplete,
