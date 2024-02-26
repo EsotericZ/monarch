@@ -64,10 +64,73 @@ async function getAllSLMaterials(req, res) {
     })
 }
 
+async function getAllFLMaterials(req, res) {
+    await Material.findAll({
+        where: {
+            area: 'flaser',
+            completed: 0,
+        },
+        order: [
+            ['programNo', 'ASC']
+        ],
+    })
+    .then((result) => {
+        return res.status(200).send({
+            data: result
+        })
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
+
 async function getAllSawMaterials(req, res) {
     await Material.findAll({
         where: {
             area: 'saw',
+            completed: 0,
+        },
+        order: [
+            ['programNo', 'ASC']
+        ],
+    })
+    .then((result) => {
+        return res.status(200).send({
+            data: result
+        })
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
+
+async function getAllShearMaterials(req, res) {
+    await Material.findAll({
+        where: {
+            area: 'shear',
+            completed: 0,
+        },
+        order: [
+            ['programNo', 'ASC']
+        ],
+    })
+    .then((result) => {
+        return res.status(200).send({
+            data: result
+        })
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
+
+async function getAllPunchMaterials(req, res) {
+    await Material.findAll({
+        where: {
+            area: 'punch',
             completed: 0,
         },
         order: [
@@ -277,7 +340,10 @@ module.exports = {
     getAllTLMaterials,
     getAllLaserMaterials,
     getAllSLMaterials,
+    getAllFLMaterials,
     getAllSawMaterials,
+    getAllShearMaterials,
+    getAllPunchMaterials,
     createMaterial,
     updateCheck,
     updateComplete,
