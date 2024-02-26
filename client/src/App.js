@@ -19,6 +19,7 @@ import { Forming } from './components/forming/Forming';
 
 import { Departments } from './components/departments/Departments';
 import { FLaser } from './components/departments/FLaser';
+import { Laser } from './components/departments/Laser';
 import { Punch } from './components/departments/Punch';
 import { Saw } from './components/departments/Saw';
 import { Shear } from './components/departments/Shear';
@@ -105,6 +106,10 @@ export const App = () => {
         <Route
           path='/fixturelaser'
           element={<FLaser />}
+        />
+        <Route
+          path='/laser'
+          element={<Laser />}
         />
         <Route
           path='/punch'

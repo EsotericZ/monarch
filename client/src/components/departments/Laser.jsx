@@ -9,11 +9,11 @@ import { check } from 'react-icons-kit/entypo/check';
 import { plus } from 'react-icons-kit/fa/plus'
 import { history } from 'react-icons-kit/fa/history'
 
-import getAllJobs from '../../services/tlaser/getAllJobs';
-import getTBRJobs from '../../services/tlaser/getTBRJobs';
-import getFRJobs from '../../services/tlaser/getFRJobs';
+import getAllJobs from '../../services/laser/getAllJobs';
+import getTBRJobs from '../../services/laser/getTBRJobs';
+import getFRJobs from '../../services/laser/getFRJobs';
 import createMaterial from '../../services/material/createMaterial';
-import getAllTLMaterials from '../../services/material/getAllTLMaterials';
+import getAllLaserMaterials from '../../services/material/getAllLaserMaterials';
 
 import updateCheck from '../../services/material/updateCheck';
 import updateComplete from '../../services/material/updateComplete';
@@ -24,7 +24,7 @@ import updateVerified from '../../services/material/updateVerified';
 import { Sidebar } from '../sidebar/Sidebar';
 import './departments.css';
 
-export const TubeLaser = () => {
+export const Laser = () => {
     const cookies = new Cookies();
     let cookieData
     try {
@@ -52,7 +52,7 @@ export const TubeLaser = () => {
     const [searchedTL, setSearchedTL] = useState([]);
     const [searchedTBR, setSearchedTBR] = useState([]);
     const [searchedFR, setSearchedFR] = useState([]);
-    const [searchedTLPrograms, setSearchedTLPrograms] = useState([]);
+    const [searchedLaserPrograms, setSearchedLaserPrograms] = useState([]);
     const [loading, setLoading] = useState(true);
     const [show, setShow] = useState(false);
     const [showComplete, setShowComplete] = useState(false);
@@ -67,17 +67,17 @@ export const TubeLaser = () => {
 
     const fetchData = async () => {
         try {
-            const [allJobs, tbrJobs, frJobs, tlMaterials] = await Promise.all([
+            const [allJobs, tbrJobs, frJobs, laserMaterials] = await Promise.all([
                 getAllJobs(),
                 getTBRJobs(),
                 getFRJobs(),
-                getAllTLMaterials()
+                getAllLaserMaterials()
             ]);
     
             setSearchedTL(allJobs);
             setSearchedTBR(tbrJobs);
             setSearchedFR(frJobs);
-            setSearchedTLPrograms(tlMaterials.data);
+            setSearchedLaserPrograms(laserMaterials.data);
             setLoading(false);
         } catch (err) {
             console.error(err);
@@ -87,7 +87,7 @@ export const TubeLaser = () => {
     const handleClose = () => setShow(false);
 
     const handleSave = () => {
-        createMaterial(programNo, material, jobNo, 'tlaser')
+        createMaterial(programNo, material, jobNo, 'laser')
         setShow(false);
         fetchData();
     };
@@ -114,7 +114,6 @@ export const TubeLaser = () => {
     const handleCloseComplete = () => setShowComplete(false);
 
     const toggleComplete = async () => {
-        console.log(jobId)
         setShowComplete(false);
         try {
             await updateComplete(jobId)
@@ -160,12 +159,12 @@ export const TubeLaser = () => {
             <Sidebar />
             {loading ?
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
-                    <h1 className='text-center'>Tube Laser</h1>
+                    <h1 className='text-center'>Laser</h1>
                     <h2 className='text-center'>Loading</h2>
                 </div>
             :
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
-                    <h1 className='text-center'>Tube Laser</h1>
+                    <h1 className='text-center'>Laser</h1>
                     <Modal show={show} onHide={handleClose}>
                         <Modal.Header closeButton>
                             <Modal.Title className="justify-content-center">Add Program</Modal.Title>
@@ -182,7 +181,7 @@ export const TubeLaser = () => {
                                     <Form.Control onChange={(e) => {setJobNo(e.target.value)}} />
                                 </FloatingLabel>
                                 <FloatingLabel label="Area" className="mb-3">
-                                    <Form.Control defaultValue="Tube Laser" disabled />
+                                    <Form.Control defaultValue="Laser" disabled />
                                 </FloatingLabel>
                             </Form>
                         </Modal.Body>
@@ -367,7 +366,7 @@ export const TubeLaser = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {searchedTLPrograms
+                                        {searchedLaserPrograms
                                             .filter((row) => 
                                                 !searchedValueProgramNo || row.programNo
                                                     .toString()
@@ -436,7 +435,7 @@ export const TubeLaser = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {searchedTLPrograms
+                                        {searchedLaserPrograms
                                             .filter((row) => 
                                                 !searchedValueProgramNo || row.programNo
                                                     .toString()
