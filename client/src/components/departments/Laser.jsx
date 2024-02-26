@@ -43,6 +43,7 @@ export const Laser = () => {
     const [searchedValueType, setSearchedValueType] = useState('');
     const [searchedValueMaterial, setSearchedValueMaterial] = useState('');
     const [searchedValueProgramNo, setSearchedValueProgramNo] = useState('');
+    const [searchedMachine, setSearchedMachine] = useState('');
     const [showToast, setShowToast] = useState(false);
     const [partCopy, setPartCopy] = useState('None');
     const [jobProgramNo, setJobProgramNo] = useState('None');
@@ -59,6 +60,7 @@ export const Laser = () => {
 
     const [programNo, setProgramNo] = useState();
     const [material, setMaterial] = useState();
+    const [machine, setMachine] = useState('Fiber');
     const [jobNo, setJobNo] = useState(' ');
 
     const [jobs, setJobs] = useState('Jobs');
@@ -87,7 +89,7 @@ export const Laser = () => {
     const handleClose = () => setShow(false);
 
     const handleSave = () => {
-        createMaterial(programNo, material, jobNo, 'laser')
+        createMaterial(programNo, material, jobNo, machine, 'laser')
         setShow(false);
         fetchData();
     };
@@ -179,6 +181,13 @@ export const Laser = () => {
                                 </FloatingLabel>
                                 <FloatingLabel controlId="floatingInput" label="Jobs" className="mb-3">
                                     <Form.Control onChange={(e) => {setJobNo(e.target.value)}} />
+                                </FloatingLabel>
+                                <FloatingLabel label="Machine" className="mb-3">
+                                    <Form.Control as="select" name="machine" onChange={(e) => {setMachine(e.target.value)}}>
+                                        <option>Fiber</option>
+                                        <option>Pulsar</option>
+                                        <option>Mitsubishi</option>
+                                    </Form.Control>
                                 </FloatingLabel>
                                 <FloatingLabel label="Area" className="mb-3">
                                     <Form.Control defaultValue="Laser" disabled />
@@ -431,6 +440,7 @@ export const Laser = () => {
                                             <th className='text-center'><input onChange={(e) => setSearchedValueProgramNo(e.target.value)} placeholder='&#xf002;  Program No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center'><input onChange={(e) => setSearchedValueMaterial(e.target.value)} placeholder='&#xf002;  Material' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center'><input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='&#xf002;  Job No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'>Machine</th>
                                             <th className='text-center'>Completed</th>
                                         </tr>
                                     </thead>
@@ -461,6 +471,7 @@ export const Laser = () => {
                                                             <td className='text-center jobBold'>{job.programNo}</td>
                                                             <td className='text-center'>{job.material}</td>
                                                             <td className='text-center'>{job.jobNo}</td>
+                                                            <td className='text-center'>{job.machine}</td>
                                                             <td className='text-center' onClick={() => handleShowComplete(job)}>
                                                                 <Icon icon={history}/>
                                                             </td>

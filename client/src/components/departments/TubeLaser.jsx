@@ -87,7 +87,7 @@ export const TubeLaser = () => {
     const handleClose = () => setShow(false);
 
     const handleSave = () => {
-        createMaterial(programNo, material, jobNo, 'tlaser')
+        createMaterial(programNo, material, jobNo, 'tlaser', 'tlaser')
         setShow(false);
         fetchData();
     };

@@ -25,6 +25,9 @@ Material.init(
         area: {
             type: DataTypes.STRING,
         },
+        machine: {
+            type: DataTypes.STRING,
+        },
         checkMatl: {
             type: DataTypes.BOOLEAN,
             defaultValue: true,
