@@ -26,6 +26,8 @@ import { Shear } from './components/departments/Shear';
 import { SLaser } from './components/departments/SLaser';
 import { TubeLaser } from './components/departments/TubeLaser';
 
+import { Purchasing } from './components/purchasing/Purchasing';
+
 import { Home } from './components/home/Home';
 import { Requests } from './components/home/Requests';
 import { Inventory } from './components/inventory/Inventory';
@@ -130,6 +132,11 @@ export const App = () => {
         <Route
           path='/tubelaser'
           element={<TubeLaser />}
+        />
+        
+        <Route
+          path='/purchasing'
+          element={<Purchasing />}
         />
 
         <Route

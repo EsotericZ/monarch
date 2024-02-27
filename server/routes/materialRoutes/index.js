@@ -3,6 +3,7 @@ let router = express.Router();
 
 const materialController = require('../../controllers/materialController');
 
+router.get('/getAllMaterials', materialController.getAllMaterials);
 router.get('/getAllTLMaterials', materialController.getAllTLMaterials);
 router.get('/getAllLaserMaterials', materialController.getAllLaserMaterials);
 router.get('/getAllSLMaterials', materialController.getAllSLMaterials);

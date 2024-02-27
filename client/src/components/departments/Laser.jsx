@@ -8,6 +8,7 @@ import { Icon } from 'react-icons-kit';
 import { check } from 'react-icons-kit/entypo/check';
 import { plus } from 'react-icons-kit/fa/plus'
 import { history } from 'react-icons-kit/fa/history'
+import { refresh } from 'react-icons-kit/fa/refresh';
 
 import getAllJobs from '../../services/laser/getAllJobs';
 import getTBRJobs from '../../services/laser/getTBRJobs';
@@ -347,8 +348,11 @@ export const Laser = () => {
                                         }
                                     </tbody>
                                 </Table>
-                                <Button className='rounded-circle refreshBtn' onClick={() => handleShow()}>
+                                <Button className='rounded-circle addBtn' onClick={() => handleShow()}>
                                     <Icon size={24} icon={plus}/>
+                                </Button>
+                                <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
+                                    <Icon size={24} icon={refresh}/>
                                 </Button>
                                 <ToastContainer position="bottom-end" className="p-3" style={{ zIndex: 1 }}>
                                     <Toast bg='success' onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide animation>
@@ -426,8 +430,11 @@ export const Laser = () => {
                                         }
                                     </tbody>
                                 </Table>
-                                <Button className='rounded-circle refreshBtn' onClick={() => handleShow()}>
+                                <Button className='rounded-circle addBtn' onClick={() => handleShow()}>
                                     <Icon size={24} icon={plus}/>
+                                </Button>
+                                <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
+                                    <Icon size={24} icon={refresh}/>
                                 </Button>
                             </div>
                         </Tab>
@@ -482,8 +489,11 @@ export const Laser = () => {
                                         }
                                     </tbody>
                                 </Table>
-                                <Button className='rounded-circle refreshBtn' onClick={() => handleShow()}>
+                                <Button className='rounded-circle addBtn' onClick={() => handleShow()}>
                                     <Icon size={24} icon={plus}/>
+                                </Button>
+                                <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
+                                    <Icon size={24} icon={refresh}/>
                                 </Button>
                             </div>
                         </Tab>

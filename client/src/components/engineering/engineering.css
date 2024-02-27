@@ -31,6 +31,17 @@
     right: 20px;
 }
 
+.addBtn {
+    background-color: #111827;
+    color: white;
+    height: 52.5px;
+    width: 52.5px;
+    z-index: 1;
+    position: fixed;
+    bottom: 20px;
+    left: 100px;
+}
+
 .toastCopy {
     position: fixed;
     bottom: 22.5px;

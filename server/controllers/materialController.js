@@ -1,6 +1,28 @@
 const { Material } = require('../models');
 require("dotenv").config();
 
+async function getAllMaterials(req, res) {
+    await Material.findAll({
+        where: {
+            checkMatl: 0,
+            verified: 0,
+            completed: 0,
+        },
+        order: [
+            ['programNo', 'ASC']
+        ],
+    })
+    .then((result) => {
+        return res.status(200).send({
+            data: result
+        })
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
+
 async function getAllTLMaterials(req, res) {
     await Material.findAll({
         where: {
@@ -337,6 +359,7 @@ async function updateVerified(req, res) {
 
 
 module.exports = {
+    getAllMaterials,
     getAllTLMaterials,
     getAllLaserMaterials,
     getAllSLMaterials,
