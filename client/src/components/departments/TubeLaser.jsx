@@ -54,6 +54,8 @@ export const TubeLaser = () => {
     const [searchedTBR, setSearchedTBR] = useState([]);
     const [searchedFR, setSearchedFR] = useState([]);
     const [searchedTLPrograms, setSearchedTLPrograms] = useState([]);
+    const [needsNestingTBR, setNeedsNestingTBR] = useState([]);
+    const [needsNestingFuture, setNeedsNestingFuture] = useState([]);
     const [loading, setLoading] = useState(true);
     const [show, setShow] = useState(false);
     const [showComplete, setShowComplete] = useState(false);
@@ -63,6 +65,7 @@ export const TubeLaser = () => {
     const [jobNo, setJobNo] = useState(' ');
 
     const [jobs, setJobs] = useState('Jobs');
+    const [nest, setNest] = useState('Nest');
     const [programMatl, setProgramMatl] = useState('Material');
     const [programs, setPrograms] = useState('Programs');
 
@@ -79,6 +82,19 @@ export const TubeLaser = () => {
             setSearchedTBR(tbrJobs);
             setSearchedFR(frJobs);
             setSearchedTLPrograms(tlMaterials.data);
+            
+            const uniq = [...new Set(tlMaterials.data.flatMap(job => job.jobNo.length > 6 ? job.jobNo.split(' ') : job.jobNo))];
+
+            if (uniq.length > 0) {
+                let tbrJobsNeeded = tbrJobs.filter(job => !uniq.includes(job.JobNo))
+                tbrJobsNeeded.pop()
+                setNeedsNestingTBR(tbrJobsNeeded);
+                
+                let futureJobsNeeded = frJobs.filter(job => !uniq.includes(job.JobNo))
+                futureJobsNeeded.pop()
+                setNeedsNestingFuture(futureJobsNeeded);
+            }
+
             setLoading(false);
         } catch (err) {
             console.error(err);
@@ -115,7 +131,6 @@ export const TubeLaser = () => {
     const handleCloseComplete = () => setShowComplete(false);
 
     const toggleComplete = async () => {
-        console.log(jobId)
         setShowComplete(false);
         try {
             await updateComplete(jobId)
@@ -212,12 +227,12 @@ export const TubeLaser = () => {
                     </Modal>
 
                     <Tabs
-                        defaultActiveKey="jobs"
+                        defaultActiveKey="nest"
                         id="justify-tab-example"
                         className='mb-3'
                         justify
                     >
-                        <Tab eventKey="jobs" title={jobs}>
+                        <Tab eventKey="nest" title={nest}>
                             <div className='mx-3'>
                                 <Table striped hover>
                                     <thead>
@@ -234,10 +249,12 @@ export const TubeLaser = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr className='divide'>
-                                            <td className='text-center' colspan='9'>TBR</td>
-                                        </tr>
-                                        {searchedTBR
+                                        {needsNestingTBR.length > 0 &&
+                                            <tr className='divide'>
+                                                <td className='text-center' colspan='9'>TBR</td>
+                                            </tr>
+                                        }
+                                        {needsNestingTBR
                                             .filter(row => typeof row.JobNo !== 'undefined')
                                             .filter((row) => 
                                                 !searchedValueJobNo || row.JobNo
@@ -285,10 +302,12 @@ export const TubeLaser = () => {
                                                 )
                                             })
                                         }
-                                        <tr className='divide'>
-                                            <td className='text-center' colspan='9'>FUTURE</td>
-                                        </tr>
-                                        {searchedFR
+                                        {needsNestingFuture.length > 0 &&
+                                            <tr className='divide'>
+                                                <td className='text-center' colspan='9'>FUTURE</td>
+                                            </tr>
+                                        }
+                                        {needsNestingFuture
                                             .filter(row => typeof row.JobNo !== 'undefined')
                                             .filter((row) => 
                                                 !searchedValueJobNo || row.JobNo
@@ -485,6 +504,145 @@ export const TubeLaser = () => {
                                 <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
                                     <Icon size={24} icon={refresh}/>
                                 </Button>
+                            </div>
+                        </Tab>
+             
+                        <Tab eventKey="jobs" title={jobs}>
+                            <div className='mx-3'>
+                                <Table striped hover>
+                                    <thead>
+                                        <tr>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='&#xf002;  Job No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'>Step No</th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValuePartNo(e.target.value)} placeholder='&#xf002;  Part No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'>Revision</th>
+                                            <th className='text-center'>Qty</th>
+                                            <th className='text-center'>Due Date</th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='&#xf002;  Customer' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='&#xf002;  Type' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueMaterial(e.target.value)} placeholder='&#xf002;  Materials' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr className='divide'>
+                                            <td className='text-center' colspan='9'>TBR</td>
+                                        </tr>
+                                        {searchedTBR
+                                            .filter(row => typeof row.JobNo !== 'undefined')
+                                            .filter((row) => 
+                                                !searchedValueJobNo || row.JobNo
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueJobNo.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValuePartNo || row.PartNo
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValuePartNo.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueCustomer || row.CustCode
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueCustomer.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueType || row.User_Text3
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueType.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueMaterial || row.SubPartNo
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueMaterial.toString().toLowerCase())
+                                            )
+                                            .map((job, index) => {
+                                                return (
+                                                    <tr key={index} job={job}>
+                                                        <td className='text-center jobBold'>{job.JobNo}</td>
+                                                        <td className='text-center'>{job.StepNo}</td>
+                                                        <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td>
+                                                        <td className='text-center'>{job.Revision}</td>
+                                                        <td className='text-center'>{job.EstimQty}</td>
+                                                        <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
+                                                        <td className='text-center'>{job.CustCode}</td>
+                                                        <td className='text-center'>{job.User_Text3}</td>
+                                                        <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.SubPartNo}`); setShowToast(true); setPartCopy(`${job.SubPartNo}`) }}>{job.SubPartNo}</td>
+                                                    </tr>
+                                                )
+                                            })
+                                        }
+                                        <tr className='divide'>
+                                            <td className='text-center' colspan='9'>FUTURE</td>
+                                        </tr>
+                                        {searchedFR
+                                            .filter(row => typeof row.JobNo !== 'undefined')
+                                            .filter((row) => 
+                                                !searchedValueJobNo || row.JobNo
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueJobNo.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValuePartNo || row.PartNo
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValuePartNo.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueCustomer || row.CustCode
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueCustomer.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueType || row.User_Text3
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueType.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueMaterial || row.SubPartNo
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueMaterial.toString().toLowerCase())
+                                            )
+                                            .map((job, index) => {
+                                                if (job.User_Text2 == '1. OFFICE') {
+                                                    return (
+                                                        <tr key={index} job={job}>
+                                                            <td className='text-center jobBold'>{job.JobNo}</td>
+                                                            <td className='text-center'>{job.StepNo}</td>
+                                                            <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td>
+                                                            <td className='text-center'>{job.Revision}</td>
+                                                            <td className='text-center'>{job.EstimQty}</td>
+                                                            <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
+                                                            <td className='text-center'>{job.CustCode}</td>
+                                                            <td className='text-center'>{job.User_Text3}</td>
+                                                            <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.SubPartNo}`); setShowToast(true); setPartCopy(`${job.SubPartNo}`) }}>{job.SubPartNo}</td>
+                                                        </tr>
+                                                    )
+                                                }
+                                            })
+                                        }
+                                    </tbody>
+                                </Table>
+                                <Button className='rounded-circle addBtn' onClick={() => handleShow()}>
+                                    <Icon size={24} icon={plus}/>
+                                </Button>
+                                <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
+                                    <Icon size={24} icon={refresh}/>
+                                </Button>
+                                <ToastContainer position="bottom-end" className="p-3" style={{ zIndex: 1 }}>
+                                    <Toast bg='success' onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide animation>
+                                        <Toast.Body>
+                                            <strong className="me-auto">{partCopy} Copied To Clipboard </strong>
+                                        </Toast.Body>
+                                    </Toast>
+                                </ToastContainer>
                             </div>
                         </Tab>
 
