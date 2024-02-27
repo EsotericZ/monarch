@@ -234,9 +234,11 @@ export const Shear = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr className='divide'>
-                                            <td className='text-center' colspan='9'>TBR</td>
-                                        </tr>
+                                        {searchedTBR.length > 1 &&
+                                            <tr className='divide'>
+                                                <td className='text-center' colspan='9'>TBR</td>
+                                            </tr>
+                                        }
                                         {searchedTBR
                                             .filter(row => typeof row.JobNo !== 'undefined')
                                             .filter((row) => 
@@ -285,9 +287,11 @@ export const Shear = () => {
                                                 )
                                             })
                                         }
-                                        <tr className='divide'>
-                                            <td className='text-center' colspan='9'>FUTURE</td>
-                                        </tr>
+                                        {searchedFR.length > 1 &&
+                                            <tr className='divide'>
+                                                <td className='text-center' colspan='9'>FUTURE</td>
+                                            </tr>
+                                        }
                                         {searchedFR
                                             .filter(row => typeof row.JobNo !== 'undefined')
                                             .filter((row) => 
