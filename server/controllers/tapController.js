@@ -45,18 +45,16 @@ async function getMetricTaps(req, res) {
 }
 
 async function createTap(req, res) {
-    console.log('!!!!!!!!!!!!!!!!!!')
-    console.log(req.body)
-    // await Taps.create(req.body)
-    // .then((result) => {
-    //     return res.status(200).send({
-    //         data: result
-    //     })
-    // }).catch((err) => {
-    //     return res.status(500).send({
-    //         status: err
-    //     })
-    // })
+    await Taps.create(req.body)
+    .then((result) => {
+        return res.status(200).send({
+            data: result
+        })
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
 }
 
 module.exports = {

@@ -33,7 +33,7 @@ export const TapChart = () => {
     const [tapName, setTapName] = useState('');
     const [holeSize, setHoleSize] = useState('');
     const [type, setType] = useState('Standard');
-    const [notes, setNotes] = useState('');
+    const [notes, setNotes] = useState('-');
     const [show, setShow] = useState(false);
     const [loading, setLoading] = useState(false);
 
@@ -56,14 +56,20 @@ export const TapChart = () => {
 
     const handleClose = () => setShow(false);
 
-    const handleSave = () => {
-        createTap(tapName, holeSize, type, notes);
-        setShow(false);
-        setTapName('');
-        setHoleSize('');
-        setType('Standard');
-        setNotes('');
-        // fetchData();
+    const handleSave = async () => {
+        try {
+
+            await createTap(tapName, holeSize, type, notes);
+            setShow(false);
+            setTapName('');
+            setHoleSize('');
+            setType('Standard');
+            setNotes('-');
+        } catch (err) {
+            console.error(err);
+        } finally {
+            fetchData();
+        }
     };
 
     const handleShow = () => {
