@@ -87,11 +87,9 @@ export const TubeLaser = () => {
 
             if (uniq.length > 0) {
                 let tbrJobsNeeded = tbrJobs.filter(job => !uniq.includes(job.JobNo))
-                tbrJobsNeeded.pop()
                 setNeedsNestingTBR(tbrJobsNeeded);
                 
                 let futureJobsNeeded = frJobs.filter(job => !uniq.includes(job.JobNo))
-                futureJobsNeeded.pop()
                 setNeedsNestingFuture(futureJobsNeeded);
             }
 
@@ -249,7 +247,7 @@ export const TubeLaser = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {needsNestingTBR.length > 0 &&
+                                        {needsNestingTBR.length > 1 &&
                                             <tr className='divide'>
                                                 <td className='text-center' colspan='9'>TBR</td>
                                             </tr>
@@ -302,7 +300,7 @@ export const TubeLaser = () => {
                                                 )
                                             })
                                         }
-                                        {needsNestingFuture.length > 0 &&
+                                        {needsNestingFuture.length > 1 &&
                                             <tr className='divide'>
                                                 <td className='text-center' colspan='9'>FUTURE</td>
                                             </tr>
