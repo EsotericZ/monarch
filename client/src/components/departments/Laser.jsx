@@ -93,6 +93,9 @@ export const Laser = () => {
                 
                 let futureJobsNeeded = frJobs.filter(job => !uniq.includes(job.JobNo))
                 setNeedsNestingFuture(futureJobsNeeded);
+            } else {
+                setNeedsNestingTBR(tbrJobs);
+                setNeedsNestingFuture(frJobs);
             }
 
             setLoading(false);
