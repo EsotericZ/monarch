@@ -15,7 +15,7 @@ import getAllUsers from '../../services/users/getAllUsers';
 import updateFormStatus from '../../services/forming/updateFormStatus';
 import updateFormProgrammer from '../../services/forming/updateFormProgrammer';
 import { Sidebar } from '../sidebar/Sidebar';
-import '../engineering/engineering.css';
+import '../programming/engineering.css';
 
 export const FormingProg = () => {
     const cookies = new Cookies();

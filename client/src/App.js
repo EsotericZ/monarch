@@ -5,23 +5,23 @@ import 'font-awesome/css/font-awesome.min.css';
 import { Admin } from './components/admin/Admin';
 import { Calendar } from './components/calendar/Calendar';
 
-import { Programming } from './components/engineering/Programming';
-import { Engineering } from './components/engineering/Engineering';
-import { Quality } from './components/engineering/Quality';
-import { TLaserProg } from './components/engineering/TLaserProg';
-import { FormingProg } from './components/engineering/FormingProg';
-import { BendDeduction } from './components/engineering/BendDeduction';
-import { Machining } from './components/engineering/Machining';
-import { Hardware } from './components/engineering/Hardware';
-import { TapChart } from './components/engineering/TapChart';
+import { Programming } from './components/programming/Programming';
+import { Engineering } from './components/programming/Engineering';
+import { Quality } from './components/programming/Quality';
+import { TubeLaserProg } from './components/programming/TubeLaserProg';
+import { FormingProg } from './components/programming/FormingProg';
+import { BendDeduction } from './components/programming/BendDeduction';
+import { Machining } from './components/programming/Machining';
+import { Hardware } from './components/programming/Hardware';
+import { TapChart } from './components/programming/TapChart';
 
 import { Departments } from './components/departments/Departments';
-import { FLaser } from './components/departments/FLaser';
+import { FixtureLaser } from './components/departments/FixtureLaser';
 import { Laser } from './components/departments/Laser';
 import { Punch } from './components/departments/Punch';
 import { Saw } from './components/departments/Saw';
 import { Shear } from './components/departments/Shear';
-import { SLaser } from './components/departments/SLaser';
+import { StaticLaser } from './components/departments/StaticLaser';
 import { TubeLaser } from './components/departments/TubeLaser';
 
 import { Purchasing } from './components/purchasing/Purchasing';
@@ -72,8 +72,8 @@ export const App = () => {
           element={<Quality />}
         />
         <Route
-          path='/tlaserprog'
-          element={<TLaserProg />}
+          path='/tubelaserprog'
+          element={<TubeLaserProg />}
         />
         <Route
           path='/formingprog'
@@ -103,7 +103,7 @@ export const App = () => {
         />
         <Route
           path='/fixturelaser'
-          element={<FLaser />}
+          element={<FixtureLaser />}
         />
         <Route
           path='/laser'
@@ -123,7 +123,7 @@ export const App = () => {
         />
         <Route
           path='/staticlaser'
-          element={<SLaser />}
+          element={<StaticLaser />}
         />
         <Route
           path='/tubelaser'

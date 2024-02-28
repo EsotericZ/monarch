@@ -15,9 +15,9 @@ import getAllUsers from '../../services/users/getAllUsers';
 import updateTLStatus from '../../services/tlaser/updateTLStatus';
 import updateTLProgrammer from '../../services/tlaser/updateTLProgrammer';
 import { Sidebar } from '../sidebar/Sidebar';
-import '../engineering/engineering.css';
+import '../programming/engineering.css';
 
-export const TLaserProg = () => {
+export const TubeLaserProg = () => {
     const cookies = new Cookies();
     let cookieData
     try {

@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, FloatingLabel, Form, Modal, Tab, Tabs, Table } from 'react-bootstrap';
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 
-import getAllJobs from '../../services/engineering/getAllJobs';
 import { Sidebar } from '../sidebar/Sidebar';
 
 export const Departments = () => {

@@ -10,11 +10,11 @@ import { plus } from 'react-icons-kit/fa/plus'
 import { history } from 'react-icons-kit/fa/history'
 import { refresh } from 'react-icons-kit/fa/refresh';
 
-import getAllJobs from '../../services/slaser/getAllJobs';
-import getTBRJobs from '../../services/slaser/getTBRJobs';
-import getFRJobs from '../../services/slaser/getFRJobs';
+import getAllJobs from '../../services/flaser/getAllJobs';
+import getTBRJobs from '../../services/flaser/getTBRJobs';
+import getFRJobs from '../../services/flaser/getFRJobs';
 import createMaterial from '../../services/material/createMaterial';
-import getAllSLMaterials from '../../services/material/getAllSLMaterials';
+import getAllFLMaterials from '../../services/material/getAllFLMaterials';
 
 import updateCheck from '../../services/material/updateCheck';
 import updateComplete from '../../services/material/updateComplete';
@@ -25,7 +25,7 @@ import updateVerified from '../../services/material/updateVerified';
 import { Sidebar } from '../sidebar/Sidebar';
 import './departments.css';
 
-export const SLaser = () => {
+export const FixtureLaser = () => {
     const cookies = new Cookies();
     let cookieData
     try {
@@ -51,24 +51,18 @@ export const SLaser = () => {
     const [jobId, setJobId] = useState(0);
     const [update, setUpdate] = useState('');
 
-    const [searchedJobs, setSearchedJobs] = useState([]);
+    const [searchedTL, setSearchedTL] = useState([]);
     const [searchedTBR, setSearchedTBR] = useState([]);
     const [searchedFR, setSearchedFR] = useState([]);
-    const [searchedSLPrograms, setSearchedSLPrograms] = useState([]);
+    const [searchedFLPrograms, setSearchedFLPrograms] = useState([]);
     const [loading, setLoading] = useState(true);
     const [show, setShow] = useState(false);
     const [showComplete, setShowComplete] = useState(false);
 
     const [programNo, setProgramNo] = useState();
     const [material, setMaterial] = useState();
-    const [machine, setMachine] = useState('Fiber');
+    const [machine, setMachine] = useState('Pulsar');
     const [jobNo, setJobNo] = useState(' ');
-
-    // const [jobNoInfo, setJobNoInfo] = useState();
-    // const [custInfo, setCustInfo] = useState();
-    // const [partNoInfo, setParNoInfo] = useState();
-    // const [engineerInfo, setEngineerInfo] = useState();
-    // const [jobStatus, setJobStatus] = useState(' ');
 
     const [jobs, setJobs] = useState('Jobs');
     const [programMatl, setProgramMatl] = useState('Material');
@@ -76,17 +70,17 @@ export const SLaser = () => {
 
     const fetchData = async () => {
         try {
-            const [allJobs, tbrJobs, frJobs, laserMaterials] = await Promise.all([
+            const [allJobs, tbrJobs, frJobs, flMaterials] = await Promise.all([
                 getAllJobs(),
                 getTBRJobs(),
                 getFRJobs(),
-                getAllSLMaterials()
+                getAllFLMaterials()
             ]);
     
-            // setSearchedTL(allJobs);
+            setSearchedTL(allJobs);
             setSearchedTBR(tbrJobs);
             setSearchedFR(frJobs);
-            setSearchedSLPrograms(laserMaterials.data);
+            setSearchedFLPrograms(flMaterials.data);
             setLoading(false);
         } catch (err) {
             console.error(err);
@@ -96,7 +90,7 @@ export const SLaser = () => {
     const handleClose = () => setShow(false);
 
     const handleSave = () => {
-        createMaterial(programNo, material, jobNo, machine, 'slaser')
+        createMaterial(programNo, material, jobNo, machine, 'flaser')
         setShow(false);
         fetchData();
     };
@@ -168,12 +162,12 @@ export const SLaser = () => {
             <Sidebar />
             {loading ?
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
-                    <h1 className='text-center'>Static Laser</h1>
+                    <h1 className='text-center'>Fixture Laser</h1>
                     <h2 className='text-center'>Loading</h2>
                 </div>
             :
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
-                    <h1 className='text-center'>Static Laser</h1>
+                    <h1 className='text-center'>Fixture Laser</h1>
                     <Modal show={show} onHide={handleClose}>
                         <Modal.Header closeButton>
                             <Modal.Title className="justify-content-center">Add Program</Modal.Title>
@@ -191,13 +185,13 @@ export const SLaser = () => {
                                 </FloatingLabel>
                                 <FloatingLabel label="Machine" className="mb-3">
                                     <Form.Control as="select" name="machine" onChange={(e) => {setMachine(e.target.value)}}>
-                                        <option>Fiber</option>
                                         <option>Pulsar</option>
+                                        <option>Fiber</option>
                                         <option>Mitsubishi</option>
                                     </Form.Control>
                                 </FloatingLabel>
                                 <FloatingLabel label="Area" className="mb-3">
-                                    <Form.Control defaultValue="Static Laser" disabled />
+                                    <Form.Control defaultValue="Fixture Laser" disabled />
                                 </FloatingLabel>
                             </Form>
                         </Modal.Body>
@@ -389,7 +383,7 @@ export const SLaser = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {searchedSLPrograms
+                                        {searchedFLPrograms
                                             .filter((row) => 
                                                 !searchedValueProgramNo || row.programNo
                                                     .toString()
@@ -462,7 +456,7 @@ export const SLaser = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {searchedSLPrograms
+                                        {searchedFLPrograms
                                             .filter((row) => 
                                                 !searchedValueProgramNo || row.programNo
                                                     .toString()
