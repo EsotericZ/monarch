@@ -56,7 +56,6 @@ export const Engineering = () => {
                     <Link to='/benddeduction'><h3 className='text-center'>Bend Deduction</h3></Link>                   
                     <Link to='/hardware'><h3 className='text-center'>Hardware</h3></Link>                   
                     <Link to='/machining'><h3 className='text-center'>Machining</h3></Link>                   
-                    <Link to='/nesting'><h3 className='text-center'>Nesting</h3></Link>                   
                     <Link to='/tapchart'><h3 className='text-center'>Tap Chart</h3></Link>                   
                 </div>
             }
