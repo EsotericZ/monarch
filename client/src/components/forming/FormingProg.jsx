@@ -17,7 +17,7 @@ import updateFormProgrammer from '../../services/forming/updateFormProgrammer';
 import { Sidebar } from '../sidebar/Sidebar';
 import '../engineering/engineering.css';
 
-export const Forming = () => {
+export const FormingProg = () => {
     const cookies = new Cookies();
     let cookieData
     try {

@@ -5,17 +5,16 @@ import 'font-awesome/css/font-awesome.min.css';
 import { Admin } from './components/admin/Admin';
 import { Calendar } from './components/calendar/Calendar';
 
+import { Programming } from './components/engineering/Programming';
 import { Engineering } from './components/engineering/Engineering';
-import { EngJobs } from './components/engineering/EngJobs';
-import { BendDeduction } from './components/engineering/BendDeduction';
-import { Hardware } from './components/engineering/Hardware';
-import { Machining } from './components/engineering/Machining';
-import { Nesting } from './components/engineering/Nesting';
 import { Quality } from './components/engineering/Quality';
-import { TapChart } from './components/engineering/TapChart';
 import { TLaserProg } from './components/engineering/TLaserProg';
+import { FormingProg } from './components/forming/FormingProg';
+import { BendDeduction } from './components/engineering/BendDeduction';
+import { Machining } from './components/engineering/Machining';
+import { Hardware } from './components/engineering/Hardware';
+import { TapChart } from './components/engineering/TapChart';
 
-import { Forming } from './components/forming/Forming';
 
 import { Departments } from './components/departments/Departments';
 import { FLaser } from './components/departments/FLaser';
@@ -59,17 +58,27 @@ export const App = () => {
           element={<Calendar />}
         />
 
+
+
+        <Route
+          path='/programming'
+          element={<Programming />}
+        />
         <Route
           path='/engineering'
           element={<Engineering />}
         />
         <Route
-          path='/engjobs'
-          element={<EngJobs />}
-        />
-        <Route
           path='/quality'
           element={<Quality />}
+        />
+        <Route
+          path='/tlaserprog'
+          element={<TLaserProg />}
+        />
+        <Route
+          path='/formingprog'
+          element={<FormingProg />}
         />
         <Route
           path='/benddeduction'
@@ -84,22 +93,10 @@ export const App = () => {
           element={<Machining />}
         />
         <Route
-          path='/nesting'
-          element={<Nesting />}
-        />
-        <Route
           path='/tapchart'
           element={<TapChart />}
         />
-        <Route
-          path='/tlaserprog'
-          element={<TLaserProg />}
-        />
 
-        <Route
-          path='/forming'
-          element={<Forming />}
-        />
 
         <Route
           path='/departments'

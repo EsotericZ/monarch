@@ -181,51 +181,57 @@ export const Home = () => {
                                         <div className="row homeBox">
                                             <div className="row jobTitle">
                                                 <table>
-                                                    <tr>
-                                                        <td className='text-end tableKey'>Total</td>
-                                                        <td className='text-start tableValue'>{engTotal}</td>
-                                                    </tr>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th className='text-end tableKey'>Total</th>
+                                                            <th className='text-start tableValue'>{engTotal}</th>
+                                                        </tr>
+                                                    </tbody>
                                                 </table>
                                             </div>
                                             <div className="row">
                                                 <div className="jobBox">
                                                     <table>
-                                                        <tr>
-                                                            <td className='text-end tableKey'>TBR</td>
-                                                            <td className='text-start tableValue'>{engTbr}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td className='text-end tableKey'>Future</td>
-                                                            <td className='text-start tableValue'>{engFuture}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td className='text-end tableKey'>Expedite</td>
-                                                            <td className='text-start tableValue'>{expedite}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td className='text-end tableKey'>Repeats</td>
-                                                            <td className='text-start tableValue'>{engRepeat}</td>
-                                                        </tr>
+                                                        <tbody>
+                                                            <tr>
+                                                                <th className='text-end tableKey'>TBR</th>
+                                                                <th className='text-start tableValue'>{engTbr}</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th className='text-end tableKey'>Future</th>
+                                                                <th className='text-start tableValue'>{engFuture}</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th className='text-end tableKey'>Expedite</th>
+                                                                <th className='text-start tableValue'>{expedite}</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th className='text-end tableKey'>Repeats</th>
+                                                                <th className='text-start tableValue'>{engRepeat}</th>
+                                                            </tr>
+                                                        </tbody>
                                                     </table>
                                                 </div>
                                                 <div className="jobBox">
                                                     <table>
-                                                        <tr>
-                                                            <td className='text-end tableKey'>Outsource</td>
-                                                            <td className='text-start tableValue'>{engOutsource}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td className='text-end tableKey'>BD Test</td>
-                                                            <td className='text-start tableValue'>{testBD}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td className='text-end tableKey'>Prototype</td>
-                                                            <td className='text-start tableValue'>{proto}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td className='text-end tableKey'>Unconfirmed</td>
-                                                            <td className='text-start tableValue'>{unconfirmedTotal}</td>
-                                                        </tr>
+                                                        <tbody>
+                                                            <tr>
+                                                                <th className='text-end tableKey'>Outsource</th>
+                                                                <th className='text-start tableValue'>{engOutsource}</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th className='text-end tableKey'>BD Test</th>
+                                                                <th className='text-start tableValue'>{testBD}</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th className='text-end tableKey'>Prototype</th>
+                                                                <th className='text-start tableValue'>{proto}</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th className='text-end tableKey'>Unconfirmed</th>
+                                                                <th className='text-start tableValue'>{unconfirmedTotal}</th>
+                                                            </tr>
+                                                        </tbody>
                                                     </table>
                                                 </div>
                                             </div>

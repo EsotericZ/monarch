@@ -62,7 +62,9 @@ export const Sidebar = () => {
                             </NavLink>
                         :
                             <CDBSidebarSubMenu title="Home" icon="home">
-                                <CDBSidebarMenuItem>Display List</CDBSidebarMenuItem>
+                                {/* <Link to='/http://10.0.1.78/monarch_jobdisplay'> */}
+                                    <CDBSidebarMenuItem>Display List</CDBSidebarMenuItem>
+                                {/* </Link> */}
                                 <CDBSidebarMenuItem>Directory</CDBSidebarMenuItem>
                                 <CDBSidebarMenuItem>Purchasing</CDBSidebarMenuItem>
                                 <CDBSidebarMenuItem>Supplies</CDBSidebarMenuItem>
@@ -70,16 +72,19 @@ export const Sidebar = () => {
                         }
 
                         {open ?
-                            <NavLink exact to='/engineering'>
-                                <CDBSidebarMenuItem icon='ghost'>Inventory</CDBSidebarMenuItem>
+                            <NavLink exact to='/programming'>
+                                <CDBSidebarMenuItem icon='ghost'>Programming</CDBSidebarMenuItem>
                             </NavLink>
                         :
-                            <CDBSidebarSubMenu title="Engineering" icon="ghost">
-                                <NavLink exact to='/engjobs'>
-                                    <CDBSidebarMenuItem>Jobs</CDBSidebarMenuItem>
+                            <CDBSidebarSubMenu title="Programming" icon="ghost">
+                                <NavLink exact to='/engineering'>
+                                    <CDBSidebarMenuItem>Engineering</CDBSidebarMenuItem>
                                 </NavLink>
                                 <NavLink exact to='/quality'>
                                     <CDBSidebarMenuItem>Quality</CDBSidebarMenuItem>
+                                </NavLink>
+                                <NavLink exact to='/formingprog'>
+                                    <CDBSidebarMenuItem>Forming</CDBSidebarMenuItem>
                                 </NavLink>
                                 <NavLink exact to='/benddeduction'>
                                     <CDBSidebarMenuItem>Bend Deduction</CDBSidebarMenuItem>
@@ -89,9 +94,6 @@ export const Sidebar = () => {
                                 </NavLink>
                                 <NavLink exact to='/machining'>
                                     <CDBSidebarMenuItem>Machining</CDBSidebarMenuItem>
-                                </NavLink>
-                                <NavLink exact to='/nesting'>
-                                    <CDBSidebarMenuItem>Nesting</CDBSidebarMenuItem>
                                 </NavLink>
                                 <NavLink exact to='/tapchart'>
                                     <CDBSidebarMenuItem>Tap Chart</CDBSidebarMenuItem>
@@ -107,9 +109,6 @@ export const Sidebar = () => {
                             <CDBSidebarSubMenu title="Departments" icon="th">
                                 <NavLink exact to='/fixturelaser'>
                                 <CDBSidebarMenuItem>Fixture Laser</CDBSidebarMenuItem>
-                                </NavLink>
-                                <NavLink exact to='/forming'>
-                                    <CDBSidebarMenuItem>Forming</CDBSidebarMenuItem>
                                 </NavLink>
                                 <CDBSidebarMenuItem>Laser (Enterprise)</CDBSidebarMenuItem>
                                 <NavLink exact to='/punch'>
