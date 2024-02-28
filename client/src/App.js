@@ -9,12 +9,11 @@ import { Programming } from './components/engineering/Programming';
 import { Engineering } from './components/engineering/Engineering';
 import { Quality } from './components/engineering/Quality';
 import { TLaserProg } from './components/engineering/TLaserProg';
-import { FormingProg } from './components/forming/FormingProg';
+import { FormingProg } from './components/engineering/FormingProg';
 import { BendDeduction } from './components/engineering/BendDeduction';
 import { Machining } from './components/engineering/Machining';
 import { Hardware } from './components/engineering/Hardware';
 import { TapChart } from './components/engineering/TapChart';
-
 
 import { Departments } from './components/departments/Departments';
 import { FLaser } from './components/departments/FLaser';
