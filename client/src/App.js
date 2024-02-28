@@ -18,6 +18,7 @@ import { TapChart } from './components/programming/TapChart';
 import { Departments } from './components/departments/Departments';
 import { FixtureLaser } from './components/departments/FixtureLaser';
 import { Laser } from './components/departments/Laser';
+import { Forming } from './components/departments/Forming';
 import { Punch } from './components/departments/Punch';
 import { Saw } from './components/departments/Saw';
 import { Shear } from './components/departments/Shear';
@@ -57,8 +58,6 @@ export const App = () => {
           element={<Calendar />}
         />
 
-
-
         <Route
           path='/programming'
           element={<Programming />}
@@ -96,7 +95,6 @@ export const App = () => {
           element={<TapChart />}
         />
 
-
         <Route
           path='/departments'
           element={<Departments />}
@@ -108,6 +106,10 @@ export const App = () => {
         <Route
           path='/laser'
           element={<Laser />}
+        />
+        <Route
+          path='/forming'
+          element={<Forming />}
         />
         <Route
           path='/punch'
