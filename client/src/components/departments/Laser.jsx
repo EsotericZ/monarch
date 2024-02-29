@@ -66,8 +66,8 @@ export const Laser = () => {
     const [machine, setMachine] = useState('Fiber');
     const [jobNo, setJobNo] = useState(' ');
 
-    const [jobs, setJobs] = useState('Jobs');
-    const [nest, setNest] = useState('Nest');
+    const [jobs, setJobs] = useState('All Jobs');
+    const [nest, setNest] = useState('Ready to Nest');
     const [programMatl, setProgramMatl] = useState('Material');
     const [programs, setPrograms] = useState('Programs');
 

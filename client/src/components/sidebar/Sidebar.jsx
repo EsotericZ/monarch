@@ -66,8 +66,12 @@ export const Sidebar = () => {
                                     <CDBSidebarMenuItem>Display List</CDBSidebarMenuItem>
                                 {/* </Link> */}
                                 <CDBSidebarMenuItem>Directory</CDBSidebarMenuItem>
-                                <CDBSidebarMenuItem>Purchasing</CDBSidebarMenuItem>
-                                <CDBSidebarMenuItem>Supplies</CDBSidebarMenuItem>
+                                <NavLink exact to='/purchasing'>
+                                    <CDBSidebarMenuItem>Purchasing</CDBSidebarMenuItem>
+                                </NavLink>
+                                <NavLink exact to='/supplies'>
+                                    <CDBSidebarMenuItem>Supplies</CDBSidebarMenuItem>
+                                </NavLink>
                             </CDBSidebarSubMenu>
                         }
 

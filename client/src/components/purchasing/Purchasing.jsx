@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button, Tab, Tabs, Table } from 'react-bootstrap';
+import { format, parseISO } from 'date-fns';
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 
@@ -8,13 +9,15 @@ import { check } from 'react-icons-kit/entypo/check';
 import { refresh } from 'react-icons-kit/fa/refresh';
 
 import getAllMaterials from '../../services/material/getAllMaterials';
+import getAllSupplies from '../../services/supplies/getAllSupplies';
 
 import updateNeed from '../../services/material/updateNeed';
 import updateOnOrder from '../../services/material/updateOnOrder';
 import updateVerified from '../../services/material/updateVerified';
+import updateOnOrderSupplies from '../../services/supplies/updateOnOrderSupplies';
+import updateCompleteSupplies from '../../services/supplies/updateCompleteSupplies';
 
 import { Sidebar } from '../sidebar/Sidebar';
-// import './departments.css';
 
 export const Purchasing = () => {
     const cookies = new Cookies();
@@ -29,25 +32,32 @@ export const Purchasing = () => {
         };
     }
 
+    const [searchedValueSupplies, setSearchedValueSupplies] = useState('');
+    const [searchedValueArea, setSearchedValueArea] = useState('');
+    const [searchedValueEmployee, setSearchedValueEmployee] = useState('');
     const [searchedValueJobNo, setSearchedValueJobNo] = useState('');
     const [searchedValueMaterial, setSearchedValueMaterial] = useState('');
     const [searchedValueProgramNo, setSearchedValueProgramNo] = useState('');
     const [update, setUpdate] = useState('');
     
     const [searchedPrograms, setSearchedPrograms] = useState([]);
+    const [searchedSupplies, setSearchedSupplies] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const [lasers, setLasers] = useState('');
-    const [saws, setSaws] = useState('Saw / Tube Laser');
-    const [punch, setPunch] = useState('Shear / Punch');
+    const [saws, setSaws] = useState('');
+    const [punch, setPunch] = useState('');
+    const [supplies, setSupplies] = useState('');
 
     const fetchData = async () => {
         try {
-            const [allMaterials] = await Promise.all([
-                getAllMaterials()
+            const [allMaterials, allSupplies] = await Promise.all([
+                getAllMaterials(),
+                getAllSupplies()
             ]);
     
             setSearchedPrograms(allMaterials.data);
+            setSearchedSupplies(allSupplies.data);
 
             let laserCount = allMaterials.data.filter(row => row.area == 'laser' || row.area == 'flaser' || row.area == 'slaser').length;
             setLasers(laserCount > 0 ? `Lasers (${laserCount})` : 'Lasers');
@@ -58,6 +68,8 @@ export const Purchasing = () => {
             let punchCount = allMaterials.data.filter(row => row.area == 'punch' || row.area == 'shear').length;
             setPunch(punchCount > 0 ? `Shear / Punch (${punchCount})` : 'Shear / Punch');
 
+            let suppliesCount = allSupplies.data.length;
+            setSupplies(suppliesCount > 0 ? `Supplies (${suppliesCount})` : 'Supplies');
 
             setLoading(false);
         } catch (err) {
@@ -90,6 +102,26 @@ export const Purchasing = () => {
         } catch (err) {
             console.log(err);
         }
+    }
+
+    const toggleOnOrderSupplies = async (item) => {
+        console.log(item.id)
+        // try {
+        //     await updateOnOrder(job.id)
+        //     setUpdate(`On Order ${job.id}`)
+        // } catch (err) {
+        //     console.log(err);
+        // }
+    }
+
+    const toggleCompleteSupplies = async (item) => {
+        console.log(item.id)
+        // try {
+        //     await updateVerified(job.id)
+        //     setUpdate(`Verified ${job.id}`)
+        // } catch (err) {
+        //     console.log(err);
+        // }
     }
     
     useEffect(() => {
@@ -333,6 +365,80 @@ export const Purchasing = () => {
                                                         </tr>
                                                     )
                                                 }
+                                            })
+                                        }
+                                    </tbody>
+                                </Table>
+                                <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
+                                    <Icon size={24} icon={refresh}/>
+                                </Button>
+                            </div>
+                        </Tab>
+
+                        <Tab eventKey="supplies" title={supplies}>
+                            <div className='mx-3'>
+                                <Table striped hover>
+                                    <thead>
+                                        <tr>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueSupplies(e.target.value)} placeholder='&#xf002;  Supplies' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='&#xf002;  Area' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueEmployee(e.target.value)} placeholder='&#xf002;  Requested By' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'>Date</th>
+                                            <th className='text-center'>Description</th>
+                                            <th className='text-center'>Link</th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='&#xf002;  Job No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'>On Order</th>
+                                            <th className='text-center'>Expected</th>
+                                            <th className='text-center'>Recieved</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {searchedSupplies
+                                            .filter((row) => 
+                                                !searchedValueSupplies || row.supplies
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueSupplies.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueArea || row.department
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueArea.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueEmployee || row.requestedBy
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueEmployee.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueJobNo || row.jobNo
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueJobNo.toString().toLowerCase())
+                                            )
+                                            .map((item, index) => {
+                                                return (
+                                                    <tr key={index} item={item}>
+                                                        <td className='text-center'>{item.supplies}</td>
+                                                        <td className='text-center'>{item.department}</td>
+                                                        <td className='text-center'>{item.requestedBy}</td>
+                                                        <td className='text-center'>{item.createdAt && format(parseISO(item.createdAt), 'MM/dd')}</td>
+                                                        <td className='text-center'>{item.notes}</td>
+                                                        <td className='text-center'>{item.productLink}</td>
+                                                        <td className='text-center'>{item.jobNo}</td>
+                                                        <td className='text-center' onClick={() => toggleOnOrderSupplies(item)}>
+                                                            {item.onOrder &&
+                                                                <Icon icon={check}/>
+                                                            }
+                                                        </td>
+                                                        <td className='text-center'>{item.expected && format(parseISO(item.expected), 'MM/dd')}</td>
+                                                        <td className='text-center' onClick={() => toggleCompleteSupplies(item)}>
+                                                            {item.completed}
+                                                        </td>
+                                                    </tr>
+                                                )
                                             })
                                         }
                                     </tbody>

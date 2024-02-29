@@ -3,6 +3,7 @@ const Maintenance = require('./Maintenance');
 const Material = require('./Material');
 const Scales = require('./Scales');
 const Shipping = require('./Shipping');
+const Supplies = require('./Supplies');
 const Taps = require('./Taps');
 const TLJobs = require('./TLJobs');
 const Todo = require('./Todo');
@@ -14,6 +15,7 @@ module.exports = {
     Material,
     Scales,
     Shipping,
+    Supplies,
     Taps,
     TLJobs,
     Todo,

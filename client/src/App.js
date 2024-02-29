@@ -26,6 +26,7 @@ import { StaticLaser } from './components/departments/StaticLaser';
 import { TubeLaser } from './components/departments/TubeLaser';
 
 import { Purchasing } from './components/purchasing/Purchasing';
+import { Supplies } from './components/supplies/Supplies';
 
 import { Home } from './components/home/Home';
 import { Requests } from './components/home/Requests';
@@ -135,6 +136,10 @@ export const App = () => {
         <Route
           path='/purchasing'
           element={<Purchasing />}
+        />
+        <Route
+          path='/supplies'
+          element={<Supplies />}
         />
 
         <Route
