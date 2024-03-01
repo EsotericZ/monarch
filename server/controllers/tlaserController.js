@@ -124,7 +124,7 @@ function updateTLStatus(req, res) {
     let jobStatus
 
     if (tlStatus == 'DONE') {
-        jobStatus = 'FINALIZE'
+        jobStatus = 'DONE'
     } else {
         jobStatus = 'TLASER'
     }
