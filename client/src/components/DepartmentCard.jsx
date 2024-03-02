@@ -52,7 +52,8 @@ export const DepartmentCard = ({ area }) => {
                 <Card.Body>
                     <Card.Title>{area.area}</Card.Title>
                     <Card.Text>
-                        {area.areaType}
+                        <div>Needs Nesting: {area.nest}</div>
+                        <div>Total Jobs: {area.jobs}</div>
                     </Card.Text>
                 </Card.Body>
             </Card>
