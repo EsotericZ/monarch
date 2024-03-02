@@ -2,41 +2,41 @@ import { Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.min.css';
 
-import { Admin } from './components/admin/Admin';
-import { Calendar } from './components/calendar/Calendar';
+import { Admin } from './pages/admin/Admin';
+import { Calendar } from './pages/calendar/Calendar';
 
-import { Programming } from './components/programming/Programming';
-import { Engineering } from './components/programming/Engineering';
-import { Quality } from './components/programming/Quality';
-import { TubeLaserProg } from './components/programming/TubeLaserProg';
-import { FormingProg } from './components/programming/FormingProg';
-import { BendDeduction } from './components/programming/BendDeduction';
-import { Machining } from './components/programming/Machining';
-import { Hardware } from './components/programming/Hardware';
-import { TapChart } from './components/programming/TapChart';
+import { Programming } from './pages/programming/Programming';
+import { Engineering } from './pages/programming/Engineering';
+import { Quality } from './pages/programming/Quality';
+import { TubeLaserProg } from './pages/programming/TubeLaserProg';
+import { FormingProg } from './pages/programming/FormingProg';
+import { BendDeduction } from './pages/programming/BendDeduction';
+import { Machining } from './pages/programming/Machining';
+import { Hardware } from './pages/programming/Hardware';
+import { TapChart } from './pages/programming/TapChart';
 
-import { Departments } from './components/departments/Departments';
-import { FixtureLaser } from './components/departments/FixtureLaser';
-import { Laser } from './components/departments/Laser';
-import { Forming } from './components/departments/Forming';
-import { Punch } from './components/departments/Punch';
-import { Saw } from './components/departments/Saw';
-import { Shear } from './components/departments/Shear';
-import { StaticLaser } from './components/departments/StaticLaser';
-import { TubeLaser } from './components/departments/TubeLaser';
+import { Departments } from './pages/departments/Departments';
+import { FixtureLaser } from './pages/departments/FixtureLaser';
+import { Laser } from './pages/departments/Laser';
+import { Forming } from './pages/departments/Forming';
+import { Punch } from './pages/departments/Punch';
+import { Saw } from './pages/departments/Saw';
+import { Shear } from './pages/departments/Shear';
+import { StaticLaser } from './pages/departments/StaticLaser';
+import { TubeLaser } from './pages/departments/TubeLaser';
 
-import { Purchasing } from './components/purchasing/Purchasing';
-import { Supplies } from './components/supplies/Supplies';
+import { Purchasing } from './pages/purchasing/Purchasing';
+import { Supplies } from './pages/supplies/Supplies';
 
-import { Home } from './components/home/Home';
-import { Requests } from './components/home/Requests';
-import { Inventory } from './components/inventory/Inventory';
-import { Login } from './components/login/Login';
-import { Maintenance } from './components/maintenance/Maintenance';
-import { HubHealth } from './components/inventory/hubHealth/HubHealth';
-import { Profile } from './components/profile/Profile';
-import { Shipping } from './components/shipping/Shipping';
-import { Test } from './components/test/Test';
+import { Home } from './pages/home/Home';
+import { Requests } from './pages/home/Requests';
+import { Inventory } from './pages/inventory/Inventory';
+import { Login } from './pages/login/Login';
+import { Maintenance } from './pages/maintenance/Maintenance';
+import { HubHealth } from './pages/inventory/hubHealth/HubHealth';
+import { Profile } from './pages/profile/Profile';
+import { Shipping } from './pages/shipping/Shipping';
+import { Test } from './pages/test/Test';
 
 export const App = () => {
   return (
