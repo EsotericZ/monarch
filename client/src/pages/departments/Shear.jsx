@@ -50,7 +50,6 @@ export const Shear = () => {
     const [jobId, setJobId] = useState(0);
     const [update, setUpdate] = useState('');
 
-    const [searchedTL, setSearchedTL] = useState([]);
     const [searchedTBR, setSearchedTBR] = useState([]);
     const [searchedFR, setSearchedFR] = useState([]);
     const [searchedShearPrograms, setSearchedShearPrograms] = useState([]);
@@ -71,14 +70,12 @@ export const Shear = () => {
 
     const fetchData = async () => {
         try {
-            const [allJobs, tbrJobs, frJobs, shearMaterials] = await Promise.all([
-                getAllJobs(),
+            const [tbrJobs, frJobs, shearMaterials] = await Promise.all([
                 getTBRJobs(),
                 getFRJobs(),
                 getAllShearMaterials()
             ]);
     
-            setSearchedTL(allJobs);
             setSearchedTBR(tbrJobs);
             setSearchedFR(frJobs);
             setSearchedShearPrograms(shearMaterials.data);
@@ -132,7 +129,6 @@ export const Shear = () => {
     const handleCloseComplete = () => setShowComplete(false);
 
     const toggleComplete = async () => {
-        console.log(jobId)
         setShowComplete(false);
         try {
             await updateComplete(jobId)
@@ -342,7 +338,7 @@ export const Shear = () => {
                                                     .includes(searchedValueMaterial.toString().toLowerCase())
                                             )
                                             .map((job, index) => {
-                                                if (job.User_Text2 == '1. OFFICE') {
+                                                if (job.User_Text2 == '1. OFFICE' || job.User_Text2 == '3. WIP') {
                                                     return (
                                                         <tr key={index} job={job}>
                                                             <td className='text-center jobBold'>{job.JobNo}</td>
@@ -617,21 +613,19 @@ export const Shear = () => {
                                                     .includes(searchedValueMaterial.toString().toLowerCase())
                                             )
                                             .map((job, index) => {
-                                                if (job.User_Text2 == '1. OFFICE') {
-                                                    return (
-                                                        <tr key={index} job={job}>
-                                                            <td className='text-center jobBold'>{job.JobNo}</td>
-                                                            <td className='text-center'>{job.StepNo}</td>
-                                                            <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td>
-                                                            <td className='text-center'>{job.Revision}</td>
-                                                            <td className='text-center'>{job.EstimQty}</td>
-                                                            <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
-                                                            <td className='text-center'>{job.CustCode}</td>
-                                                            <td className='text-center'>{job.User_Text3}</td>
-                                                            <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.SubPartNo}`); setShowToast(true); setPartCopy(`${job.SubPartNo}`) }}>{job.SubPartNo}</td>
-                                                        </tr>
-                                                    )
-                                                }
+                                                return (
+                                                    <tr key={index} job={job}>
+                                                        <td className='text-center jobBold'>{job.JobNo}</td>
+                                                        <td className='text-center'>{job.StepNo}</td>
+                                                        <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td>
+                                                        <td className='text-center'>{job.Revision}</td>
+                                                        <td className='text-center'>{job.EstimQty}</td>
+                                                        <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
+                                                        <td className='text-center'>{job.CustCode}</td>
+                                                        <td className='text-center'>{job.User_Text3}</td>
+                                                        <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.SubPartNo}`); setShowToast(true); setPartCopy(`${job.SubPartNo}`) }}>{job.SubPartNo}</td>
+                                                    </tr>
+                                                )
                                             })
                                         }
                                     </tbody>
