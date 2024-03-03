@@ -15,11 +15,17 @@ import createUser from '../../services/users/createUser';
 import deleteUser  from '../../services/users/deleteUser';
 import updateUser from '../../services/users/updateUser';
 import updateEngineering from '../../services/users/updateEngineering';
-import updateShipping from '../../services/users/updateShipping';
-import updateMaintenance from '../../services/users/updateMaintenance';
-import updateTLaser from '../../services/users/updateTLaser';
-import updateQuality from '../../services/users/updateQuality';
 import updateForming from '../../services/users/updateForming';
+import updateLaser from '../../services/users/updateLaser';
+import updateMachining from '../../services/users/updateMachining';
+import updateMaintenance from '../../services/users/updateMaintenance';
+import updatePunch from '../../services/users/updatePunch';
+import updateQuality from '../../services/users/updateQuality';
+import updateSaw from '../../services/users/updateSaw';
+import updateShear from '../../services/users/updateShear';
+import updateShipping from '../../services/users/updateShipping';
+import updateTLaser from '../../services/users/updateTLaser';
+
 import getAllRFID from '../../services/rfid/getAllRFID';
 import { Sidebar } from '../sidebar/Sidebar';
 
@@ -52,6 +58,11 @@ export const Admin = () => {
         tlaser: 0,
         quality: 0,
         forming: 0,
+        machining: 0,
+        laser: 0,
+        saw: 0,
+        punch: 0,
+        shear: 0,
     });
     const [updateSingleUser, setUpdateSingleUser] = useState({
         id: '',
@@ -119,6 +130,31 @@ export const Admin = () => {
     async function toggleForming(user) {
         updateForming(user.id)
         setUpdate('Forming')
+    }
+
+    async function toggleMachining(user) {
+        updateMachining(user.id)
+        setUpdate('Machining')
+    }
+
+    async function toggleLaser(user) {
+        updateLaser(user.id)
+        setUpdate('Laser')
+    }
+
+    async function toggleSaw(user) {
+        updateSaw(user.id)
+        setUpdate('Saw')
+    }
+
+    async function togglePunch(user) {
+        updatePunch(user.id)
+        setUpdate('Punch')
+    }
+
+    async function toggleShear(user) {
+        updateShear(user.id)
+        setUpdate('Shear')
     }
 
     const handleChangeAdd = (e) => {
@@ -266,9 +302,14 @@ export const Admin = () => {
                                         <th className='text-center'>Role</th>
                                         <th className='text-center'>RFID</th>
                                         <th className='text-center' width='75px'>Eng</th>
+                                        <th className='text-center' width='75px'>Mach</th>
+                                        <th className='text-center' width='75px'>QC</th>
+                                        <th className='text-center' width='75px'>Laser</th>
                                         <th className='text-center' width='75px'>Form</th>
                                         <th className='text-center' width='75px'>TL</th>
-                                        <th className='text-center' width='75px'>QC</th>
+                                        <th className='text-center' width='75px'>Saw</th>
+                                        <th className='text-center' width='75px'>Punch</th>
+                                        <th className='text-center' width='75px'>Shear</th>
                                         <th className='text-center' width='75px'>Maint</th>
                                         <th className='text-center' width='75px'>Ship</th>
                                     </tr>
@@ -291,6 +332,33 @@ export const Admin = () => {
                                                         <Icon icon={circle_minus} style={{ color: '#CC0202' }} />
                                                     </td>
                                                 }
+                                                {user.machining ?
+                                                    <td className='text-center' onClick={() => toggleMachining(user)}>
+                                                        <Icon icon={circle_ok} style={{ color: '#5BC326' }} />
+                                                    </td>
+                                                :
+                                                    <td className='text-center' onClick={() => toggleMachining(user)}>
+                                                        <Icon icon={circle_minus} style={{ color: '#CC0202' }} />
+                                                    </td>
+                                                }
+                                                {user.quality ?
+                                                    <td className='text-center' onClick={() => toggleQuality(user)}>
+                                                        <Icon icon={circle_ok} style={{ color: '#5BC326' }} />
+                                                    </td>
+                                                :
+                                                    <td className='text-center' onClick={() => toggleQuality(user)}>
+                                                        <Icon icon={circle_minus} style={{ color: '#CC0202' }} />
+                                                    </td>
+                                                }
+                                                {user.laser ?
+                                                    <td className='text-center' onClick={() => toggleLaser(user)}>
+                                                        <Icon icon={circle_ok} style={{ color: '#5BC326' }} />
+                                                    </td>
+                                                :
+                                                    <td className='text-center' onClick={() => toggleLaser(user)}>
+                                                        <Icon icon={circle_minus} style={{ color: '#CC0202' }} />
+                                                    </td>
+                                                }
                                                 {user.forming ?
                                                     <td className='text-center' onClick={() => toggleForming(user)}>
                                                         <Icon icon={circle_ok} style={{ color: '#5BC326' }} />
@@ -309,12 +377,30 @@ export const Admin = () => {
                                                         <Icon icon={circle_minus} style={{ color: '#CC0202' }} />
                                                     </td>
                                                 }
-                                                {user.quality ?
-                                                    <td className='text-center' onClick={() => toggleQuality(user)}>
+                                                {user.saw ?
+                                                    <td className='text-center' onClick={() => toggleSaw(user)}>
                                                         <Icon icon={circle_ok} style={{ color: '#5BC326' }} />
                                                     </td>
                                                 :
-                                                    <td className='text-center' onClick={() => toggleQuality(user)}>
+                                                    <td className='text-center' onClick={() => toggleSaw(user)}>
+                                                        <Icon icon={circle_minus} style={{ color: '#CC0202' }} />
+                                                    </td>
+                                                }
+                                                {user.punch ?
+                                                    <td className='text-center' onClick={() => togglePunch(user)}>
+                                                        <Icon icon={circle_ok} style={{ color: '#5BC326' }} />
+                                                    </td>
+                                                :
+                                                    <td className='text-center' onClick={() => togglePunch(user)}>
+                                                        <Icon icon={circle_minus} style={{ color: '#CC0202' }} />
+                                                    </td>
+                                                }
+                                                {user.shear ?
+                                                    <td className='text-center' onClick={() => toggleShear(user)}>
+                                                        <Icon icon={circle_ok} style={{ color: '#5BC326' }} />
+                                                    </td>
+                                                :
+                                                    <td className='text-center' onClick={() => toggleShear(user)}>
                                                         <Icon icon={circle_minus} style={{ color: '#CC0202' }} />
                                                     </td>
                                                 }
