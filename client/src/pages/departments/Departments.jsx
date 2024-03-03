@@ -189,8 +189,10 @@ export const Departments = () => {
             {
                 area: 'Forming',
                 link: '/forming',
-                nest: needsNestingForm,
-                jobs: totalJobsForm-1,
+                // nest: needsNestingForm,
+                // jobs: totalJobsForm-1,
+                nest: '-',
+                jobs: '-',
                 image: 'forming',
                 areaType: 'production',
             },

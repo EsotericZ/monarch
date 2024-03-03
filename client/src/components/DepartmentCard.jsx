@@ -79,6 +79,13 @@ export const DepartmentCard = ({ area }) => {
                             <span>Total Jobs: {area.jobs}</span>
                         </Card.Text>
                     }
+                    {area.areaType == 'programming' &&
+                        <Card.Text>
+                            <span>TBR Jobs: {area.tbr}</span>
+                            <br />
+                            <span>Futrue Jobs: {area.future}</span>
+                        </Card.Text>
+                    }
                 </Card.Body>
             </Card>
         </Link>
