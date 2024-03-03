@@ -14,5 +14,10 @@ router.post('/updateShipping', userController.updateShipping);
 router.post('/updateTLaser', userController.updateTLaser);
 router.post('/updateQuality', userController.updateQuality);
 router.post('/updateForming', userController.updateForming);
+router.post('/updateMachining', userController.updateMachining);
+router.post('/updateLaser', userController.updateLaser);
+router.post('/updateSaw', userController.updateSaw);
+router.post('/updatePunch', userController.updatePunch);
+router.post('/updateShear', userController.updateShear);
 
 module.exports = router;

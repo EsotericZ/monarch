@@ -350,6 +350,211 @@ async function updateForming(req, res) {
     })
 }
 
+async function updateMachining(req, res) {
+    let id = req.body.id
+
+    await User.findOne({
+        where: {id: id}
+    })
+    .then((result) => {
+        if (result.machining) {
+            User.update(
+                { machining: 0 },
+                { where: { id:id }}
+            ).then((result) => {
+                return res.status(200).send({
+                    data: result
+                })
+            }).catch((err) => {
+                return res.status(500).send({
+                    status: err
+                })
+            })
+        } else {
+            User.update(
+                { machining: 1 },
+                { where: { id:id }}
+            ).then((result) => {
+                return res.status(200).send({
+                    data: result
+                })
+            }).catch((err) => {
+                return res.status(500).send({
+                    status: err
+                })
+            })
+        }
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
+
+async function updateLaser(req, res) {
+    let id = req.body.id
+
+    await User.findOne({
+        where: {id: id}
+    })
+    .then((result) => {
+        if (result.laser) {
+            User.update(
+                { laser: 0 },
+                { where: { id:id }}
+            ).then((result) => {
+                return res.status(200).send({
+                    data: result
+                })
+            }).catch((err) => {
+                return res.status(500).send({
+                    status: err
+                })
+            })
+        } else {
+            User.update(
+                { laser: 1 },
+                { where: { id:id }}
+            ).then((result) => {
+                return res.status(200).send({
+                    data: result
+                })
+            }).catch((err) => {
+                return res.status(500).send({
+                    status: err
+                })
+            })
+        }
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
+
+async function updateSaw(req, res) {
+    let id = req.body.id
+
+    await User.findOne({
+        where: {id: id}
+    })
+    .then((result) => {
+        if (result.saw) {
+            User.update(
+                { saw: 0 },
+                { where: { id:id }}
+            ).then((result) => {
+                return res.status(200).send({
+                    data: result
+                })
+            }).catch((err) => {
+                return res.status(500).send({
+                    status: err
+                })
+            })
+        } else {
+            User.update(
+                { saw: 1 },
+                { where: { id:id }}
+            ).then((result) => {
+                return res.status(200).send({
+                    data: result
+                })
+            }).catch((err) => {
+                return res.status(500).send({
+                    status: err
+                })
+            })
+        }
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
+
+async function updatePunch(req, res) {
+    let id = req.body.id
+
+    await User.findOne({
+        where: {id: id}
+    })
+    .then((result) => {
+        if (result.punch) {
+            User.update(
+                { punch: 0 },
+                { where: { id:id }}
+            ).then((result) => {
+                return res.status(200).send({
+                    data: result
+                })
+            }).catch((err) => {
+                return res.status(500).send({
+                    status: err
+                })
+            })
+        } else {
+            User.update(
+                { punch: 1 },
+                { where: { id:id }}
+            ).then((result) => {
+                return res.status(200).send({
+                    data: result
+                })
+            }).catch((err) => {
+                return res.status(500).send({
+                    status: err
+                })
+            })
+        }
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
+
+async function updateShear(req, res) {
+    let id = req.body.id
+
+    await User.findOne({
+        where: {id: id}
+    })
+    .then((result) => {
+        if (result.shear) {
+            User.update(
+                { shear: 0 },
+                { where: { id:id }}
+            ).then((result) => {
+                return res.status(200).send({
+                    data: result
+                })
+            }).catch((err) => {
+                return res.status(500).send({
+                    status: err
+                })
+            })
+        } else {
+            User.update(
+                { shear: 1 },
+                { where: { id:id }}
+            ).then((result) => {
+                return res.status(200).send({
+                    data: result
+                })
+            }).catch((err) => {
+                return res.status(500).send({
+                    status: err
+                })
+            })
+        }
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
+
 module.exports = {
     getAllUsers,
     getUserPassword,
@@ -362,4 +567,9 @@ module.exports = {
     updateTLaser,
     updateQuality,
     updateForming,
+    updateMachining,
+    updateLaser,
+    updateSaw,
+    updatePunch,
+    updateShear,
 }
