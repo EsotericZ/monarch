@@ -16,4 +16,9 @@ Outsource page - 'Print' column need to fix
 mysqldump -u root -p monarch > mmbackup.sql
 ```
 
+## Database Restore
+```
+mysqldump -u root -p monarch < mmbackup.sql
+```
+
 Run before uploading to git
