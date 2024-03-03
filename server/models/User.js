@@ -55,6 +55,26 @@ User.init(
             type: DataTypes.BOOLEAN,
             defaultValue: false,
         },
+        machining: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
+        laser: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
+        saw: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
+        punch: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
+        shear: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
     }, {
         sequelize,
         tableName: 'users',

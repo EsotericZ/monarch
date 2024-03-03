@@ -35,6 +35,11 @@ async function login(req, res) {
                     tlaser: userInfo.tlaser,
                     quality: userInfo.quality,
                     forming: userInfo.forming,
+                    machining: userInfo.machining,
+                    laser: userInfo.laser,
+                    saw: userInfo.saw,
+                    punch: userInfo.punch,
+                    shear: userInfo.shear,
                 },
                 process.env.JWT_SECRET_KEY || 'pass',
                 { expiresIn: '1d' }
