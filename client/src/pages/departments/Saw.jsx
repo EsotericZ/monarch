@@ -79,6 +79,7 @@ export const Saw = () => {
     
             setSearchedTBR(tbrJobs);
             setSearchedFR(frJobs);
+            console.log(frJobs)
             setSearchedSawPrograms(sawMaterials.data);
 
             const uniq = [...new Set(sawMaterials.data.flatMap(job => job.jobNo.length > 6 ? job.jobNo.split(' ') : job.jobNo))];
@@ -615,7 +616,7 @@ export const Saw = () => {
                                                     .includes(searchedValueMaterial.toString().toLowerCase())
                                             )
                                             .map((job, index) => {
-                                                if (job.User_Text2 == '1. OFFICE') {
+                                                // if (job.User_Text2 == '1. OFFICE') {
                                                     return (
                                                         <tr key={index} job={job}>
                                                             <td className='text-center jobBold'>{job.JobNo}</td>
@@ -629,7 +630,7 @@ export const Saw = () => {
                                                             <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.SubPartNo}`); setShowToast(true); setPartCopy(`${job.SubPartNo}`) }}>{job.SubPartNo}</td>
                                                         </tr>
                                                     )
-                                                }
+                                                // }
                                             })
                                         }
                                     </tbody>

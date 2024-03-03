@@ -76,7 +76,7 @@ async function getFRJobs(req, res) {
 
         request.query("SELECT R.JobNo, D.PartNo, D.Revision, R.EstimQty, D.DueDate, O.CustCode, D.User_Text3, D.User_Text2, D.User_Number3, R.OrderNo, R.StepNo, D.QuoteNo, M.SubPartNo\
             FROM OrderRouting R INNER JOIN OrderDet D ON R.JobNo=D.JobNo INNER JOIN ORDERS O ON D.OrderNo=O.OrderNo INNER JOIN Estim E ON D.PartNo=E.PartNo INNER JOIN Materials M ON D.PartNo=M.PartNo\
-            WHERE D.Status='Open' AND R.Status!='Finished' AND R.Status!='Closed' AND R.WorkCntr='301 SAW' AND D.User_Text2='1. OFFICE' AND R.JobNo\
+            WHERE D.Status='Open' AND R.Status!='Finished' AND R.Status!='Closed' AND R.WorkCntr='301 SAW' AND (D.User_Text2 = '1. OFFICE' OR D.User_Text2 = '3. WIP') AND R.JobNo\
             IN (SELECT R.JobNo FROM OrderRouting R INNER JOIN OrderDet D ON R.JobNo=D.JobNo INNER JOIN ORDERS O ON D.OrderNo=O.OrderNo WHERE D.Status='Open' AND R.Status='Finished')\
             ORDER BY D.DueDate, R.JobNo", 
             

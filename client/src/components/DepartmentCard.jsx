@@ -50,7 +50,7 @@ export const DepartmentCard = ({ area }) => {
                 ) : null
                 }
                 <Card.Body>
-                    <Card.Title>{area.area}</Card.Title>
+                    <Card.Title className="text-center">{area.area}</Card.Title>
                     <Card.Text>
                         <div>Needs Nesting: {area.nest}</div>
                         <div>Total Jobs: {area.jobs}</div>
