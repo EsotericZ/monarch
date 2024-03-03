@@ -4,9 +4,11 @@ import { Button } from 'react-bootstrap';
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { Icon } from 'react-icons-kit';
 import { refresh } from 'react-icons-kit/fa/refresh';
+import { user } from 'react-icons-kit/icomoon/user'
 import { Bar, Doughnut } from 'react-chartjs-2';
 
 import getAllJobs from '../../services/engineering/getAllJobs';
@@ -175,9 +177,17 @@ export const Home = () => {
                     {cookieData ?
                         <>
                             <div className='mx-3'>
-                                <h1 className='text-center m-3'>Front End Jobs</h1>
                                 <div className="row homeFlex">
                                     <div className="homeLeft">
+                                        <div className="row homeBox align-items-center">
+                                            <div className="col-auto">
+                                                <Icon size={52} icon={user}/>
+                                            </div>
+                                            <div className="col">
+                                                <h3>{cookieData.name}</h3>
+                                                <Link to='/profile'>Quick Links</Link>
+                                            </div>
+                                        </div>
                                         <div className="row homeBox">
                                             <div className="row jobTitle">
                                                 <table>
