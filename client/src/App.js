@@ -8,6 +8,7 @@ import { Calendar } from './pages/calendar/Calendar';
 import { Programming } from './pages/programming/Programming';
 import { Engineering } from './pages/programming/Engineering';
 import { Quality } from './pages/programming/Quality';
+import { QualityInfo } from './pages/programming/QualityInfo';
 import { TubeLaserProg } from './pages/programming/TubeLaserProg';
 import { FormingProg } from './pages/programming/FormingProg';
 import { BendDeduction } from './pages/programming/BendDeduction';
@@ -70,6 +71,10 @@ export const App = () => {
         <Route
           path='/quality'
           element={<Quality />}
+        />
+        <Route
+          path='/qualityinfo'
+          element={<QualityInfo />}
         />
         <Route
           path='/tubelaserprog'

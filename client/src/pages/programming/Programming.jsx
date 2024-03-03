@@ -1,8 +1,10 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 
 import { Sidebar } from '../sidebar/Sidebar';
+import { DepartmentCard } from '../../components/DepartmentCard';
 
 export const Programming = () => {
     const cookies = new Cookies();
@@ -16,21 +18,113 @@ export const Programming = () => {
             'engineering': false,
         };
     }
+    
+    const [areas, setAreas] = useState([]);
+    const [tools, setTools] = useState([]);
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        setAreas([
+            {
+                area: 'Engineering',
+                link: '/engineering',
+                nest: 0,
+                jobs: 0,
+                image: 'engineering',
+                areaType: 'programming',
+            },
+            {
+                area: 'Machining',
+                link: '/machining',
+                nest: 0,
+                jobs: 0,
+                image: 'machining',
+                areaType: 'programming',
+            },
+            {
+                area: 'Quality',
+                link: '/quality',
+                nest: 0,
+                jobs: 0,
+                image: 'quality',
+                areaType: 'programming',
+            },
+            {
+                area: 'Tube Laser',
+                link: '/tubelaserprog',
+                nest: 0,
+                jobs: 0,
+                image: 'tlaser',
+                areaType: 'programming',
+            },
+            {
+                area: 'Forming',
+                link: '/formingprog',
+                nest: 0,
+                jobs: 0,
+                image: 'forming',
+                areaType: 'programming',
+            },
+        ]);
+    }, []);
+
+    useEffect(() => {
+        setTools([
+            {
+                area: 'QC Info',
+                link: '/qualityinfo',
+                image: 'qcInfo',
+                areaType: 'tooling',
+            },
+            {
+                area: 'Bend Deduction',
+                link: '/benddeduction',
+                image: 'bd',
+                areaType: 'tooling',
+            },
+            {
+                area: 'Tap Chart',
+                link: '/tapchart',
+                image: 'tap',
+                areaType: 'tooling',
+            },
+            {
+                area: 'Hardware',
+                link: '/hardware',
+                image: 'hardware',
+                areaType: 'tooling',
+            },
+        ]);
+    }, []);
 
     return (
+        // <div style={{ display: 'flex', minHeight: '100vh', alignItems: 'center' }}>
         <div style={{ display: 'flex' }}>
             <Sidebar />
-            <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
-                <h1 className='text-center'>Programming</h1>
-                <Link to='/engineering'><h3 className='text-center'>Engineering</h3></Link>                   
-                <Link to='/quality'><h3 className='text-center'>Quality</h3></Link>                   
-                <Link to='/tubelaserprog'><h3 className='text-center'>Tube Laser</h3></Link>                   
-                <Link to='/formingprog'><h3 className='text-center'>Forming</h3></Link>                   
-                <Link to='/benddeduction'><h3 className='text-center'>Bend Deduction</h3></Link>                   
-                <Link to='/machining'><h3 className='text-center'>Machining</h3></Link>                   
-                <Link to='/hardware'><h3 className='text-center'>Hardware</h3></Link>                   
-                <Link to='/tapchart'><h3 className='text-center'>Tap Chart</h3></Link>                   
-            </div>
+            {loading ?
+                <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
+                    <h1 className='text-center'>Departments</h1>
+                    <h2 className='text-center'>Loading</h2>
+                </div>
+            :
+                <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
+                    <h1 className='text-center'>Programming</h1>
+                    <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '20px' }}>
+                        {areas.map((area, index) => {
+                            return (
+                                <DepartmentCard key={index} area={area} />
+                            )
+                        })}
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '20px' }}>
+                        {tools.map((area, index) => {
+                            return (
+                                <DepartmentCard key={index} area={area} />
+                            )
+                        })}
+                    </div>
+                </div>
+            }
         </div>
     )
 }

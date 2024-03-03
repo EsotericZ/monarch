@@ -4,7 +4,7 @@ import jwt_decode from 'jwt-decode';
 
 import { Sidebar } from '../sidebar/Sidebar';
 
-export const Hardware = () => {
+export const QualityInfo = () => {
     const cookies = new Cookies();
     let cookieData
     try {
@@ -24,12 +24,12 @@ export const Hardware = () => {
             <Sidebar />
             {loading ?
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
-                    <h1 className='text-center'>Hardware</h1>
+                    <h1 className='text-center'>Quality Info</h1>
                     <h2 className='text-center'>Loading</h2>
                 </div>
             :
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
-                    <h1 className='text-center'>Hardware</h1>
+                    <h1 className='text-center'>Quality Info</h1>
                     <h2 className='text-center'>This Page is Under Construction</h2>
                 </div>
             }

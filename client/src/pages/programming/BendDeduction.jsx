@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 
@@ -25,14 +24,13 @@ export const BendDeduction= () => {
             <Sidebar />
             {loading ?
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
-                    <h1 className='text-center'>Engineering</h1>
+                    <h1 className='text-center'>Bend Deduction</h1>
                     <h2 className='text-center'>Loading</h2>
                 </div>
             :
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
-                    <h1 className='text-center'>Engineering</h1>
+                    <h1 className='text-center'>Bend Deduction</h1>
                     <h2 className='text-center'>This Page is Under Construction</h2>
-                    <Link to='/engineering'><h3 className='text-center'>Engineering Home</h3></Link>                   
                 </div>
             }
         </div>
