@@ -6,6 +6,7 @@ import jwt_decode from 'jwt-decode';
 import { NavLink } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
+import PuffLoader from "react-spinners/PuffLoader";
 import { Icon } from 'react-icons-kit';
 import { refresh } from 'react-icons-kit/fa/refresh';
 import { user } from 'react-icons-kit/icomoon/user'
@@ -170,7 +171,12 @@ export const Home = () => {
         <div style={{ display: 'flex' }}>
             <Sidebar />
             {loading ?
-                <h1>Loading</h1>
+                <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
+                    <h1 className='text-center m-3'>Monarch Metal</h1>
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '100px' }}>
+                        <PuffLoader color="red" />
+                    </div>
+                </div>
             :
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
                     <h1 className='text-center m-3'>Monarch Metal</h1>

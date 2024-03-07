@@ -28,7 +28,6 @@ async function getAllJobs(req, res) {
         function(err, recordset) {
             if (err) console.error(err);
             let records = recordset.recordsets[0];
-            console.log(records)
 
             const map = new Map();
             records.forEach(item => map.set(item.JobNo, item));

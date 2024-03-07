@@ -3,6 +3,8 @@ import { Button, Dropdown, FloatingLabel, Form, Modal, Tab, Tabs, Table } from '
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 
+import PuffLoader from "react-spinners/PuffLoader";
+
 import { Icon } from 'react-icons-kit';
 import { circle_ok } from 'react-icons-kit/ikons/circle_ok';
 import { circle_minus } from 'react-icons-kit/ikons/circle_minus';
@@ -222,7 +224,9 @@ export const Admin = () => {
             {loading ?
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
                     <h1 className='text-center m-3'>Employee Database</h1>
-                    <h1>Loading</h1>
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '100px' }}>
+                        <PuffLoader color="red" />
+                    </div>
                 </div>
             :
                 (cookieData.name ?

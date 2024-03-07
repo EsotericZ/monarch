@@ -3,6 +3,8 @@ import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 import { NavLink } from 'react-router-dom';
 
+import PuffLoader from "react-spinners/PuffLoader";
+
 import { Sidebar } from '../sidebar/Sidebar';
 import { DepartmentCard } from '../../components/DepartmentCard';
 
@@ -454,33 +456,42 @@ export const Profile = () => {
     return (
         <div style={{ display: 'flex' }}>
             <Sidebar />
-            <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
-                {loggedIn ?
-                    <>
-                        <h2 className='text-center m-3'>{cookieData.name}</h2>
-                        <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '20px' }}>
-                            {areas.map((area, index) => {
-                                return (
-                                    <DepartmentCard key={index} area={area} />
-                                )
-                            })}
+            {loggedIn ?
+                <>
+                    {loading ?
+                        <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
+                            <h1 className='text-center m-3'>Monarch Metal</h1>
+                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '100px' }}>
+                                <PuffLoader color="red" />
+                            </div>
                         </div>
-                        <NavLink exact to='/'>
-                            <div className='text-center'>
-                                <button onClick={handleLogout} className='text-center m-3 mmBtn'>Logout</button>
+                    :
+                        <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
+                            <h2 className='text-center m-3'>{cookieData.name}</h2>
+                            <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '20px' }}>
+                                {areas.map((area, index) => {
+                                    return (
+                                        <DepartmentCard key={index} area={area} />
+                                    )
+                                })}
                             </div>
-                        </NavLink>
-                    </>
-                :
-                    <>
-                        <NavLink exact to='/login'>
-                            <div className='text-center'>
-                                <button className='m-5 mmBtn'>Log In</button>
-                            </div>
-                        </NavLink>
-                    </>
-                }
-            </div>
+                            <NavLink exact to='/'>
+                                <div className='text-center'>
+                                    <button onClick={handleLogout} className='text-center m-3 mmBtn'>Logout</button>
+                                </div>
+                            </NavLink>
+                        </div>
+                    }
+                </>
+            :
+                <>
+                    <NavLink exact to='/login'>
+                        <div className='text-center'>
+                            <button className='m-5 mmBtn'>Log In</button>
+                        </div>
+                    </NavLink>
+                </>
+            }
         </div>
     )
 }

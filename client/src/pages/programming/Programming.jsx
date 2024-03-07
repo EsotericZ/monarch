@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 
+import PuffLoader from "react-spinners/PuffLoader";
+
 import { Sidebar } from '../sidebar/Sidebar';
 import { DepartmentCard } from '../../components/DepartmentCard';
 
@@ -172,8 +174,10 @@ export const Programming = () => {
             <Sidebar />
             {loading ?
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
-                    <h1 className='text-center'>Departments</h1>
-                    <h2 className='text-center'>Loading</h2>
+                    <h1 className='text-center'>Programming</h1>
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '100px' }}>
+                        <PuffLoader color="red" />
+                    </div>
                 </div>
             :
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
