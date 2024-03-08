@@ -29,6 +29,10 @@ import { TubeLaser } from './pages/departments/TubeLaser';
 import { Purchasing } from './pages/purchasing/Purchasing';
 import { Supplies } from './pages/supplies/Supplies';
 
+import { Scales } from './pages/scales/Scales';
+
+import { VTiger } from './pages/vtiger/VTiger';
+
 import { Home } from './pages/home/Home';
 import { Requests } from './pages/home/Requests';
 import { Inventory } from './pages/inventory/Inventory';
@@ -145,6 +149,16 @@ export const App = () => {
         <Route
           path='/supplies'
           element={<Supplies />}
+        />
+
+        <Route
+          path='/scales'
+          element={<Scales />}
+        />
+
+        <Route
+          path='/vtiger'
+          element={<VTiger />}
         />
 
         <Route

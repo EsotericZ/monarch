@@ -30,17 +30,12 @@ export const Inventory = () => {
 
     const fetchData = async () => {
         try {
-            console.log('hit')
             const channels = await getAllChannels();
-            console.log(channels)
             let channelArray = channels.split("\n")
             let newChannelArray = [...new Set(channelArray.map((channel) => channel.slice(0,6)))]
             setActiveHubs(newChannelArray.length);
 
-            console.log('hit2')
             const ports = await getAllPorts();
-            console.log(ports)
-            console.log(ports.data)
             setTotalHubs(ports.data.length)
             setInactiveHubs(ports.data.length - newChannelArray.length);
 

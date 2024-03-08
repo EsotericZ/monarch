@@ -21,7 +21,7 @@ const headers = [
     { label: "Work", key: "WorkCode" },
 ];
 
-export const Test = () => {
+export const VTiger = () => {
     const [details, setDetails] = useState('');
     const [custCode, setCustCode] = useState('');
     const [custData, setCustData] = useState([]);
