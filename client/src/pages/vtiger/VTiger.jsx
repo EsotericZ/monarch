@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Button } from 'react-bootstrap';
-import { CSVLink } from 'react-csv';
 
 import { Sidebar } from '../sidebar/Sidebar';
 import getAllCustomers from '../../services/vtiger/getAllCustomers';
@@ -8,17 +7,20 @@ import getOneCustomer from '../../services/vtiger/getOneCustomer';
 import './test.css';
 
 const headers = [
-    { label: "Code", key: "CustCode" },
-    { label: "Name", key: "CustName" },
-    { label: "Active", key: "Active" },
-    { label: "Salesman", key: "SalesID" },
+    { label: "Customer Code", key: "CustCode" },
+    { label: "Organization Name", key: "CustName" },
+    { label: "Customer Status", key: "Active" },
+    { label: "Assigned To", key: "SalesID" },
+    { label: "Date Open", key: "DateOpen" },
     { label: "Website", key: "Website" },
-    // { label: "Address", key: "BAddr1" },
-    { label: "City", key: "BCity" },
-    { label: "State", key: "BState" },
-    { label: "ZIP", key: "BZIPCode" },
-    { label: "Phone", key: "Phone" },
-    { label: "Work", key: "WorkCode" },
+    { label: "Billing Address", key: "BAddr1" },
+    { label: "Billing City", key: "BCity" },
+    { label: "Billing State", key: "BState" },
+    { label: "Billing Postal Code", key: "BZIPCode" },
+    { label: "Primary Phone", key: "Phone" },
+    { label: "Customer End Use", key: "WorkCode" },
+    { label: "Date Last Activity", key: "DateLast" },
+    { label: "YTD Sales", key: "YTDSales" },
 ];
 
 export const VTiger = () => {
@@ -32,17 +34,20 @@ export const VTiger = () => {
             setCustData(res);
 
             const csvData = res.map(item => ({
-                Code: item.CustCode,
-                Name: item.CustName,
+                CustCode: item.CustCode,
+                CustName: item.CustName,
                 Active: item.Active,
-                Salesman: item.SalesID,
+                SalesID: item.SalesID,
+                DateOpen: item.DateOpen,
                 Website: item.Website,
-                // Address: item.BAddr1, 
-                City: item.BCity, 
-                State: item.BState, 
-                ZIP: item.BZIPCode, 
+                BAddr1: item.BAddr1, 
+                BCity: item.BCity, 
+                BState: item.BState, 
+                BZIPCode: item.BZIPCode, 
                 Phone: item.Phone, 
-                Work: item.WorkCode
+                WorkCode: item.WorkCode,
+                DateLast: item.DateLast,
+                YTDSales: item.YTDSales,
             }));
 
             const csvContent = [
@@ -69,17 +74,20 @@ export const VTiger = () => {
             setCustData(res);
 
             const csvData = res.map(item => ({
-                Code: item.CustCode,
-                Name: item.CustName,
+                CustCode: item.CustCode,
+                CustName: item.CustName,
                 Active: item.Active,
-                Salesman: item.SalesID,
+                SalesID: item.SalesID,
+                DateOpen: item.DateOpen,
                 Website: item.Website,
-                // Address: item.BAddr1, 
-                City: item.BCity, 
-                State: item.BState, 
-                ZIP: item.BZIPCode, 
+                BAddr1: item.BAddr1, 
+                BCity: item.BCity, 
+                BState: item.BState, 
+                BZIPCode: item.BZIPCode, 
                 Phone: item.Phone, 
-                Work: item.WorkCode
+                WorkCode: item.WorkCode,
+                DateLast: item.DateLast,
+                YTDSales: item.YTDSales,
             }));
 
             const csvContent = [

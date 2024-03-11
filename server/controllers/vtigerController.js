@@ -18,7 +18,7 @@ async function getAllCustomers(req, res) {
         if (err) console.error(err);
         let request = new sql.Request();
 
-        request.query("SELECT CustCode, CustName, Active, SalesID, Website, BCity, BState, BZIPCode, Phone, WorkCode FROM CustCode",
+        request.query("SELECT * FROM CustCode",
         
         function(err, recordset) {
             if (err) console.error(err);
@@ -37,7 +37,7 @@ async function getOneCustomer(req, res) {
         let request = new sql.Request();
 
         request.input('custCode', sql.NVarChar, custCode)
-        .query('SELECT CustCode, CustName, Active, SalesID, Website, BCity, BState, BZIPCode, Phone, WorkCode FROM CustCode WHERE CustCode = @custCode', function(err, result) {
+        .query('SELECT * FROM CustCode WHERE CustCode = @custCode', function(err, result) {
             if (err) console.error(err);
             let records = result.recordsets[0];
 
