@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Button } from 'react-bootstrap';
+import { format, parseISO } from 'date-fns';
 
 import { Sidebar } from '../sidebar/Sidebar';
 import getAllCustomers from '../../services/vtiger/getAllCustomers';
@@ -26,29 +27,32 @@ const headers = [
 export const VTiger = () => {
     const [details, setDetails] = useState('');
     const [custCode, setCustCode] = useState('');
-    const [custData, setCustData] = useState([]);
 
     const fetchAllExportCSV = async () => {
         try {
             const res = await getAllCustomers();
-            setCustData(res);
 
-            const csvData = res.map(item => ({
-                CustCode: item.CustCode,
-                CustName: item.CustName,
-                Active: item.Active,
-                SalesID: item.SalesID,
-                DateOpen: item.DateOpen,
-                Website: item.Website,
-                BAddr1: item.BAddr1, 
-                BCity: item.BCity, 
-                BState: item.BState, 
-                BZIPCode: item.BZIPCode, 
-                Phone: item.Phone, 
-                WorkCode: item.WorkCode,
-                DateLast: item.DateLast,
-                YTDSales: item.YTDSales,
-            }));
+            const csvData = res.map(item => {
+                const dateOpen = item.DateOpen ? item.DateOpen.split('T')[0] : '';
+                const dateLast = item.DateLast ? item.DateLast.split('T')[0] : '';
+
+                return {
+                    CustCode: item.CustCode,
+                    CustName: item.CustName,
+                    Active: item.Active,
+                    SalesID: item.SalesID,
+                    DateOpen: dateOpen,
+                    Website: item.Website,
+                    BAddr1: item.BAddr1, 
+                    BCity: item.BCity, 
+                    BState: item.BState, 
+                    BZIPCode: item.BZIPCode, 
+                    Phone: item.Phone, 
+                    WorkCode: item.WorkCode,
+                    DateLast: dateLast,
+                    YTDSales: item.YTDSales,
+                }
+            });
 
             const csvContent = [
                 headers.map(header => header.label).join(','),
@@ -71,24 +75,28 @@ export const VTiger = () => {
     const fetchOneExportCSV = async () => {
         try {
             const res = await getOneCustomer(custCode);
-            setCustData(res);
 
-            const csvData = res.map(item => ({
-                CustCode: item.CustCode,
-                CustName: item.CustName,
-                Active: item.Active,
-                SalesID: item.SalesID,
-                DateOpen: item.DateOpen,
-                Website: item.Website,
-                BAddr1: item.BAddr1, 
-                BCity: item.BCity, 
-                BState: item.BState, 
-                BZIPCode: item.BZIPCode, 
-                Phone: item.Phone, 
-                WorkCode: item.WorkCode,
-                DateLast: item.DateLast,
-                YTDSales: item.YTDSales,
-            }));
+            const csvData = res.map(item => {
+                const dateOpen = item.DateOpen ? item.DateOpen.split('T')[0] : '';
+                const dateLast = item.DateLast ? item.DateLast.split('T')[0] : '';
+
+                return {
+                    CustCode: item.CustCode,
+                    CustName: item.CustName,
+                    Active: item.Active,
+                    SalesID: item.SalesID,
+                    DateOpen: dateOpen,
+                    Website: item.Website,
+                    BAddr1: item.BAddr1, 
+                    BCity: item.BCity, 
+                    BState: item.BState, 
+                    BZIPCode: item.BZIPCode, 
+                    Phone: item.Phone, 
+                    WorkCode: item.WorkCode,
+                    DateLast: dateLast,
+                    YTDSales: item.YTDSales,
+                }
+            });
 
             const csvContent = [
                 headers.map(header => header.label).join(','),
@@ -123,12 +131,14 @@ export const VTiger = () => {
                                     onChange={(e) => {setCustCode(e.target.value)}}
                                 />
                             </div>
+                            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '15px' }}>
                             <Button className='vtiger' onClick={() => fetchOneExportCSV()}>
                                 Get Customer
                             </Button>
+                            </div>
                         </div>
                     </div>
-                    <div style={{ width: '20px' }}></div>
+                    <div style={{ width: '75px' }}></div>
                     <div className='mx-3'>
                         <div style={{ width: 'fit-content', marginTop: '100px' }}>
                             <Button className='vtiger' onClick={() => fetchAllExportCSV()}>
