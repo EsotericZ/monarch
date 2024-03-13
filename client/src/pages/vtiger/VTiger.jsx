@@ -35,11 +35,12 @@ export const VTiger = () => {
             const csvData = res.map(item => {
                 const dateOpen = item.DateOpen ? item.DateOpen.split('T')[0] : '';
                 const dateLast = item.DateLast ? item.DateLast.split('T')[0] : '';
+                const active = item.Active == 'N' ? 'Inactive' : 'Active';
 
                 return {
                     CustCode: item.CustCode,
                     CustName: item.CustName,
-                    Active: item.Active,
+                    Active: active,
                     SalesID: item.SalesID,
                     DateOpen: dateOpen,
                     Website: item.Website,
@@ -79,11 +80,12 @@ export const VTiger = () => {
             const csvData = res.map(item => {
                 const dateOpen = item.DateOpen ? item.DateOpen.split('T')[0] : '';
                 const dateLast = item.DateLast ? item.DateLast.split('T')[0] : '';
+                const active = item.Active == 'N' ? 'Inactive' : 'Active';
 
                 return {
                     CustCode: item.CustCode,
                     CustName: item.CustName,
-                    Active: item.Active,
+                    Active: active,
                     SalesID: item.SalesID,
                     DateOpen: dateOpen,
                     Website: item.Website,
