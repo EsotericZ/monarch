@@ -98,6 +98,12 @@ export const Home = () => {
         fetchData();
     }, []);
 
+    useEffect(() => {
+        setInterval(() => {
+            fetchData();
+        }, 30000)
+    }, [])
+
     const options = {
         responsive: true,
         plugins: {
@@ -267,6 +273,9 @@ export const Home = () => {
                             </div>
 
 
+                            <div className='text-center m-3'>
+                                This Page Will Auto Refresh Every 30 Seconds
+                            </div>
                             <div className='text-center m-3'>
                                 <NavLink exact to='/requests'>
                                     Website Requests
