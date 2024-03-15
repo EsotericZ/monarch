@@ -57,8 +57,35 @@ async function createTap(req, res) {
     })
 }
 
+async function updateTap(req, res) {
+    let id = req.body.id
+    let tapName = req.body.tapName
+    let holeSize = req.body.holeSize
+    let type = req.body.type
+    let notes = req.body.notes
+    
+    await Taps.update(
+        {
+            tapName,
+            holeSize,
+            type,
+            notes,
+        },
+        { where: { id: id }}
+    ).then((result) => {
+        return res.status(200).send({
+            data: result
+        })
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
+
 module.exports = {
     getStandardTaps,
     getMetricTaps,
     createTap,
+    updateTap,
 }

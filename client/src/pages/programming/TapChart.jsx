@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Button, FloatingLabel, Form, Modal, Table } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 
@@ -10,6 +9,7 @@ import { plus } from 'react-icons-kit/fa/plus'
 import getStandardTaps from '../../services/taps/getStandardTaps';
 import getMetricTaps from '../../services/taps/getMetricTaps';
 import createTap from '../../services/taps/createTap';
+import updateTap from '../../services/taps/updateTap';
 
 import { Sidebar } from '../sidebar/Sidebar';
 
@@ -34,7 +34,9 @@ export const TapChart = () => {
     const [holeSize, setHoleSize] = useState('');
     const [type, setType] = useState('Standard');
     const [notes, setNotes] = useState('-');
+    const [id, setId] = useState(0);
     const [show, setShow] = useState(false);
+    const [showEdit, setShowEdit] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const fetchData = async () => {
@@ -58,7 +60,6 @@ export const TapChart = () => {
 
     const handleSave = async () => {
         try {
-
             await createTap(tapName, holeSize, type, notes);
             setShow(false);
             setTapName('');
@@ -74,7 +75,40 @@ export const TapChart = () => {
 
     const handleShow = () => {
         setShow(true);
-    } ;
+    };
+
+    const handleOpenTap = (tap) => {
+        setId(tap.id);
+        setTapName(tap.tapName);
+        setHoleSize(tap.holeSize);
+        setType(tap.type);
+        setNotes(tap.notes);
+        setShowEdit(true)
+    };
+
+    const handleCancel = () => {
+        setTapName('');
+        setHoleSize('');
+        setType('');
+        setNotes('');
+        setShowEdit(false);
+    }
+
+    const handleUpdate = async () => {
+        try {
+            await updateTap(id, tapName, holeSize, type, notes);
+            setId(0);
+            setTapName('');
+            setHoleSize('');
+            setType('');
+            setNotes('');
+            setShowEdit(false);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            fetchData();
+        }
+    }
 
     useEffect(() => {
         fetchData();
@@ -119,6 +153,37 @@ export const TapChart = () => {
                                 Cancel
                             </Button>
                             <Button className='modalBtnVerify' variant="primary" onClick={handleSave}>
+                                Save
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
+
+                    <Modal show={showEdit}>
+                        <Modal.Header>
+                            <Modal.Title>Update Tap</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <FloatingLabel label="Tap Name" className="mb-3">
+                                <Form.Control defaultValue={tapName} onChange={(e) => {setTapName(e.target.value)}} />
+                            </FloatingLabel>
+                            <FloatingLabel controlId="floatingInput" label="Hole Size" className="mb-3">
+                                <Form.Control defaultValue={holeSize} onChange={(e) => {setHoleSize(e.target.value)}} />
+                            </FloatingLabel>
+                            <FloatingLabel label="Type" className="mb-3">
+                                <Form.Control defaultValue={type} as="select" name="Type" onChange={(e) => {setType(e.target.value)}}>
+                                    <option>Standard</option>
+                                    <option>Metric</option>
+                                </Form.Control>
+                            </FloatingLabel>
+                            <FloatingLabel controlId="floatingInput" label="Notes" className="mb-3">
+                                <Form.Control defaultValue={notes} onChange={(e) => {setNotes(e.target.value)}} />
+                            </FloatingLabel>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button className='modalBtnCancel' variant="secondary" onClick={handleCancel}>
+                                Cancel
+                            </Button>
+                            <Button className='modalBtnVerify' variant="primary" onClick={handleUpdate}>
                                 Save
                             </Button>
                         </Modal.Footer>
@@ -177,7 +242,7 @@ export const TapChart = () => {
                                         .map((tap, index) => {
                                             return (
                                                 <tr key={index} tap={tap}>
-                                                    <td className='text-center jobBold'>{tap.tapName}</td>
+                                                    <td onClick={() => handleOpenTap(tap)} className='text-center jobBold'>{tap.tapName}</td>
                                                     <td className='text-center'>{tap.holeSize}</td>
                                                     <td className='text-center'>{tap.notes}</td>
                                                 </tr>
