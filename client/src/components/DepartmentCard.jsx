@@ -31,7 +31,7 @@ export const DepartmentCard = ({ area }) => {
             backgroundColor = '#CDE3FD';
             break;
         default:
-            backgroundColor = 'white'; // Default background color
+            backgroundColor = 'white';
             break;
     }
 
@@ -72,20 +72,6 @@ export const DepartmentCard = ({ area }) => {
                 }
                 <Card.Body>
                     <Card.Title className="text-center">{area.area}</Card.Title>
-                    {area.areaType == 'production' &&
-                        <Card.Text>
-                            <span>Needs Nesting: {area.nest}</span>
-                            <br />
-                            <span>Total Jobs: {area.jobs}</span>
-                        </Card.Text>
-                    }
-                    {area.areaType == 'programming' &&
-                        <Card.Text>
-                            <span>TBR Jobs: {area.tbr}</span>
-                            <br />
-                            <span>Futrue Jobs: {area.future}</span>
-                        </Card.Text>
-                    }
                 </Card.Body>
             </Card>
         </Link>
