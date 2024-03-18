@@ -51,6 +51,11 @@ export const Quality = () => {
     const [qualityUsers, setQualityUsers] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    const [dropdownTBRTitles, setDropdownTBRTitles] = useState({});
+    const [dropdownFutureTitles, setDropdownFutureTitles] = useState({});
+    const [dropdownTBRStatuses, setDropdownTBRStatuses] = useState({});
+    const [dropdownFutureStatuses, setDropdownFutureStatuses] = useState({});
+
     const [tbr, setTbr] = useState('');
     const [future, setFuture] = useState('');
     const [proto, setProto] = useState('');
@@ -86,6 +91,10 @@ export const Quality = () => {
     };
 
     const handleTBRInspector = async (job, inspector) => {
+        setDropdownTBRTitles(prevState => ({
+            ...prevState,
+            [job.JobNo]: inspector
+        }));
         try {
             await updateInspector(job.dataValues.jobNo, inspector);
             const res = await getTBRJobs();
@@ -96,6 +105,10 @@ export const Quality = () => {
     }
     
     const handleTBRStatus = async (job, jobStatus) => {
+        setDropdownTBRStatuses(prevState => ({
+            ...prevState,
+            [job.JobNo]: jobStatus
+        }));
         try {
             await updateStatus(job.dataValues.jobNo, jobStatus);
             const res = await getTBRJobs();
@@ -106,6 +119,10 @@ export const Quality = () => {
     }
 
     const handleFutureInspector = async (job, inspector) => {
+        setDropdownFutureTitles(prevState => ({
+            ...prevState,
+            [job.JobNo]: inspector
+        }));
         try {
             await updateInspector(job.dataValues.jobNo, inspector);
             const res = await getFutureJobs();
@@ -116,6 +133,10 @@ export const Quality = () => {
     }
 
     const handleFutureStatus = async (job, jobStatus) => {
+        setDropdownFutureStatuses(prevState => ({
+            ...prevState,
+            [job.JobNo]: jobStatus
+        }));
         try {
             await updateStatus(job.dataValues.jobNo, jobStatus);
             const res = await getFutureJobs();
@@ -222,6 +243,8 @@ export const Quality = () => {
                                             .map((job, index) => {
                                                 if (job.dataValues.jobStatus == 'QC' || job.dataValues.jobStatus == 'CHECKING') {
                                                     const rowClass = job.WorkCode == 'HOT' ? 'expedite-row' : '';
+                                                    const dropdownTBRTitle = dropdownTBRTitles[job.JobNo] || job.dataValues.inspector;
+                                                    const dropdownTBRStatus = dropdownTBRStatuses[job.JobNo] || job.dataValues.jobStatus;
                                                     return (
                                                         <tr key={index} job={job} className={rowClass}>
                                                             <td className='text-center jobBold'>{job.JobNo}</td>
@@ -236,7 +259,7 @@ export const Quality = () => {
                                                             <td className='text-center'>{job.dataValues.engineer}</td>
                                                             {cookieData.quality ?
                                                                 <td className='text-center'>
-                                                                    <DropdownButton title={job.dataValues.inspector} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                    <DropdownButton title={dropdownTBRTitle} align={{ lg: 'start' }} className='text-center dropDowns'>
                                                                         {qualityUsers.map((user, n) => (
                                                                             <Dropdown.Item key={n} onClick={() => handleTBRInspector(job, user)} className='dropDownItem'>{user}</Dropdown.Item>
                                                                         ))}
@@ -254,7 +277,7 @@ export const Quality = () => {
                                                             </td>
                                                             {cookieData.quality ?
                                                                 <td className='text-center'>
-                                                                    <DropdownButton title={job.dataValues.jobStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                    <DropdownButton title={dropdownTBRStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
                                                                         <Dropdown.Item onClick={() => handleTBRStatus(job, 'CHECKING')} className='dropDownItem'>CHECKING</Dropdown.Item>
                                                                         <Dropdown.Item onClick={() => handleTBRStatus(job, 'REWORK')} className='dropDownItem'>REWORK</Dropdown.Item>
                                                                         <Dropdown.Item onClick={() => handleTBRStatus(job, 'DONE')} className='dropDownItem'>DONE</Dropdown.Item>
@@ -360,6 +383,8 @@ export const Quality = () => {
                                             .map((job, index) => {
                                                 if (job.User_Text3 != 'REPEAT' && job.User_Text2 != '6. OUTSOURCE' && job.dataValues.jobStatus == 'QC' || job.dataValues.jobStatus == 'CHECKING') {
                                                     const rowClass = job.WorkCode == 'HOT' ? 'expedite-row' : '';
+                                                    const dropdownTBRTitle = dropdownTBRTitles[job.JobNo] || job.dataValues.inspector;
+                                                    const dropdownTBRStatus = dropdownTBRStatuses[job.JobNo] || job.dataValues.jobStatus;
                                                     return (
                                                         <tr key={index} job={job} className={rowClass}>
                                                             <td className='text-center jobBold'>{job.JobNo}</td>
@@ -374,7 +399,7 @@ export const Quality = () => {
                                                             <td className='text-center'>{job.dataValues.engineer}</td>
                                                             {cookieData.quality ?
                                                                 <td className='text-center'>
-                                                                    <DropdownButton title={job.dataValues.inspector} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                    <DropdownButton title={dropdownTBRTitle} align={{ lg: 'start' }} className='text-center dropDowns'>
                                                                         {qualityUsers.map((user, n) => (
                                                                             <Dropdown.Item key={n} onClick={() => handleFutureInspector(job, user)} className='dropDownItem'>{user}</Dropdown.Item>
                                                                         ))}
@@ -392,7 +417,7 @@ export const Quality = () => {
                                                             </td>
                                                             {cookieData.quality ?
                                                                 <td className='text-center'>
-                                                                    <DropdownButton title={job.dataValues.jobStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                    <DropdownButton title={dropdownTBRStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
                                                                         <Dropdown.Item onClick={() => handleFutureStatus(job, 'CHECKING')} className='dropDownItem'>CHECKING</Dropdown.Item>
                                                                         <Dropdown.Item onClick={() => handleFutureStatus(job, 'REWORK')} className='dropDownItem'>REWORK</Dropdown.Item>
                                                                         <Dropdown.Item onClick={() => handleFutureStatus(job, 'DONE')} className='dropDownItem'>DONE</Dropdown.Item>
