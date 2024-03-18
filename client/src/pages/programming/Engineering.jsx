@@ -216,26 +216,20 @@ export const Engineering = () => {
     const handleTBREngineer = async (job, engineer) => {
         try {
             await updateEngineer(job.dataValues.jobNo, engineer);
-            const res = await getTBRJobs();
+            // const res = await getTBRJobs();
             fetchFutureData();
-            // setSearchedTBR(res);
         } catch (err) {
             console.log(err);
-        // } finally {
-        //     setUpdate(`Engineer ${engineer}, Job ${job.dataValues.jobNo}`)
         }
     };
 
     const handleTBRJobStatus = async (job, jobStatus) => {
         try {
             await updateJobStatus(job.dataValues.jobNo, jobStatus);
-            const res = await getTBRJobs();
+            // const res = await getTBRJobs();
             fetchFutureData();
-            // setSearchedTBR(res);
         } catch (err) {
             console.log(err);
-        // } finally {
-        //     setUpdate(`Status ${jobStatus}, Job ${job.dataValues.jobNo}`)
         }
     };
     
