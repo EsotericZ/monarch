@@ -67,6 +67,8 @@ export const Engineering = () => {
     const [engineeringUsers, setEngineeringUsers] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    const [dropdownTitles, setDropdownTitles] = useState({});
+
     const [tbr, setTbr] = useState('');
     const [future, setFuture] = useState('');
     const [repeat, setRepeat] = useState('');
@@ -216,7 +218,8 @@ export const Engineering = () => {
     const handleTBREngineer = async (job, engineer) => {
         try {
             await updateEngineer(job.dataValues.jobNo, engineer);
-            fetchFutureData();
+            const res = await getTBRJobs();
+            setSearchedTBR(res);
         } catch (err) {
             console.log(err);
         }
@@ -225,17 +228,24 @@ export const Engineering = () => {
     const handleTBRJobStatus = async (job, jobStatus) => {
         try {
             await updateJobStatus(job.dataValues.jobNo, jobStatus);
-            fetchFutureData();
+            const res = await getTBRJobs();
+            setSearchedTBR(res);
         } catch (err) {
             console.log(err);
         }
     };
     
     const handleFutureEngineer = async (job, engineer) => {
+        setDropdownTitles(prevState => ({
+            ...prevState,
+            [job.JobNo]: engineer
+        }));
         try {
             await updateEngineer(job.dataValues.jobNo, engineer);
-            fetchFutureData();
-            setUpdate(`Job ${job.dataValues.jobNo}, Engineer ${engineer}`)
+            // fetchFutureData();
+            // setUpdate(`Job ${job.dataValues.jobNo}, Engineer ${engineer}`)
+            const res = await getFutureJobs();
+            setSearchedFuture(res);
         } catch (err) {
             console.log(err)
         }
@@ -244,8 +254,10 @@ export const Engineering = () => {
     const handleFutureJobStatus = async (job, jobStatus) => {
         try {
             await updateJobStatus(job.dataValues.jobNo, jobStatus);
-            fetchFutureData();
-            setUpdate(`Job ${job.dataValues.jobNo}, Status ${jobStatus}`)
+            // fetchFutureData();
+            // setUpdate(`Job ${job.dataValues.jobNo}, Status ${jobStatus}`)
+            const res = await getFutureJobs();
+            setSearchedFuture(res);
         } catch (err) {
             console.log(err);
         }
@@ -350,6 +362,7 @@ export const Engineering = () => {
                                             })
                                             .map((job, index) => {
                                                 const rowClass = job.WorkCode == 'HOT' ? 'expedite-row' : '';
+                                                const dropdownTitle = dropdownTitles[job.JobNo] || job.dataValues.engineer;
                                                 return (
                                                     <tr key={index} job={job} className={rowClass}>
                                                         <td className='text-center jobBold'>{job.JobNo}</td>
@@ -364,12 +377,12 @@ export const Engineering = () => {
                                                         <td className='text-center'>{job.User_Text3}</td>
                                                         {cookieData.engineering ?
                                                             <td className='text-center'>
-                                                                <DropdownButton title={job.dataValues.engineer} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                <DropdownButton title={dropdownTitle} align={{ lg: 'start' }} className='text-center dropDowns'>
                                                                     {engineeringUsers.map((user, n) => (
                                                                         <Dropdown.Item key={n} onClick={() => handleTBREngineer(job, user)} className='dropDownItem'>{user}</Dropdown.Item>
                                                                     ))}
                                                                     <Dropdown.Divider />
-                                                                    <Dropdown.Item onClick={() => {handleTBREngineer(job, ''); this.DropdownButton.title='load';}} className='dropDownItem'>None</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={() => handleTBREngineer(job, '')} className='dropDownItem'>None</Dropdown.Item>
                                                                 </DropdownButton>
                                                             </td>
                                                         :
