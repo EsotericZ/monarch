@@ -69,7 +69,9 @@ export const Engineering = () => {
 
     const [dropdownTBRTitles, setDropdownTBRTitles] = useState({});
     const [dropdownFutureTitles, setDropdownFutureTitles] = useState({});
-
+    const [dropdownTBRStatuses, setDropdownTBRStatuses] = useState({});
+    const [dropdownFutureStatuses, setDropdownFutureStatuses] = useState({});
+    
     const [tbr, setTbr] = useState('');
     const [future, setFuture] = useState('');
     const [repeat, setRepeat] = useState('');
@@ -231,6 +233,10 @@ export const Engineering = () => {
     };
 
     const handleTBRJobStatus = async (job, jobStatus) => {
+        setDropdownTBRStatuses(prevState => ({
+            ...prevState,
+            [job.JobNo]: jobStatus
+        }));
         try {
             await updateJobStatus(job.dataValues.jobNo, jobStatus);
             const res = await getTBRJobs();
@@ -255,10 +261,12 @@ export const Engineering = () => {
     }
     
     const handleFutureJobStatus = async (job, jobStatus) => {
+        setDropdownFutureStatuses(prevState => ({
+            ...prevState,
+            [job.JobNo]: jobStatus
+        }));
         try {
             await updateJobStatus(job.dataValues.jobNo, jobStatus);
-            // fetchFutureData();
-            // setUpdate(`Job ${job.dataValues.jobNo}, Status ${jobStatus}`)
             const res = await getFutureJobs();
             setSearchedFuture(res);
         } catch (err) {
@@ -366,6 +374,7 @@ export const Engineering = () => {
                                             .map((job, index) => {
                                                 const rowClass = job.WorkCode == 'HOT' ? 'expedite-row' : '';
                                                 const dropdownTBRTitle = dropdownTBRTitles[job.JobNo] || job.dataValues.engineer;
+                                                const dropdownTBRStatus = dropdownTBRStatuses[job.JobNo] || job.dataValues.jobStatus;
                                                 return (
                                                     <tr key={index} job={job} className={rowClass}>
                                                         <td className='text-center jobBold'>{job.JobNo}</td>
@@ -385,7 +394,7 @@ export const Engineering = () => {
                                                                         <Dropdown.Item key={n} onClick={() => handleTBREngineer(job, user)} className='dropDownItem'>{user}</Dropdown.Item>
                                                                     ))}
                                                                     <Dropdown.Divider />
-                                                                    <Dropdown.Item onClick={() => handleTBREngineer(job, '')} className='dropDownItem'>None</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={() => handleTBREngineer(job, ' ')} className='dropDownItem'>None</Dropdown.Item>
                                                                 </DropdownButton>
                                                             </td>
                                                         :
@@ -407,7 +416,7 @@ export const Engineering = () => {
                                                         }
                                                         {cookieData.engineering ?
                                                             <td className='text-center'>
-                                                                <DropdownButton title={job.dataValues.jobStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                <DropdownButton title={dropdownTBRStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
                                                                     <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'WIP')} className='dropDownItem'>WIP</Dropdown.Item>
                                                                     <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'FORMING')} className='dropDownItem'>FORMING</Dropdown.Item>
                                                                     <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'FINALIZE')} className='dropDownItem'>FINALIZE</Dropdown.Item>
@@ -520,6 +529,7 @@ export const Engineering = () => {
                                                 if (job.User_Text3 != 'REPEAT' && job.User_Text2 != '6. OUTSOURCE') {
                                                     const rowClass = job.WorkCode == 'HOT' ? 'expedite-row' : '';
                                                     const dropdownFutureTitle = dropdownFutureTitles[job.JobNo] || job.dataValues.engineer;
+                                                    const dropdownFutureStatus = dropdownFutureStatuses[job.JobNo] || job.dataValues.jobStatus;
                                                     return (
                                                         <tr key={index} job={job} className={rowClass}>
                                                             <td className='text-center jobBold'>{job.JobNo}</td>
@@ -539,7 +549,7 @@ export const Engineering = () => {
                                                                             <Dropdown.Item key={n} onClick={() => handleFutureEngineer(job, user)} className='dropDownItem'>{user}</Dropdown.Item>
                                                                         ))}
                                                                         <Dropdown.Divider />
-                                                                        <Dropdown.Item onClick={() => handleFutureEngineer(job, '')} className='dropDownItem'>None</Dropdown.Item>
+                                                                        <Dropdown.Item onClick={() => handleFutureEngineer(job, ' ')} className='dropDownItem'>None</Dropdown.Item>
                                                                     </DropdownButton>
                                                                 </td>
                                                             :
@@ -561,7 +571,7 @@ export const Engineering = () => {
                                                             }
                                                             {cookieData.engineering ?
                                                                 <td className='text-center'>
-                                                                    <DropdownButton title={job.dataValues.jobStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                    <DropdownButton title={dropdownFutureStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
                                                                         <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'WIP')} className='dropDownItem'>WIP</Dropdown.Item>
                                                                         <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'FORMING')} className='dropDownItem'>FORMING</Dropdown.Item>
                                                                         <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'FINALIZE')} className='dropDownItem'>FINALIZE</Dropdown.Item>
