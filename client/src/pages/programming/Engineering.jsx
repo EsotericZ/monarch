@@ -216,6 +216,10 @@ export const Engineering = () => {
     }
 
     const handleTBREngineer = async (job, engineer) => {
+        setDropdownTitles(prevState => ({
+            ...prevState,
+            [job.JobNo]: engineer
+        }));
         try {
             await updateEngineer(job.dataValues.jobNo, engineer);
             const res = await getTBRJobs();
@@ -236,10 +240,7 @@ export const Engineering = () => {
     };
     
     const handleFutureEngineer = async (job, engineer) => {
-        setDropdownTitles(prevState => ({
-            ...prevState,
-            [job.JobNo]: engineer
-        }));
+
         try {
             await updateEngineer(job.dataValues.jobNo, engineer);
             // fetchFutureData();
