@@ -142,6 +142,23 @@ export const Engineering = () => {
             setLoading(false);
         }
     };
+
+    const fetchFutureData = async () => {
+        try {
+            const [futureRes] = await Promise.all([
+                getFutureJobs(),
+            ]);
+    
+            setSearchedFuture(futureRes);
+            let futureCount = futureRes.filter(row => typeof row.JobNo !== 'undefined' && row.User_Text3 !== 'REPEAT').length;
+            setFuture(futureCount > 0 ? `Future (${futureCount})` : 'Future');
+
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
     
     const fetchRepeatData = async () => {
         try {
@@ -181,8 +198,14 @@ export const Engineering = () => {
     };
 
     const toggleModel = async (job) => {
-        updateModel(job.dataValues.id);
-        setUpdate(`Model ${job.dataValues.jobNo}`)
+        try {
+            await updateModel(job.dataValues.id);
+            
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setUpdate(`Model ${job.dataValues.jobNo}`)
+        }
     }
 
     const toggleExpedite = async (job) => {
@@ -197,6 +220,8 @@ export const Engineering = () => {
             setSearchedTBR(res);
         } catch (err) {
             console.log(err);
+        } finally {
+            setUpdate(`Engineer ${engineer}, Job ${job.dataValues.jobNo}`)
         }
     };
 
@@ -207,6 +232,8 @@ export const Engineering = () => {
             setSearchedTBR(res);
         } catch (err) {
             console.log(err);
+        } finally {
+            setUpdate(`Status ${jobStatus}, Job ${job.dataValues.jobNo}`)
         }
     };
     
@@ -547,7 +574,7 @@ export const Engineering = () => {
                                         }
                                     </tbody>
                                 </Table>
-                                <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
+                                <Button className='rounded-circle refreshBtn' onClick={() => fetchFutureData()}>
                                     <Icon size={24} icon={refresh}/>
                                 </Button>
                                 <ToastContainer className="toastCopy" style={{ zIndex: 1 }}>
