@@ -5,6 +5,8 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 
+import PuffLoader from "react-spinners/PuffLoader";
+
 import { Icon } from 'react-icons-kit';
 import {check} from 'react-icons-kit/entypo/check';
 import { refresh } from 'react-icons-kit/fa/refresh';
@@ -156,7 +158,9 @@ export const Quality = () => {
             {loading ?
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
                     <h1 className='text-center'>Quality</h1>
-                    <h2 className='text-center'>Loading</h2>
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '100px' }}>
+                        <PuffLoader color="red" />
+                    </div>
                 </div>
             :
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
@@ -383,8 +387,8 @@ export const Quality = () => {
                                             .map((job, index) => {
                                                 if (job.User_Text3 != 'REPEAT' && job.User_Text2 != '6. OUTSOURCE' && job.dataValues.jobStatus == 'QC' || job.dataValues.jobStatus == 'CHECKING') {
                                                     const rowClass = job.WorkCode == 'HOT' ? 'expedite-row' : '';
-                                                    const dropdownTBRTitle = dropdownTBRTitles[job.JobNo] || job.dataValues.inspector;
-                                                    const dropdownTBRStatus = dropdownTBRStatuses[job.JobNo] || job.dataValues.jobStatus;
+                                                    const dropdownFutureTitle = dropdownFutureTitles[job.JobNo] || job.dataValues.inspector;
+                                                    const dropdownFutureStatus = dropdownFutureStatuses[job.JobNo] || job.dataValues.jobStatus;
                                                     return (
                                                         <tr key={index} job={job} className={rowClass}>
                                                             <td className='text-center jobBold'>{job.JobNo}</td>
@@ -399,7 +403,7 @@ export const Quality = () => {
                                                             <td className='text-center'>{job.dataValues.engineer}</td>
                                                             {cookieData.quality ?
                                                                 <td className='text-center'>
-                                                                    <DropdownButton title={dropdownTBRTitle} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                    <DropdownButton title={dropdownFutureTitle} align={{ lg: 'start' }} className='text-center dropDowns'>
                                                                         {qualityUsers.map((user, n) => (
                                                                             <Dropdown.Item key={n} onClick={() => handleFutureInspector(job, user)} className='dropDownItem'>{user}</Dropdown.Item>
                                                                         ))}
@@ -417,7 +421,7 @@ export const Quality = () => {
                                                             </td>
                                                             {cookieData.quality ?
                                                                 <td className='text-center'>
-                                                                    <DropdownButton title={dropdownTBRStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                    <DropdownButton title={dropdownFutureStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
                                                                         <Dropdown.Item onClick={() => handleFutureStatus(job, 'CHECKING')} className='dropDownItem'>CHECKING</Dropdown.Item>
                                                                         <Dropdown.Item onClick={() => handleFutureStatus(job, 'REWORK')} className='dropDownItem'>REWORK</Dropdown.Item>
                                                                         <Dropdown.Item onClick={() => handleFutureStatus(job, 'DONE')} className='dropDownItem'>DONE</Dropdown.Item>
