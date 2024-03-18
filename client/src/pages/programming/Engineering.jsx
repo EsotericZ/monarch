@@ -147,17 +147,34 @@ export const Engineering = () => {
             setLoading(false);
         }
     };
-
+    
+    const fetchTBRData = async () => {
+        try {
+            const [tbrRes] = await Promise.all([
+                getTBRJobs(),
+            ]);
+    
+            setSearchedTBR(tbrRes);
+            let tbrCount = tbrRes.filter(row => typeof row.JobNo !== 'undefined').length;
+            setTbr(tbrCount > 0 ? `TBR (${tbrCount})` : 'TBR');
+    
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+    
     const fetchFutureData = async () => {
         try {
             const [futureRes] = await Promise.all([
                 getFutureJobs(),
             ]);
-    
+            
             setSearchedFuture(futureRes);
             let futureCount = futureRes.filter(row => typeof row.JobNo !== 'undefined' && row.User_Text3 !== 'REPEAT').length;
             setFuture(futureCount > 0 ? `Future (${futureCount})` : 'Future');
-
+            
         } catch (err) {
             console.error(err);
         } finally {
@@ -172,29 +189,73 @@ export const Engineering = () => {
                 getPrints(),
                 getRepeatJobs(),
             ]);
-    
+            
             setSearchedNextStep(nextStepRes);
-    
+            
             setSearchedPrints(printsRes);
-    
+            
             setSearchedRepeat(repeatRes);
             let repeatCount = repeatRes.length;
             setRepeat(repeatCount > 0 ? `Repeat (${repeatCount})` : 'Repeat');
-        
+            
             setFullRepeats(
                 repeatRes.map(v => {
                     let obj1 = nextStepRes.find(o => o.JobNo === v.JobNo);
                     if (obj1) {
-                    v.WorkCntr = obj1.WorkCntr;
+                        v.WorkCntr = obj1.WorkCntr;
                     }
-
+                    
                     let obj = printsRes.find(x => x.PartNo === v.PartNo);
+                    v.DocNumber = obj ? obj.DocNumber : '';
+                    
+                    return v;
+                })
+            );
+                
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+        
+    const fetchOutsourceData = async () => {
+        try {
+            const [outsourcePrintsRes, outsourceRes] = await Promise.all([
+                getOutsourcePrints(),
+                getOutsourceJobs(),
+            ]);
+    
+            setSearchedOutsourcePrints(outsourcePrintsRes);
+    
+            setSearchedOutsource(outsourceRes);
+            let outsourceCount = outsourceRes.length;
+            setOutsource(outsourceCount > 0 ? `Outsource (${outsourceCount})` : 'Outsource');
+        
+            setFullOutsource(
+                outsourceRes.map(v => {
+                    let obj = outsourcePrintsRes.find(x => x.PartNo === v.PartNo);
                     v.DocNumber = obj ? obj.DocNumber : '';
 
                     return v;
                 })
             );
-        
+
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const fetchActiveData = async () => {
+        try {
+            const [engRes] = await Promise.all([
+                getAllJobs(),
+            ]);
+    
+            setSearchedEng(engRes);
+    
         } catch (err) {
             console.error(err);
         } finally {
@@ -439,7 +500,7 @@ export const Engineering = () => {
                                         }
                                     </tbody>
                                 </Table>
-                                <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
+                                <Button className='rounded-circle refreshBtn' onClick={() => fetchTBRData()}>
                                     <Icon size={24} icon={refresh}/>
                                 </Button>
                                 <ToastContainer className="toastCopy" style={{ zIndex: 1 }}>
@@ -769,7 +830,7 @@ export const Engineering = () => {
                                         }
                                     </tbody>
                                 </Table>
-                                <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
+                                <Button className='rounded-circle refreshBtn' onClick={() => fetchOutsourceData()}>
                                     <Icon size={24} icon={refresh}/>
                                 </Button>
                                 <ToastContainer className="toastCopy" style={{ zIndex: 1 }}>
@@ -850,7 +911,7 @@ export const Engineering = () => {
                                         }
                                     </tbody>
                                 </Table>
-                                <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
+                                <Button className='rounded-circle refreshBtn' onClick={() => fetchActiveData()}>
                                     <Icon size={24} icon={refresh}/>
                                 </Button>
                                 <ToastContainer className="toastCopy" style={{ zIndex: 1 }}>
