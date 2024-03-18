@@ -244,8 +244,6 @@ export const Engineering = () => {
     const handleFutureJobStatus = async (job, jobStatus) => {
         try {
             await updateJobStatus(job.dataValues.jobNo, jobStatus);
-            // const res = await getFutureJobs();
-            // setSearchedFuture(res);
             fetchFutureData();
             setUpdate(`Job ${job.dataValues.jobNo}, Status ${jobStatus}`)
         } catch (err) {
@@ -371,7 +369,7 @@ export const Engineering = () => {
                                                                         <Dropdown.Item key={n} onClick={() => handleTBREngineer(job, user)} className='dropDownItem'>{user}</Dropdown.Item>
                                                                     ))}
                                                                     <Dropdown.Divider />
-                                                                    <Dropdown.Item onClick={() => handleTBREngineer(job, '')} className='dropDownItem'>None</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={() => {handleTBREngineer(job, ''); this.DropdownButton.title='load';}} className='dropDownItem'>None</Dropdown.Item>
                                                                 </DropdownButton>
                                                             </td>
                                                         :
