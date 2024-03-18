@@ -216,7 +216,6 @@ export const Engineering = () => {
     const handleTBREngineer = async (job, engineer) => {
         try {
             await updateEngineer(job.dataValues.jobNo, engineer);
-            // const res = await getTBRJobs();
             fetchFutureData();
         } catch (err) {
             console.log(err);
@@ -226,7 +225,6 @@ export const Engineering = () => {
     const handleTBRJobStatus = async (job, jobStatus) => {
         try {
             await updateJobStatus(job.dataValues.jobNo, jobStatus);
-            // const res = await getTBRJobs();
             fetchFutureData();
         } catch (err) {
             console.log(err);
@@ -236,8 +234,9 @@ export const Engineering = () => {
     const handleFutureEngineer = async (job, engineer) => {
         try {
             await updateEngineer(job.dataValues.jobNo, engineer);
-            const res = await getFutureJobs();
-            setSearchedFuture(res);
+            // const res = await getFutureJobs();
+            // setSearchedFuture(res);
+            fetchFutureData();
         } catch (err) {
             console.log(err)
         }
@@ -246,8 +245,9 @@ export const Engineering = () => {
     const handleFutureJobStatus = async (job, jobStatus) => {
         try {
             await updateJobStatus(job.dataValues.jobNo, jobStatus);
-            const res = await getFutureJobs();
-            setSearchedFuture(res);
+            // const res = await getFutureJobs();
+            // setSearchedFuture(res);
+            fetchFutureData();
         } catch (err) {
             console.log(err);
         }
