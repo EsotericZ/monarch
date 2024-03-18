@@ -85,7 +85,13 @@ async function getTBRJobs(req, res) {
 };
 
 async function getFutureJobs(req, res) {
-    const jobData = await Jobs.findAll();
+    const jobData = await Jobs.findAll({
+        where: {
+            jobNo: {
+                [Op.gt]: 150000
+            }
+        }
+    });
     sql.connect(config, function(err,) {
         if (err) console.error(err);
         let request = new sql.Request();

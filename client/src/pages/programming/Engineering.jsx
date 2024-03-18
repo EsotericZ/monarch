@@ -234,8 +234,6 @@ export const Engineering = () => {
     const handleFutureEngineer = async (job, engineer) => {
         try {
             await updateEngineer(job.dataValues.jobNo, engineer);
-            // const res = await getFutureJobs();
-            // setSearchedFuture(res);
             fetchFutureData();
         } catch (err) {
             console.log(err)
