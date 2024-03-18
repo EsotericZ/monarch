@@ -142,6 +142,43 @@ export const Engineering = () => {
             setLoading(false);
         }
     };
+    
+    const fetchRepeatData = async () => {
+        try {
+            const [nextStepRes, printsRes, repeatRes] = await Promise.all([
+                getNextStep(),
+                getPrints(),
+                getRepeatJobs(),
+            ]);
+    
+            setSearchedNextStep(nextStepRes);
+    
+            setSearchedPrints(printsRes);
+    
+            setSearchedRepeat(repeatRes);
+            let repeatCount = repeatRes.length;
+            setRepeat(repeatCount > 0 ? `Repeat (${repeatCount})` : 'Repeat');
+        
+            setFullRepeats(
+                repeatRes.map(v => {
+                    let obj1 = nextStepRes.find(o => o.JobNo === v.JobNo);
+                    if (obj1) {
+                    v.WorkCntr = obj1.WorkCntr;
+                    }
+
+                    let obj = printsRes.find(x => x.PartNo === v.PartNo);
+                    v.DocNumber = obj ? obj.DocNumber : '';
+
+                    return v;
+                })
+            );
+        
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const toggleModel = async (job) => {
         updateModel(job.dataValues.id);
@@ -597,7 +634,7 @@ export const Engineering = () => {
                                         }
                                     </tbody>
                                 </Table>
-                                <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
+                                <Button className='rounded-circle refreshBtn' onClick={() => fetchRepeatData()}>
                                     <Icon size={24} icon={refresh}/>
                                 </Button>
                                 <ToastContainer className="toastCopy" style={{ zIndex: 1 }}>
