@@ -5,6 +5,8 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 
+import PuffLoader from "react-spinners/PuffLoader";
+
 import { Icon } from 'react-icons-kit';
 import { refresh } from 'react-icons-kit/fa/refresh';
 
@@ -50,6 +52,11 @@ export const TubeLaserProg = () => {
     const [tlaserUsers, setTlaserUsers] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    const [dropdownTBRTitles, setDropdownTBRTitles] = useState({});
+    const [dropdownFutureTitles, setDropdownFutureTitles] = useState({});
+    const [dropdownTBRStatuses, setDropdownTBRStatuses] = useState({});
+    const [dropdownFutureStatuses, setDropdownFutureStatuses] = useState({});
+
     const [tbr, setTbr] = useState('');
     const [future, setFuture] = useState('');
 
@@ -81,6 +88,10 @@ export const TubeLaserProg = () => {
     };
     
     const handleTBRTLProgrammer = async (job, tlProgrammer) => {
+        setDropdownTBRTitles(prevState => ({
+            ...prevState,
+            [job.JobNo]: tlProgrammer
+        }));
         try {
             await updateTLProgrammer(job.dataValues.jobNo, tlProgrammer);
             const res = await getTBRJobs();
@@ -91,6 +102,10 @@ export const TubeLaserProg = () => {
     };
     
     const handleTBRJobStatus = async (job, tlStatus) => {
+        setDropdownTBRStatuses(prevState => ({
+            ...prevState,
+            [job.JobNo]: tlStatus
+        }));
         try {
             await updateTLStatus(job.dataValues.jobNo, tlStatus);
             const res = await getTBRJobs();
@@ -101,6 +116,10 @@ export const TubeLaserProg = () => {
     };
     
     const handleFutureTLProgrammer = async (job, tlProgrammer) => {
+        setDropdownFutureTitles(prevState => ({
+            ...prevState,
+            [job.JobNo]: tlProgrammer
+        }));
         try {
             await updateTLProgrammer(job.dataValues.jobNo, tlProgrammer);
             const res = await getFutureJobs();
@@ -111,6 +130,10 @@ export const TubeLaserProg = () => {
     };
         
     const handleFutureJobStatus = async (job, tlStatus) => {
+        setDropdownFutureStatuses(prevState => ({
+            ...prevState,
+            [job.JobNo]: tlStatus
+        }));
         try {
             await updateTLStatus(job.dataValues.jobNo, tlStatus);
             const res = await getFutureJobs();
@@ -130,7 +153,9 @@ export const TubeLaserProg = () => {
             {loading ?
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
                     <h1 className='text-center'>Tube Laser</h1>
-                    <h2 className='text-center'>Loading</h2>
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '100px' }}>
+                        <PuffLoader color="red" />
+                    </div>
                 </div>
             :
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
@@ -216,6 +241,8 @@ export const TubeLaserProg = () => {
                                             .map((job, index) => {
                                                 if (job.dataValues.jobStatus == 'TLASER') {
                                                     const rowClass = job.WorkCode == 'HOT' ? 'expedite-row' : '';
+                                                    const dropdownTBRTitle = dropdownTBRTitles[job.JobNo] || job.dataValues.tlProgrammer;
+                                                    const dropdownTBRStatus = dropdownTBRStatuses[job.JobNo] || job.dataValues.tlStatus;
                                                     return (
                                                         <tr key={index} job={job} className={rowClass}>
                                                             <td className='text-center jobBold'>{job.JobNo}</td>
@@ -230,7 +257,7 @@ export const TubeLaserProg = () => {
                                                             <td className='text-center'>{job.dataValues.engineer}</td>
                                                             {cookieData.tlaser ?
                                                                 <td className='text-center'>
-                                                                    <DropdownButton title={job.dataValues.tlProgrammer} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                    <DropdownButton title={dropdownTBRTitle} align={{ lg: 'start' }} className='text-center dropDowns'>
                                                                         {tlaserUsers.map((user, n) => (
                                                                             <Dropdown.Item key={n} onClick={() => handleTBRTLProgrammer(job, user)} className='dropDownItem'>{user}</Dropdown.Item>
                                                                         ))}
@@ -243,7 +270,7 @@ export const TubeLaserProg = () => {
                                                             }
                                                             {cookieData.tlaser ?
                                                                 <td className='text-center'>
-                                                                    <DropdownButton title={job.dataValues.tlStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                    <DropdownButton title={dropdownTBRStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
                                                                         <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'WIP')} className='dropDownItem'>WIP</Dropdown.Item>
                                                                         <Dropdown.Item onClick={() => handleTBRJobStatus(job, '')} className='dropDownItem'>None</Dropdown.Item>
                                                                         <Dropdown.Divider />
@@ -347,6 +374,8 @@ export const TubeLaserProg = () => {
                                             .map((job, index) => {
                                                 if (job.User_Text3 != 'REPEAT' && job.User_Text2 != '6. OUTSOURCE' && job.dataValues.jobStatus == 'TLASER') {
                                                     const rowClass = job.WorkCode == 'HOT' ? 'expedite-row' : '';
+                                                    const dropdownFutureTitle = dropdownFutureTitles[job.JobNo] || job.dataValues.tlProgrammer;
+                                                    const dropdownFutureStatus = dropdownFutureStatuses[job.JobNo] || job.dataValues.tlStatus;
                                                     return (
                                                         <tr key={index} job={job} className={rowClass}>
                                                             <td className='text-center jobBold'>{job.JobNo}</td>
@@ -361,7 +390,7 @@ export const TubeLaserProg = () => {
                                                             <td className='text-center'>{job.dataValues.engineer}</td>
                                                             {cookieData.tlaser ?
                                                                 <td className='text-center'>
-                                                                    <DropdownButton title={job.dataValues.tlProgrammer} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                    <DropdownButton title={dropdownFutureTitle} align={{ lg: 'start' }} className='text-center dropDowns'>
                                                                         {tlaserUsers.map((user, n) => (
                                                                             <Dropdown.Item key={n} onClick={() => handleFutureTLProgrammer(job, user)} className='dropDownItem'>{user}</Dropdown.Item>
                                                                         ))}
@@ -374,7 +403,7 @@ export const TubeLaserProg = () => {
                                                             }
                                                             {cookieData.tlaser ?
                                                                 <td className='text-center'>
-                                                                    <DropdownButton title={job.dataValues.tlStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                    <DropdownButton title={dropdownFutureStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
                                                                         <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'WIP')} className='dropDownItem'>WIP</Dropdown.Item>
                                                                         <Dropdown.Item onClick={() => handleFutureJobStatus(job, '')} className='dropDownItem'>None</Dropdown.Item>
                                                                         <Dropdown.Divider />

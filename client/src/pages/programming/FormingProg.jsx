@@ -5,6 +5,8 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 
+import PuffLoader from "react-spinners/PuffLoader";
+
 import { Icon } from 'react-icons-kit';
 import { refresh } from 'react-icons-kit/fa/refresh';
 
@@ -50,6 +52,11 @@ export const FormingProg = () => {
     const [formingUsers, setFormingUsers] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    const [dropdownTBRTitles, setDropdownTBRTitles] = useState({});
+    const [dropdownFutureTitles, setDropdownFutureTitles] = useState({});
+    const [dropdownTBRStatuses, setDropdownTBRStatuses] = useState({});
+    const [dropdownFutureStatuses, setDropdownFutureStatuses] = useState({});
+
     const [tbr, setTbr] = useState('');
     const [future, setFuture] = useState('');
     const [BDTest, setBDTest] = useState('');
@@ -85,6 +92,10 @@ export const FormingProg = () => {
     };
 
     const handleTBRFormProgrammer = async (job, formProgrammer) => {
+        setDropdownTBRTitles(prevState => ({
+            ...prevState,
+            [job.JobNo]: formProgrammer
+        }));
         try {
             await updateFormProgrammer(job.dataValues.jobNo, formProgrammer);
             const res = await getTBRJobs();
@@ -95,6 +106,10 @@ export const FormingProg = () => {
     };
     
     const handleTBRJobStatus = async (job, formStatus) => {
+        setDropdownTBRStatuses(prevState => ({
+            ...prevState,
+            [job.JobNo]: formStatus
+        }));
         try {
             await updateFormStatus(job.dataValues.jobNo, formStatus);
             const res = await getTBRJobs();
@@ -105,6 +120,10 @@ export const FormingProg = () => {
     };
     
     const handleFutureFormProgrammer = async (job, formProgrammer) => {
+        setDropdownFutureTitles(prevState => ({
+            ...prevState,
+            [job.JobNo]: formProgrammer
+        }));
         try {
             await updateFormProgrammer(job.dataValues.jobNo, formProgrammer);
             const res = await getFutureJobs();
@@ -114,9 +133,13 @@ export const FormingProg = () => {
         }
     };
         
-    const handleFutureJobStatus = async (job, jobStatus) => {
+    const handleFutureJobStatus = async (job, formStatus) => {
+        setDropdownFutureStatuses(prevState => ({
+            ...prevState,
+            [job.JobNo]: formStatus
+        }));
         try {
-            await updateFormStatus(job.dataValues.jobNo, jobStatus);
+            await updateFormStatus(job.dataValues.jobNo, formStatus);
             const res = await getFutureJobs();
             setSearchedFuture(res);
         } catch (err) {
@@ -134,7 +157,9 @@ export const FormingProg = () => {
             {loading ?
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
                     <h1 className='text-center'>Forming</h1>
-                    <h2 className='text-center'>Loading</h2>
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '100px' }}>
+                        <PuffLoader color="red" />
+                    </div>
                 </div>
             :
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
@@ -220,6 +245,8 @@ export const FormingProg = () => {
                                             .map((job, index) => {
                                                 if (job.dataValues.jobStatus == 'FORMING') {
                                                     const rowClass = job.WorkCode == 'HOT' ? 'expedite-row' : '';
+                                                    const dropdownTBRTitle = dropdownTBRTitles[job.JobNo] || job.dataValues.formProgrammer;
+                                                    const dropdownTBRStatus = dropdownTBRStatuses[job.JobNo] || job.dataValues.formStatus;
                                                     return (
                                                         <tr key={index} job={job} className={rowClass}>
                                                             <td className='text-center jobBold'>{job.JobNo}</td>
@@ -234,7 +261,7 @@ export const FormingProg = () => {
                                                             <td className='text-center'>{job.dataValues.engineer}</td>
                                                             {cookieData.forming ?
                                                                 <td className='text-center'>
-                                                                    <DropdownButton title={job.dataValues.formProgrammer} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                    <DropdownButton title={dropdownTBRTitle} align={{ lg: 'start' }} className='text-center dropDowns'>
                                                                         {formingUsers.map((user, n) => (
                                                                             <Dropdown.Item key={n} onClick={() => handleTBRFormProgrammer(job, user)} className='dropDownItem'>{user}</Dropdown.Item>
                                                                         ))}
@@ -247,7 +274,7 @@ export const FormingProg = () => {
                                                             }
                                                             {cookieData.forming ?
                                                                 <td className='text-center'>
-                                                                    <DropdownButton title={job.dataValues.formStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                    <DropdownButton title={dropdownTBRStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
                                                                         <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'WIP')} className='dropDownItem'>WIP</Dropdown.Item>
                                                                         <Dropdown.Item onClick={() => handleTBRJobStatus(job, 'BD TEST')} className='dropDownItem'>BD TEST</Dropdown.Item>
                                                                         <Dropdown.Divider />
@@ -351,6 +378,8 @@ export const FormingProg = () => {
                                             .map((job, index) => {
                                                 if (job.User_Text3 != 'REPEAT' && job.User_Text2 != '6. OUTSOURCE' && job.dataValues.jobStatus == 'FORMING') {
                                                     const rowClass = job.WorkCode == 'HOT' ? 'expedite-row' : '';
+                                                    const dropdownFutureTitle = dropdownFutureTitles[job.JobNo] || job.dataValues.formProgrammer;
+                                                    const dropdownFutureStatus = dropdownFutureStatuses[job.JobNo] || job.dataValues.formStatus;
                                                     return (
                                                         <tr key={index} job={job} className={rowClass}>
                                                             <td className='text-center jobBold'>{job.JobNo}</td>
@@ -365,7 +394,7 @@ export const FormingProg = () => {
                                                             <td className='text-center'>{job.dataValues.engineer}</td>
                                                             {cookieData.forming ?
                                                                 <td className='text-center'>
-                                                                    <DropdownButton title={job.dataValues.formProgrammer} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                    <DropdownButton title={dropdownFutureTitle} align={{ lg: 'start' }} className='text-center dropDowns'>
                                                                         {formingUsers.map((user, n) => (
                                                                             <Dropdown.Item key={n} onClick={() => handleFutureFormProgrammer(job, user)} className='dropDownItem'>{user}</Dropdown.Item>
                                                                         ))}
@@ -378,7 +407,7 @@ export const FormingProg = () => {
                                                             }
                                                             {cookieData.forming ?
                                                                 <td className='text-center'>
-                                                                    <DropdownButton title={job.dataValues.formStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                    <DropdownButton title={dropdownFutureStatus} align={{ lg: 'start' }} className='text-center dropDowns'>
                                                                         <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'WIP')} className='dropDownItem'>WIP</Dropdown.Item>
                                                                         <Dropdown.Item onClick={() => handleFutureJobStatus(job, 'BD TEST')} className='dropDownItem'>BD TEST</Dropdown.Item>
                                                                         <Dropdown.Divider />
