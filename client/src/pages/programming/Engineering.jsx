@@ -217,11 +217,12 @@ export const Engineering = () => {
         try {
             await updateEngineer(job.dataValues.jobNo, engineer);
             const res = await getTBRJobs();
-            setSearchedTBR(res);
+            fetchFutureData();
+            // setSearchedTBR(res);
         } catch (err) {
             console.log(err);
-        } finally {
-            setUpdate(`Engineer ${engineer}, Job ${job.dataValues.jobNo}`)
+        // } finally {
+        //     setUpdate(`Engineer ${engineer}, Job ${job.dataValues.jobNo}`)
         }
     };
 
@@ -229,11 +230,12 @@ export const Engineering = () => {
         try {
             await updateJobStatus(job.dataValues.jobNo, jobStatus);
             const res = await getTBRJobs();
-            setSearchedTBR(res);
+            fetchFutureData();
+            // setSearchedTBR(res);
         } catch (err) {
             console.log(err);
-        } finally {
-            setUpdate(`Status ${jobStatus}, Job ${job.dataValues.jobNo}`)
+        // } finally {
+        //     setUpdate(`Status ${jobStatus}, Job ${job.dataValues.jobNo}`)
         }
     };
     
