@@ -235,6 +235,7 @@ export const Engineering = () => {
         try {
             await updateEngineer(job.dataValues.jobNo, engineer);
             fetchFutureData();
+            setUpdate(`Job ${job.dataValues.jobNo}, Engineer ${engineer}`)
         } catch (err) {
             console.log(err)
         }
@@ -246,6 +247,7 @@ export const Engineering = () => {
             // const res = await getFutureJobs();
             // setSearchedFuture(res);
             fetchFutureData();
+            setUpdate(`Job ${job.dataValues.jobNo}, Status ${jobStatus}`)
         } catch (err) {
             console.log(err);
         }
