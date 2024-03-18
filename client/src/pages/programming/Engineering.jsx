@@ -71,7 +71,6 @@ export const Engineering = () => {
     const [dropdownFutureTitles, setDropdownFutureTitles] = useState({});
     const [dropdownTBRStatuses, setDropdownTBRStatuses] = useState({});
     const [dropdownFutureStatuses, setDropdownFutureStatuses] = useState({});
-    const [toggledModels, setToggledModels] = useState({});
     
     const [tbr, setTbr] = useState('');
     const [future, setFuture] = useState('');
@@ -204,10 +203,6 @@ export const Engineering = () => {
     };
 
     const toggleModel = async (job) => {
-        setToggledModels(prevState => ({
-            ...prevState,
-            [job.JobNo]: !prevState[job.JobNo]
-        }));
         try {
             await updateModel(job.dataValues.id);
             
@@ -408,10 +403,9 @@ export const Engineering = () => {
                                                         <td className='text-center'>{job.QuoteNo}</td>
                                                         {cookieData.engineering ?
                                                             <td className='text-center' onClick={() => toggleModel(job)}>
-                                                                {/* {job.dataValues.model && */}
-                                                                {toggledModels[job.JobNo] && job.dataValues.model && (
+                                                                {job.dataValues.model &&
                                                                     <Icon icon={check}/>
-                                                                )}
+                                                                }
                                                             </td>
                                                         :
                                                             <td className='text-center'>
@@ -564,10 +558,9 @@ export const Engineering = () => {
                                                             <td className='text-center'>{job.QuoteNo}</td>
                                                             {cookieData.engineering ?
                                                                 <td className='text-center' onClick={() => toggleModel(job)}>
-                                                                    {/* {job.dataValues.model && */}
-                                                                    {toggledModels[job.JobNo] && job.dataValues.model && (
+                                                                    {job.dataValues.model &&
                                                                         <Icon icon={check}/>
-                                                                    )}
+                                                                    }
                                                                 </td>
                                                             :
                                                                 <td className='text-center'>
