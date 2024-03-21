@@ -152,6 +152,24 @@ export const Quality = () => {
         fetchData();
     }, [loading, update]);
 
+    let qcCustomers = [
+        'AIRC',
+        'FAT',
+        'JFT',
+        'JUWI',
+        'MBI',
+        'MSM',
+        'NFT',
+        'PROVISION',
+        'PVM',
+        'QL',
+        'SFAB',
+        'STONEAGE',
+        'THS',
+        'TRELL',
+        'VERIS'
+    ];
+
     return (
         <div style={{ display: 'flex' }}>
             <Sidebar />
@@ -247,10 +265,11 @@ export const Quality = () => {
                                             .map((job, index) => {
                                                 if (job.dataValues.jobStatus == 'QC' || job.dataValues.jobStatus == 'CHECKING') {
                                                     const rowClass = job.WorkCode == 'HOT' ? 'expedite-row' : '';
+                                                    const qcClass = qcCustomers.includes(job.CustCode) ? 'qc-row' : '';
                                                     const dropdownTBRTitle = dropdownTBRTitles[job.JobNo] || job.dataValues.inspector;
                                                     const dropdownTBRStatus = dropdownTBRStatuses[job.JobNo] || job.dataValues.jobStatus;
                                                     return (
-                                                        <tr key={index} job={job} className={rowClass}>
+                                                        <tr key={index} job={job} className={`${rowClass} ${qcClass}`}>
                                                             <td className='text-center jobBold'>{job.JobNo}</td>
                                                             <CopyToClipboard text={job.PartNo} onCopy={() => { setShowToast(true); setPartCopy(`${job.PartNo}`) }}>
                                                                 <td className='text-center'>{job.PartNo}</td>
@@ -387,10 +406,11 @@ export const Quality = () => {
                                             .map((job, index) => {
                                                 if (job.User_Text3 != 'REPEAT' && job.User_Text2 != '6. OUTSOURCE' && job.dataValues.jobStatus == 'QC' || job.dataValues.jobStatus == 'CHECKING') {
                                                     const rowClass = job.WorkCode == 'HOT' ? 'expedite-row' : '';
+                                                    const qcClass = qcCustomers.includes(job.CustCode) ? 'qc-row' : '';
                                                     const dropdownFutureTitle = dropdownFutureTitles[job.JobNo] || job.dataValues.inspector;
                                                     const dropdownFutureStatus = dropdownFutureStatuses[job.JobNo] || job.dataValues.jobStatus;
                                                     return (
-                                                        <tr key={index} job={job} className={rowClass}>
+                                                        <tr key={index} job={job} className={`${rowClass} ${qcClass}`}>
                                                             <td className='text-center jobBold'>{job.JobNo}</td>
                                                             <CopyToClipboard text={job.PartNo} onCopy={() => { setShowToast(true); setPartCopy(`${job.PartNo}`) }}>
                                                                 <td className='text-center'>{job.PartNo}</td>
