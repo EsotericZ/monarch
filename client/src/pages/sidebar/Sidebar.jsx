@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useLayoutEffect } from 'react';
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 import { NavLink } from 'react-router-dom';
@@ -39,10 +39,11 @@ export const Sidebar = () => {
         setData();
     }, [name, admin])
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const handleResize = () => {
-            setOpen(true);
+            setOpen(false);
         };
+        
         window.addEventListener('resize', handleResize);
         return () => {
             window.removeEventListener('resize', handleResize);
