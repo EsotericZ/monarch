@@ -11,6 +11,7 @@ import { refresh } from 'react-icons-kit/fa/refresh';
 
 import getAllSupplies from '../../services/supplies/getAllSupplies';
 import createSupplies from '../../services/supplies/createSupplies';
+import updateSupplies from '../../services/supplies/updateSupplies';
 
 import { Sidebar } from '../sidebar/Sidebar';
 
@@ -37,10 +38,12 @@ export const Supplies = () => {
     const [notes, setNotes] = useState('');
     const [productLink, setProductLink] = useState('');
     const [jobNo, setJobNo] = useState('');
+    const [id, setId] = useState(0);
     
     const [searchedSupplies, setSearchedSupplies] = useState([]);
     const [loading, setLoading] = useState(true);
     const [show, setShow] = useState(false);
+    const [showEdit, setShowEdit] = useState(false);
 
     const fetchData = async () => {
         try {
@@ -76,6 +79,45 @@ export const Supplies = () => {
     const handleShow = () => {
         setShow(true);
     } ;
+    
+    const handleUpdateItem = (item) => {
+        setId(item.id);
+        setSupplies(item.supplies);
+        setDepartment(item.department);
+        setRequestedBy(item.requestedBy);
+        setNotes(item.notes);
+        setProductLink(item.productLink);
+        setJobNo(item.jobNo);
+        setShowEdit(true)
+    };
+
+    const handleCancel = () => {
+        setSupplies('');
+        setDepartment('');
+        setRequestedBy('');
+        setNotes('');
+        setProductLink('');
+        setJobNo('');
+        setShowEdit(false);
+    }
+
+    const handleUpdate = async () => {
+        try {
+            await updateSupplies(id, supplies, department, requestedBy, notes, productLink, jobNo);
+            setId(0);
+            setSupplies('');
+            setDepartment('');
+            setRequestedBy('');
+            setNotes('');
+            setProductLink('');
+            setJobNo('');
+            setShowEdit(false);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            fetchData();
+        }
+    }
 
     useEffect(() => {
         fetchData();
@@ -95,7 +137,7 @@ export const Supplies = () => {
 
                     <Modal show={show} onHide={handleClose}>
                         <Modal.Header closeButton>
-                            <Modal.Title className="justify-content-center">Add Program</Modal.Title>
+                            <Modal.Title className="justify-content-center">Add Request</Modal.Title>
                         </Modal.Header>
                         <Modal.Body className="text-center">
                             <Form>
@@ -111,6 +153,7 @@ export const Supplies = () => {
                                         <option>Welding</option>
                                         <option>Paint</option>
                                         <option>Shop</option>
+                                        <option>Other</option>
                                     </Form.Control>
                                 </FloatingLabel>
                                 <FloatingLabel controlId="floatingInput" label="Description / Notes" className="mb-3">
@@ -129,6 +172,46 @@ export const Supplies = () => {
                                 Cancel
                             </Button>
                             <Button className='modalBtnVerify' variant="primary" onClick={handleSave}>
+                                Save
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
+
+                    <Modal show={showEdit}>
+                        <Modal.Header>
+                            <Modal.Title>Update Supplies</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <FloatingLabel label="Supplies Requested" className="mb-3">
+                                <Form.Control defaultValue={supplies} onChange={(e) => {setSupplies(e.target.value)}} />
+                            </FloatingLabel>
+                            <FloatingLabel controlId="floatingInput" label="Requested By" className="mb-3">
+                                <Form.Control defaultValue={requestedBy} onChange={(e) => {setRequestedBy(e.target.value)}} />
+                            </FloatingLabel>
+                            <FloatingLabel label="Department" className="mb-3">
+                                <Form.Control defaultValue={department} as="select" name="machine" onChange={(e) => {setDepartment(e.target.value)}}>
+                                    <option> </option>
+                                    <option>Welding</option>
+                                    <option>Paint</option>
+                                    <option>Shop</option>
+                                    <option>Other</option>
+                                </Form.Control>
+                            </FloatingLabel>
+                            <FloatingLabel controlId="floatingInput" label="Description / Notes" className="mb-3">
+                                <Form.Control defaultValue={notes} onChange={(e) => {setNotes(e.target.value)}} />
+                            </FloatingLabel>
+                            <FloatingLabel controlId="floatingInput" label="Product Link" className="mb-3">
+                                <Form.Control defaultValue={productLink} onChange={(e) => {setProductLink(e.target.value)}} />
+                            </FloatingLabel>
+                            <FloatingLabel controlId="floatingInput" label="Job No" className="mb-3">
+                                <Form.Control defaultValue={jobNo} onChange={(e) => {setJobNo(e.target.value)}} />
+                            </FloatingLabel>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button className='modalBtnCancel' variant="secondary" onClick={handleCancel}>
+                                Cancel
+                            </Button>
+                            <Button className='modalBtnVerify' variant="primary" onClick={handleUpdate}>
                                 Save
                             </Button>
                         </Modal.Footer>
@@ -178,7 +261,7 @@ export const Supplies = () => {
                                     .map((item, index) => {
                                         return (
                                             <tr key={index} item={item}>
-                                                <td className='text-center'>{item.supplies}</td>
+                                                <td onClick={() => handleUpdateItem(item)} className='text-center'>{item.supplies}</td>
                                                 <td className='text-center'>{item.department}</td>
                                                 <td className='text-center'>{item.requestedBy}</td>
                                                 <td className='text-center'>{item.notes}</td>

@@ -33,7 +33,38 @@ async function createSupplies(req, res) {
     })
 }
 
+async function updateSupplies(req, res) {
+    let id = req.body.id
+    let supplies = req.body.supplies
+    let department = req.body.department
+    let requestedBy = req.body.requestedBy
+    let notes = req.body.notes
+    let productLink = req.body.productLink
+    let jobNo = req.body.jobNo
+    
+    await Supplies.update(
+        {
+            supplies, 
+            department, 
+            requestedBy, 
+            notes, 
+            productLink, 
+            jobNo
+        },
+        { where: { id: id }}
+    ).then((result) => {
+        return res.status(200).send({
+            data: result
+        })
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
+
 module.exports = {
     getAllSupplies,
     createSupplies,
+    updateSupplies,
 }
