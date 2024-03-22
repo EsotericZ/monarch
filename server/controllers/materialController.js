@@ -357,6 +357,31 @@ async function updateVerified(req, res) {
     })
 }
 
+async function updateMaterial(req, res) {
+    let id = req.body.id
+    let programNo = req.body.programNo
+    let material = req.body.material
+    let jobNo = req.body.jobNo
+    let machine = req.body.machine
+    
+    await Material.update(
+        {
+            programNo, 
+            material, 
+            jobNo, 
+            machine,
+        },
+        { where: { id: id }}
+    ).then((result) => {
+        return res.status(200).send({
+            data: result
+        })
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
 
 module.exports = {
     getAllMaterials,
@@ -373,4 +398,5 @@ module.exports = {
     updateNeed,
     updateOnOrder,
     updateVerified,
+    updateMaterial,
 }

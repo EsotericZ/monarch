@@ -211,7 +211,7 @@ export const TapChart = () => {
                                         .map((tap, index) => {
                                             return (
                                                 <tr key={index} tap={tap}>
-                                                    <td className='text-center jobBold'>{tap.tapName}</td>
+                                                    <td onClick={() => handleOpenTap(tap)} className='text-center jobBold'>{tap.tapName}</td>
                                                     <td className='text-center'>{tap.holeSize}</td>
                                                     <td className='text-center'>{tap.notes}</td>
                                                 </tr>
