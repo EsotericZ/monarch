@@ -49,7 +49,6 @@ export const Forming = () => {
                 getAllJobs(),
             ]);
     
-            console.log(allJobs)
             setSearchedForming(allJobs);
             setLoading(false);
         } catch (err) {

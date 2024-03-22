@@ -15,6 +15,7 @@ import getTBRJobs from '../../services/tlaser/getTBRJobs';
 import getFRJobs from '../../services/tlaser/getFRJobs';
 import createMaterial from '../../services/material/createMaterial';
 import getAllTLMaterials from '../../services/material/getAllTLMaterials';
+import updateMaterial from '../../services/material/updateMaterial';
 
 import updateCheck from '../../services/material/updateCheck';
 import updateComplete from '../../services/material/updateComplete';
@@ -57,11 +58,14 @@ export const TubeLaser = () => {
     const [needsNestingFuture, setNeedsNestingFuture] = useState([]);
     const [loading, setLoading] = useState(true);
     const [show, setShow] = useState(false);
+    const [showEdit, setShowEdit] = useState(false);
     const [showComplete, setShowComplete] = useState(false);
 
     const [programNo, setProgramNo] = useState();
     const [material, setMaterial] = useState();
     const [jobNo, setJobNo] = useState(' ');
+    const [machine, setMachine] = useState('tlaser');
+    const [id, setId] = useState(0);
 
     const [jobs, setJobs] = useState('All Jobs');
     const [nest, setNest] = useState('Ready to Nest');
@@ -164,6 +168,39 @@ export const TubeLaser = () => {
             console.log(err);
         }
     }
+
+    const handleUpdateJob = (job) => {
+        setId(job.id);
+        setProgramNo(job.programNo);
+        setMaterial(job.material);
+        setJobNo(job.jobNo);
+        setMachine(job.machine);
+        setShowEdit(true)
+    };
+
+    const handleCancel = () => {
+        setProgramNo('');
+        setMaterial('');
+        setJobNo('');
+        setMachine('');
+        setShowEdit(false);
+    }
+
+    const handleUpdate = async () => {
+        try {
+            await updateMaterial(id, programNo, material, jobNo, machine);
+            setId(0);
+            setProgramNo('');
+            setMaterial('');
+            setJobNo('');
+            setMachine('');
+            setShowEdit(false);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            fetchData();
+        }
+    }
     
     useEffect(() => {
         fetchData();
@@ -222,6 +259,34 @@ export const TubeLaser = () => {
                                 </Button>
                             </div>
                         </Modal.Body>
+                    </Modal>
+                    
+                    <Modal show={showEdit}>
+                        <Modal.Header>
+                            <Modal.Title>Update Program</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <FloatingLabel label="Tap Name" className="mb-3">
+                                <Form.Control defaultValue={programNo} onChange={(e) => {setProgramNo(e.target.value)}} />
+                            </FloatingLabel>
+                            <FloatingLabel controlId="floatingInput" label="Hole Size" className="mb-3">
+                                <Form.Control defaultValue={material} onChange={(e) => {setMaterial(e.target.value)}} />
+                            </FloatingLabel>
+                            <FloatingLabel controlId="floatingInput" label="Hole Size" className="mb-3">
+                                <Form.Control defaultValue={jobNo} onChange={(e) => {setJobNo(e.target.value)}} />
+                            </FloatingLabel>
+                            <FloatingLabel label="Area" className="mb-3">
+                                <Form.Control defaultValue="Tube Laser" disabled />
+                            </FloatingLabel>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button className='modalBtnCancel' variant="secondary" onClick={handleCancel}>
+                                Cancel
+                            </Button>
+                            <Button className='modalBtnVerify' variant="primary" onClick={handleUpdate}>
+                                Save
+                            </Button>
+                        </Modal.Footer>
                     </Modal>
 
                     <Tabs
@@ -410,7 +475,7 @@ export const TubeLaser = () => {
                                             .map((job, index) => {
                                                 return (
                                                     <tr key={index} job={job}>
-                                                        <td className='text-center jobBold'>{job.programNo}</td>
+                                                        <td onClick={() => handleUpdateJob(job)} className='text-center jobBold'>{job.programNo}</td>
                                                         <td className='text-center'>{job.material}</td>
                                                         <td className='text-center'>{job.jobNo}</td>
                                                         <td className='text-center' onClick={() => toggleCheck(job)}>
@@ -483,7 +548,7 @@ export const TubeLaser = () => {
                                                 if (job.verified) {
                                                     return (
                                                         <tr key={index} job={job}>
-                                                            <td className='text-center jobBold'>{job.programNo}</td>
+                                                            <td onClick={() => handleUpdateJob(job)} className='text-center jobBold'>{job.programNo}</td>
                                                             <td className='text-center'>{job.material}</td>
                                                             <td className='text-center'>{job.jobNo}</td>
                                                             <td className='text-center' onClick={() => handleShowComplete(job)}>
