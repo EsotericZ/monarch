@@ -269,7 +269,7 @@ export const Supplies = () => {
                                                 <td className='text-center'>{item.jobNo}</td>
                                                 <td className='text-center'>
                                                     {item.needSupplies &&
-                                                        <Icon icon={check}/>
+                                                        <Icon icon={check} />
                                                     }
                                                 </td>
                                                 <td className='text-center'>
