@@ -4,7 +4,7 @@ import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 
 import { Icon } from 'react-icons-kit';
-import { plus } from 'react-icons-kit/fa/plus'
+import { plus } from 'react-icons-kit/fa/plus';
 
 import getStandardTaps from '../../services/taps/getStandardTaps';
 import getMetricTaps from '../../services/taps/getMetricTaps';
