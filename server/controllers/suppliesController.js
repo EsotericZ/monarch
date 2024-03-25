@@ -63,8 +63,30 @@ async function updateSupplies(req, res) {
     })
 }
 
+async function updateSuppliesDate(req, res) {
+    let id = req.body.id
+    let expected = req.body.date
+    console.log('hi')
+    
+    await Supplies.update(
+        {
+            expected
+        },
+        { where: { id: id }}
+    ).then((result) => {
+        return res.status(200).send({
+            data: result
+        })
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
+
 module.exports = {
     getAllSupplies,
     createSupplies,
     updateSupplies,
+    updateSuppliesDate,
 }

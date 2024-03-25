@@ -4,6 +4,10 @@ import { format, parseISO } from 'date-fns';
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import './supplies.css';
+
 import { Icon } from 'react-icons-kit';
 import { check } from 'react-icons-kit/entypo/check';
 import { plus } from 'react-icons-kit/fa/plus'
@@ -12,6 +16,7 @@ import { refresh } from 'react-icons-kit/fa/refresh';
 import getAllSupplies from '../../services/supplies/getAllSupplies';
 import createSupplies from '../../services/supplies/createSupplies';
 import updateSupplies from '../../services/supplies/updateSupplies';
+import updateSuppliesDate from '../../services/supplies/updateSuppliesDate';
 
 import { Sidebar } from '../sidebar/Sidebar';
 
@@ -44,6 +49,7 @@ export const Supplies = () => {
     const [loading, setLoading] = useState(true);
     const [show, setShow] = useState(false);
     const [showEdit, setShowEdit] = useState(false);
+    const [selectedDates, setSelectedDates] = useState({});
 
     const fetchData = async () => {
         try {
@@ -54,6 +60,19 @@ export const Supplies = () => {
             setSearchedSupplies(allSupplies.data);
           
             setLoading(false);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const handleDateChange = async (id, date) => {
+        setSelectedDates(prevState => ({
+            ...prevState,
+            [id]: date,
+        }));
+        console.log(id, date)
+        try {
+            await updateSuppliesDate(id, date)
         } catch (err) {
             console.error(err);
         }
@@ -224,6 +243,7 @@ export const Supplies = () => {
                                     <th className='text-center'><input onChange={(e) => setSearchedValueSupplies(e.target.value)} placeholder='&#xf002;  Supplies' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                     <th className='text-center'><input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='&#xf002;  Area' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                     <th className='text-center'><input onChange={(e) => setSearchedValueEmployee(e.target.value)} placeholder='&#xf002;  Requested By' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                    <th className='text-center'>Created</th>
                                     <th className='text-center'>Description</th>
                                     <th className='text-center'>Link</th>
                                     <th className='text-center'><input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='&#xf002;  Job No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
@@ -264,6 +284,7 @@ export const Supplies = () => {
                                                 <td onClick={() => handleUpdateItem(item)} className='text-center'>{item.supplies}</td>
                                                 <td className='text-center'>{item.department}</td>
                                                 <td className='text-center'>{item.requestedBy}</td>
+                                                <td className='text-center'>{format(parseISO(item.createdAt), 'MM/dd')}</td>
                                                 <td className='text-center'>{item.notes}</td>
                                                 <td className='text-center'>{item.productLink}</td>
                                                 <td className='text-center'>{item.jobNo}</td>
@@ -274,16 +295,26 @@ export const Supplies = () => {
                                                 </td>
                                                 <td className='text-center'>
                                                     {item.onOrder &&
-                                                        <Icon icon={check}/>
+                                                        <Icon icon={check} />
                                                     }
                                                 </td>
-                                                <td className='text-center'>{item.expected && format(parseISO(item.expected), 'MM/dd')}</td>
+                                                <td className='text-center'>
+                                                    <DatePicker
+                                                        selected={selectedDates[item.id] || (item.expected ? new Date(item.expected + 'T00:00:00') : null)}
+                                                        onChange={(date) => {
+                                                            handleDateChange(item.id, date)
+                                                        }}
+                                                        dateFormat="MM/dd/yy"
+                                                        className='text-center'
+                                                    />
+                                                </td>
                                             </tr>
                                         )
                                     })
                                 }
                             </tbody>
                         </Table>
+
                         <Button className='rounded-circle addBtn' onClick={() => handleShow()}>
                             <Icon size={24} icon={plus}/>
                         </Button>
