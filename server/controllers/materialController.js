@@ -383,6 +383,26 @@ async function updateMaterial(req, res) {
     })
 }
 
+async function updateMaterialsDate(req, res) {
+    let id = req.body.id
+    let expected = req.body.date
+    
+    await Material.update(
+        {
+            expected
+        },
+        { where: { id: id }}
+    ).then((result) => {
+        return res.status(200).send({
+            data: result
+        })
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
+
 module.exports = {
     getAllMaterials,
     getAllTLMaterials,
@@ -399,4 +419,5 @@ module.exports = {
     updateOnOrder,
     updateVerified,
     updateMaterial,
+    updateMaterialsDate,
 }

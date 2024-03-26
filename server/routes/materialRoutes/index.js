@@ -18,5 +18,6 @@ router.post('/updateNeed', materialController.updateNeed);
 router.post('/updateOnOrder', materialController.updateOnOrder);
 router.post('/updateVerified', materialController.updateVerified);
 router.post('/updateMaterial', materialController.updateMaterial);
+router.post('/updateMaterialsDate', materialController.updateMaterialsDate);
 
 module.exports = router;

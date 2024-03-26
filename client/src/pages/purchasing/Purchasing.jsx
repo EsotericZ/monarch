@@ -4,9 +4,13 @@ import { format, parseISO } from 'date-fns';
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+
 import { Icon } from 'react-icons-kit';
 import { check } from 'react-icons-kit/entypo/check';
 import { refresh } from 'react-icons-kit/fa/refresh';
+import { history } from 'react-icons-kit/fa/history'
 
 import getAllMaterials from '../../services/material/getAllMaterials';
 import getAllSupplies from '../../services/supplies/getAllSupplies';
@@ -16,6 +20,8 @@ import updateOnOrder from '../../services/material/updateOnOrder';
 import updateVerified from '../../services/material/updateVerified';
 import updateOnOrderSupplies from '../../services/supplies/updateOnOrderSupplies';
 import updateRecieved from '../../services/supplies/updateRecieved';
+import updateSuppliesDate from '../../services/supplies/updateSuppliesDate';
+import updateMaterialsDate from '../../services/material/updateMaterialsDate';
 
 import { Sidebar } from '../sidebar/Sidebar';
 
@@ -48,6 +54,8 @@ export const Purchasing = () => {
     const [saws, setSaws] = useState('');
     const [punch, setPunch] = useState('');
     const [supplies, setSupplies] = useState('');
+    const [selectedDates, setSelectedDates] = useState({});
+    const [selectedDatesMaterial, setSelectedDatesMaterial] = useState({});
 
     const fetchData = async () => {
         try {
@@ -72,6 +80,30 @@ export const Purchasing = () => {
             setSupplies(suppliesCount > 0 ? `Supplies (${suppliesCount})` : 'Supplies');
 
             setLoading(false);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const handleDateChangeMaterial = async (id, date) => {
+        setSelectedDatesMaterial(prevState => ({
+            ...prevState,
+            [id]: date,
+        }));
+        try {
+            await updateMaterialsDate(id, date)
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const handleDateChange = async (id, date) => {
+        setSelectedDates(prevState => ({
+            ...prevState,
+            [id]: date,
+        }));
+        try {
+            await updateSuppliesDate(id, date)
         } catch (err) {
             console.error(err);
         }
@@ -150,13 +182,15 @@ export const Purchasing = () => {
                             <Table striped hover>
                                     <thead>
                                         <tr>
-                                            <th className='text-center'><input onChange={(e) => setSearchedValueProgramNo(e.target.value)} placeholder='&#xf002;  Program No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center'><input onChange={(e) => setSearchedValueMaterial(e.target.value)} placeholder='&#xf002;  Material' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center'><input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='&#xf002;  Job No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center'>Area</th>
-                                            <th className='text-center'>Need</th>
-                                            <th className='text-center'>On Order</th>
-                                            <th className='text-center'>Verified</th>
+                                            <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueProgramNo(e.target.value)} placeholder='&#xf002;  Program No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='25%'><input onChange={(e) => setSearchedValueMaterial(e.target.value)} placeholder='&#xf002;  Material' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='15%'><input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='&#xf002;  Job No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='10%'>Area</th>
+                                            <th className='text-center' width='8%'>Created</th>
+                                            <th className='text-center' width='8%'>Need</th>
+                                            <th className='text-center' width='8%'>On Order</th>
+                                            <th className='text-center' width='8%'>Expected</th>
+                                            <th className='text-center' width='8%'>Verified</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -195,6 +229,7 @@ export const Purchasing = () => {
                                                             {job.area == 'slaser' &&
                                                                 <td className='text-center'>Static Laser</td>
                                                             }
+                                                            <td className='text-center'>{job.createdAt && format(parseISO(job.createdAt), 'MM/dd')}</td>
                                                             <td className='text-center' onClick={() => toggleNeed(job)}>
                                                                 {job.needMatl &&
                                                                     <Icon icon={check}/>
@@ -205,10 +240,18 @@ export const Purchasing = () => {
                                                                     <Icon icon={check}/>
                                                                 }
                                                             </td>
+                                                            <td className='text-center'>
+                                                                <DatePicker
+                                                                    selected={selectedDatesMaterial[job.id] || (job.expected ? new Date(job.expected + 'T00:00:00') : null)}
+                                                                    onChange={(date) => {
+                                                                        handleDateChangeMaterial(job.id, date)
+                                                                    }}
+                                                                    dateFormat="MM/dd"
+                                                                    className='text-center'
+                                                                />
+                                                            </td>
                                                             <td className='text-center' onClick={() => toggleVerified(job)}>
-                                                                {job.verified &&
-                                                                    <Icon icon={check}/>
-                                                                }
+                                                                <Icon icon={history}/>
                                                             </td>
                                                         </tr>
                                                     )
@@ -228,13 +271,15 @@ export const Purchasing = () => {
                             <Table striped hover>
                                     <thead>
                                         <tr>
-                                            <th className='text-center'><input onChange={(e) => setSearchedValueProgramNo(e.target.value)} placeholder='&#xf002;  Program No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center'><input onChange={(e) => setSearchedValueMaterial(e.target.value)} placeholder='&#xf002;  Material' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center'><input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='&#xf002;  Job No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center'>Area</th>
-                                            <th className='text-center'>Need</th>
-                                            <th className='text-center'>On Order</th>
-                                            <th className='text-center'>Verified</th>
+                                            <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueProgramNo(e.target.value)} placeholder='&#xf002;  Program No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='25%'><input onChange={(e) => setSearchedValueMaterial(e.target.value)} placeholder='&#xf002;  Material' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='15%'><input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='&#xf002;  Job No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='10%'>Area</th>
+                                            <th className='text-center' width='8%'>Created</th>
+                                            <th className='text-center' width='8%'>Need</th>
+                                            <th className='text-center' width='8%'>On Order</th>
+                                            <th className='text-center' width='8%'>Expected</th>
+                                            <th className='text-center' width='8%'>Verified</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -270,6 +315,7 @@ export const Purchasing = () => {
                                                             {job.area == 'saw' &&
                                                                 <td className='text-center'>Saw</td>
                                                             }
+                                                            <td className='text-center'>{job.createdAt && format(parseISO(job.createdAt), 'MM/dd')}</td>
                                                             <td className='text-center' onClick={() => toggleNeed(job)}>
                                                                 {job.needMatl &&
                                                                     <Icon icon={check}/>
@@ -280,10 +326,18 @@ export const Purchasing = () => {
                                                                     <Icon icon={check}/>
                                                                 }
                                                             </td>
+                                                            <td className='text-center'>
+                                                                <DatePicker
+                                                                    selected={selectedDatesMaterial[job.id] || (job.expected ? new Date(job.expected + 'T00:00:00') : null)}
+                                                                    onChange={(date) => {
+                                                                        handleDateChangeMaterial(job.id, date)
+                                                                    }}
+                                                                    dateFormat="MM/dd"
+                                                                    className='text-center'
+                                                                />
+                                                            </td>
                                                             <td className='text-center' onClick={() => toggleVerified(job)}>
-                                                                {job.verified &&
-                                                                    <Icon icon={check}/>
-                                                                }
+                                                                <Icon icon={history}/>
                                                             </td>
                                                         </tr>
                                                     )
@@ -303,13 +357,15 @@ export const Purchasing = () => {
                             <Table striped hover>
                                     <thead>
                                         <tr>
-                                            <th className='text-center'><input onChange={(e) => setSearchedValueProgramNo(e.target.value)} placeholder='&#xf002;  Program No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center'><input onChange={(e) => setSearchedValueMaterial(e.target.value)} placeholder='&#xf002;  Material' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center'><input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='&#xf002;  Job No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center'>Area</th>
-                                            <th className='text-center'>Need</th>
-                                            <th className='text-center'>On Order</th>
-                                            <th className='text-center'>Verified</th>
+                                            <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueProgramNo(e.target.value)} placeholder='&#xf002;  Program No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='25%'><input onChange={(e) => setSearchedValueMaterial(e.target.value)} placeholder='&#xf002;  Material' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='15%'><input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='&#xf002;  Job No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='10%'>Area</th>
+                                            <th className='text-center' width='8%'>Created</th>
+                                            <th className='text-center' width='8%'>Need</th>
+                                            <th className='text-center' width='8%'>On Order</th>
+                                            <th className='text-center' width='8%'>Expected</th>
+                                            <th className='text-center' width='8%'>Verified</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -345,6 +401,7 @@ export const Purchasing = () => {
                                                             {job.area == 'punch' &&
                                                                 <td className='text-center'>Punch</td>
                                                             }
+                                                            <td className='text-center'>{job.createdAt && format(parseISO(job.createdAt), 'MM/dd')}</td>
                                                             <td className='text-center' onClick={() => toggleNeed(job)}>
                                                                 {job.needMatl &&
                                                                     <Icon icon={check}/>
@@ -355,10 +412,18 @@ export const Purchasing = () => {
                                                                     <Icon icon={check}/>
                                                                 }
                                                             </td>
+                                                            <td className='text-center'>
+                                                                <DatePicker
+                                                                    selected={selectedDatesMaterial[job.id] || (job.expected ? new Date(job.expected + 'T00:00:00') : null)}
+                                                                    onChange={(date) => {
+                                                                        handleDateChangeMaterial(job.id, date)
+                                                                    }}
+                                                                    dateFormat="MM/dd"
+                                                                    className='text-center'
+                                                                />
+                                                            </td>
                                                             <td className='text-center' onClick={() => toggleVerified(job)}>
-                                                                {job.verified &&
-                                                                    <Icon icon={check}/>
-                                                                }
+                                                                <Icon icon={history}/>
                                                             </td>
                                                         </tr>
                                                     )
@@ -378,16 +443,16 @@ export const Purchasing = () => {
                                 <Table striped hover>
                                     <thead>
                                         <tr>
-                                            <th className='text-center'><input onChange={(e) => setSearchedValueSupplies(e.target.value)} placeholder='&#xf002;  Supplies' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center'><input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='&#xf002;  Area' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center'><input onChange={(e) => setSearchedValueEmployee(e.target.value)} placeholder='&#xf002;  Requested By' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center'>Date</th>
-                                            <th className='text-center'>Description</th>
-                                            <th className='text-center'>Link</th>
-                                            <th className='text-center'><input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='&#xf002;  Job No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center'>On Order</th>
-                                            <th className='text-center'>Expected</th>
-                                            <th className='text-center'>Recieved</th>
+                                            <th className='text-center' width='15%'><input onChange={(e) => setSearchedValueSupplies(e.target.value)} placeholder='&#xf002;  Supplies' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='8%'><input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='&#xf002;  Area' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='8%'><input onChange={(e) => setSearchedValueEmployee(e.target.value)} placeholder='&#xf002;  Requested By' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='8%'>Created</th>
+                                            <th className='text-center' width='15%'>Description</th>
+                                            <th className='text-center' width='14%'>Link</th>
+                                            <th className='text-center' width='8%'><input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='&#xf002;  Job No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='8%'>On Order</th>
+                                            <th className='text-center' width='8%'>Expected</th>
+                                            <th className='text-center' width='8%'>Recieved</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -431,9 +496,18 @@ export const Purchasing = () => {
                                                                 <Icon icon={check}/>
                                                             }
                                                         </td>
-                                                        <td className='text-center'>{item.expected && format(parseISO(item.expected), 'MM/dd')}</td>
+                                                        <td className='text-center'>
+                                                            <DatePicker
+                                                                selected={selectedDates[item.id] || (item.expected ? new Date(item.expected + 'T00:00:00') : null)}
+                                                                onChange={(date) => {
+                                                                    handleDateChange(item.id, date)
+                                                                }}
+                                                                dateFormat="MM/dd"
+                                                                className='text-center'
+                                                            />
+                                                        </td>
                                                         <td className='text-center' onClick={() => toggleCompleteSupplies(item)}>
-                                                            {item.completed}
+                                                            <Icon icon={history}/>
                                                         </td>
                                                     </tr>
                                                 )

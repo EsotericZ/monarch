@@ -298,7 +298,8 @@ export const Supplies = () => {
                                                         <Icon icon={check} />
                                                     }
                                                 </td>
-                                                <td className='text-center'>
+                                                <td className='text-center'>{item.expected && format(parseISO(item.expected), 'MM/dd')}</td>
+                                                {/* <td className='text-center'>
                                                     <DatePicker
                                                         selected={selectedDates[item.id] || (item.expected ? new Date(item.expected + 'T00:00:00') : null)}
                                                         onChange={(date) => {
@@ -307,7 +308,7 @@ export const Supplies = () => {
                                                         dateFormat="MM/dd/yy"
                                                         className='text-center'
                                                     />
-                                                </td>
+                                                </td> */}
                                             </tr>
                                         )
                                     })

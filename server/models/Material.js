@@ -48,10 +48,14 @@ Material.init(
             type: DataTypes.BOOLEAN,
             defaultValue: false,
         },
+        expected : {
+            type: DataTypes.DATE,
+            defaultValue: null,
+        },
     },
     {
         sequelize,
-        timestamps: false,
+        timestamps: true,
         freezeTableName: true,
         modelName: 'material',
     }

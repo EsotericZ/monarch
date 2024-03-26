@@ -66,7 +66,6 @@ async function updateSupplies(req, res) {
 async function updateSuppliesDate(req, res) {
     let id = req.body.id
     let expected = req.body.date
-    console.log('hi')
     
     await Supplies.update(
         {
