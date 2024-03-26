@@ -4,8 +4,6 @@ import { format, parseISO } from 'date-fns';
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import './supplies.css';
 
 import { Icon } from 'react-icons-kit';
@@ -16,7 +14,6 @@ import { refresh } from 'react-icons-kit/fa/refresh';
 import getAllSupplies from '../../services/supplies/getAllSupplies';
 import createSupplies from '../../services/supplies/createSupplies';
 import updateSupplies from '../../services/supplies/updateSupplies';
-import updateSuppliesDate from '../../services/supplies/updateSuppliesDate';
 
 import { Sidebar } from '../sidebar/Sidebar';
 
@@ -49,7 +46,6 @@ export const Supplies = () => {
     const [loading, setLoading] = useState(true);
     const [show, setShow] = useState(false);
     const [showEdit, setShowEdit] = useState(false);
-    const [selectedDates, setSelectedDates] = useState({});
 
     const fetchData = async () => {
         try {
@@ -60,19 +56,6 @@ export const Supplies = () => {
             setSearchedSupplies(allSupplies.data);
           
             setLoading(false);
-        } catch (err) {
-            console.error(err);
-        }
-    };
-
-    const handleDateChange = async (id, date) => {
-        setSelectedDates(prevState => ({
-            ...prevState,
-            [id]: date,
-        }));
-        console.log(id, date)
-        try {
-            await updateSuppliesDate(id, date)
         } catch (err) {
             console.error(err);
         }
@@ -299,16 +282,6 @@ export const Supplies = () => {
                                                     }
                                                 </td>
                                                 <td className='text-center'>{item.expected && format(parseISO(item.expected), 'MM/dd')}</td>
-                                                {/* <td className='text-center'>
-                                                    <DatePicker
-                                                        selected={selectedDates[item.id] || (item.expected ? new Date(item.expected + 'T00:00:00') : null)}
-                                                        onChange={(date) => {
-                                                            handleDateChange(item.id, date)
-                                                        }}
-                                                        dateFormat="MM/dd/yy"
-                                                        className='text-center'
-                                                    />
-                                                </td> */}
                                             </tr>
                                         )
                                     })

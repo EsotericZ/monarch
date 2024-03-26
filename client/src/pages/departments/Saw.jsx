@@ -4,6 +4,8 @@ import { format, parseISO } from 'date-fns';
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 
+import PuffLoader from "react-spinners/PuffLoader";
+
 import { Icon } from 'react-icons-kit';
 import { check } from 'react-icons-kit/entypo/check';
 import { plus } from 'react-icons-kit/fa/plus'
@@ -213,7 +215,9 @@ export const Saw = () => {
             {loading ?
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
                     <h1 className='text-center'>Saw</h1>
-                    <h2 className='text-center'>Loading</h2>
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '100px' }}>
+                        <PuffLoader color="red" />
+                    </div>
                 </div>
             :
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
@@ -450,6 +454,7 @@ export const Saw = () => {
                                             <th className='text-center'>Check</th>
                                             <th className='text-center'>Need</th>
                                             <th className='text-center'>On Order</th>
+                                            <th className='text-center'>Expected</th>
                                             <th className='text-center'>Verified</th>
                                         </tr>
                                     </thead>
@@ -494,6 +499,7 @@ export const Saw = () => {
                                                                 <Icon icon={check}/>
                                                             }
                                                         </td>
+                                                        <td className='text-center'>{job.expected && format(parseISO(job.expected), 'MM/dd')}</td>
                                                         <td className='text-center' onClick={() => toggleVerified(job)}>
                                                             {job.verified &&
                                                                 <Icon icon={check}/>
