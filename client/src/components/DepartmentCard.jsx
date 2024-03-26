@@ -30,6 +30,9 @@ export const DepartmentCard = ({ area }) => {
         case 'tooling':
             backgroundColor = '#CDE3FD';
             break;
+        case 'misc':
+            backgroundColor = 'yellow';
+            break;
         default:
             backgroundColor = 'white';
             break;

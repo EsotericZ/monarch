@@ -213,6 +213,17 @@ export const Profile = () => {
                 },
             ]);
         }
+        {(cookieData.purchasing) && 
+            setAreas(prevAreas => [
+                ...prevAreas,
+                {
+                    area: 'Purchasing',
+                    link: '/purchasing',
+                    image: 'bd',
+                    areaType: 'misc',
+                },
+            ]);
+        }
         setLoading(false);
     }, [loggedIn]);
 

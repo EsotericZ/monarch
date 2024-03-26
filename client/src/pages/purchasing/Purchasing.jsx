@@ -188,9 +188,13 @@ export const Purchasing = () => {
                                             <th className='text-center' width='10%'>Area</th>
                                             <th className='text-center' width='8%'>Created</th>
                                             <th className='text-center' width='8%'>Need</th>
-                                            <th className='text-center' width='8%'>On Order</th>
-                                            <th className='text-center' width='8%'>Expected</th>
-                                            <th className='text-center' width='8%'>Verified</th>
+                                            {cookieData.purchasing &&
+                                                <>
+                                                    <th className='text-center' width='8%'>On Order</th>
+                                                    <th className='text-center' width='8%'>Expected</th>
+                                                    <th className='text-center' width='8%'>Verified</th>
+                                                </>
+                                            }
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -235,24 +239,28 @@ export const Purchasing = () => {
                                                                     <Icon icon={check}/>
                                                                 }
                                                             </td>
-                                                            <td className='text-center' onClick={() => toggleOnOrder(job)}>
-                                                                {job.onOrder &&
-                                                                    <Icon icon={check}/>
-                                                                }
-                                                            </td>
-                                                            <td className='text-center'>
-                                                                <DatePicker
-                                                                    selected={selectedDatesMaterial[job.id] || (job.expected ? new Date(job.expected + 'T00:00:00') : null)}
-                                                                    onChange={(date) => {
-                                                                        handleDateChangeMaterial(job.id, date)
-                                                                    }}
-                                                                    dateFormat="MM/dd"
-                                                                    className='text-center'
-                                                                />
-                                                            </td>
-                                                            <td className='text-center' onClick={() => toggleVerified(job)}>
-                                                                <Icon icon={history}/>
-                                                            </td>
+                                                            {cookieData.purchasing &&
+                                                                <>
+                                                                    <td className='text-center' onClick={() => toggleOnOrder(job)}>
+                                                                        {job.onOrder &&
+                                                                            <Icon icon={check}/>
+                                                                        }
+                                                                    </td>
+                                                                    <td className='text-center'>
+                                                                        <DatePicker
+                                                                            selected={selectedDatesMaterial[job.id] || (job.expected ? new Date(job.expected + 'T00:00:00') : null)}
+                                                                            onChange={(date) => {
+                                                                                handleDateChangeMaterial(job.id, date)
+                                                                            }}
+                                                                            dateFormat="MM/dd"
+                                                                            className='text-center'
+                                                                        />
+                                                                    </td>
+                                                                    <td className='text-center' onClick={() => toggleVerified(job)}>
+                                                                        <Icon icon={history}/>
+                                                                    </td>
+                                                                </>
+                                                            }
                                                         </tr>
                                                     )
                                                 }
@@ -277,9 +285,13 @@ export const Purchasing = () => {
                                             <th className='text-center' width='10%'>Area</th>
                                             <th className='text-center' width='8%'>Created</th>
                                             <th className='text-center' width='8%'>Need</th>
-                                            <th className='text-center' width='8%'>On Order</th>
-                                            <th className='text-center' width='8%'>Expected</th>
-                                            <th className='text-center' width='8%'>Verified</th>
+                                            {cookieData.purchasing &&
+                                                <>
+                                                    <th className='text-center' width='8%'>On Order</th>
+                                                    <th className='text-center' width='8%'>Expected</th>
+                                                    <th className='text-center' width='8%'>Verified</th>
+                                                </>
+                                            }
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -321,24 +333,28 @@ export const Purchasing = () => {
                                                                     <Icon icon={check}/>
                                                                 }
                                                             </td>
-                                                            <td className='text-center' onClick={() => toggleOnOrder(job)}>
-                                                                {job.onOrder &&
-                                                                    <Icon icon={check}/>
-                                                                }
-                                                            </td>
-                                                            <td className='text-center'>
-                                                                <DatePicker
-                                                                    selected={selectedDatesMaterial[job.id] || (job.expected ? new Date(job.expected + 'T00:00:00') : null)}
-                                                                    onChange={(date) => {
-                                                                        handleDateChangeMaterial(job.id, date)
-                                                                    }}
-                                                                    dateFormat="MM/dd"
-                                                                    className='text-center'
-                                                                />
-                                                            </td>
-                                                            <td className='text-center' onClick={() => toggleVerified(job)}>
-                                                                <Icon icon={history}/>
-                                                            </td>
+                                                            {cookieData.purchasing &&
+                                                                <>
+                                                                    <td className='text-center' onClick={() => toggleOnOrder(job)}>
+                                                                        {job.onOrder &&
+                                                                            <Icon icon={check}/>
+                                                                        }
+                                                                    </td>
+                                                                    <td className='text-center'>
+                                                                        <DatePicker
+                                                                            selected={selectedDatesMaterial[job.id] || (job.expected ? new Date(job.expected + 'T00:00:00') : null)}
+                                                                            onChange={(date) => {
+                                                                                handleDateChangeMaterial(job.id, date)
+                                                                            }}
+                                                                            dateFormat="MM/dd"
+                                                                            className='text-center'
+                                                                        />
+                                                                    </td>
+                                                                    <td className='text-center' onClick={() => toggleVerified(job)}>
+                                                                        <Icon icon={history}/>
+                                                                    </td>
+                                                                </>
+                                                            }
                                                         </tr>
                                                     )
                                                 }
@@ -363,9 +379,13 @@ export const Purchasing = () => {
                                             <th className='text-center' width='10%'>Area</th>
                                             <th className='text-center' width='8%'>Created</th>
                                             <th className='text-center' width='8%'>Need</th>
-                                            <th className='text-center' width='8%'>On Order</th>
-                                            <th className='text-center' width='8%'>Expected</th>
-                                            <th className='text-center' width='8%'>Verified</th>
+                                            {cookieData.purchasing &&
+                                                <>
+                                                    <th className='text-center' width='8%'>On Order</th>
+                                                    <th className='text-center' width='8%'>Expected</th>
+                                                    <th className='text-center' width='8%'>Verified</th>
+                                                </>
+                                            }
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -407,24 +427,28 @@ export const Purchasing = () => {
                                                                     <Icon icon={check}/>
                                                                 }
                                                             </td>
-                                                            <td className='text-center' onClick={() => toggleOnOrder(job)}>
-                                                                {job.onOrder &&
-                                                                    <Icon icon={check}/>
-                                                                }
-                                                            </td>
-                                                            <td className='text-center'>
-                                                                <DatePicker
-                                                                    selected={selectedDatesMaterial[job.id] || (job.expected ? new Date(job.expected + 'T00:00:00') : null)}
-                                                                    onChange={(date) => {
-                                                                        handleDateChangeMaterial(job.id, date)
-                                                                    }}
-                                                                    dateFormat="MM/dd"
-                                                                    className='text-center'
-                                                                />
-                                                            </td>
-                                                            <td className='text-center' onClick={() => toggleVerified(job)}>
-                                                                <Icon icon={history}/>
-                                                            </td>
+                                                            {cookieData.purchasing &&
+                                                                <>
+                                                                    <td className='text-center' onClick={() => toggleOnOrder(job)}>
+                                                                        {job.onOrder &&
+                                                                            <Icon icon={check}/>
+                                                                        }
+                                                                    </td>
+                                                                    <td className='text-center'>
+                                                                        <DatePicker
+                                                                            selected={selectedDatesMaterial[job.id] || (job.expected ? new Date(job.expected + 'T00:00:00') : null)}
+                                                                            onChange={(date) => {
+                                                                                handleDateChangeMaterial(job.id, date)
+                                                                            }}
+                                                                            dateFormat="MM/dd"
+                                                                            className='text-center'
+                                                                        />
+                                                                    </td>
+                                                                    <td className='text-center' onClick={() => toggleVerified(job)}>
+                                                                        <Icon icon={history}/>
+                                                                    </td>
+                                                                </>
+                                                            }
                                                         </tr>
                                                     )
                                                 }
@@ -450,9 +474,13 @@ export const Purchasing = () => {
                                             <th className='text-center' width='15%'>Description</th>
                                             <th className='text-center' width='14%'>Link</th>
                                             <th className='text-center' width='8%'><input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='&#xf002;  Job No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center' width='8%'>On Order</th>
-                                            <th className='text-center' width='8%'>Expected</th>
-                                            <th className='text-center' width='8%'>Recieved</th>
+                                            {cookieData.purchasing &&
+                                                <>
+                                                    <th className='text-center' width='8%'>On Order</th>
+                                                    <th className='text-center' width='8%'>Expected</th>
+                                                    <th className='text-center' width='8%'>Recieved</th>
+                                                </>
+                                            }
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -491,24 +519,28 @@ export const Purchasing = () => {
                                                         <td className='text-center'>{item.notes}</td>
                                                         <td className='text-center'>{item.productLink}</td>
                                                         <td className='text-center'>{item.jobNo}</td>
-                                                        <td className='text-center' onClick={() => toggleOnOrderSupplies(item)}>
-                                                            {item.onOrder &&
-                                                                <Icon icon={check}/>
-                                                            }
-                                                        </td>
-                                                        <td className='text-center'>
-                                                            <DatePicker
-                                                                selected={selectedDates[item.id] || (item.expected ? new Date(item.expected + 'T00:00:00') : null)}
-                                                                onChange={(date) => {
-                                                                    handleDateChange(item.id, date)
-                                                                }}
-                                                                dateFormat="MM/dd"
-                                                                className='text-center'
-                                                            />
-                                                        </td>
-                                                        <td className='text-center' onClick={() => toggleCompleteSupplies(item)}>
-                                                            <Icon icon={history}/>
-                                                        </td>
+                                                        {cookieData.purchasing &&
+                                                            <>
+                                                                <td className='text-center' onClick={() => toggleOnOrderSupplies(item)}>
+                                                                    {item.onOrder &&
+                                                                        <Icon icon={check}/>
+                                                                    }
+                                                                </td>
+                                                                <td className='text-center'>
+                                                                    <DatePicker
+                                                                        selected={selectedDates[item.id] || (item.expected ? new Date(item.expected + 'T00:00:00') : null)}
+                                                                        onChange={(date) => {
+                                                                            handleDateChange(item.id, date)
+                                                                        }}
+                                                                        dateFormat="MM/dd"
+                                                                        className='text-center'
+                                                                    />
+                                                                </td>
+                                                                <td className='text-center' onClick={() => toggleCompleteSupplies(item)}>
+                                                                    <Icon icon={history}/>
+                                                                </td>
+                                                            </>
+                                                        }
                                                     </tr>
                                                 )
                                             })

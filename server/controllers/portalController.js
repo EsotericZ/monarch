@@ -40,6 +40,7 @@ async function login(req, res) {
                     saw: userInfo.saw,
                     punch: userInfo.punch,
                     shear: userInfo.shear,
+                    purchasing: userInfo.purchasing,
                 },
                 process.env.JWT_SECRET_KEY || 'pass',
                 { expiresIn: '1d' }
