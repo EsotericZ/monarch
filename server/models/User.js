@@ -75,6 +75,10 @@ User.init(
             type: DataTypes.BOOLEAN,
             defaultValue: false,
         },
+        purchasing: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
     }, {
         sequelize,
         tableName: 'users',

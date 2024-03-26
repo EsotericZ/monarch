@@ -27,6 +27,7 @@ import updateSaw from '../../services/users/updateSaw';
 import updateShear from '../../services/users/updateShear';
 import updateShipping from '../../services/users/updateShipping';
 import updateTLaser from '../../services/users/updateTLaser';
+import updatePurchasing from '../../services/users/updatePurchasing';
 
 import getAllRFID from '../../services/rfid/getAllRFID';
 import { Sidebar } from '../sidebar/Sidebar';
@@ -112,6 +113,11 @@ export const Admin = () => {
     async function toggleShipping(user) {
         updateShipping(user.id);
         setUpdate('Shipping');
+    }
+
+    async function togglePurchasing(user) {
+        updatePurchasing(user.id);
+        setUpdate('Purchasing');
     }
 
     async function toggleEngineering(user) {
@@ -316,6 +322,7 @@ export const Admin = () => {
                                         <th className='text-center' width='75px'>Shear</th>
                                         <th className='text-center' width='75px'>Maint</th>
                                         <th className='text-center' width='75px'>Ship</th>
+                                        <th className='text-center' width='75px'>Purch</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -423,6 +430,15 @@ export const Admin = () => {
                                                     </td>
                                                 :
                                                     <td className='text-center' onClick={() => toggleShipping(user)}>
+                                                        <Icon icon={circle_minus} style={{ color: '#CC0202' }} />
+                                                    </td>
+                                                }
+                                                {user.purchasing ?
+                                                    <td className='text-center' onClick={() => togglePurchasing(user)}>
+                                                        <Icon icon={circle_ok} style={{ color: '#5BC326' }} />
+                                                    </td>
+                                                :
+                                                    <td className='text-center' onClick={() => togglePurchasing(user)}>
                                                         <Icon icon={circle_minus} style={{ color: '#CC0202' }} />
                                                     </td>
                                                 }

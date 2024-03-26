@@ -19,5 +19,6 @@ router.post('/updateLaser', userController.updateLaser);
 router.post('/updateSaw', userController.updateSaw);
 router.post('/updatePunch', userController.updatePunch);
 router.post('/updateShear', userController.updateShear);
+router.post('/updatePurchasing', userController.updatePurchasing);
 
 module.exports = router;

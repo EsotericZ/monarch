@@ -9,7 +9,7 @@ async function getAllUsers(req, res) {
         where: {
             name: { [Op.ne]: 'Admin' }
         },
-        order: [['number', 'ASC']]
+        order: [['name', 'ASC']]
     })
     .then((result) => {
         return res.status(200).send({
@@ -555,6 +555,47 @@ async function updateShear(req, res) {
     })
 }
 
+async function updatePurchasing(req, res) {
+    let id = req.body.id
+
+    await User.findOne({
+        where: {id: id}
+    })
+    .then((result) => {
+        if (result.purchasing) {
+            User.update(
+                { purchasing: 0 },
+                { where: { id:id }}
+            ).then((result) => {
+                return res.status(200).send({
+                    data: result
+                })
+            }).catch((err) => {
+                return res.status(500).send({
+                    status: err
+                })
+            })
+        } else {
+            User.update(
+                { purchasing: 1 },
+                { where: { id:id }}
+            ).then((result) => {
+                return res.status(200).send({
+                    data: result
+                })
+            }).catch((err) => {
+                return res.status(500).send({
+                    status: err
+                })
+            })
+        }
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
+
 module.exports = {
     getAllUsers,
     getUserPassword,
@@ -572,4 +613,5 @@ module.exports = {
     updateSaw,
     updatePunch,
     updateShear,
+    updatePurchasing,
 }
