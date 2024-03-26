@@ -310,6 +310,7 @@ export const TubeLaser = () => {
                                             <th className='text-center'>Revision</th>
                                             <th className='text-center'>Qty</th>
                                             <th className='text-center'>Due Date</th>
+                                            <th className='text-center'>Traveler</th>
                                             <th className='text-center'><input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='&#xf002;  Customer' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center'><input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='&#xf002;  Type' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center'><input onChange={(e) => setSearchedValueMaterial(e.target.value)} placeholder='&#xf002;  Materials' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
@@ -318,7 +319,7 @@ export const TubeLaser = () => {
                                     <tbody>
                                         {needsNestingTBR.length > 1 &&
                                             <tr className='divide'>
-                                                <td className='text-center' colspan='9'>TBR</td>
+                                                <td className='text-center' colspan='10'>TBR</td>
                                             </tr>
                                         }
                                         {needsNestingTBR
@@ -362,6 +363,11 @@ export const TubeLaser = () => {
                                                         <td className='text-center'>{job.Revision}</td>
                                                         <td className='text-center'>{job.EstimQty}</td>
                                                         <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
+                                                        <td className='text-center'>
+                                                            {job.User_Date1 &&
+                                                                <Icon icon={check}/>
+                                                            }
+                                                        </td>
                                                         <td className='text-center'>{job.CustCode}</td>
                                                         <td className='text-center'>{job.User_Text3}</td>
                                                         <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.SubPartNo}`); setShowToast(true); setPartCopy(`${job.SubPartNo}`) }}>{job.SubPartNo}</td>
@@ -371,7 +377,7 @@ export const TubeLaser = () => {
                                         }
                                         {needsNestingFuture.length > 1 &&
                                             <tr className='divide'>
-                                                <td className='text-center' colspan='9'>FUTURE</td>
+                                                <td className='text-center' colspan='10'>FUTURE</td>
                                             </tr>
                                         }
                                         {needsNestingFuture
@@ -416,6 +422,11 @@ export const TubeLaser = () => {
                                                             <td className='text-center'>{job.Revision}</td>
                                                             <td className='text-center'>{job.EstimQty}</td>
                                                             <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
+                                                            <td className='text-center'>
+                                                                {job.User_Date1 &&
+                                                                    <Icon icon={check}/>
+                                                                }
+                                                            </td>
                                                             <td className='text-center'>{job.CustCode}</td>
                                                             <td className='text-center'>{job.User_Text3}</td>
                                                             <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.SubPartNo}`); setShowToast(true); setPartCopy(`${job.SubPartNo}`) }}>{job.SubPartNo}</td>
@@ -587,6 +598,7 @@ export const TubeLaser = () => {
                                             <th className='text-center'>Revision</th>
                                             <th className='text-center'>Qty</th>
                                             <th className='text-center'>Due Date</th>
+                                            <th className='text-center'>Traveler</th>
                                             <th className='text-center'><input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='&#xf002;  Customer' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center'><input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='&#xf002;  Type' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center'><input onChange={(e) => setSearchedValueMaterial(e.target.value)} placeholder='&#xf002;  Materials' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
@@ -595,7 +607,7 @@ export const TubeLaser = () => {
                                     <tbody>
                                         {searchedTBR.length > 1 &&
                                             <tr className='divide'>
-                                                <td className='text-center' colspan='9'>TBR</td>
+                                                <td className='text-center' colspan='10'>TBR</td>
                                             </tr>
                                         }
                                         {searchedTBR
@@ -639,6 +651,11 @@ export const TubeLaser = () => {
                                                         <td className='text-center'>{job.Revision}</td>
                                                         <td className='text-center'>{job.EstimQty}</td>
                                                         <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
+                                                        <td className='text-center'>
+                                                            {job.User_Date1 &&
+                                                                <Icon icon={check}/>
+                                                            }
+                                                        </td>
                                                         <td className='text-center'>{job.CustCode}</td>
                                                         <td className='text-center'>{job.User_Text3}</td>
                                                         <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.SubPartNo}`); setShowToast(true); setPartCopy(`${job.SubPartNo}`) }}>{job.SubPartNo}</td>
@@ -648,7 +665,7 @@ export const TubeLaser = () => {
                                         }
                                         {searchedFR.length > 1 &&
                                             <tr className='divide'>
-                                                <td className='text-center' colspan='9'>FUTURE</td>
+                                                <td className='text-center' colspan='10'>FUTURE</td>
                                             </tr>
                                         }
                                         {searchedFR
@@ -692,6 +709,11 @@ export const TubeLaser = () => {
                                                         <td className='text-center'>{job.Revision}</td>
                                                         <td className='text-center'>{job.EstimQty}</td>
                                                         <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
+                                                        <td className='text-center'>
+                                                            {job.User_Date1 &&
+                                                                <Icon icon={check}/>
+                                                            }
+                                                        </td>
                                                         <td className='text-center'>{job.CustCode}</td>
                                                         <td className='text-center'>{job.User_Text3}</td>
                                                         <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.SubPartNo}`); setShowToast(true); setPartCopy(`${job.SubPartNo}`) }}>{job.SubPartNo}</td>
