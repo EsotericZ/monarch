@@ -15,7 +15,7 @@ import updateNeed from '../../services/material/updateNeed';
 import updateOnOrder from '../../services/material/updateOnOrder';
 import updateVerified from '../../services/material/updateVerified';
 import updateOnOrderSupplies from '../../services/supplies/updateOnOrderSupplies';
-import updateCompleteSupplies from '../../services/supplies/updateCompleteSupplies';
+import updateRecieved from '../../services/supplies/updateRecieved';
 
 import { Sidebar } from '../sidebar/Sidebar';
 
@@ -105,23 +105,21 @@ export const Purchasing = () => {
     }
 
     const toggleOnOrderSupplies = async (item) => {
-        console.log(item.id)
-        // try {
-        //     await updateOnOrder(job.id)
-        //     setUpdate(`On Order ${job.id}`)
-        // } catch (err) {
-        //     console.log(err);
-        // }
+        try {
+            await updateOnOrderSupplies(item.id)
+            setUpdate(`On Order ${item.id}`)
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     const toggleCompleteSupplies = async (item) => {
-        console.log(item.id)
-        // try {
-        //     await updateVerified(job.id)
-        //     setUpdate(`Verified ${job.id}`)
-        // } catch (err) {
-        //     console.log(err);
-        // }
+        try {
+            await updateRecieved(item.id)
+            setUpdate(`Recieved ${item.id}`)
+        } catch (err) {
+            console.log(err);
+        }
     }
     
     useEffect(() => {
