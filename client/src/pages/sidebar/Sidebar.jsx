@@ -12,6 +12,9 @@ import {
   CDBSidebarFooter,
 } from 'cdbreact-pro';
 
+import Tooltip from 'react-bootstrap/Tooltip';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+
 export const Sidebar = () => {
     const cookies = new Cookies();
     const [name, setName] = useState('');
@@ -58,9 +61,14 @@ export const Sidebar = () => {
                     <CDBSidebarMenu>
 
                         {open ?
-                            <NavLink exact to='/'>
-                                <CDBSidebarMenuItem icon="home">Home</CDBSidebarMenuItem>
-                            </NavLink>
+                            <OverlayTrigger
+                                placement="right"
+                                overlay={<Tooltip id="button-tooltip-2">Home</Tooltip>}
+                            >
+                                <NavLink exact to='/'>
+                                    <CDBSidebarMenuItem icon="home">Home</CDBSidebarMenuItem>
+                                </NavLink>
+                            </OverlayTrigger>
                         :
                             <CDBSidebarSubMenu title="Home" icon="home">
                                 {/* <Link to='/http://10.0.1.78/monarch_jobdisplay'> */}
@@ -77,9 +85,14 @@ export const Sidebar = () => {
                         }
 
                         {open ?
-                            <NavLink exact to='/programming'>
-                                <CDBSidebarMenuItem icon='ghost'>Programming</CDBSidebarMenuItem>
-                            </NavLink>
+                            <OverlayTrigger
+                                placement="right"
+                                overlay={<Tooltip id="button-tooltip-2">Programming</Tooltip>}
+                            >
+                                <NavLink exact to='/programming'>
+                                    <CDBSidebarMenuItem icon='ghost'>Programming</CDBSidebarMenuItem>
+                                </NavLink>
+                            </OverlayTrigger>
                         :
                             <CDBSidebarSubMenu title="Programming" icon="ghost">
                                 <NavLink exact to='/engineering'>
@@ -107,9 +120,14 @@ export const Sidebar = () => {
                         }
 
                         {open ?
-                            <NavLink exact to='/departments'>
-                                <CDBSidebarMenuItem icon='th'>Departments</CDBSidebarMenuItem>
-                            </NavLink>
+                            <OverlayTrigger
+                                placement="right"
+                                overlay={<Tooltip id="button-tooltip-2">Departments</Tooltip>}
+                            >
+                                <NavLink exact to='/departments'>
+                                    <CDBSidebarMenuItem icon='th'>Departments</CDBSidebarMenuItem>
+                                </NavLink>
+                            </OverlayTrigger>
                         :
                             <CDBSidebarSubMenu title="Departments" icon="th">
                                 <NavLink exact to='/fixturelaser'>
@@ -135,39 +153,74 @@ export const Sidebar = () => {
                             </CDBSidebarSubMenu>
                         }
 
-                        <NavLink exact to='/maintenance'>
-                            <CDBSidebarMenuItem icon="hammer">Maintenance</CDBSidebarMenuItem>
-                        </NavLink>
-                        <NavLink exact to='/shipping'>
-                            <CDBSidebarMenuItem icon='truck'>Shipping</CDBSidebarMenuItem>
-                        </NavLink>
-                        <NavLink exact to='/inventory'>
-                            <CDBSidebarMenuItem icon='clipboard'>Inventory</CDBSidebarMenuItem>
-                        </NavLink>
+                        <OverlayTrigger
+                            placement="right"
+                            overlay={<Tooltip id="button-tooltip-2">Maintenance</Tooltip>}
+                        >
+                            <NavLink exact to='/maintenance'>
+                                <CDBSidebarMenuItem icon="hammer">Maintenance</CDBSidebarMenuItem>
+                            </NavLink>
+                        </OverlayTrigger>
+                        <OverlayTrigger
+                            placement="right"
+                            overlay={<Tooltip id="button-tooltip-2">Shipping</Tooltip>}
+                        >
+                            <NavLink exact to='/shipping'>
+                                <CDBSidebarMenuItem icon='truck'>Shipping</CDBSidebarMenuItem>
+                            </NavLink>
+                        </OverlayTrigger>
+                        <OverlayTrigger
+                            placement="right"
+                            overlay={<Tooltip id="button-tooltip-2">Inventory</Tooltip>}
+                        >
+                            <NavLink exact to='/inventory'>
+                                <CDBSidebarMenuItem icon='clipboard'>Inventory</CDBSidebarMenuItem>
+                            </NavLink>
+                        </OverlayTrigger>
                     </CDBSidebarMenu>
 
                     {name ?
-                        <CDBSidebarMenu>
-                            <NavLink exact to='/profile'>
-                                <CDBSidebarMenuItem icon="user">Profile</CDBSidebarMenuItem>
-                            </NavLink>
-                        </CDBSidebarMenu>
+                        <OverlayTrigger
+                            placement="right"
+                            overlay={<Tooltip id="button-tooltip-2">Profile</Tooltip>}
+                        >
+                            <CDBSidebarMenu>
+                                <NavLink exact to='/profile'>
+                                    <CDBSidebarMenuItem icon="user">Profile</CDBSidebarMenuItem>
+                                </NavLink>
+                            </CDBSidebarMenu>
+                        </OverlayTrigger>
                     :
-                        <CDBSidebarMenu>
-                            <NavLink exact to='/login'>
-                                <CDBSidebarMenuItem icon="user">Login</CDBSidebarMenuItem>
-                            </NavLink>
-                        </CDBSidebarMenu>
+                        <OverlayTrigger
+                            placement="right"
+                            overlay={<Tooltip id="button-tooltip-2">Login</Tooltip>}
+                        >
+                            <CDBSidebarMenu>
+                                <NavLink exact to='/login'>
+                                    <CDBSidebarMenuItem icon="user">Login</CDBSidebarMenuItem>
+                                </NavLink>
+                            </CDBSidebarMenu>
+                        </OverlayTrigger>
                     }
 
                     {admin &&
                         <CDBSidebarMenu>
-                            <NavLink exact to='/admin'>
-                                <CDBSidebarMenuItem icon="wrench">Admin</CDBSidebarMenuItem>
-                            </NavLink>
-                            <a href='http://10.0.1.45:3000/' target='__blank'>
-                                <CDBSidebarMenuItem icon="lock">RFID Site</CDBSidebarMenuItem>
-                            </a>
+                            <OverlayTrigger
+                                placement="right"
+                                overlay={<Tooltip id="button-tooltip-2">Admin</Tooltip>}
+                            >
+                                <NavLink exact to='/admin'>
+                                    <CDBSidebarMenuItem icon="wrench">Admin</CDBSidebarMenuItem>
+                                </NavLink>
+                            </OverlayTrigger>
+                            <OverlayTrigger
+                                placement="right"
+                                overlay={<Tooltip id="button-tooltip-2">RFID</Tooltip>}
+                            >
+                                <a href='http://10.0.1.45:3000/' target='__blank'>
+                                    <CDBSidebarMenuItem icon="lock">RFID Site</CDBSidebarMenuItem>
+                                </a>
+                            </OverlayTrigger>
                         </CDBSidebarMenu>
                     }
 
