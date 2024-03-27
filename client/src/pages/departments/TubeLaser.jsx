@@ -12,7 +12,7 @@ import { plus } from 'react-icons-kit/fa/plus'
 import { history } from 'react-icons-kit/fa/history'
 import { refresh } from 'react-icons-kit/fa/refresh';
 
-import getAllJobs from '../../services/tlaser/getAllJobs';
+// import getAllJobs from '../../services/tlaser/getAllJobs';
 import getTBRJobs from '../../services/tlaser/getTBRJobs';
 import getFRJobs from '../../services/tlaser/getFRJobs';
 import createMaterial from '../../services/material/createMaterial';
@@ -22,7 +22,7 @@ import updateMaterial from '../../services/material/updateMaterial';
 import updateCheck from '../../services/material/updateCheck';
 import updateComplete from '../../services/material/updateComplete';
 import updateNeed from '../../services/material/updateNeed';
-import updateOnOrder from '../../services/material/updateOnOrder';
+// import updateOnOrder from '../../services/material/updateOnOrder';
 import updateVerified from '../../services/material/updateVerified';
 
 import { Sidebar } from '../sidebar/Sidebar';
@@ -153,14 +153,14 @@ export const TubeLaser = () => {
         }
     }
 
-    const toggleOnOrder = async (job) => {
-        try {
-            await updateOnOrder(job.id)
-            setUpdate(`On Order ${job.id}`)
-        } catch (err) {
-            console.log(err);
-        }
-    }
+    // const toggleOnOrder = async (job) => {
+    //     try {
+    //         await updateOnOrder(job.id)
+    //         setUpdate(`On Order ${job.id}`)
+    //     } catch (err) {
+    //         console.log(err);
+    //     }
+    // }
 
     const toggleVerified = async (job) => {
         try {
@@ -437,9 +437,11 @@ export const TubeLaser = () => {
                                         }
                                     </tbody>
                                 </Table>
-                                <Button className='rounded-circle addBtn' onClick={() => handleShow()}>
-                                    <Icon size={24} icon={plus}/>
-                                </Button>
+                                {cookieData.tlaser &&
+                                    <Button className='rounded-circle addBtn' onClick={() => handleShow()}>
+                                        <Icon size={24} icon={plus}/>
+                                    </Button>
+                                }
                                 <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
                                     <Icon size={24} icon={refresh}/>
                                 </Button>
@@ -491,39 +493,71 @@ export const TubeLaser = () => {
                                             .map((job, index) => {
                                                 return (
                                                     <tr key={index} job={job}>
-                                                        <td onClick={() => handleUpdateJob(job)} className='text-center jobBold'>{job.programNo}</td>
+                                                        {cookieData.tlaser ? 
+                                                            <td onClick={() => handleUpdateJob(job)} className='text-center jobBold'>{job.programNo}</td>
+                                                        :
+                                                            <td className='text-center jobBold'>{job.programNo}</td>
+                                                        }
                                                         <td className='text-center'>{job.material}</td>
                                                         <td className='text-center'>{job.jobNo}</td>
-                                                        <td className='text-center' onClick={() => toggleCheck(job)}>
-                                                            {job.checkMatl &&
-                                                                <Icon icon={check}/>
-                                                            }
-                                                        </td>
-                                                        <td className='text-center' onClick={() => toggleNeed(job)}>
-                                                            {job.needMatl &&
-                                                                <Icon icon={check}/>
-                                                            }
-                                                        </td>
-                                                        <td className='text-center' onClick={() => toggleOnOrder(job)}>
+                                                        {cookieData.tlaser ? 
+                                                            <>
+                                                                <td className='text-center' onClick={() => toggleCheck(job)}>
+                                                                    {job.checkMatl &&
+                                                                        <Icon icon={check}/>
+                                                                    }
+                                                                </td>
+                                                                <td className='text-center' onClick={() => toggleNeed(job)}>
+                                                                    {job.needMatl &&
+                                                                        <Icon icon={check}/>
+                                                                    }
+                                                                </td>
+                                                            </>
+                                                        :
+                                                            <>
+                                                                <td className='text-center'>
+                                                                    {job.checkMatl &&
+                                                                        <Icon icon={check}/>
+                                                                    }
+                                                                </td>
+                                                                <td className='text-center'>
+                                                                    {job.needMatl &&
+                                                                        <Icon icon={check}/>
+                                                                    }
+                                                                </td>
+                                                            </>
+                                                        }
+                                                        {/* <td className='text-center' onClick={() => toggleOnOrder(job)}> */}
+                                                        <td className='text-center'>
                                                             {job.onOrder &&
                                                                 <Icon icon={check}/>
                                                             }
                                                         </td>
                                                         <td className='text-center'>{job.expected && format(parseISO(job.expected), 'MM/dd')}</td>
-                                                        <td className='text-center' onClick={() => toggleVerified(job)}>
-                                                            {job.verified &&
-                                                                <Icon icon={check}/>
-                                                            }
-                                                        </td>
+                                                        {cookieData.tlaser ? 
+                                                            <td className='text-center' onClick={() => toggleVerified(job)}>
+                                                                {job.verified &&
+                                                                    <Icon icon={check}/>
+                                                                }
+                                                            </td>
+                                                        :
+                                                            <td className='text-center'>
+                                                                {job.verified &&
+                                                                    <Icon icon={check}/>
+                                                                }
+                                                            </td>
+                                                        }
                                                     </tr>
                                                 )
                                             })
                                         }
                                     </tbody>
                                 </Table>
-                                <Button className='rounded-circle addBtn' onClick={() => handleShow()}>
-                                    <Icon size={24} icon={plus}/>
-                                </Button>
+                                {cookieData.tlaser &&
+                                    <Button className='rounded-circle addBtn' onClick={() => handleShow()}>
+                                        <Icon size={24} icon={plus}/>
+                                    </Button>
+                                }
                                 <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
                                     <Icon size={24} icon={refresh}/>
                                 </Button>
@@ -538,7 +572,9 @@ export const TubeLaser = () => {
                                             <th className='text-center'><input onChange={(e) => setSearchedValueProgramNo(e.target.value)} placeholder='&#xf002;  Program No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center'><input onChange={(e) => setSearchedValueMaterial(e.target.value)} placeholder='&#xf002;  Material' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center'><input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='&#xf002;  Job No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center'>Completed</th>
+                                            {cookieData.tlaser &&
+                                                <th className='text-center'>Completed</th>
+                                            }
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -565,7 +601,11 @@ export const TubeLaser = () => {
                                                 if (job.verified) {
                                                     return (
                                                         <tr key={index} job={job}>
-                                                            <td onClick={() => handleUpdateJob(job)} className='text-center jobBold'>{job.programNo}</td>
+                                                            {cookieData.tlaser ? 
+                                                                <td onClick={() => handleUpdateJob(job)} className='text-center jobBold'>{job.programNo}</td>
+                                                            :
+                                                                <td className='text-center jobBold'>{job.programNo}</td>
+                                                            }
                                                             <td className='text-center'>{job.material}</td>
                                                             <td className='text-center'>{job.jobNo}</td>
                                                             <td className='text-center' onClick={() => handleShowComplete(job)}>
@@ -578,9 +618,11 @@ export const TubeLaser = () => {
                                         }
                                     </tbody>
                                 </Table>
-                                <Button className='rounded-circle addBtn' onClick={() => handleShow()}>
-                                    <Icon size={24} icon={plus}/>
-                                </Button>
+                                {cookieData.tlaser &&
+                                    <Button className='rounded-circle addBtn' onClick={() => handleShow()}>
+                                        <Icon size={24} icon={plus}/>
+                                    </Button>
+                                }
                                 <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
                                     <Icon size={24} icon={refresh}/>
                                 </Button>
@@ -723,9 +765,11 @@ export const TubeLaser = () => {
                                         }
                                     </tbody>
                                 </Table>
-                                <Button className='rounded-circle addBtn' onClick={() => handleShow()}>
-                                    <Icon size={24} icon={plus}/>
-                                </Button>
+                                {cookieData.tlaser &&
+                                    <Button className='rounded-circle addBtn' onClick={() => handleShow()}>
+                                        <Icon size={24} icon={plus}/>
+                                    </Button>
+                                }
                                 <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
                                     <Icon size={24} icon={refresh}/>
                                 </Button>

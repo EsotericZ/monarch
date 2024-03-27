@@ -233,7 +233,7 @@ export const Purchasing = () => {
                                                             {job.area == 'slaser' &&
                                                                 <td className='text-center'>Static Laser</td>
                                                             }
-                                                            <td className='text-center'>{job.createdAt && format(parseISO(job.createdAt), 'MM/dd')}</td>
+                                                            <td className='text-center'>{job.createdAt && format(parseISO(job.createdAt), 'MM/dd h:mmb')}</td>
                                                             <td className='text-center' onClick={() => toggleNeed(job)}>
                                                                 {job.needMatl &&
                                                                     <Icon icon={check}/>
@@ -327,7 +327,7 @@ export const Purchasing = () => {
                                                             {job.area == 'saw' &&
                                                                 <td className='text-center'>Saw</td>
                                                             }
-                                                            <td className='text-center'>{job.createdAt && format(parseISO(job.createdAt), 'MM/dd')}</td>
+                                                            <td className='text-center'>{job.createdAt && format(parseISO(job.createdAt), 'MM/dd h:mmb')}</td>
                                                             <td className='text-center' onClick={() => toggleNeed(job)}>
                                                                 {job.needMatl &&
                                                                     <Icon icon={check}/>
@@ -421,7 +421,7 @@ export const Purchasing = () => {
                                                             {job.area == 'punch' &&
                                                                 <td className='text-center'>Punch</td>
                                                             }
-                                                            <td className='text-center'>{job.createdAt && format(parseISO(job.createdAt), 'MM/dd')}</td>
+                                                            <td className='text-center'>{job.createdAt && format(parseISO(job.createdAt), 'MM/dd h:mmb')}</td>
                                                             <td className='text-center' onClick={() => toggleNeed(job)}>
                                                                 {job.needMatl &&
                                                                     <Icon icon={check}/>
@@ -515,7 +515,7 @@ export const Purchasing = () => {
                                                         <td className='text-center'>{item.supplies}</td>
                                                         <td className='text-center'>{item.department}</td>
                                                         <td className='text-center'>{item.requestedBy}</td>
-                                                        <td className='text-center'>{item.createdAt && format(parseISO(item.createdAt), 'MM/dd')}</td>
+                                                        <td className='text-center'>{item.createdAt && format(parseISO(item.createdAt), 'MM/dd h:mmb')}</td>
                                                         <td className='text-center'>{item.notes}</td>
                                                         <td className='text-center'>{item.productLink}</td>
                                                         <td className='text-center'>{item.jobNo}</td>

@@ -12,7 +12,7 @@ import { plus } from 'react-icons-kit/fa/plus'
 import { history } from 'react-icons-kit/fa/history'
 import { refresh } from 'react-icons-kit/fa/refresh';
 
-import getAllJobs from '../../services/shear/getAllJobs';
+// import getAllJobs from '../../services/shear/getAllJobs';
 import getTBRJobs from '../../services/shear/getTBRJobs';
 import getFRJobs from '../../services/shear/getFRJobs';
 import createMaterial from '../../services/material/createMaterial';
@@ -22,7 +22,7 @@ import updateMaterial from '../../services/material/updateMaterial';
 import updateCheck from '../../services/material/updateCheck';
 import updateComplete from '../../services/material/updateComplete';
 import updateNeed from '../../services/material/updateNeed';
-import updateOnOrder from '../../services/material/updateOnOrder';
+// import updateOnOrder from '../../services/material/updateOnOrder';
 import updateVerified from '../../services/material/updateVerified';
 
 import { Sidebar } from '../sidebar/Sidebar';
@@ -153,14 +153,14 @@ export const Shear = () => {
         }
     }
 
-    const toggleOnOrder = async (job) => {
-        try {
-            await updateOnOrder(job.id)
-            setUpdate(`On Order ${job.id}`)
-        } catch (err) {
-            console.log(err);
-        }
-    }
+    // const toggleOnOrder = async (job) => {
+    //     try {
+    //         await updateOnOrder(job.id)
+    //         setUpdate(`On Order ${job.id}`)
+    //     } catch (err) {
+    //         console.log(err);
+    //     }
+    // }
 
     const toggleVerified = async (job) => {
         try {
@@ -310,6 +310,7 @@ export const Shear = () => {
                                             <th className='text-center'>Revision</th>
                                             <th className='text-center'>Qty</th>
                                             <th className='text-center'>Due Date</th>
+                                            <th className='text-center'>Traveler</th>
                                             <th className='text-center'><input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='&#xf002;  Customer' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center'><input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='&#xf002;  Type' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center'><input onChange={(e) => setSearchedValueMaterial(e.target.value)} placeholder='&#xf002;  Materials' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
@@ -318,7 +319,7 @@ export const Shear = () => {
                                     <tbody>
                                         {needsNestingTBR.length > 1 &&
                                             <tr className='divide'>
-                                                <td className='text-center' colspan='9'>TBR</td>
+                                                <td className='text-center' colspan='10'>TBR</td>
                                             </tr>
                                         }
                                         {needsNestingTBR
@@ -362,6 +363,11 @@ export const Shear = () => {
                                                         <td className='text-center'>{job.Revision}</td>
                                                         <td className='text-center'>{job.EstimQty}</td>
                                                         <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
+                                                        <td className='text-center'>
+                                                            {job.User_Date1 &&
+                                                                <Icon icon={check}/>
+                                                            }
+                                                        </td>
                                                         <td className='text-center'>{job.CustCode}</td>
                                                         <td className='text-center'>{job.User_Text3}</td>
                                                         <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.SubPartNo}`); setShowToast(true); setPartCopy(`${job.SubPartNo}`) }}>{job.SubPartNo}</td>
@@ -371,7 +377,7 @@ export const Shear = () => {
                                         }
                                         {needsNestingFuture.length > 1 &&
                                             <tr className='divide'>
-                                                <td className='text-center' colspan='9'>FUTURE</td>
+                                                <td className='text-center' colspan='10'>FUTURE</td>
                                             </tr>
                                         }
                                         {needsNestingFuture
@@ -416,6 +422,11 @@ export const Shear = () => {
                                                             <td className='text-center'>{job.Revision}</td>
                                                             <td className='text-center'>{job.EstimQty}</td>
                                                             <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
+                                                            <td className='text-center'>
+                                                                {job.User_Date1 &&
+                                                                    <Icon icon={check}/>
+                                                                }
+                                                            </td>
                                                             <td className='text-center'>{job.CustCode}</td>
                                                             <td className='text-center'>{job.User_Text3}</td>
                                                             <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.SubPartNo}`); setShowToast(true); setPartCopy(`${job.SubPartNo}`) }}>{job.SubPartNo}</td>
@@ -426,9 +437,11 @@ export const Shear = () => {
                                         }
                                     </tbody>
                                 </Table>
-                                <Button className='rounded-circle addBtn' onClick={() => handleShow()}>
-                                    <Icon size={24} icon={plus}/>
-                                </Button>
+                                {cookieData.shear &&
+                                    <Button className='rounded-circle addBtn' onClick={() => handleShow()}>
+                                        <Icon size={24} icon={plus}/>
+                                    </Button>
+                                }
                                 <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
                                     <Icon size={24} icon={refresh}/>
                                 </Button>
@@ -480,39 +493,71 @@ export const Shear = () => {
                                             .map((job, index) => {
                                                 return (
                                                     <tr key={index} job={job}>
-                                                        <td onClick={() => handleUpdateJob(job)} className='text-center jobBold'>{job.programNo}</td>
+                                                        {cookieData.shear ? 
+                                                            <td onClick={() => handleUpdateJob(job)} className='text-center jobBold'>{job.programNo}</td>
+                                                        :
+                                                            <td className='text-center jobBold'>{job.programNo}</td>
+                                                        }
                                                         <td className='text-center'>{job.material}</td>
                                                         <td className='text-center'>{job.jobNo}</td>
-                                                        <td className='text-center' onClick={() => toggleCheck(job)}>
-                                                            {job.checkMatl &&
-                                                                <Icon icon={check}/>
-                                                            }
-                                                        </td>
-                                                        <td className='text-center' onClick={() => toggleNeed(job)}>
-                                                            {job.needMatl &&
-                                                                <Icon icon={check}/>
-                                                            }
-                                                        </td>
-                                                        <td className='text-center' onClick={() => toggleOnOrder(job)}>
+                                                        {cookieData.shear ? 
+                                                            <>
+                                                                <td className='text-center' onClick={() => toggleCheck(job)}>
+                                                                    {job.checkMatl &&
+                                                                        <Icon icon={check}/>
+                                                                    }
+                                                                </td>
+                                                                <td className='text-center' onClick={() => toggleNeed(job)}>
+                                                                    {job.needMatl &&
+                                                                        <Icon icon={check}/>
+                                                                    }
+                                                                </td>
+                                                            </>
+                                                        :
+                                                            <>
+                                                                <td className='text-center'>
+                                                                    {job.checkMatl &&
+                                                                        <Icon icon={check}/>
+                                                                    }
+                                                                </td>
+                                                                <td className='text-center'>
+                                                                    {job.needMatl &&
+                                                                        <Icon icon={check}/>
+                                                                    }
+                                                                </td>
+                                                            </>
+                                                        }
+                                                        {/* <td className='text-center' onClick={() => toggleOnOrder(job)}> */}
+                                                        <td className='text-center'>
                                                             {job.onOrder &&
                                                                 <Icon icon={check}/>
                                                             }
                                                         </td>
                                                         <td className='text-center'>{job.expected && format(parseISO(job.expected), 'MM/dd')}</td>
-                                                        <td className='text-center' onClick={() => toggleVerified(job)}>
-                                                            {job.verified &&
-                                                                <Icon icon={check}/>
-                                                            }
-                                                        </td>
+                                                        {cookieData.shear ? 
+                                                            <td className='text-center' onClick={() => toggleVerified(job)}>
+                                                                {job.verified &&
+                                                                    <Icon icon={check}/>
+                                                                }
+                                                            </td>
+                                                        :
+                                                            <td className='text-center'>
+                                                                {job.verified &&
+                                                                    <Icon icon={check}/>
+                                                                }
+                                                            </td>
+                                                        }
                                                     </tr>
                                                 )
                                             })
                                         }
                                     </tbody>
                                 </Table>
-                                <Button className='rounded-circle addBtn' onClick={() => handleShow()}>
-                                    <Icon size={24} icon={plus}/>
-                                </Button>
+                                {cookieData.shear &&
+                                    <Button className='rounded-circle addBtn' onClick={() => handleShow()}>
+                                        <Icon size={24} icon={plus}/>
+                                    </Button>
+                                }
                                 <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
                                     <Icon size={24} icon={refresh}/>
                                 </Button>
@@ -527,7 +572,9 @@ export const Shear = () => {
                                             <th className='text-center'><input onChange={(e) => setSearchedValueProgramNo(e.target.value)} placeholder='&#xf002;  Program No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center'><input onChange={(e) => setSearchedValueMaterial(e.target.value)} placeholder='&#xf002;  Material' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center'><input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='&#xf002;  Job No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center'>Completed</th>
+                                            {cookieData.shear &&
+                                                <th className='text-center'>Completed</th>
+                                            }
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -554,7 +601,11 @@ export const Shear = () => {
                                                 if (job.verified) {
                                                     return (
                                                         <tr key={index} job={job}>
-                                                            <td onClick={() => handleUpdateJob(job)} className='text-center jobBold'>{job.programNo}</td>
+                                                            {cookieData.shear ? 
+                                                                <td onClick={() => handleUpdateJob(job)} className='text-center jobBold'>{job.programNo}</td>
+                                                            :
+                                                                <td className='text-center jobBold'>{job.programNo}</td>
+                                                            }
                                                             <td className='text-center'>{job.material}</td>
                                                             <td className='text-center'>{job.jobNo}</td>
                                                             <td className='text-center' onClick={() => handleShowComplete(job)}>
@@ -567,9 +618,11 @@ export const Shear = () => {
                                         }
                                     </tbody>
                                 </Table>
-                                <Button className='rounded-circle addBtn' onClick={() => handleShow()}>
-                                    <Icon size={24} icon={plus}/>
-                                </Button>
+                                {cookieData.shear &&
+                                    <Button className='rounded-circle addBtn' onClick={() => handleShow()}>
+                                        <Icon size={24} icon={plus}/>
+                                    </Button>
+                                }
                                 <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
                                     <Icon size={24} icon={refresh}/>
                                 </Button>
@@ -587,6 +640,7 @@ export const Shear = () => {
                                             <th className='text-center'>Revision</th>
                                             <th className='text-center'>Qty</th>
                                             <th className='text-center'>Due Date</th>
+                                            <th className='text-center'>Traveler</th>
                                             <th className='text-center'><input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='&#xf002;  Customer' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center'><input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='&#xf002;  Type' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center'><input onChange={(e) => setSearchedValueMaterial(e.target.value)} placeholder='&#xf002;  Materials' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
@@ -595,7 +649,7 @@ export const Shear = () => {
                                     <tbody>
                                         {searchedTBR.length > 1 &&
                                             <tr className='divide'>
-                                                <td className='text-center' colspan='9'>TBR</td>
+                                                <td className='text-center' colspan='10'>TBR</td>
                                             </tr>
                                         }
                                         {searchedTBR
@@ -639,6 +693,11 @@ export const Shear = () => {
                                                         <td className='text-center'>{job.Revision}</td>
                                                         <td className='text-center'>{job.EstimQty}</td>
                                                         <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
+                                                        <td className='text-center'>
+                                                            {job.User_Date1 &&
+                                                                <Icon icon={check}/>
+                                                            }
+                                                        </td>
                                                         <td className='text-center'>{job.CustCode}</td>
                                                         <td className='text-center'>{job.User_Text3}</td>
                                                         <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.SubPartNo}`); setShowToast(true); setPartCopy(`${job.SubPartNo}`) }}>{job.SubPartNo}</td>
@@ -648,7 +707,7 @@ export const Shear = () => {
                                         }
                                         {searchedFR.length > 1 &&
                                             <tr className='divide'>
-                                                <td className='text-center' colspan='9'>FUTURE</td>
+                                                <td className='text-center' colspan='10'>FUTURE</td>
                                             </tr>
                                         }
                                         {searchedFR
@@ -692,6 +751,11 @@ export const Shear = () => {
                                                         <td className='text-center'>{job.Revision}</td>
                                                         <td className='text-center'>{job.EstimQty}</td>
                                                         <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
+                                                        <td className='text-center'>
+                                                            {job.User_Date1 &&
+                                                                <Icon icon={check}/>
+                                                            }
+                                                        </td>
                                                         <td className='text-center'>{job.CustCode}</td>
                                                         <td className='text-center'>{job.User_Text3}</td>
                                                         <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.SubPartNo}`); setShowToast(true); setPartCopy(`${job.SubPartNo}`) }}>{job.SubPartNo}</td>
@@ -701,9 +765,11 @@ export const Shear = () => {
                                         }
                                     </tbody>
                                 </Table>
-                                <Button className='rounded-circle addBtn' onClick={() => handleShow()}>
-                                    <Icon size={24} icon={plus}/>
-                                </Button>
+                                {cookieData.shear &&
+                                    <Button className='rounded-circle addBtn' onClick={() => handleShow()}>
+                                        <Icon size={24} icon={plus}/>
+                                    </Button>
+                                }
                                 <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
                                     <Icon size={24} icon={refresh}/>
                                 </Button>
