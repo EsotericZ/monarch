@@ -1,3 +1,4 @@
+const BDChart = require('./BDChart');
 const Jobs = require('./Jobs');
 const Maintenance = require('./Maintenance');
 const Material = require('./Material');
@@ -10,6 +11,7 @@ const Todo = require('./Todo');
 const User = require('./User');
 
 module.exports = {
+    BDChart,
     Jobs,
     Maintenance,
     Material,

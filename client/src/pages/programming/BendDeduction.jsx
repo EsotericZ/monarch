@@ -10,6 +10,9 @@ import { Icon } from 'react-icons-kit';
 import { check } from 'react-icons-kit/entypo/check';
 import { plus } from 'react-icons-kit/fa/plus';
 
+import getRecords from '../../services/bendDeduction/getRecords';
+import createRecord from '../../services/bendDeduction/createRecord';
+import updateRecord from '../../services/bendDeduction/updateRecord';
 import { Sidebar } from '../sidebar/Sidebar';
 
 export const BendDeduction= () => {
@@ -25,14 +28,16 @@ export const BendDeduction= () => {
         };
     }
 
-    const [searchedValueType, setSearchedValueType] = useState('');
+    const [searchedValueSubType, setSearchedValueSubType] = useState('');
     const [searchedValueGauge, setSearchedValueGauge] = useState('');
     const [searchedValueThickness, setSearchedValueThickness] = useState('');
     const [searchedValueRadius, setSearchedValueRadius] = useState('');
     const [searchedValuePunch, setSearchedValuePunch] = useState('');
     const [searchedValueDie, setSearchedValueDie] = useState('');
     const [searchedValueNotes, setSearchedValueNotes] = useState('');
+    const [searchedBD, setSearchedBD] = useState([]);
 
+    const [id, setId] = useState(0);
     const [type, setType] = useState('');
     const [subType, setSubType] = useState('');
     const [gauge, setGauge] = useState('');
@@ -44,6 +49,7 @@ export const BendDeduction= () => {
     const [notes, setNotes] = useState('-');
     const [verified, setVerified] = useState(false);
     const [show, setShow] = useState(false);
+    const [showEdit, setShowEdit] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const [crs, setCRS] = useState('Carbon');
@@ -52,13 +58,28 @@ export const BendDeduction= () => {
     const [custom, setCustom] = useState('Custom');
     const [archive, setArchive] = useState('Archive');
 
+    const fetchData = async () => {
+        try {
+            const [bdRes] = await Promise.all([
+                getRecords()
+            ]);
+
+            setSearchedBD(bdRes.data);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    }
+
     const handleClose = () => setShow(false);
 
     const handleSave = async () => {
         try {
-            // await createRecord(type, gauge, thickness, radius, bd, punch, die, notes, true);
+            await createRecord(type, subType, gauge, thickness, radius, bd, punch, die, notes, true);
             setShow(false);
             setType('');
+            setSubType('');
             setGauge('');
             setThickness('');
             setRadius('');
@@ -68,8 +89,8 @@ export const BendDeduction= () => {
             setNotes('-');
         } catch (err) {
             console.error(err);
-        // } finally {
-        //     fetchData();
+        } finally {
+            fetchData();
         }
     };
 
@@ -77,57 +98,110 @@ export const BendDeduction= () => {
         setShow(true);
     };
 
+    const handleOpenRecord = (record) => {
+        setId(record.id);
+        setType(record.type);
+        setSubType(record.subType);
+        setGauge(record.gauge);
+        setThickness(record.thickness);
+        setRadius(record.radius);
+        setBD(record.bd);
+        setPunch(record.punch);
+        setDie(record.die);
+        setNotes(record.notes);
+        setShowEdit(true)
+    };
+
+    const handleCancel = () => {
+        setId(0);
+        setType('');
+        setSubType('');
+        setGauge('');
+        setThickness('');
+        setRadius('');
+        setBD('');
+        setPunch('');
+        setDie('');
+        setNotes('');
+        setShowEdit(false)
+    }
+
+    const handleUpdate = async () => {
+        try {
+            await updateRecord(id, radius, bd, punch, die, notes);
+            setId(0);
+            setType('');
+            setSubType('');
+            setGauge('');
+            setThickness('');
+            setRadius('');
+            setBD('');
+            setPunch('');
+            setDie('');
+            setNotes('');
+            setShowEdit(false);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            fetchData();
+        }
+    }
+
+    useEffect(() => {
+        fetchData();
+    }, [loading])
+
     let matlCRS = [
-        { gauge: '24Ga', thick: '0.023' },
-        { gauge: '22Ga', thick: '0.030' },
-        { gauge: '20Ga', thick: '0.035' },
-        { gauge: '18Ga', thick: '0.048' },
-        { gauge: '16Ga', thick: '0.060' },
-        { gauge: '14Ga', thick: '0.074' },
-        { gauge: '13Ga', thick: '0.090' },
-        { gauge: '12Ga', thick: '0.104' },
-        { gauge: '11Ga', thick: '0.120' },
-        { gauge: '10Ga', thick: '0.135' },
+        { gauge: '24Ga', thick: '.023' },
+        { gauge: '22Ga', thick: '.030' },
+        { gauge: '20Ga', thick: '.035' },
+        { gauge: '18Ga', thick: '.048' },
+        { gauge: '16Ga', thick: '.060' },
+        { gauge: '14Ga', thick: '.074' },
+        { gauge: '13Ga', thick: '.090' },
+        { gauge: '12Ga', thick: '.104' },
+        { gauge: '11Ga', thick: '.120' },
+        { gauge: '10Ga', thick: '.135' },
     ];
     
     let matlHRS = [
-        { gauge: '7Ga', thick: '0.187' },
-        { gauge: '1/4', thick: '0.250' },
-        { gauge: '5/16', thick: '0.312' },
-        { gauge: '3/8', thick: '0.375' },
-        { gauge: '1/2', thick: '0.500' },
+        { gauge: '7Ga', thick: '.187' },
+        { gauge: '1/4', thick: '.250' },
+        { gauge: '5/16', thick: '.312' },
+        { gauge: '3/8', thick: '.375' },
+        { gauge: '1/2', thick: '.500' },
     ];
     
     let matlSSS = [
-        { gauge: '24Ga', thick: '0.023' },
-        { gauge: '22Ga', thick: '0.030' },
-        { gauge: '20Ga', thick: '0.025' },
-        { gauge: '18Ga', thick: '0.048' },
-        { gauge: '16Ga', thick: '0.060' },
-        { gauge: '14Ga', thick: '0.074' },
-        { gauge: '13Ga', thick: '0.090' },
-        { gauge: '12Ga', thick: '0.104' },
-        { gauge: '11Ga', thick: '0.120' },
-        { gauge: '10Ga', thick: '0.135' },
-        { gauge: '7Ga', thick: '0.187' },
-        { gauge: '1/4', thick: '0.250' },
+        { gauge: '24Ga', thick: '.023' },
+        { gauge: '22Ga', thick: '.030' },
+        { gauge: '20Ga', thick: '.025' },
+        { gauge: '18Ga', thick: '.048' },
+        { gauge: '16Ga', thick: '.060' },
+        { gauge: '14Ga', thick: '.074' },
+        { gauge: '13Ga', thick: '.090' },
+        { gauge: '12Ga', thick: '.104' },
+        { gauge: '11Ga', thick: '.120' },
+        { gauge: '10Ga', thick: '.135' },
+        { gauge: '7Ga', thick: '.187' },
+        { gauge: '1/4', thick: '.250' },
     ];
 
     let matlALS = [
-        { gauge: '24Ga', thick: '0.020' },
-        { gauge: '22Ga', thick: '0.023' },
-        { gauge: '21Ga', thick: '0.028' },
-        { gauge: '20Ga', thick: '0.032' },
-        { gauge: '19Ga', thick: '0.035' },
-        { gauge: '18Ga', thick: '0.040' },
-        { gauge: '16Ga', thick: '0.050' },
-        { gauge: '14Ga', thick: '0.060' },
-        { gauge: '12Ga', thick: '0.080' },
-        { gauge: '11Ga', thick: '0.090' },
-        { gauge: '10Ga', thick: '0.100' },
-        { gauge: '8Ga', thick: '0.125' },
-        { gauge: '5Ga', thick: '0.187' },
-        { gauge: '1/4', thick: '0.250' },
+        { gauge: '24Ga', thick: '.020' },
+        { gauge: '22Ga', thick: '.023' },
+        { gauge: '21Ga', thick: '.028' },
+        { gauge: '20Ga', thick: '.032' },
+        { gauge: '19Ga', thick: '.035' },
+        { gauge: '18Ga', thick: '.040' },
+        { gauge: '16Ga', thick: '.050' },
+        { gauge: '14Ga', thick: '.060' },
+        { gauge: '12Ga', thick: '.080' },
+        { gauge: '11Ga', thick: '.090' },
+        { gauge: '10Ga', thick: '.100' },
+        { gauge: '8Ga', thick: '.125' },
+        { gauge: '5Ga', thick: '.187' },
+        { gauge: '1/4', thick: '.250' },
     ];
 
     return (
@@ -348,6 +422,69 @@ export const BendDeduction= () => {
                             }
                         </Modal.Footer>
                     </Modal>
+                    
+                    <Modal show={showEdit} onHide={handleCancel}>
+                        <Modal.Header closeButton>
+                            <Modal.Title className="justify-content-center">Update Bend Deduction</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body className="text-center">
+                            <Form>
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <FloatingLabel label="Type" className="mb-3">
+                                            <Form.Control disabled defaultValue={type} />
+                                        </FloatingLabel>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <FloatingLabel label="Sub Type" className="mb-3">
+                                            <Form.Control disabled defaultValue={subType} />
+                                        </FloatingLabel>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <FloatingLabel label="Gauge" className="mb-3">
+                                            <Form.Control disabled defaultValue={gauge} />
+                                        </FloatingLabel>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <FloatingLabel label="Thickness" className="mb-3">
+                                            <Form.Control disabled defaultValue={thickness} />
+                                        </FloatingLabel>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <FloatingLabel controlId="floatingInput" label="Radius" className="mb-3">
+                                            <Form.Control defaultValue={radius} onChange={(e) => {setRadius(e.target.value)}} />
+                                        </FloatingLabel>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <FloatingLabel controlId="floatingInput" label="Bend Deduction" className="mb-3">
+                                            <Form.Control defaultValue={bd} onChange={(e) => {setBD(e.target.value)}} />
+                                        </FloatingLabel>
+                                    </div>
+                                </div>
+                                <FloatingLabel controlId="floatingInput" label="Punch Tooling" className="mb-3">
+                                    <Form.Control defaultValue={punch} onChange={(e) => {setPunch(e.target.value)}} />
+                                </FloatingLabel>
+                                <FloatingLabel controlId="floatingInput" label="Die Tooling" className="mb-3">
+                                    <Form.Control defaultValue={die} onChange={(e) => {setDie(e.target.value)}} />
+                                </FloatingLabel>
+                                <FloatingLabel controlId="floatingInput" label="Notes" className="mb-3">
+                                    <Form.Control defaultValue={notes} onChange={(e) => {setNotes(e.target.value)}} />
+                                </FloatingLabel>
+                            </Form>
+                        </Modal.Body>
+                        <Modal.Footer className="justify-content-center">
+                            <Button className='modalBtnCancel' variant="secondary" onClick={handleCancel}>
+                                Cancel
+                            </Button>
+                            <Button className='modalBtnVerify' variant="primary" onClick={handleUpdate}>
+                                Save
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
 
                     <Tabs
                         defaultActiveKey="crs"
@@ -370,15 +507,73 @@ export const BendDeduction= () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-
+                                        {searchedBD
+                                            .filter((row) => 
+                                                !searchedValueGauge || row.gauge
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueGauge.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueThickness || row.thickness
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueThickness.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueRadius || row.radius
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueRadius.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValuePunch || row.punch
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValuePunch.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueDie || row.die
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueDie.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueNotes || row.notes
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueNotes.toString().toLowerCase())
+                                            )
+                                            .map((record, index) => {
+                                                if (record.verified && record.type == 'Carbon') {
+                                                    return (
+                                                        <tr key={index} record={record}>
+                                                            {cookieData.forming ?
+                                                                <td className='text-center' onClick={() => handleOpenRecord(record)}>{record.gauge}</td>
+                                                            :
+                                                                <td className='text-center'>{record.gauge}</td>
+                                                            }
+                                                            <td className='text-center'>{record.thickness}</td>
+                                                            <td className='text-center'>{record.radius}</td>
+                                                            <td className='text-center'>{record.bd}</td>
+                                                            <td className='text-center'>{record.punch}</td>
+                                                            <td className='text-center'>{record.die}</td>
+                                                            <td className='text-center'>{record.notes}</td>
+                                                        </tr>
+                                                    )
+                                                }
+                                            })
+                                        }
                                     </tbody>
                                 </Table>
-                                <Button className='rounded-circle refreshBtn' onClick={() => handleShow()}>
-                                    <Icon size={24} icon={plus}/>
-                                </Button>
+                                {cookieData.forming &&
+                                    <Button className='rounded-circle refreshBtn' onClick={() => handleShow()}>
+                                        <Icon size={24} icon={plus}/>
+                                    </Button>
+                                }
                             </div>
                         </Tab>
-                        
+
                         <Tab eventKey="sss" title={sss}>
                             <div className='mx-3'>
                                 <Table striped hover>
@@ -394,15 +589,73 @@ export const BendDeduction= () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-
+                                        {searchedBD
+                                            .filter((row) => 
+                                                !searchedValueGauge || row.gauge
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueGauge.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueThickness || row.thickness
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueThickness.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueRadius || row.radius
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueRadius.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValuePunch || row.punch
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValuePunch.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueDie || row.die
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueDie.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueNotes || row.notes
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueNotes.toString().toLowerCase())
+                                            )
+                                            .map((record, index) => {
+                                                if (record.verified && record.type == 'Stainless') {
+                                                    return (
+                                                        <tr key={index} record={record}>
+                                                            {cookieData.forming ?
+                                                                <td className='text-center' onClick={() => handleOpenRecord(record)}>{record.gauge}</td>
+                                                            :
+                                                                <td className='text-center'>{record.gauge}</td>
+                                                            }
+                                                            <td className='text-center'>{record.thickness}</td>
+                                                            <td className='text-center'>{record.radius}</td>
+                                                            <td className='text-center'>{record.bd}</td>
+                                                            <td className='text-center'>{record.punch}</td>
+                                                            <td className='text-center'>{record.die}</td>
+                                                            <td className='text-center'>{record.notes}</td>
+                                                        </tr>
+                                                    )
+                                                }
+                                            })
+                                        }
                                     </tbody>
                                 </Table>
-                                <Button className='rounded-circle refreshBtn' onClick={() => handleShow()}>
-                                    <Icon size={24} icon={plus}/>
-                                </Button>
+                                {cookieData.forming &&
+                                    <Button className='rounded-circle refreshBtn' onClick={() => handleShow()}>
+                                        <Icon size={24} icon={plus}/>
+                                    </Button>
+                                }
                             </div>
                         </Tab>
-                        
+
                         <Tab eventKey="als" title={als}>
                             <div className='mx-3'>
                                 <Table striped hover>
@@ -418,40 +671,74 @@ export const BendDeduction= () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-
+                                        {searchedBD
+                                            .filter((row) => 
+                                                !searchedValueGauge || row.gauge
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueGauge.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueThickness || row.thickness
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueThickness.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueRadius || row.radius
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueRadius.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValuePunch || row.punch
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValuePunch.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueDie || row.die
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueDie.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueNotes || row.notes
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueNotes.toString().toLowerCase())
+                                            )
+                                            .map((record, index) => {
+                                                if (record.verified && record.type == 'Aluminum') {
+                                                    return (
+                                                        <tr key={index} record={record}>
+                                                            {cookieData.forming ?
+                                                                <td className='text-center' onClick={() => handleOpenRecord(record)}>{record.gauge}</td>
+                                                            :
+                                                                <td className='text-center'>{record.gauge}</td>
+                                                            }
+                                                            <td className='text-center'>{record.thickness}</td>
+                                                            <td className='text-center'>{record.radius}</td>
+                                                            <td className='text-center'>{record.bd}</td>
+                                                            <td className='text-center'>{record.punch}</td>
+                                                            <td className='text-center'>{record.die}</td>
+                                                            <td className='text-center'>{record.notes}</td>
+                                                        </tr>
+                                                    )
+                                                }
+                                            })
+                                        }
                                     </tbody>
                                 </Table>
-                                <Button className='rounded-circle refreshBtn' onClick={() => handleShow()}>
-                                    <Icon size={24} icon={plus}/>
-                                </Button>
+                                {cookieData.forming &&
+                                    <Button className='rounded-circle refreshBtn' onClick={() => handleShow()}>
+                                        <Icon size={24} icon={plus}/>
+                                    </Button>
+                                }
                             </div>
                         </Tab>
-                        
+
                         <Tab eventKey="custom" title={custom}>
-                            <div className='mx-3'>
-                                <Table striped hover>
-                                    <thead>
-                                        <tr>
-                                            <th className='text-center' width='11%'><input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='&#xf002;  Type' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueThickness(e.target.value)} placeholder='&#xf002;  Thickness' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueRadius(e.target.value)} placeholder='&#xf002;  Radius' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center' width='10%'>Bend Deduction</th>
-                                            <th className='text-center' width='18%'><input onChange={(e) => setSearchedValuePunch(e.target.value)} placeholder='&#xf002;  Punch Tool' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center' width='18%'><input onChange={(e) => setSearchedValueDie(e.target.value)} placeholder='&#xf002;  Die Tool' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center' width='23%'><input onChange={(e) => setSearchedValueNotes(e.target.value)} placeholder='&#xf002;  Notes' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-
-                                    </tbody>
-                                </Table>
-                                <Button className='rounded-circle refreshBtn' onClick={() => handleShow()}>
-                                    <Icon size={24} icon={plus}/>
-                                </Button>
-                            </div>
-                        </Tab>
-                       
-                        <Tab eventKey="archive" title={archive}>
                             <div className='mx-3'>
                                 <Table striped hover>
                                     <thead>
@@ -466,12 +753,160 @@ export const BendDeduction= () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-
+                                        {searchedBD
+                                            .filter((row) => 
+                                                !searchedValueGauge || row.gauge
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueGauge.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueThickness || row.thickness
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueThickness.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueRadius || row.radius
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueRadius.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValuePunch || row.punch
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValuePunch.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueDie || row.die
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueDie.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueNotes || row.notes
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueNotes.toString().toLowerCase())
+                                            )
+                                            .map((record, index) => {
+                                                if (record.verified && record.type == 'Custom') {
+                                                    return (
+                                                        <tr key={index} record={record}>
+                                                            {cookieData.forming ?
+                                                                <td className='text-center' onClick={() => handleOpenRecord(record)}>{record.gauge}</td>
+                                                            :
+                                                                <td className='text-center'>{record.gauge}</td>
+                                                            }
+                                                            <td className='text-center'>{record.thickness}</td>
+                                                            <td className='text-center'>{record.radius}</td>
+                                                            <td className='text-center'>{record.bd}</td>
+                                                            <td className='text-center'>{record.punch}</td>
+                                                            <td className='text-center'>{record.die}</td>
+                                                            <td className='text-center'>{record.notes}</td>
+                                                        </tr>
+                                                    )
+                                                }
+                                            })
+                                        }
                                     </tbody>
                                 </Table>
-                                <Button className='rounded-circle refreshBtn' onClick={() => handleShow()}>
-                                    <Icon size={24} icon={plus}/>
-                                </Button>
+                                {cookieData.forming &&
+                                    <Button className='rounded-circle refreshBtn' onClick={() => handleShow()}>
+                                        <Icon size={24} icon={plus}/>
+                                    </Button>
+                                }
+                            </div>
+                        </Tab>
+
+                        <Tab eventKey="archive" title={archive}>
+                            <div className='mx-3'>
+                                <Table striped hover>
+                                    <thead>
+                                        <tr>
+                                            <th className='text-center' width='11%'><input onChange={(e) => setSearchedValueGauge(e.target.value)} placeholder='&#xf002;  Gauge' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueSubType(e.target.value)} placeholder='&#xf002;  Sub Type' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueThickness(e.target.value)} placeholder='&#xf002;  Thickness' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueRadius(e.target.value)} placeholder='&#xf002;  Radius' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='10%'>Bend Deduction</th>
+                                            <th className='text-center' width='18%'><input onChange={(e) => setSearchedValuePunch(e.target.value)} placeholder='&#xf002;  Punch Tool' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='18%'><input onChange={(e) => setSearchedValueDie(e.target.value)} placeholder='&#xf002;  Die Tool' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='23%'><input onChange={(e) => setSearchedValueNotes(e.target.value)} placeholder='&#xf002;  Notes' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {searchedBD
+                                            .filter((row) => 
+                                                !searchedValueGauge || row.gauge
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueGauge.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueSubType || row.subType
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueSubType.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueThickness || row.thickness
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueThickness.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueRadius || row.radius
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueRadius.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValuePunch || row.punch
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValuePunch.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueDie || row.die
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueDie.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueNotes || row.notes
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueNotes.toString().toLowerCase())
+                                            )
+                                            .map((record, index) => {
+                                                if (!record.verified) {
+                                                    return (
+                                                        <tr key={index} record={record}>
+                                                            {cookieData.forming ?
+                                                                <td className='text-center' onClick={() => handleOpenRecord(record)}>{record.gauge}</td>
+                                                            :
+                                                                <td className='text-center'>{record.gauge}</td>
+                                                            }
+                                                            <td className='text-center'>{record.subType}</td>
+                                                            <td className='text-center'>{record.thickness}</td>
+                                                            <td className='text-center'>{record.radius}</td>
+                                                            <td className='text-center'>{record.bd}</td>
+                                                            <td className='text-center'>{record.punch}</td>
+                                                            <td className='text-center'>{record.die}</td>
+                                                            <td className='text-center'>{record.notes}</td>
+                                                        </tr>
+                                                    )
+                                                }
+                                            })
+                                        }
+                                    </tbody>
+                                </Table>
+                                {cookieData.forming &&
+                                    <Button className='rounded-circle refreshBtn' onClick={() => handleShow()}>
+                                        <Icon size={24} icon={plus}/>
+                                    </Button>
+                                }
                             </div>
                         </Tab>
 
