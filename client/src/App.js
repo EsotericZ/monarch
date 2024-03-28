@@ -30,6 +30,7 @@ import { Purchasing } from './pages/purchasing/Purchasing';
 import { Supplies } from './pages/supplies/Supplies';
 
 import { Scales } from './pages/scales/Scales';
+import { ScalesAdmin } from './pages/scales/ScalesAdmin';
 
 import { VTiger } from './pages/vtiger/VTiger';
 
@@ -154,6 +155,10 @@ export const App = () => {
         <Route
           path='/scales'
           element={<Scales />}
+        />
+        <Route
+          path='/scalesAdmin'
+          element={<ScalesAdmin />}
         />
 
         <Route

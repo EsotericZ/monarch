@@ -1,0 +1,28 @@
+.centered-container {
+    display: flex;
+    justify-content: center;
+}
+
+.form-check-columns {
+    column-count: 3;
+    column-gap: 50px;
+    border: 1px solid black;
+    padding: 10px 30px;
+    margin-top: 30px;
+}
+
+.form-check-column {
+    break-inside: avoid-column;
+}
+
+.custom-button {
+    background-color: red;
+    border-color: darkred;
+    color: #fff;
+    width: 125px;
+    height: 35px;
+}
+
+.buttonMove {
+    margin-right: 150px;
+}
