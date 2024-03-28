@@ -386,8 +386,10 @@ export const BendDeduction= () => {
                                                 <option>.172</option>
                                                 <option>.190</option>
                                                 <option>.210</option>
+                                                <option>.236</option>
                                                 <option>.250</option>
                                                 <option>.375</option>
+                                                <option>.393</option>
                                                 <option>.500</option>
                                                 <option>1.000</option>
                                             </Form.Control>
