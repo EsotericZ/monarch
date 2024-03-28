@@ -765,7 +765,7 @@ export const BendDeduction= () => {
                                 <Table striped hover>
                                     <thead>
                                         <tr>
-                                            <th className='text-center' width='11%'><input onChange={(e) => setSearchedValueGauge(e.target.value)} placeholder='&#xf002;  Gauge' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='11%'><input onChange={(e) => setSearchedValueSubType(e.target.value)} placeholder='&#xf002;  Sub Type' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueThickness(e.target.value)} placeholder='&#xf002;  Thickness' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueRadius(e.target.value)} placeholder='&#xf002;  Radius' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center' width='10%'>Bend Deduction</th>
@@ -778,10 +778,10 @@ export const BendDeduction= () => {
                                     <tbody>
                                         {searchedBD
                                             .filter((row) => 
-                                                !searchedValueGauge || row.gauge
+                                                !searchedValueSubType || row.subType
                                                     .toString()
                                                     .toLowerCase()
-                                                    .includes(searchedValueGauge.toString().toLowerCase())
+                                                    .includes(searchedValueSubType.toString().toLowerCase())
                                             )
                                             .filter((row) => 
                                                 !searchedValueThickness || row.thickness
@@ -818,9 +818,9 @@ export const BendDeduction= () => {
                                                     return (
                                                         <tr key={index} record={record}>
                                                             {cookieData.forming ?
-                                                                <td className='text-center' onClick={() => handleOpenRecord(record)}>{record.gauge}</td>
+                                                                <td className='text-center' onClick={() => handleOpenRecord(record)}>{record.subType}</td>
                                                             :
-                                                                <td className='text-center'>{record.gauge}</td>
+                                                                <td className='text-center'>{record.subType}</td>
                                                             }
                                                             <td className='text-center'>{record.thickness}</td>
                                                             <td className='text-center'>{record.radius}</td>
