@@ -387,6 +387,7 @@ export const BendDeduction= () => {
                                                 <option>.039</option>
                                                 <option>.060</option>
                                                 <option>.090</option>
+                                                <option>.118</option>
                                                 <option>.125</option>
                                                 <option>.172</option>
                                                 <option>.190</option>
