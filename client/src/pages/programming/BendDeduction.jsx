@@ -379,6 +379,7 @@ export const BendDeduction= () => {
                                             <Form.Control as="select" name="Radius" onChange={(e) => {setRadius(e.target.value)}}>
                                                 <option> </option>
                                                 <option>.031</option>
+                                                <option>.039</option>
                                                 <option>.060</option>
                                                 <option>.090</option>
                                                 <option>.125</option>
