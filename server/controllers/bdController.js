@@ -40,6 +40,7 @@ async function updateRecord(req, res) {
     let bd = req.body.bd
     let punch = req.body.punch
     let die = req.body.die
+    let dieOpening = req.body.dieOpening
     let notes = req.body.notes
     
     await BDChart.update(
@@ -48,6 +49,7 @@ async function updateRecord(req, res) {
             bd,
             punch,
             die,
+            dieOpening,
             notes,
         },
         { where: { id: id }}

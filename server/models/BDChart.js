@@ -34,6 +34,9 @@ BDChart.init(
         die: {
             type: DataTypes.STRING,
         },
+        dieOpening: {
+            type: DataTypes.STRING,
+        },
         notes: {
             type: DataTypes.STRING,
         },

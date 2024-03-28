@@ -46,6 +46,7 @@ export const BendDeduction= () => {
     const [bd, setBD] = useState('');
     const [punch, setPunch] = useState('');
     const [die, setDie] = useState('');
+    const [dieOpening, setDieOpening] = useState('');
     const [notes, setNotes] = useState('-');
     const [verified, setVerified] = useState(false);
     const [show, setShow] = useState(false);
@@ -76,7 +77,7 @@ export const BendDeduction= () => {
 
     const handleSave = async () => {
         try {
-            await createRecord(type, subType, gauge, thickness, radius, bd, punch, die, notes, true);
+            await createRecord(type, subType, gauge, thickness, radius, bd, punch, die, dieOpening, notes, true);
             setShow(false);
             setType('');
             setSubType('');
@@ -86,6 +87,7 @@ export const BendDeduction= () => {
             setBD('');
             setPunch('');
             setDie('');
+            setDieOpening('');
             setNotes('-');
         } catch (err) {
             console.error(err);
@@ -108,6 +110,7 @@ export const BendDeduction= () => {
         setBD(record.bd);
         setPunch(record.punch);
         setDie(record.die);
+        setDieOpening(record.dieOpening);
         setNotes(record.notes);
         setShowEdit(true)
     };
@@ -122,13 +125,14 @@ export const BendDeduction= () => {
         setBD('');
         setPunch('');
         setDie('');
+        setDieOpening('');
         setNotes('');
         setShowEdit(false)
     }
 
     const handleUpdate = async () => {
         try {
-            await updateRecord(id, radius, bd, punch, die, notes);
+            await updateRecord(id, radius, bd, punch, die, dieOpening, notes);
             setId(0);
             setType('');
             setSubType('');
@@ -138,6 +142,7 @@ export const BendDeduction= () => {
             setBD('');
             setPunch('');
             setDie('');
+            setDieOpening('');
             setNotes('');
             setShowEdit(false);
         } catch (err) {
@@ -407,6 +412,9 @@ export const BendDeduction= () => {
                                 <FloatingLabel controlId="floatingInput" label="Die Tooling" className="mb-3">
                                     <Form.Control onChange={(e) => {setDie(e.target.value)}} />
                                 </FloatingLabel>
+                                <FloatingLabel controlId="floatingInput" label="Die Opening" className="mb-3">
+                                    <Form.Control onChange={(e) => {setDieOpening(e.target.value)}} />
+                                </FloatingLabel>
                                 <FloatingLabel controlId="floatingInput" label="Notes" className="mb-3">
                                     <Form.Control onChange={(e) => {setNotes(e.target.value)}} />
                                 </FloatingLabel>
@@ -476,6 +484,9 @@ export const BendDeduction= () => {
                                 <FloatingLabel controlId="floatingInput" label="Die Tooling" className="mb-3">
                                     <Form.Control defaultValue={die} onChange={(e) => {setDie(e.target.value)}} />
                                 </FloatingLabel>
+                                <FloatingLabel controlId="floatingInput" label="Die Opening" className="mb-3">
+                                    <Form.Control defaultValue={dieOpening} onChange={(e) => {setDieOpening(e.target.value)}} />
+                                </FloatingLabel>
                                 <FloatingLabel controlId="floatingInput" label="Notes" className="mb-3">
                                     <Form.Control defaultValue={notes} onChange={(e) => {setNotes(e.target.value)}} />
                                 </FloatingLabel>
@@ -508,6 +519,7 @@ export const BendDeduction= () => {
                                             <th className='text-center' width='10%'>Bend Deduction</th>
                                             <th className='text-center' width='18%'><input onChange={(e) => setSearchedValuePunch(e.target.value)} placeholder='&#xf002;  Punch Tool' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center' width='18%'><input onChange={(e) => setSearchedValueDie(e.target.value)} placeholder='&#xf002;  Die Tool' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='10%'>Die Opening</th>
                                             <th className='text-center' width='23%'><input onChange={(e) => setSearchedValueNotes(e.target.value)} placeholder='&#xf002;  Notes' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                         </tr>
                                     </thead>
@@ -563,6 +575,7 @@ export const BendDeduction= () => {
                                                             <td className='text-center'>{record.bd}</td>
                                                             <td className='text-center'>{record.punch}</td>
                                                             <td className='text-center'>{record.die}</td>
+                                                            <td className='text-center'>{record.dieOpening}</td>
                                                             <td className='text-center'>{record.notes}</td>
                                                         </tr>
                                                     )
@@ -590,6 +603,7 @@ export const BendDeduction= () => {
                                             <th className='text-center' width='10%'>Bend Deduction</th>
                                             <th className='text-center' width='18%'><input onChange={(e) => setSearchedValuePunch(e.target.value)} placeholder='&#xf002;  Punch Tool' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center' width='18%'><input onChange={(e) => setSearchedValueDie(e.target.value)} placeholder='&#xf002;  Die Tool' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='10%'>Die Opening</th>
                                             <th className='text-center' width='23%'><input onChange={(e) => setSearchedValueNotes(e.target.value)} placeholder='&#xf002;  Notes' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                         </tr>
                                     </thead>
@@ -645,6 +659,7 @@ export const BendDeduction= () => {
                                                             <td className='text-center'>{record.bd}</td>
                                                             <td className='text-center'>{record.punch}</td>
                                                             <td className='text-center'>{record.die}</td>
+                                                            <td className='text-center'>{record.dieOpening}</td>
                                                             <td className='text-center'>{record.notes}</td>
                                                         </tr>
                                                     )
@@ -672,6 +687,7 @@ export const BendDeduction= () => {
                                             <th className='text-center' width='10%'>Bend Deduction</th>
                                             <th className='text-center' width='18%'><input onChange={(e) => setSearchedValuePunch(e.target.value)} placeholder='&#xf002;  Punch Tool' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center' width='18%'><input onChange={(e) => setSearchedValueDie(e.target.value)} placeholder='&#xf002;  Die Tool' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='10%'>Die Opening</th>
                                             <th className='text-center' width='23%'><input onChange={(e) => setSearchedValueNotes(e.target.value)} placeholder='&#xf002;  Notes' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                         </tr>
                                     </thead>
@@ -727,6 +743,7 @@ export const BendDeduction= () => {
                                                             <td className='text-center'>{record.bd}</td>
                                                             <td className='text-center'>{record.punch}</td>
                                                             <td className='text-center'>{record.die}</td>
+                                                            <td className='text-center'>{record.dieOpening}</td>
                                                             <td className='text-center'>{record.notes}</td>
                                                         </tr>
                                                     )
@@ -754,6 +771,7 @@ export const BendDeduction= () => {
                                             <th className='text-center' width='10%'>Bend Deduction</th>
                                             <th className='text-center' width='18%'><input onChange={(e) => setSearchedValuePunch(e.target.value)} placeholder='&#xf002;  Punch Tool' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center' width='18%'><input onChange={(e) => setSearchedValueDie(e.target.value)} placeholder='&#xf002;  Die Tool' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='10%'>Die Opening</th>
                                             <th className='text-center' width='23%'><input onChange={(e) => setSearchedValueNotes(e.target.value)} placeholder='&#xf002;  Notes' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                         </tr>
                                     </thead>
@@ -809,6 +827,7 @@ export const BendDeduction= () => {
                                                             <td className='text-center'>{record.bd}</td>
                                                             <td className='text-center'>{record.punch}</td>
                                                             <td className='text-center'>{record.die}</td>
+                                                            <td className='text-center'>{record.dieOpening}</td>
                                                             <td className='text-center'>{record.notes}</td>
                                                         </tr>
                                                     )

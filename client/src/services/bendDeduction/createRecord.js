@@ -1,6 +1,6 @@
 import api from '../../api/api';
 
-const createRecord = async (type, subType, gauge, thickness, radius, bd, punch, die, notes, verified) => {
+const createRecord = async (type, subType, gauge, thickness, radius, bd, punch, die, dieOpening, notes, verified) => {
     const res = await api.post('/bd/createRecord', {
         type, 
         subType,
@@ -10,6 +10,7 @@ const createRecord = async (type, subType, gauge, thickness, radius, bd, punch, 
         bd, 
         punch, 
         die, 
+        dieOpening,
         notes, 
         verified
     });
