@@ -513,10 +513,11 @@ export const BendDeduction= () => {
                                 <Table striped hover>
                                     <thead>
                                         <tr>
-                                            <th className='text-center' width='11%'><input onChange={(e) => setSearchedValueGauge(e.target.value)} placeholder='&#xf002;  Gauge' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueThickness(e.target.value)} placeholder='&#xf002;  Thickness' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueRadius(e.target.value)} placeholder='&#xf002;  Radius' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center' width='10%'>Bend Deduction</th>
+                                            <th className='text-center' width='9%'><input onChange={(e) => setSearchedValueGauge(e.target.value)} placeholder='&#xf002;  Gauge' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='8%'><input onChange={(e) => setSearchedValueSubType(e.target.value)} placeholder='&#xf002;  Sub Type' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='8%'><input onChange={(e) => setSearchedValueThickness(e.target.value)} placeholder='&#xf002;  Thickness' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='8%'><input onChange={(e) => setSearchedValueRadius(e.target.value)} placeholder='&#xf002;  Radius' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='8%'>Bend Deduction</th>
                                             <th className='text-center' width='18%'><input onChange={(e) => setSearchedValuePunch(e.target.value)} placeholder='&#xf002;  Punch Tool' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center' width='18%'><input onChange={(e) => setSearchedValueDie(e.target.value)} placeholder='&#xf002;  Die Tool' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center' width='10%'>Die Opening</th>
@@ -530,6 +531,12 @@ export const BendDeduction= () => {
                                                     .toString()
                                                     .toLowerCase()
                                                     .includes(searchedValueGauge.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueSubType || row.subType
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueSubType.toString().toLowerCase())
                                             )
                                             .filter((row) => 
                                                 !searchedValueThickness || row.thickness
@@ -570,6 +577,7 @@ export const BendDeduction= () => {
                                                             :
                                                                 <td className='text-center'>{record.gauge}</td>
                                                             }
+                                                            <td className='text-center'>{record.subType}</td>
                                                             <td className='text-center'>{record.thickness}</td>
                                                             <td className='text-center'>{record.radius}</td>
                                                             <td className='text-center'>{record.bd}</td>
@@ -597,10 +605,11 @@ export const BendDeduction= () => {
                                 <Table striped hover>
                                     <thead>
                                         <tr>
-                                            <th className='text-center' width='11%'><input onChange={(e) => setSearchedValueGauge(e.target.value)} placeholder='&#xf002;  Gauge' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueThickness(e.target.value)} placeholder='&#xf002;  Thickness' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueRadius(e.target.value)} placeholder='&#xf002;  Radius' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center' width='10%'>Bend Deduction</th>
+                                            <th className='text-center' width='9%'><input onChange={(e) => setSearchedValueGauge(e.target.value)} placeholder='&#xf002;  Gauge' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='8%'><input onChange={(e) => setSearchedValueSubType(e.target.value)} placeholder='&#xf002;  Sub Type' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='8%'><input onChange={(e) => setSearchedValueThickness(e.target.value)} placeholder='&#xf002;  Thickness' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='8%'><input onChange={(e) => setSearchedValueRadius(e.target.value)} placeholder='&#xf002;  Radius' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='8%'>Bend Deduction</th>
                                             <th className='text-center' width='18%'><input onChange={(e) => setSearchedValuePunch(e.target.value)} placeholder='&#xf002;  Punch Tool' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center' width='18%'><input onChange={(e) => setSearchedValueDie(e.target.value)} placeholder='&#xf002;  Die Tool' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center' width='10%'>Die Opening</th>
@@ -614,6 +623,12 @@ export const BendDeduction= () => {
                                                     .toString()
                                                     .toLowerCase()
                                                     .includes(searchedValueGauge.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueSubType || row.subType
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueSubType.toString().toLowerCase())
                                             )
                                             .filter((row) => 
                                                 !searchedValueThickness || row.thickness
@@ -654,6 +669,7 @@ export const BendDeduction= () => {
                                                             :
                                                                 <td className='text-center'>{record.gauge}</td>
                                                             }
+                                                            <td className='text-center'>{record.subType}</td>
                                                             <td className='text-center'>{record.thickness}</td>
                                                             <td className='text-center'>{record.radius}</td>
                                                             <td className='text-center'>{record.bd}</td>
@@ -681,10 +697,11 @@ export const BendDeduction= () => {
                                 <Table striped hover>
                                     <thead>
                                         <tr>
-                                            <th className='text-center' width='11%'><input onChange={(e) => setSearchedValueGauge(e.target.value)} placeholder='&#xf002;  Gauge' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueThickness(e.target.value)} placeholder='&#xf002;  Thickness' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueRadius(e.target.value)} placeholder='&#xf002;  Radius' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center' width='10%'>Bend Deduction</th>
+                                            <th className='text-center' width='9%'><input onChange={(e) => setSearchedValueGauge(e.target.value)} placeholder='&#xf002;  Gauge' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='8%'><input onChange={(e) => setSearchedValueSubType(e.target.value)} placeholder='&#xf002;  Sub Type' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='8%'><input onChange={(e) => setSearchedValueThickness(e.target.value)} placeholder='&#xf002;  Thickness' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='8%'><input onChange={(e) => setSearchedValueRadius(e.target.value)} placeholder='&#xf002;  Radius' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='8%'>Bend Deduction</th>
                                             <th className='text-center' width='18%'><input onChange={(e) => setSearchedValuePunch(e.target.value)} placeholder='&#xf002;  Punch Tool' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center' width='18%'><input onChange={(e) => setSearchedValueDie(e.target.value)} placeholder='&#xf002;  Die Tool' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center' width='10%'>Die Opening</th>
@@ -698,6 +715,12 @@ export const BendDeduction= () => {
                                                     .toString()
                                                     .toLowerCase()
                                                     .includes(searchedValueGauge.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueSubType || row.subType
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueSubType.toString().toLowerCase())
                                             )
                                             .filter((row) => 
                                                 !searchedValueThickness || row.thickness
@@ -738,6 +761,7 @@ export const BendDeduction= () => {
                                                             :
                                                                 <td className='text-center'>{record.gauge}</td>
                                                             }
+                                                            <td className='text-center'>{record.subType}</td>
                                                             <td className='text-center'>{record.thickness}</td>
                                                             <td className='text-center'>{record.radius}</td>
                                                             <td className='text-center'>{record.bd}</td>
