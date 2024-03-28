@@ -183,8 +183,10 @@ export const BendDeduction= () => {
         { gauge: '12Ga', thick: '.104' },
         { gauge: '11Ga', thick: '.120' },
         { gauge: '10Ga', thick: '.135' },
+        { gauge: '8Ga', thick: '.160' },
         { gauge: '7Ga', thick: '.187' },
         { gauge: '1/4', thick: '.250' },
+        { gauge: '3/8', thick: '.375' },
     ];
 
     let matlALS = [
