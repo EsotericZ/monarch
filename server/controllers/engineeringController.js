@@ -128,6 +128,12 @@ async function getRepeatJobs(req, res) {
             // let records = recordset.recordsets[0];
 
             // res.send(records)
+            if (!recordset) {
+                // Handle the case where recordset is undefined
+                res.status(404).send('No records found');
+                return;
+            }
+            
             if (recordset.recordsets && recordset.recordsets[0]) {
                 let records = recordset.recordsets[0];
                 res.send(records);
