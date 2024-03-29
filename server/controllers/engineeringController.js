@@ -124,10 +124,17 @@ async function getRepeatJobs(req, res) {
             ORDER BY D.DueDate, R.JobNo", 
         
         function(err, recordset) {
-            if (err) console.error(err);
-            let records = recordset.recordsets[0];
+            // if (err) console.error(err);
+            // let records = recordset.recordsets[0];
 
-            res.send(records)
+            // res.send(records)
+            if (recordset.recordsets && recordset.recordsets[0]) {
+                let records = recordset.recordsets[0];
+                res.send(records);
+            } else {
+                // Handle the case where recordset.recordsets[0] is undefined
+                res.status(404).send('No records found');
+            }
         })
     })
 };
