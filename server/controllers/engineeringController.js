@@ -26,8 +26,22 @@ async function getAllJobs(req, res) {
             ORDER BY R.JobNo", 
         
         function(err, recordset) {
-            if (err) console.error(err);
-            let records = recordset.recordsets[0];
+            // if (err) console.error(err);
+            // let records = recordset.recordsets[0];
+
+            if (!recordset) {
+                // Handle the case where recordset is undefined
+                res.status(404).send('No records found');
+                return;
+            }
+            
+            if (recordset.recordsets && recordset.recordsets[0]) {
+                let records = recordset.recordsets[0];
+                res.send(records);
+            } else {
+                // Handle the case where recordset.recordsets[0] is undefined
+                res.status(404).send('No records found');
+            }
 
             const map = new Map();
             records.forEach(item => map.set(item.JobNo, item));
@@ -51,8 +65,22 @@ async function getUnconfirmedJobs(req, res) {
         
         function(err, recordset) {
             if (err) console.error(err);
-            let records = recordset.recordsets[0];
-            console.log(records)
+            // let records = recordset.recordsets[0];
+            // console.log(records)
+
+            if (!recordset) {
+                // Handle the case where recordset is undefined
+                res.status(404).send('No records found');
+                return;
+            }
+            
+            if (recordset.recordsets && recordset.recordsets[0]) {
+                let records = recordset.recordsets[0];
+                res.send(records);
+            } else {
+                // Handle the case where recordset.recordsets[0] is undefined
+                res.status(404).send('No records found');
+            }
 
             res.send(records)
         })
@@ -71,8 +99,22 @@ async function getTBRJobs(req, res) {
             ORDER BY D.User_Number3", 
         
         function(err, recordset) {
-            if (err) console.error(err);
-            let records = recordset.recordsets[0];
+            // if (err) console.error(err);
+            // let records = recordset.recordsets[0];
+
+            if (!recordset) {
+                // Handle the case where recordset is undefined
+                res.status(404).send('No records found');
+                return;
+            }
+            
+            if (recordset.recordsets && recordset.recordsets[0]) {
+                let records = recordset.recordsets[0];
+                res.send(records);
+            } else {
+                // Handle the case where recordset.recordsets[0] is undefined
+                res.status(404).send('No records found');
+            }
 
             const map = new Map();
             records.forEach(item => map.set(item.JobNo, item));
@@ -101,8 +143,22 @@ async function getFutureJobs(req, res) {
             ORDER BY D.DueDate, R.JobNo", 
         
         function(err, recordset) {
-            if (err) console.error(err);
-            let records = recordset.recordsets[0];
+            // if (err) console.error(err);
+            // let records = recordset.recordsets[0];
+
+            if (!recordset) {
+                // Handle the case where recordset is undefined
+                res.status(404).send('No records found');
+                return;
+            }
+            
+            if (recordset.recordsets && recordset.recordsets[0]) {
+                let records = recordset.recordsets[0];
+                res.send(records);
+            } else {
+                // Handle the case where recordset.recordsets[0] is undefined
+                res.status(404).send('No records found');
+            }
 
             const map = new Map();
             records.forEach(item => map.set(item.JobNo, item));
@@ -133,7 +189,7 @@ async function getRepeatJobs(req, res) {
                 res.status(404).send('No records found');
                 return;
             }
-            
+
             if (recordset.recordsets && recordset.recordsets[0]) {
                 let records = recordset.recordsets[0];
                 res.send(records);
