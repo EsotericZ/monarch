@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Tab, Tabs, Table } from 'react-bootstrap';
 
 import getAllSensors from "../../services/scales/getAllSensors";
+import getAllScales from '../../services/scales/getAllScales';
 import createScale from '../../services/scales/createScale';
 import './scales.css'
 
 import { Icon } from 'react-icons-kit';
+import { check } from 'react-icons-kit/entypo/check';
 import { refresh } from 'react-icons-kit/fa/refresh';
 
 import Cookies from 'universal-cookie';
@@ -20,17 +22,24 @@ export const ScalesAdmin = () => {
     const [cookieData, setCookieData] = useState('');
 
     const [allSensors, setAllSensors] = useState([]);
+    const [allScales, setAllScales] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const [scaleName, setScaleName] = useState('');
     const [scaleType, setScaleType] = useState(0);
     const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
 
+    const [createScale, setCreateScale] = useState('Create Scale');
+    const [zeroScale, setZeroScale] = useState('Modify Scale');
+    const [createItem, setCreateItem] = useState('Create Item');
+    const [modifyItem, setModifyItem] = useState('Modify Item');
+
     const fetchData = async () => {
         try {
-            const sensors = await getAllSensors();
-            setAllSensors(sensors)
-            setLoading(false)
+            const [sensors, scales] = await Promise.all([getAllSensors(), getAllScales()]);
+            setAllSensors(sensors);
+            setAllScales(scales);
+            setLoading(false);
         } catch (err) {
             console.log(err)
         }
@@ -53,8 +62,7 @@ export const ScalesAdmin = () => {
                 channelIds: selectedCheckboxes,
             })
             setScaleName('');
-            const sensors = await getAllSensors();
-            setAllSensors(sensors)
+            await fetchData();
         } catch (err) {
             console.error(err)
         }
@@ -76,47 +84,201 @@ export const ScalesAdmin = () => {
                 </div>
             :
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
-                    <h1 className='text-center m-3'>Create Scale</h1>
-                    <div className='mx-3 centered-container'>
-                        <Form>
-                            <Form.Label>Scale Name</Form.Label>
-                            <Form.Control 
-                                type='text'
-                                value={scaleName}
-                                onChange={(e) => setScaleName(e.target.value)}
-                            />
-                            <Form.Label className='mt-3'>Scale Type</Form.Label>
-                            <Form.Select 
-                                aria-label="Scale Type"
-                                value={scaleType}
-                                onChange={(e) => setScaleType(parseInt(e.target.value))}
-                            >
-                                <option value={0}>Quantity</option>
-                                <option value={1}>Percentage</option>
-                            </Form.Select>
-                            <div className="form-check-columns">
-                                {allSensors
-                                    .filter(sensor => sensor.ScaleName == 'Unused')
-                                    .map((sensor, index) => (
-                                        <div key={index} className="form-check-column">
-                                            <Form.Check
-                                                type='checkbox'
-                                                id={sensor.ChannelId}
-                                                label={`Hub: ${sensor.HubSerialNumber} || Port: ${sensor.PortNumber} || Channel: ${sensor.ChannelNumber}`}
-                                                onChange={() => handleCheckboxChange(sensor.ChannelId)}
-                                                checked={selectedCheckboxes.includes(sensor.ChannelId)}
-                                            />
-                                        </div>
-                                    ))
-                                }
+                    <h1 className='text-center'>Scales</h1>
+                    
+                    <Tabs
+                        defaultActiveKey="createScale"
+                        id="justify-tab-example"
+                        className='mb-3'
+                        justify
+                    >
+                        <Tab eventKey="createScale" title={createScale}>
+                            <div className='mx-3 centered-container'>
+                                <Form>
+                                    <Form.Label>Scale Name</Form.Label>
+                                    <Form.Control 
+                                        type='text'
+                                        value={scaleName}
+                                        onChange={(e) => setScaleName(e.target.value)}
+                                        />
+                                    <Form.Label className='mt-3'>Scale Type</Form.Label>
+                                    <Form.Select 
+                                        aria-label="Scale Type"
+                                        value={scaleType}
+                                        onChange={(e) => setScaleType(parseInt(e.target.value))}
+                                        >
+                                        <option value={0}>Quantity</option>
+                                        <option value={1}>Percentage</option>
+                                    </Form.Select>
+                                    <div className="form-check-columns">
+                                        {allSensors
+                                            .filter(sensor => sensor.ScaleName == 'Unused')
+                                            .map((sensor, index) => (
+                                                <div key={index} className="form-check-column">
+                                                    <Form.Check
+                                                        type='checkbox'
+                                                        id={sensor.ChannelId}
+                                                        label={`Hub: ${sensor.HubSerialNumber} || Port: ${sensor.PortNumber} || Channel: ${sensor.ChannelNumber}`}
+                                                        onChange={() => handleCheckboxChange(sensor.ChannelId)}
+                                                        checked={selectedCheckboxes.includes(sensor.ChannelId)}
+                                                    />
+                                                </div>
+                                            ))
+                                        }
+                                    </div>
+                                </Form>
                             </div>
-                        </Form>
-                    </div>
-                    <div className="d-flex justify-content-end mt-3 buttonMove">
-                        <Button type='submit' className="custom-button" onClick={handleSubmit}>
-                            Create
-                        </Button>
-                    </div>
+                            <div className="d-flex justify-content-end mt-3 buttonMove">
+                                <Button type='submit' className="custom-button" onClick={handleSubmit}>
+                                    Create
+                                </Button>
+                            </div>
+                        </Tab>
+
+                        <Tab eventKey="zeroScale" title={zeroScale}>
+                            <div>
+                                <div className='mx-3'>
+                                    <Table striped hover>
+                                        <thead>
+                                            <tr>
+                                                <th className='text-center'>Name</th>
+                                                <th className='text-center'>Zero Weight</th>
+                                                <th className='text-center'>Connected</th>
+                                                <th className='text-center'>Zero Scale</th>
+                                                <th className='text-center'>Delete Scale</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr className='divide'>
+                                                <td className='text-center' colspan='5'>New</td>
+                                            </tr>
+                                            {allScales
+                                                .filter(scale => scale.ZeroWeight == 0)
+                                                .map((scale, index) => {
+                                                    return (
+                                                        <tr key={index} scale={scale}>
+                                                            <td className='text-center'>{scale.Name}</td>
+                                                            <td className='text-center'>{scale.ZeroWeight}</td>
+                                                            {scale.Connected ?
+                                                                <td className='text-center'>
+                                                                    <Icon icon={check}/>
+                                                                </td>
+                                                            :
+                                                                <td className='text-center'></td>
+                                                            }
+                                                            <td className='text-center'>Add This</td>
+                                                            <td className='text-center'>Add This</td>
+                                                        </tr>
+                                                    )
+                                                })
+                                            }
+                                            <tr className='divide'>
+                                                <td className='text-center' colspan='5'>Existing</td>
+                                            </tr>
+                                            {allScales
+                                                .filter(scale => scale.ZeroWeight != 0)
+                                                .map((scale, index) => {
+                                                    return (
+                                                        <tr key={index} scale={scale}>
+                                                            <td className='text-center'>{scale.Name}</td>
+                                                            <td className='text-center'>{scale.ZeroWeight}</td>
+                                                            {scale.Connected ?
+                                                                <td className='text-center'>
+                                                                    <Icon icon={check}/>
+                                                                </td>
+                                                            :
+                                                                <td className='text-center'></td>
+                                                            }
+                                                            <td className='text-center'>Add This</td>
+                                                            <td className='text-center'>Add This</td>
+                                                        </tr>
+                                                    )
+                                                })
+                                            }
+                                        </tbody>
+                                    </Table>
+                                </div>
+                            </div>
+                        </Tab>
+
+                        <Tab eventKey="createItem" title={createItem}>
+                            <div className='mx-3 centered-container'>
+                                <h1>Build</h1>
+                                {/* <Form>
+                                    <Form.Label>Scale Name</Form.Label>
+                                    <Form.Control 
+                                        type='text'
+                                        value={scaleName}
+                                        onChange={(e) => setScaleName(e.target.value)}
+                                        />
+                                    <Form.Label className='mt-3'>Scale Type</Form.Label>
+                                    <Form.Select 
+                                        aria-label="Scale Type"
+                                        value={scaleType}
+                                        onChange={(e) => setScaleType(parseInt(e.target.value))}
+                                        >
+                                        <option value={0}>Quantity</option>
+                                        <option value={1}>Percentage</option>
+                                    </Form.Select>
+                                    <div className="form-check-columns">
+                                        {allSensors
+                                            .filter(sensor => sensor.ScaleName == 'Unused')
+                                            .map((sensor, index) => (
+                                                <div key={index} className="form-check-column">
+                                                    <Form.Check
+                                                        type='checkbox'
+                                                        id={sensor.ChannelId}
+                                                        label={`Hub: ${sensor.HubSerialNumber} || Port: ${sensor.PortNumber} || Channel: ${sensor.ChannelNumber}`}
+                                                        onChange={() => handleCheckboxChange(sensor.ChannelId)}
+                                                        checked={selectedCheckboxes.includes(sensor.ChannelId)}
+                                                    />
+                                                </div>
+                                            ))
+                                        }
+                                    </div>
+                                </Form> */}
+                            </div>
+                        </Tab>
+
+                        <Tab eventKey="modifyItem" title={modifyItem}>
+                            <div className='mx-3 centered-container'>
+                                <h1>Build</h1>
+                                {/* <Form>
+                                    <Form.Label>Scale Name</Form.Label>
+                                    <Form.Control 
+                                        type='text'
+                                        value={scaleName}
+                                        onChange={(e) => setScaleName(e.target.value)}
+                                        />
+                                    <Form.Label className='mt-3'>Scale Type</Form.Label>
+                                    <Form.Select 
+                                        aria-label="Scale Type"
+                                        value={scaleType}
+                                        onChange={(e) => setScaleType(parseInt(e.target.value))}
+                                        >
+                                        <option value={0}>Quantity</option>
+                                        <option value={1}>Percentage</option>
+                                    </Form.Select>
+                                    <div className="form-check-columns">
+                                        {allSensors
+                                            .filter(sensor => sensor.ScaleName == 'Unused')
+                                            .map((sensor, index) => (
+                                                <div key={index} className="form-check-column">
+                                                    <Form.Check
+                                                        type='checkbox'
+                                                        id={sensor.ChannelId}
+                                                        label={`Hub: ${sensor.HubSerialNumber} || Port: ${sensor.PortNumber} || Channel: ${sensor.ChannelNumber}`}
+                                                        onChange={() => handleCheckboxChange(sensor.ChannelId)}
+                                                        checked={selectedCheckboxes.includes(sensor.ChannelId)}
+                                                    />
+                                                </div>
+                                            ))
+                                        }
+                                    </div>
+                                </Form> */}
+                            </div>
+                        </Tab>                        
+                    </Tabs>
                 </div>
             }
         </div>
