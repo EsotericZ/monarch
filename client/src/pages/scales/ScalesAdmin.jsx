@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 
 import getAllSensors from "../../services/scales/getAllSensors";
+import createScale from '../../services/scales/createScale';
 import './scales.css'
 
 import { Icon } from 'react-icons-kit';
@@ -22,7 +23,7 @@ export const ScalesAdmin = () => {
     const [loading, setLoading] = useState(true);
 
     const [scaleName, setScaleName] = useState('');
-    const [scaleType, setScaleType] = useState('Quantity');
+    const [scaleType, setScaleType] = useState(0);
     const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
 
     const fetchData = async () => {
@@ -44,9 +45,20 @@ export const ScalesAdmin = () => {
         }
     };
     
-        const handleSubmit = () => {
-            console.log(scaleName, scaleType, selectedCheckboxes)
-        };
+    const handleSubmit = async () => {
+        try {
+            await createScale({
+                name: scaleName,
+                scaleWeightType: scaleType,
+                channelIds: selectedCheckboxes,
+            })
+            setScaleName('');
+            const sensors = await getAllSensors();
+            setAllSensors(sensors)
+        } catch (err) {
+            console.error(err)
+        }
+    };
 
     useEffect(() => {
         fetchData();
@@ -77,10 +89,10 @@ export const ScalesAdmin = () => {
                             <Form.Select 
                                 aria-label="Scale Type"
                                 value={scaleType}
-                                onChange={(e) => setScaleType(e.target.value)}
+                                onChange={(e) => setScaleType(parseInt(e.target.value))}
                             >
-                                <option value="Quantity">Quantity</option>
-                                <option value="Percentage">Percentage</option>
+                                <option value={0}>Quantity</option>
+                                <option value={1}>Percentage</option>
                             </Form.Select>
                             <div className="form-check-columns">
                                 {allSensors
