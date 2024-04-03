@@ -3,6 +3,7 @@ import { Button, Form, Modal, Tab, Tabs, Table } from 'react-bootstrap';
 
 import getAllSensors from "../../services/scales/getAllSensors";
 import getAllScales from '../../services/scales/getAllScales';
+import getMMItems from '../../services/scales/getMMItems';
 import createScale from '../../services/scales/createScale';
 import deleteScale from '../../services/scales/deleteScale';
 import zeroScale from '../../services/scales/zeroScale';
@@ -30,6 +31,7 @@ export const ScalesAdmin = () => {
 
     const [allSensors, setAllSensors] = useState([]);
     const [allScales, setAllScales] = useState([]);
+    const [combinedData, setCombinedData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentScaleName, setCurrentScaleName] = useState('');
     const [currentItemName, setCurrentItemName] = useState('');
@@ -56,9 +58,16 @@ export const ScalesAdmin = () => {
     
     const fetchData = async () => {
         try {
-            const [sensors, scales] = await Promise.all([getAllSensors(), getAllScales()]);
+            const [sensors, scales, mmItems] = await Promise.all([getAllSensors(), getAllScales(), getMMItems()]);
             setAllSensors(sensors);
             setAllScales(scales);
+
+            const combinedData = scales.map(scale => {
+                const matchingMMItem = mmItems.data.find(item => item.scaleId === scale.ScaleId);
+                return { ...scale, ...matchingMMItem };
+            });
+            
+            setCombinedData(combinedData);
 
             const hasZeroWeightScale = scales.some(scale => scale.ZeroWeight === 0);
             setNewScales(hasZeroWeightScale);
@@ -453,20 +462,30 @@ export const ScalesAdmin = () => {
                                         <thead>
                                             <tr>
                                                 <th className='text-center'>Item Name</th>
+                                                <th className='text-center'>Item Name MM</th>
+                                                <th className='text-center'>ScaleId</th>
+                                                <th className='text-center'>ScaleId MM</th>
                                                 <th className='text-center'>Item Bin Location</th>
+                                                <th className='text-center'>Item Bin Location MM</th>
                                                 <th className='text-center'>Alert Threshold</th>
+                                                <th className='text-center'>Alert Threshold MM</th>
                                                 <th className='text-center'>Delete Item</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {allScales
+                                            {combinedData
                                                 .filter(scale => scale.ItemPartNumber)
                                                 .map((scale, index) => {
                                                     return (
                                                         <tr key={index} scale={scale}>
                                                             <td className='text-center'>{scale.ItemPartNumber}</td>
+                                                            <td className='text-center'>{scale.itemName}</td>
+                                                            <td className='text-center'>{scale.ScaleId}</td>
+                                                            <td className='text-center'>{scale.scaleId}</td>
                                                             <td className='text-center'>{scale.ItemDescription}</td>
+                                                            <td className='text-center'>{scale.itemLocation}</td>
                                                             <td className='text-center'>{scale.AlertThreshold}</td>
+                                                            <td className='text-center'>{scale.alert}</td>
                                                             <td className='text-center'>
                                                                 <Icon icon={remove} onClick={() => handleShowDeleteItem(scale)} />
                                                             </td>

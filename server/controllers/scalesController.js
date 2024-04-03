@@ -1,3 +1,4 @@
+const { ScaleItems } = require('../models');
 const { Scales } = require('../models');
 
 async function getAllPorts(req, res) {
@@ -7,6 +8,20 @@ async function getAllPorts(req, res) {
             ['portNo', 'ASC']
         ]
     })
+    .then((result) => {
+        return res.status(200).send({
+            data: result
+        })
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
+
+async function getMMItems(req, res) {
+    console.log('hit')
+    await ScaleItems.findAll()
     .then((result) => {
         return res.status(200).send({
             data: result
@@ -33,5 +48,6 @@ async function createPort(req, res) {
 
 module.exports = {
     getAllPorts,
+    getMMItems,
     createPort,
 }
