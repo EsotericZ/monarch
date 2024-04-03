@@ -5,6 +5,7 @@ import getAllSensors from "../../services/scales/getAllSensors";
 import getAllScales from '../../services/scales/getAllScales';
 import createScale from '../../services/scales/createScale';
 import deleteScale from '../../services/scales/deleteScale';
+import zeroScale from '../../services/scales/zeroScale';
 import './scales.css'
 
 import { Icon } from 'react-icons-kit';
@@ -31,44 +32,35 @@ export const ScalesAdmin = () => {
     const [currentScaleName, setCurrentScaleName] = useState('');
     const [currentScaleId, setCurrentScaleId] = useState(0);
     const [showDelete, setShowDelete] = useState(false);
+    const [newScales, setNewScales] = useState(false);
+    const [zeroNoItem, setZeroNoItem] = useState(false);
 
     const [scaleName, setScaleName] = useState('');
     const [scaleType, setScaleType] = useState(0);
     const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
 
-    const [createScale, setCreateScale] = useState('Create Scale');
-    const [zeroScale, setZeroScale] = useState('Modify Scale');
+    const [newScale, setNewScale] = useState('Create Scale');
+    const [modifyScale, setModifyScale] = useState('Modify Scale');
     const [createItem, setCreateItem] = useState('Create Item');
     const [modifyItem, setModifyItem] = useState('Modify Item');
-
+    
     const fetchData = async () => {
         try {
             const [sensors, scales] = await Promise.all([getAllSensors(), getAllScales()]);
             setAllSensors(sensors);
             setAllScales(scales);
+
+            const hasZeroWeightScale = scales.some(scale => scale.ZeroWeight === 0);
+            setNewScales(hasZeroWeightScale);
+            
+            
+            const hasZeroNoItem = scales.some(scale => scale.ZeroWeight != 0 && !scale.ItemPartNumber);
+            setZeroNoItem(hasZeroNoItem);
+
             setLoading(false);
         } catch (err) {
             console.log(err)
         }
-    };
-
-    const handleCloseDelete = () => setShowDelete(false);
-    const handleShowDelete = (scale) => {
-        setCurrentScaleName(scale.Name)
-        setCurrentScaleId(scale.ScaleId)
-        setShowDelete(true);
-    };
-
-    const handleDeleteScale = async () => {
-        try {
-            await deleteScale(currentScaleId)
-            setCurrentScaleName('');
-            setCurrentScaleId(0);
-            await fetchData();
-        } catch (err) {
-            console.error(err);
-        }
-        setShowDelete(false);
     };
     
     const handleCheckboxChange = (channelId) => {
@@ -91,6 +83,34 @@ export const ScalesAdmin = () => {
             await fetchData();
         } catch (err) {
             console.error(err)
+        }
+    };
+
+    const handleCloseDelete = () => setShowDelete(false);
+    const handleShowDelete = (scale) => {
+        setCurrentScaleName(scale.Name)
+        setCurrentScaleId(scale.ScaleId)
+        setShowDelete(true);
+    };
+
+    const handleDeleteScale = async () => {
+        try {
+            await deleteScale(currentScaleId)
+            setCurrentScaleName('');
+            setCurrentScaleId(0);
+            await fetchData();
+        } catch (err) {
+            console.error(err);
+        }
+        setShowDelete(false);
+    };
+    
+    const handleZeroScale = async (scale) => {
+        try {
+            await zeroScale(scale.ScaleId)
+            await fetchData();
+        } catch (err) {
+            console.error(err);
         }
     };
 
@@ -131,12 +151,12 @@ export const ScalesAdmin = () => {
                     </Modal>
                     
                     <Tabs
-                        defaultActiveKey="createScale"
+                        defaultActiveKey="newScale"
                         id="justify-tab-example"
                         className='mb-3'
                         justify
                     >
-                        <Tab eventKey="createScale" title={createScale}>
+                        <Tab eventKey="newScale" title={newScale}>
                             <div className='mx-3 centered-container'>
                                 <Form>
                                     <Form.Label>Scale Name</Form.Label>
@@ -179,7 +199,7 @@ export const ScalesAdmin = () => {
                             </div>
                         </Tab>
 
-                        <Tab eventKey="zeroScale" title={zeroScale}>
+                        <Tab eventKey="modifyScale" title={modifyScale}>
                             <div>
                                 <div className='mx-3'>
                                     <Table striped hover>
@@ -193,9 +213,11 @@ export const ScalesAdmin = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr className='divide'>
-                                                <td className='text-center' colspan='5'>New</td>
-                                            </tr>
+                                            {newScales &&
+                                                <tr className='divide'>
+                                                    <td className='text-center' colspan='5'>New</td>
+                                                </tr>
+                                            }
                                             {allScales
                                                 .filter(scale => scale.ZeroWeight == 0)
                                                 .map((scale, index) => {
@@ -211,7 +233,7 @@ export const ScalesAdmin = () => {
                                                                 <td className='text-center'></td>
                                                             }
                                                             <td className='text-center'>
-                                                                <Icon icon={playCircleO} />
+                                                                <Icon icon={playCircleO} onClick={() => handleZeroScale(scale)} />
                                                             </td>
                                                             <td className='text-center'>
                                                                 <Icon icon={remove} onClick={() => handleShowDelete(scale)} />
@@ -220,11 +242,18 @@ export const ScalesAdmin = () => {
                                                     )
                                                 })
                                             }
-                                            <tr className='divide'>
-                                                <td className='text-center' colspan='5'>Existing</td>
-                                            </tr>
+                                            {newScales &&
+                                                <tr>
+                                                    <td className='text-center' colspan='5'></td>
+                                                </tr>
+                                            }
+                                            {zeroNoItem &&
+                                                <tr className='divide'>
+                                                    <td className='text-center' colspan='5'>No Item Attached</td>
+                                                </tr>
+                                            }
                                             {allScales
-                                                .filter(scale => scale.ZeroWeight != 0)
+                                                .filter(scale => scale.ZeroWeight != 0 && !scale.ItemPartNumber)
                                                 .map((scale, index) => {
                                                     return (
                                                         <tr key={index} scale={scale}>
@@ -238,10 +267,42 @@ export const ScalesAdmin = () => {
                                                                 <td className='text-center'></td>
                                                             }
                                                             <td className='text-center'>
-                                                                <Icon icon={warning} />
+                                                                <Icon icon={playCircleO} onClick={() => handleZeroScale(scale)} />
                                                             </td>
                                                             <td className='text-center'>
                                                                 <Icon icon={remove} onClick={() => handleShowDelete(scale)} />
+                                                            </td>
+                                                        </tr>
+                                                    )
+                                                })
+                                            }
+                                            {zeroNoItem &&
+                                                <tr>
+                                                    <td className='text-center' colspan='5'></td>
+                                                </tr>
+                                            }
+                                            <tr className='divide'>
+                                                <td className='text-center' colspan='5'>Existing</td>
+                                            </tr>
+                                            {allScales
+                                                .filter(scale => scale.ZeroWeight != 0 && scale.ItemPartNumber)
+                                                .map((scale, index) => {
+                                                    return (
+                                                        <tr key={index} scale={scale}>
+                                                            <td className='text-center'>{scale.Name}</td>
+                                                            <td className='text-center'>{scale.ZeroWeight}</td>
+                                                            {scale.Connected ?
+                                                                <td className='text-center'>
+                                                                    <Icon icon={check} />
+                                                                </td>
+                                                            :
+                                                                <td className='text-center'></td>
+                                                            }
+                                                            <td className='text-center'>
+                                                                <Icon icon={warning} onClick={() => handleZeroScale(scale)} />
+                                                            </td>
+                                                            <td className='text-center'>
+                                                                Remove Item First
                                                             </td>
                                                         </tr>
                                                     )
