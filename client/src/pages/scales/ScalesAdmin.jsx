@@ -7,6 +7,7 @@ import createScale from '../../services/scales/createScale';
 import deleteScale from '../../services/scales/deleteScale';
 import zeroScale from '../../services/scales/zeroScale';
 import createItem from '../../services/scales/createItem';
+import deleteItem from '../../services/scales/deleteItem';
 import './scales.css'
 
 import { Icon } from 'react-icons-kit';
@@ -31,8 +32,10 @@ export const ScalesAdmin = () => {
     const [allScales, setAllScales] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentScaleName, setCurrentScaleName] = useState('');
+    const [currentItemName, setCurrentItemName] = useState('');
     const [currentScaleId, setCurrentScaleId] = useState(0);
     const [showDelete, setShowDelete] = useState(false);
+    const [showDeleteItem, setShowDeleteItem] = useState(false);
     const [newScales, setNewScales] = useState(false);
     const [zeroNoItem, setZeroNoItem] = useState(false);
     const [newItems, setNewItems] = useState(false);
@@ -65,7 +68,6 @@ export const ScalesAdmin = () => {
 
             const hasNewItem = scales.some(scale => !scale.ItemPartNumber);
             setNewItems(hasNewItem);
-            console.log(hasNewItem)
 
             setLoading(false);
         } catch (err) {
@@ -103,10 +105,31 @@ export const ScalesAdmin = () => {
         setShowDelete(true);
     };
     
+    const handleCloseDeleteItem = () => setShowDeleteItem(false);
+    const handleShowDeleteItem = (scale) => {
+        setCurrentScaleName(scale.Name)
+        setCurrentItemName(scale.ItemPartNumber)
+        setCurrentScaleId(scale.ScaleId)
+        setShowDeleteItem(true);
+    };
+    
     const handleDeleteScale = async () => {
         try {
             await deleteScale(currentScaleId)
             setCurrentScaleName('');
+            setCurrentScaleId(0);
+            await fetchData();
+        } catch (err) {
+            console.error(err);
+        }
+        setShowDelete(false);
+    };
+    
+    const handleDeleteItem = async () => {
+        try {
+            await deleteScale(currentScaleId)
+            setCurrentScaleName('');
+            setCurrentItemName('');
             setCurrentScaleId(0);
             await fetchData();
         } catch (err) {
@@ -125,11 +148,6 @@ export const ScalesAdmin = () => {
     };
     
     const handleSubmitItem = async () => {
-        console.log(itemName)
-        console.log(itemLocation)
-        console.log(itemSample)
-        console.log(radioScaleId)
-        console.log(itemAlert)
         try {
             await createItem({
                 ScaleId: radioScaleId,
@@ -172,14 +190,36 @@ export const ScalesAdmin = () => {
                             <Modal.Title>Delete Scale</Modal.Title>
                         </Modal.Header>
                         <Modal.Body className="text-center">
-                            <div>Warning! Your are about to delete scale <b>{currentScaleName}</b></div>
-                            <div>Are you sure?</div>
+                            <div>Warning! Your Are About To Delete Scale</div>
+                            <div><b>{currentScaleName}</b></div>
+                            <div className='mt-3'>Are You Sure?</div>
                         </Modal.Body>
                         <Modal.Footer className="justify-content-center">
                             <Button className='modalBtnCancel' variant="secondary" onClick={handleCloseDelete}>
                                 Cancel
                             </Button>
                             <Button className='modalBtnVerify' variant="primary" onClick={handleDeleteScale}>
+                                Verify
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
+
+                    <Modal show={showDeleteItem}>
+                        <Modal.Header>
+                            <Modal.Title>Delete Item</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body className="text-center">
+                            <div>Warning! Your Are About To Delete Item</div>
+                            <div><b>{currentItemName}</b></div>
+                            <div className='mt-3'>This Will Also Delete Scale</div>
+                            <div><b>{currentScaleName}</b></div>
+                            <div className='mt-3'>Are you sure?</div>
+                        </Modal.Body>
+                        <Modal.Footer className="justify-content-center">
+                            <Button className='modalBtnCancel' variant="secondary" onClick={handleCloseDeleteItem}>
+                                Cancel
+                            </Button>
+                            <Button className='modalBtnVerify' variant="primary" onClick={handleDeleteItem}>
                                 Verify
                             </Button>
                         </Modal.Footer>
@@ -240,7 +280,7 @@ export const ScalesAdmin = () => {
                                     <Table striped hover>
                                         <thead>
                                             <tr>
-                                                <th className='text-center'>Name</th>
+                                                <th className='text-center'>Scale Name</th>
                                                 <th className='text-center'>Zero Weight</th>
                                                 <th className='text-center'>Connected</th>
                                                 <th className='text-center'>Zero Scale</th>
@@ -337,7 +377,7 @@ export const ScalesAdmin = () => {
                                                                 <Icon icon={warning} onClick={() => handleZeroScale(scale)} />
                                                             </td>
                                                             <td className='text-center'>
-                                                                Remove Item First
+                                                                Delete Item
                                                             </td>
                                                         </tr>
                                                     )
@@ -407,41 +447,36 @@ export const ScalesAdmin = () => {
                         </Tab>
 
                         <Tab eventKey="modifyItem" title={modifyItem}>
-                            <div className='mx-3 centered-container'>
-                                <h1>Build</h1>
-                                {/* <Form>
-                                    <Form.Label>Scale Name</Form.Label>
-                                    <Form.Control 
-                                        type='text'
-                                        value={scaleName}
-                                        onChange={(e) => setScaleName(e.target.value)}
-                                        />
-                                    <Form.Label className='mt-3'>Scale Type</Form.Label>
-                                    <Form.Select 
-                                        aria-label="Scale Type"
-                                        value={scaleType}
-                                        onChange={(e) => setScaleType(parseInt(e.target.value))}
-                                        >
-                                        <option value={0}>Quantity</option>
-                                        <option value={1}>Percentage</option>
-                                    </Form.Select>
-                                    <div className="form-check-columns">
-                                        {allSensors
-                                            .filter(sensor => sensor.ScaleName == 'Unused')
-                                            .map((sensor, index) => (
-                                                <div key={index} className="form-check-column">
-                                                    <Form.Check
-                                                        type='checkbox'
-                                                        id={sensor.ChannelId}
-                                                        label={`Hub: ${sensor.HubSerialNumber} || Port: ${sensor.PortNumber} || Channel: ${sensor.ChannelNumber}`}
-                                                        onChange={() => handleCheckboxChange(sensor.ChannelId)}
-                                                        checked={selectedCheckboxes.includes(sensor.ChannelId)}
-                                                    />
-                                                </div>
-                                            ))
-                                        }
-                                    </div>
-                                </Form> */}
+                            <div>
+                                <div className='mx-3'>
+                                    <Table striped hover>
+                                        <thead>
+                                            <tr>
+                                                <th className='text-center'>Item Name</th>
+                                                <th className='text-center'>Item Bin Location</th>
+                                                <th className='text-center'>Alert Threshold</th>
+                                                <th className='text-center'>Delete Item</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {allScales
+                                                .filter(scale => scale.ItemPartNumber)
+                                                .map((scale, index) => {
+                                                    return (
+                                                        <tr key={index} scale={scale}>
+                                                            <td className='text-center'>{scale.ItemPartNumber}</td>
+                                                            <td className='text-center'>{scale.ItemDescription}</td>
+                                                            <td className='text-center'>{scale.AlertThreshold}</td>
+                                                            <td className='text-center'>
+                                                                <Icon icon={remove} onClick={() => handleShowDeleteItem(scale)} />
+                                                            </td>
+                                                        </tr>
+                                                    )
+                                                })
+                                            }
+                                        </tbody>
+                                    </Table>
+                                </div>
                             </div>
                         </Tab>                        
                     </Tabs>
