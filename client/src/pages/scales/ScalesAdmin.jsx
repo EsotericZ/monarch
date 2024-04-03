@@ -1,14 +1,18 @@
 import { useEffect, useState } from 'react';
-import { Button, Form, Tab, Tabs, Table } from 'react-bootstrap';
+import { Button, Form, Modal, Tab, Tabs, Table } from 'react-bootstrap';
 
 import getAllSensors from "../../services/scales/getAllSensors";
 import getAllScales from '../../services/scales/getAllScales';
 import createScale from '../../services/scales/createScale';
+import deleteScale from '../../services/scales/deleteScale';
 import './scales.css'
 
 import { Icon } from 'react-icons-kit';
 import { check } from 'react-icons-kit/entypo/check';
 import { refresh } from 'react-icons-kit/fa/refresh';
+import { remove } from 'react-icons-kit/fa/remove'
+import { playCircleO } from 'react-icons-kit/fa/playCircleO'
+import { warning } from 'react-icons-kit/fa/warning'
 
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
@@ -24,6 +28,9 @@ export const ScalesAdmin = () => {
     const [allSensors, setAllSensors] = useState([]);
     const [allScales, setAllScales] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [currentScaleName, setCurrentScaleName] = useState('');
+    const [currentScaleId, setCurrentScaleId] = useState(0);
+    const [showDelete, setShowDelete] = useState(false);
 
     const [scaleName, setScaleName] = useState('');
     const [scaleType, setScaleType] = useState(0);
@@ -43,7 +50,26 @@ export const ScalesAdmin = () => {
         } catch (err) {
             console.log(err)
         }
-    }
+    };
+
+    const handleCloseDelete = () => setShowDelete(false);
+    const handleShowDelete = (scale) => {
+        setCurrentScaleName(scale.Name)
+        setCurrentScaleId(scale.ScaleId)
+        setShowDelete(true);
+    };
+
+    const handleDeleteScale = async () => {
+        try {
+            await deleteScale(currentScaleId)
+            setCurrentScaleName('');
+            setCurrentScaleId(0);
+            await fetchData();
+        } catch (err) {
+            console.error(err);
+        }
+        setShowDelete(false);
+    };
     
     const handleCheckboxChange = (channelId) => {
         const isChecked = selectedCheckboxes.includes(channelId);
@@ -85,6 +111,24 @@ export const ScalesAdmin = () => {
             :
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
                     <h1 className='text-center'>Scales</h1>
+
+                    <Modal show={showDelete}>
+                        <Modal.Header>
+                            <Modal.Title>Delete Scale</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body className="text-center">
+                            <div>Warning! Your are about to delete scale <b>{currentScaleName}</b></div>
+                            <div>Are you sure?</div>
+                        </Modal.Body>
+                        <Modal.Footer className="justify-content-center">
+                            <Button className='modalBtnCancel' variant="secondary" onClick={handleCloseDelete}>
+                                Cancel
+                            </Button>
+                            <Button className='modalBtnVerify' variant="primary" onClick={handleDeleteScale}>
+                                Verify
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
                     
                     <Tabs
                         defaultActiveKey="createScale"
@@ -161,13 +205,17 @@ export const ScalesAdmin = () => {
                                                             <td className='text-center'>{scale.ZeroWeight}</td>
                                                             {scale.Connected ?
                                                                 <td className='text-center'>
-                                                                    <Icon icon={check}/>
+                                                                    <Icon icon={check} />
                                                                 </td>
                                                             :
                                                                 <td className='text-center'></td>
                                                             }
-                                                            <td className='text-center'>Add This</td>
-                                                            <td className='text-center'>Add This</td>
+                                                            <td className='text-center'>
+                                                                <Icon icon={playCircleO} />
+                                                            </td>
+                                                            <td className='text-center'>
+                                                                <Icon icon={remove} onClick={() => handleShowDelete(scale)} />
+                                                            </td>
                                                         </tr>
                                                     )
                                                 })
@@ -184,13 +232,17 @@ export const ScalesAdmin = () => {
                                                             <td className='text-center'>{scale.ZeroWeight}</td>
                                                             {scale.Connected ?
                                                                 <td className='text-center'>
-                                                                    <Icon icon={check}/>
+                                                                    <Icon icon={check} />
                                                                 </td>
                                                             :
                                                                 <td className='text-center'></td>
                                                             }
-                                                            <td className='text-center'>Add This</td>
-                                                            <td className='text-center'>Add This</td>
+                                                            <td className='text-center'>
+                                                                <Icon icon={warning} />
+                                                            </td>
+                                                            <td className='text-center'>
+                                                                <Icon icon={remove} onClick={() => handleShowDelete(scale)} />
+                                                            </td>
                                                         </tr>
                                                     )
                                                 })
