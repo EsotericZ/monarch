@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Form, Modal, Tab, Tabs, Table } from 'react-bootstrap';
+import { Button, FloatingLabel, Form, Modal, Tab, Tabs, Table } from 'react-bootstrap';
 
 import getAllSensors from "../../services/scales/getAllSensors";
 import getAllScales from '../../services/scales/getAllScales';
@@ -8,7 +8,9 @@ import createScale from '../../services/scales/createScale';
 import deleteScale from '../../services/scales/deleteScale';
 import zeroScale from '../../services/scales/zeroScale';
 import createItem from '../../services/scales/createItem';
+import createMMItem from '../../services/scales/createMMItem';
 import deleteItem from '../../services/scales/deleteItem';
+import updateItem from '../../services/scales/updateItem';
 import './scales.css'
 
 import { Icon } from 'react-icons-kit';
@@ -37,6 +39,7 @@ export const ScalesAdmin = () => {
     const [currentItemName, setCurrentItemName] = useState('');
     const [currentScaleId, setCurrentScaleId] = useState(0);
     const [showDelete, setShowDelete] = useState(false);
+    const [showEdit, setShowEdit] = useState(false);
     const [showDeleteItem, setShowDeleteItem] = useState(false);
     const [newScales, setNewScales] = useState(false);
     const [zeroNoItem, setZeroNoItem] = useState(false);
@@ -136,7 +139,7 @@ export const ScalesAdmin = () => {
     
     const handleDeleteItem = async () => {
         try {
-            await deleteScale(currentScaleId)
+            await deleteItem(currentScaleId)
             setCurrentScaleName('');
             setCurrentItemName('');
             setCurrentScaleId(0);
@@ -165,6 +168,7 @@ export const ScalesAdmin = () => {
                 PartNumber: itemName,
                 AlertThreshold: itemAlert,
             })
+            await createMMItem(radioScaleId, itemName, itemLocation, itemAlert)
             setItemName('');
             setItemLocation('');
             setItemSample(1);
@@ -175,7 +179,33 @@ export const ScalesAdmin = () => {
             console.error(err)
         }
     };
+
+    const handleOpenItem = (scale) => {
+        setItemName(scale.itemName);
+        setItemLocation(scale.itemLocation);
+        setCurrentScaleId(scale.scaleId);
+        setItemAlert(parseInt(scale.alert));
+        setShowEdit(true);
+    };
+
+    const handleCancelEdit = () => {
+        setShowEdit(false);
+    };
     
+    const handleUpdateItem = async () => {
+        try {
+            await updateItem(itemName, itemLocation, currentScaleId, itemAlert);
+        } catch (err) {
+            console.error(err)
+        }
+        setItemName('');
+        setItemLocation('');
+        setCurrentScaleId(0);
+        setItemAlert(0);
+        setShowEdit(false);
+        await fetchData();
+    }
+
     useEffect(() => {
         fetchData();
     }, [])
@@ -230,6 +260,34 @@ export const ScalesAdmin = () => {
                             </Button>
                             <Button className='modalBtnVerify' variant="primary" onClick={handleDeleteItem}>
                                 Verify
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
+
+                    <Modal show={showEdit}>
+                        <Modal.Header>
+                            <Modal.Title>Update Item</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <FloatingLabel label="Item Name" className="mb-3">
+                                <Form.Control defaultValue={itemName} onChange={(e) => {setItemName(e.target.value)}} />
+                            </FloatingLabel>
+                            <FloatingLabel controlId="floatingInput" label="Item Bin Location" className="mb-3">
+                                <Form.Control defaultValue={itemLocation} onChange={(e) => {setItemLocation(e.target.value)}} />
+                            </FloatingLabel>
+                            <FloatingLabel controlId="floatingInput" label="Scale ID" className="mb-3">
+                                <Form.Control disabled defaultValue={currentScaleId} />
+                            </FloatingLabel>
+                            <FloatingLabel controlId="floatingInput" label="Alert Threshold" className="mb-3">
+                                <Form.Control defaultValue={itemAlert} onChange={(e) => {setItemAlert(parseInt(e.target.value))}} />
+                            </FloatingLabel>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button className='modalBtnCancel' variant="secondary" onClick={handleCancelEdit}>
+                                Cancel
+                            </Button>
+                            <Button className='modalBtnVerify' variant="primary" onClick={handleUpdateItem}>
+                                Save
                             </Button>
                         </Modal.Footer>
                     </Modal>
@@ -479,7 +537,7 @@ export const ScalesAdmin = () => {
                                                     return (
                                                         <tr key={index} scale={scale}>
                                                             <td className='text-center'>{scale.ItemPartNumber}</td>
-                                                            <td className='text-center'>{scale.itemName}</td>
+                                                            <td className='text-center' onClick={() => handleOpenItem(scale)}>{scale.itemName}</td>
                                                             <td className='text-center'>{scale.ScaleId}</td>
                                                             <td className='text-center'>{scale.scaleId}</td>
                                                             <td className='text-center'>{scale.ItemDescription}</td>
