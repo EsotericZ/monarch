@@ -64,12 +64,20 @@ async function updateItem(req, res) {
     let itemLocation = req.body.itemLocation
     let itemId = req.body.currentItemId
     let alert = req.body.itemAlert
+    let rack = req.body.itemRack
+    let shelf = req.body.itemShelf
+    let bin = req.body.itemBin
+    let area = req.body.itemArea
     
     await ScaleItems.update(
         {
             itemName,
             itemLocation,
             alert,
+            rack,
+            shelf,
+            bin,
+            area,
         },
         { where: { itemId: itemId }}
     ).then((result) => {

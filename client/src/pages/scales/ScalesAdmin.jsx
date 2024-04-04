@@ -205,6 +205,10 @@ export const ScalesAdmin = () => {
         setCurrentScaleId(scale.ScaleId);
         setCurrentItemId(scale.ItemId);
         setItemAlert(parseInt(scale.alert));
+        setItemRack(parseInt(scale.rack));
+        setItemShelf(parseInt(scale.shelf));
+        setItemBin(scale.bin);
+        setItemArea(scale.area);
         setShowEdit(true);
     };
 
@@ -214,7 +218,7 @@ export const ScalesAdmin = () => {
     
     const handleUpdateItem = async () => {
         try {
-            await updateItem(itemName, itemLocation, currentItemId, itemAlert);
+            await updateItem(itemName, itemLocation, currentItemId, itemAlert, itemRack, itemShelf, itemBin, itemArea);
         } catch (err) {
             console.error(err)
         }
@@ -223,6 +227,10 @@ export const ScalesAdmin = () => {
         setCurrentScaleId(0);
         setCurrentItemId(0);
         setItemAlert(0);
+        setItemRack(0);
+        setItemShelf(0)
+        setItemBin('');
+        setItemArea('');
         setShowEdit(false);
         await fetchData();
     }
@@ -296,15 +304,52 @@ export const ScalesAdmin = () => {
                             <FloatingLabel controlId="floatingInput" label="Item Bin Location" className="mb-3">
                                 <Form.Control defaultValue={itemLocation} onChange={(e) => {setItemLocation(e.target.value)}} />
                             </FloatingLabel>
-                            <FloatingLabel controlId="floatingInput" label="Scale ID" className="mb-3">
-                                <Form.Control disabled defaultValue={currentScaleId} />
-                            </FloatingLabel>
-                            <FloatingLabel controlId="floatingInput" label="Item ID" className="mb-3">
-                                <Form.Control disabled defaultValue={currentItemId} />
-                            </FloatingLabel>
+                            <div className="row">
+                                <div className="col">
+                                    <FloatingLabel controlId="floatingInput" label="Scale ID" className="mb-3">
+                                        <Form.Control disabled defaultValue={currentScaleId} />
+                                    </FloatingLabel>
+                                </div>
+                                <div className="col">
+                                    <FloatingLabel controlId="floatingInput" label="Item ID" className="mb-3">
+                                        <Form.Control disabled defaultValue={currentItemId} />
+                                    </FloatingLabel>
+                                </div>
+                            </div>
                             <FloatingLabel controlId="floatingInput" label="Alert Threshold" className="mb-3">
                                 <Form.Control defaultValue={itemAlert} onChange={(e) => {setItemAlert(parseInt(e.target.value))}} />
                             </FloatingLabel>
+                            <div className="row">
+                                <div className="col">
+                                    <FloatingLabel controlId="floatingInput" label="Rack" className="mb-3">
+                                        <Form.Control defaultValue={itemRack} onChange={(e) => {setItemRack(parseInt(e.target.value))}} />
+                                    </FloatingLabel>
+                                </div>
+                                <div className="col">
+                                    <FloatingLabel controlId="floatingInput" label="Shelf" className="mb-3">
+                                        <Form.Control defaultValue={itemShelf} onChange={(e) => {setItemShelf(parseInt(e.target.value))}} />
+                                    </FloatingLabel>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col">
+                                    <FloatingLabel controlId="floatingInput" label="Bin" className="mb-3">
+                                        <Form.Control defaultValue={itemBin} onChange={(e) => {setItemBin(e.target.value)}} />
+                                    </FloatingLabel>
+                                </div>
+                                <div className="col">
+                                    <FloatingLabel controlId="floatingInput" label="Area" className="mb-3">
+                                        <Form.Control defaultValue={itemArea} as="select" name="area" onChange={(e) => {setItemArea(e.target.value)}}>
+                                            <option> </option>
+                                            <option>Laser</option>
+                                            <option>Misc</option>
+                                            <option>Paint</option>
+                                            <option>Shop</option>
+                                            <option>Weld</option>
+                                        </Form.Control>
+                                    </FloatingLabel>
+                                </div>
+                            </div>
                         </Modal.Body>
                         <Modal.Footer>
                             <Button className='modalBtnCancel' variant="secondary" onClick={handleCancelEdit}>
@@ -491,49 +536,71 @@ export const ScalesAdmin = () => {
                                                     value={itemName}
                                                     onChange={(e) => setItemName(e.target.value)}
                                                 />
-                                                <Form.Label className='mt-3'>Part Bin Location</Form.Label>
+                                                <Form.Label className='mt-3'>Part Location ID</Form.Label>
                                                 <Form.Control 
                                                     type='text'
                                                     value={itemLocation}
                                                     onChange={(e) => setItemLocation(e.target.value)}
                                                 />
-                                                <Form.Label className='mt-3'>Sample Quantity</Form.Label>
-                                                <Form.Control 
-                                                    type='text'
-                                                    value={itemSample}
-                                                    onChange={(e) => setItemSample(parseInt(e.target.value))}
-                                                />
-                                                <Form.Label className='mt-3'>Alert Threshold</Form.Label>
-                                                <Form.Control 
-                                                    type='text'
-                                                    value={itemAlert}
-                                                    onChange={(e) => setItemAlert(parseInt(e.target.value))}
-                                                />
-                                                <Form.Label className='mt-3'>Rack</Form.Label>
-                                                <Form.Control 
-                                                    type='text'
-                                                    value={itemRack}
-                                                    onChange={(e) => setItemRack(parseInt(e.target.value))}
-                                                />
-                                                <Form.Label className='mt-3'>Shelf</Form.Label>
-                                                <Form.Control 
-                                                    type='text'
-                                                    value={itemShelf}
-                                                    onChange={(e) => setItemShelf(parseInt(e.target.value))}
-                                                />
-                                                <Form.Label className='mt-3'>Bin</Form.Label>
-                                                <Form.Control 
-                                                    type='text'
-                                                    value={itemBin}
-                                                    onChange={(e) => setItemBin(e.target.value)}
-                                                />
-                                                <Form.Label className='mt-3'>Area</Form.Label>
-                                                <Form.Control 
-                                                    type='text'
-                                                    value={itemArea}
-                                                    onChange={(e) => setItemArea(e.target.value)}
-                                                />
-                                                <div className="form-check-columns">
+                                                <div className="row">
+                                                    <div className="col">
+                                                        <Form.Label className='mt-3'>Sample Quantity</Form.Label>
+                                                        <Form.Control 
+                                                            type='text'
+                                                            value={itemSample}
+                                                            onChange={(e) => setItemSample(parseInt(e.target.value))}
+                                                        />
+                                                    </div>
+                                                    <div className="col">
+                                                        <Form.Label className='mt-3'>Alert Threshold</Form.Label>
+                                                        <Form.Control 
+                                                            type='text'
+                                                            value={itemAlert}
+                                                            onChange={(e) => setItemAlert(parseInt(e.target.value))}
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="row">
+                                                    <div className="col">
+                                                        <Form.Label className='mt-3'>Rack</Form.Label>
+                                                        <Form.Control 
+                                                            type='text'
+                                                            value={itemRack}
+                                                            onChange={(e) => setItemRack(parseInt(e.target.value))}
+                                                        />
+                                                    </div>
+                                                    <div className="col">
+                                                        <Form.Label className='mt-3'>Shelf</Form.Label>
+                                                        <Form.Control 
+                                                            type='text'
+                                                            value={itemShelf}
+                                                            onChange={(e) => setItemShelf(parseInt(e.target.value))}
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="row">
+                                                    <div className="col">
+                                                        <Form.Label className='mt-3'>Bin</Form.Label>
+                                                        <Form.Control 
+                                                            type='text'
+                                                            value={itemBin}
+                                                            onChange={(e) => setItemBin(e.target.value)}
+                                                        />
+                                                    </div>
+                                                    <div className="col">
+                                                        <Form.Label className='mt-3'>Area</Form.Label>
+                                                        <Form.Control as="select" name="area" onChange={(e) => {setItemArea(e.target.value)}}>
+                                                            <option> </option>
+                                                            <option>Laser</option>
+                                                            <option>Misc</option>
+                                                            <option>Paint</option>
+                                                            <option>Shop</option>
+                                                            <option>Weld</option>
+                                                        </Form.Control>
+                                                    </div>
+                                                </div>
+                                                <Form.Label className='mt-3'>Scale Name</Form.Label>
+                                                <div className="form-check-columns-scales">
                                                     {allScales
                                                         .filter(scale => !scale.ItemPartNumber)
                                                         .map((scale, index) => (
