@@ -106,6 +106,8 @@ export const ScalesAdmin = () => {
                 channelIds: selectedCheckboxes,
             })
             setScaleName('');
+            setScaleType(0);
+            setSelectedCheckboxes([]);
             await fetchData();
         } catch (err) {
             console.error(err)
@@ -142,8 +144,9 @@ export const ScalesAdmin = () => {
     
     const handleDeleteItem = async () => {
         try {
-            await deleteItem(currentItemId)
-            await deleteMMItem(currentItemId)
+            await deleteItem(currentItemId);
+            await deleteScale(currentScaleId);
+            await deleteMMItem(currentItemId);
             setCurrentScaleName('');
             setCurrentItemName('');
             setCurrentScaleId(0);
@@ -152,7 +155,7 @@ export const ScalesAdmin = () => {
         } catch (err) {
             console.error(err);
         }
-        setShowDelete(false);
+        setShowDeleteItem(false);
     };
     
     const handleZeroScale = async (scale) => {
@@ -173,7 +176,10 @@ export const ScalesAdmin = () => {
                 PartNumber: itemName,
                 AlertThreshold: itemAlert,
             })
-            await createMMItem(radioScaleId, itemName, itemLocation, itemAlert)
+            const newScales = await getAllScales();
+            const desiredObject = newScales.find(obj => obj.ScaleId === radioScaleId);
+            const newItemId = desiredObject.ItemId;
+            await createMMItem(radioScaleId, newItemId, itemName, itemLocation, itemAlert);
             setItemName('');
             setItemLocation('');
             setItemSample(1);
@@ -257,6 +263,8 @@ export const ScalesAdmin = () => {
                         <Modal.Body className="text-center">
                             <div>Warning! Your Are About To Delete Item</div>
                             <div><b>{currentItemName}</b></div>
+                            <div>This Will Also Delete Scale</div>
+                            <div><b>{currentScaleName}</b></div>
                             <div className='mt-3'>Are you sure?</div>
                         </Modal.Body>
                         <Modal.Footer className="justify-content-center">
