@@ -32,6 +32,13 @@ export const ScalesAdmin = () => {
 
     const [cookieData, setCookieData] = useState('');
 
+    const [searchedValueScaleName, setSearchedValueScaleName] = useState('');
+    const [searchedValueItemName, setSearchedValueItemName] = useState('');
+    const [searchedValueRack, setSearchedValueRack] = useState('');
+    const [searchedValueShelf, setSearchedValueShelf] = useState('');
+    const [searchedValueArea, setSearchedValueArea] = useState('');
+    const [searchedValueLocation, setSearchedValueLocation] = useState('');
+
     const [allSensors, setAllSensors] = useState([]);
     const [allScales, setAllScales] = useState([]);
     const [combinedData, setCombinedData] = useState([]);
@@ -416,7 +423,7 @@ export const ScalesAdmin = () => {
                                     <Table striped hover>
                                         <thead>
                                             <tr>
-                                                <th className='text-center'>Scale Name</th>
+                                                <th className='text-center'><input onChange={(e) => setSearchedValueScaleName(e.target.value)} placeholder='&#xf002;  Scale Name' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                                 <th className='text-center'>Zero Weight</th>
                                                 <th className='text-center'>Connected</th>
                                                 <th className='text-center'>Zero Scale</th>
@@ -426,11 +433,17 @@ export const ScalesAdmin = () => {
                                         <tbody>
                                             {newScales &&
                                                 <tr className='divide'>
-                                                    <td className='text-center' colspan='5'>New</td>
+                                                    <td className='text-center' colSpan='5'>New</td>
                                                 </tr>
                                             }
                                             {allScales
                                                 .filter(scale => scale.ZeroWeight == 0)
+                                                .filter((row) => 
+                                                    !searchedValueScaleName || row.Name
+                                                        .toString()
+                                                        .toLowerCase()
+                                                        .includes(searchedValueScaleName.toString().toLowerCase())
+                                                )
                                                 .map((scale, index) => {
                                                     return (
                                                         <tr key={index} scale={scale}>
@@ -455,16 +468,22 @@ export const ScalesAdmin = () => {
                                             }
                                             {newScales &&
                                                 <tr>
-                                                    <td className='text-center' colspan='5'></td>
+                                                    <td className='text-center' colSpan='5'></td>
                                                 </tr>
                                             }
                                             {zeroNoItem &&
                                                 <tr className='divide'>
-                                                    <td className='text-center' colspan='5'>No Item Attached</td>
+                                                    <td className='text-center' colSpan='5'>No Item Attached</td>
                                                 </tr>
                                             }
                                             {allScales
                                                 .filter(scale => scale.ZeroWeight != 0 && !scale.ItemPartNumber)
+                                                .filter((row) => 
+                                                    !searchedValueScaleName || row.Name
+                                                        .toString()
+                                                        .toLowerCase()
+                                                        .includes(searchedValueScaleName.toString().toLowerCase())
+                                                )
                                                 .map((scale, index) => {
                                                     return (
                                                         <tr key={index} scale={scale}>
@@ -489,14 +508,20 @@ export const ScalesAdmin = () => {
                                             }
                                             {zeroNoItem &&
                                                 <tr>
-                                                    <td className='text-center' colspan='5'></td>
+                                                    <td className='text-center' colSpan='5'></td>
                                                 </tr>
                                             }
                                             <tr className='divide'>
-                                                <td className='text-center' colspan='5'>Existing</td>
+                                                <td className='text-center' colSpan='5'>Existing</td>
                                             </tr>
                                             {allScales
                                                 .filter(scale => scale.ZeroWeight != 0 && scale.ItemPartNumber)
+                                                .filter((row) => 
+                                                    !searchedValueScaleName || row.Name
+                                                        .toString()
+                                                        .toLowerCase()
+                                                        .includes(searchedValueScaleName.toString().toLowerCase())
+                                                )
                                                 .map((scale, index) => {
                                                     return (
                                                         <tr key={index} scale={scale}>
@@ -635,17 +660,17 @@ export const ScalesAdmin = () => {
                                         <thead>
                                             <tr>
                                                 <th className='text-center'>Item Name</th>
-                                                <th className='text-center'>Item Name MM</th>
+                                                <th className='text-center'><input onChange={(e) => setSearchedValueItemName(e.target.value)} placeholder='&#xf002;  Item Name' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                                 <th className='text-center'>ScaleId</th>
                                                 <th className='text-center'>ScaleId MM</th>
                                                 <th className='text-center'>ItemId</th>
                                                 <th className='text-center'>ItemId MM</th>
-                                                <th className='text-center'>Rack</th>
-                                                <th className='text-center'>Shelf</th>
+                                                <th className='text-center'><input onChange={(e) => setSearchedValueRack(e.target.value)} placeholder='&#xf002;  Rack' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                                <th className='text-center'><input onChange={(e) => setSearchedValueShelf(e.target.value)} placeholder='&#xf002;  Shelf' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                                 <th className='text-center'>Bin</th>
-                                                <th className='text-center'>Area</th>
+                                                <th className='text-center'><input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='&#xf002;  Area' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                                 <th className='text-center'>Item Bin Location</th>
-                                                <th className='text-center'>Item Bin Location MM</th>
+                                                <th className='text-center'><input onChange={(e) => setSearchedValueLocation(e.target.value)} placeholder='&#xf002;  Bin Location' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                                 <th className='text-center'>Alert Threshold</th>
                                                 <th className='text-center'>Alert Threshold MM</th>
                                                 <th className='text-center'>Delete Item</th>
@@ -654,6 +679,36 @@ export const ScalesAdmin = () => {
                                         <tbody>
                                             {combinedData
                                                 .filter(scale => scale.ItemPartNumber)
+                                                .filter((row) => 
+                                                    !searchedValueItemName || row.itemName
+                                                        .toString()
+                                                        .toLowerCase()
+                                                        .includes(searchedValueItemName.toString().toLowerCase())
+                                                )
+                                                .filter((row) => 
+                                                    !searchedValueRack || row.rack
+                                                        .toString()
+                                                        .toLowerCase()
+                                                        .includes(searchedValueRack.toString().toLowerCase())
+                                                )
+                                                .filter((row) => 
+                                                    !searchedValueShelf || row.shelf
+                                                        .toString()
+                                                        .toLowerCase()
+                                                        .includes(searchedValueShelf.toString().toLowerCase())
+                                                )
+                                                .filter((row) => 
+                                                    !searchedValueArea || row.area
+                                                        .toString()
+                                                        .toLowerCase()
+                                                        .includes(searchedValueArea.toString().toLowerCase())
+                                                )
+                                                .filter((row) => 
+                                                    !searchedValueLocation || row.itemLocation
+                                                        .toString()
+                                                        .toLowerCase()
+                                                        .includes(searchedValueLocation.toString().toLowerCase())
+                                                )
                                                 .map((scale, index) => {
                                                     return (
                                                         <tr key={index} scale={scale}>
