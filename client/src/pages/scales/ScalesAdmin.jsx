@@ -349,8 +349,11 @@ export const ScalesAdmin = () => {
                                         <Form.Control defaultValue={itemArea} as="select" name="area" onChange={(e) => {setItemArea(e.target.value)}}>
                                             <option> </option>
                                             <option>Laser</option>
+                                            <option>Material</option>
                                             <option>Misc</option>
                                             <option>Paint</option>
+                                            <option>Safety</option>
+                                            <option>Sanding</option>
                                             <option>Shop</option>
                                             <option>Weld</option>
                                         </Form.Control>
@@ -617,8 +620,11 @@ export const ScalesAdmin = () => {
                                                         <Form.Control as="select" name="area" onChange={(e) => {setItemArea(e.target.value)}}>
                                                             <option> </option>
                                                             <option>Laser</option>
+                                                            <option>Material</option>
                                                             <option>Misc</option>
                                                             <option>Paint</option>
+                                                            <option>Safety</option>
+                                                            <option>Sanding</option>
                                                             <option>Shop</option>
                                                             <option>Weld</option>
                                                         </Form.Control>
@@ -659,20 +665,20 @@ export const ScalesAdmin = () => {
                                     <Table striped hover>
                                         <thead>
                                             <tr>
-                                                <th className='text-center'>Item Name</th>
+                                                {/* <th className='text-center'>Item Name</th> */}
                                                 <th className='text-center'><input onChange={(e) => setSearchedValueItemName(e.target.value)} placeholder='&#xf002;  Item Name' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                                <th className='text-center'>ScaleId</th>
+                                                {/* <th className='text-center'>ScaleId</th>
                                                 <th className='text-center'>ScaleId MM</th>
                                                 <th className='text-center'>ItemId</th>
-                                                <th className='text-center'>ItemId MM</th>
+                                                <th className='text-center'>ItemId MM</th> */}
                                                 <th className='text-center'><input onChange={(e) => setSearchedValueRack(e.target.value)} placeholder='&#xf002;  Rack' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                                 <th className='text-center'><input onChange={(e) => setSearchedValueShelf(e.target.value)} placeholder='&#xf002;  Shelf' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                                 <th className='text-center'>Bin</th>
                                                 <th className='text-center'><input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='&#xf002;  Area' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                                <th className='text-center'>Item Bin Location</th>
+                                                {/* <th className='text-center'>Item Bin Location</th> */}
                                                 <th className='text-center'><input onChange={(e) => setSearchedValueLocation(e.target.value)} placeholder='&#xf002;  Bin Location' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                                 <th className='text-center'>Alert Threshold</th>
-                                                <th className='text-center'>Alert Threshold MM</th>
+                                                {/* <th className='text-center'>Alert Threshold MM</th> */}
                                                 <th className='text-center'>Delete Item</th>
                                             </tr>
                                         </thead>
@@ -712,19 +718,19 @@ export const ScalesAdmin = () => {
                                                 .map((scale, index) => {
                                                     return (
                                                         <tr key={index} scale={scale}>
-                                                            <td className='text-center'>{scale.ItemPartNumber}</td>
+                                                            {/* <td className='text-center'>{scale.ItemPartNumber}</td> */}
                                                             <td className='text-center' onClick={() => handleOpenItem(scale)}>{scale.itemName}</td>
-                                                            <td className='text-center'>{scale.ScaleId}</td>
+                                                            {/* <td className='text-center'>{scale.ScaleId}</td>
                                                             <td className='text-center'>{scale.scaleId}</td>
                                                             <td className='text-center'>{scale.ItemId}</td>
-                                                            <td className='text-center'>{scale.itemId}</td>
+                                                            <td className='text-center'>{scale.itemId}</td> */}
                                                             <td className='text-center'>{scale.rack}</td>
                                                             <td className='text-center'>{scale.shelf}</td>
                                                             <td className='text-center'>{scale.bin}</td>
                                                             <td className='text-center'>{scale.area}</td>
-                                                            <td className='text-center'>{scale.ItemDescription}</td>
+                                                            {/* <td className='text-center'>{scale.ItemDescription}</td> */}
                                                             <td className='text-center'>{scale.itemLocation}</td>
-                                                            <td className='text-center'>{scale.AlertThreshold}</td>
+                                                            {/* <td className='text-center'>{scale.AlertThreshold}</td> */}
                                                             <td className='text-center'>{scale.alert}</td>
                                                             <td className='text-center'>
                                                                 <Icon icon={remove} onClick={() => handleShowDeleteItem(scale)} />
