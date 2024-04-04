@@ -55,6 +55,10 @@ export const ScalesAdmin = () => {
     const [itemLocation, setItemLocation] = useState('');
     const [itemSample, setItemSample] = useState(1);
     const [itemAlert, setItemAlert] = useState(1);
+    const [itemRack, setItemRack] = useState(0);
+    const [itemShelf, setItemShelf] = useState(0);
+    const [itemBin, setItemBin] = useState('');
+    const [itemArea, setItemArea] = useState('');
     
     const [newScale, setNewScale] = useState('Create Scale');
     const [modifyScale, setModifyScale] = useState('Modify Scale');
@@ -179,12 +183,16 @@ export const ScalesAdmin = () => {
             const newScales = await getAllScales();
             const desiredObject = newScales.find(obj => obj.ScaleId === radioScaleId);
             const newItemId = desiredObject.ItemId;
-            await createMMItem(radioScaleId, newItemId, itemName, itemLocation, itemAlert);
+            await createMMItem(radioScaleId, newItemId, itemName, itemLocation, itemAlert, itemRack, itemShelf, itemBin, itemArea);
             setItemName('');
             setItemLocation('');
             setItemSample(1);
             setItemAlert(1);
             setRadioScaleId(0);
+            setItemRack(0);
+            setItemShelf(0);
+            setItemBin('');
+            setItemArea('');
             await fetchData();
         } catch (err) {
             console.error(err)
@@ -501,6 +509,30 @@ export const ScalesAdmin = () => {
                                                     value={itemAlert}
                                                     onChange={(e) => setItemAlert(parseInt(e.target.value))}
                                                 />
+                                                <Form.Label className='mt-3'>Rack</Form.Label>
+                                                <Form.Control 
+                                                    type='text'
+                                                    value={itemRack}
+                                                    onChange={(e) => setItemRack(parseInt(e.target.value))}
+                                                />
+                                                <Form.Label className='mt-3'>Shelf</Form.Label>
+                                                <Form.Control 
+                                                    type='text'
+                                                    value={itemShelf}
+                                                    onChange={(e) => setItemShelf(parseInt(e.target.value))}
+                                                />
+                                                <Form.Label className='mt-3'>Bin</Form.Label>
+                                                <Form.Control 
+                                                    type='text'
+                                                    value={itemBin}
+                                                    onChange={(e) => setItemBin(e.target.value)}
+                                                />
+                                                <Form.Label className='mt-3'>Area</Form.Label>
+                                                <Form.Control 
+                                                    type='text'
+                                                    value={itemArea}
+                                                    onChange={(e) => setItemArea(e.target.value)}
+                                                />
                                                 <div className="form-check-columns">
                                                     {allScales
                                                         .filter(scale => !scale.ItemPartNumber)
@@ -541,6 +573,10 @@ export const ScalesAdmin = () => {
                                                 <th className='text-center'>ScaleId MM</th>
                                                 <th className='text-center'>ItemId</th>
                                                 <th className='text-center'>ItemId MM</th>
+                                                <th className='text-center'>Rack</th>
+                                                <th className='text-center'>Shelf</th>
+                                                <th className='text-center'>Bin</th>
+                                                <th className='text-center'>Area</th>
                                                 <th className='text-center'>Item Bin Location</th>
                                                 <th className='text-center'>Item Bin Location MM</th>
                                                 <th className='text-center'>Alert Threshold</th>
@@ -560,6 +596,10 @@ export const ScalesAdmin = () => {
                                                             <td className='text-center'>{scale.scaleId}</td>
                                                             <td className='text-center'>{scale.ItemId}</td>
                                                             <td className='text-center'>{scale.itemId}</td>
+                                                            <td className='text-center'>{scale.rack}</td>
+                                                            <td className='text-center'>{scale.shelf}</td>
+                                                            <td className='text-center'>{scale.bin}</td>
+                                                            <td className='text-center'>{scale.area}</td>
                                                             <td className='text-center'>{scale.ItemDescription}</td>
                                                             <td className='text-center'>{scale.itemLocation}</td>
                                                             <td className='text-center'>{scale.AlertThreshold}</td>

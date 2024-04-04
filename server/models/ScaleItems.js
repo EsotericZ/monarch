@@ -27,6 +27,18 @@ ScaleItems.init(
         alert: {
             type: DataTypes.INTEGER,
         },
+        rack: {
+            type: DataTypes.INTEGER,
+        },
+        shelf: {
+            type: DataTypes.INTEGER,
+        },
+        bin: {
+            type: DataTypes.STRING,
+        },
+        area: {
+            type: DataTypes.STRING,
+        },
     },
     {
         sequelize,
