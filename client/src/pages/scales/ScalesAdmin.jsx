@@ -188,7 +188,8 @@ export const ScalesAdmin = () => {
     const handleOpenItem = (scale) => {
         setItemName(scale.itemName);
         setItemLocation(scale.itemLocation);
-        setCurrentScaleId(scale.scaleId);
+        setCurrentScaleId(scale.ScaleId);
+        setCurrentItemId(scale.ItemId);
         setItemAlert(parseInt(scale.alert));
         setShowEdit(true);
     };
@@ -199,13 +200,14 @@ export const ScalesAdmin = () => {
     
     const handleUpdateItem = async () => {
         try {
-            await updateItem(itemName, itemLocation, currentScaleId, itemAlert);
+            await updateItem(itemName, itemLocation, currentItemId, itemAlert);
         } catch (err) {
             console.error(err)
         }
         setItemName('');
         setItemLocation('');
         setCurrentScaleId(0);
+        setCurrentItemId(0);
         setItemAlert(0);
         setShowEdit(false);
         await fetchData();
@@ -280,6 +282,9 @@ export const ScalesAdmin = () => {
                             </FloatingLabel>
                             <FloatingLabel controlId="floatingInput" label="Scale ID" className="mb-3">
                                 <Form.Control disabled defaultValue={currentScaleId} />
+                            </FloatingLabel>
+                            <FloatingLabel controlId="floatingInput" label="Item ID" className="mb-3">
+                                <Form.Control disabled defaultValue={currentItemId} />
                             </FloatingLabel>
                             <FloatingLabel controlId="floatingInput" label="Alert Threshold" className="mb-3">
                                 <Form.Control defaultValue={itemAlert} onChange={(e) => {setItemAlert(parseInt(e.target.value))}} />

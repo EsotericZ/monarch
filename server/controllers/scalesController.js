@@ -62,7 +62,7 @@ async function createMMItem(req, res) {
 async function updateItem(req, res) {
     let itemName = req.body.itemName
     let itemLocation = req.body.itemLocation
-    let scaleId = req.body.currentScaleId
+    let itemId = req.body.currentItemId
     let alert = req.body.itemAlert
     
     await ScaleItems.update(
@@ -71,7 +71,7 @@ async function updateItem(req, res) {
             itemLocation,
             alert,
         },
-        { where: { scaleId: scaleId }}
+        { where: { itemId: itemId }}
     ).then((result) => {
         return res.status(200).send({
             data: result
