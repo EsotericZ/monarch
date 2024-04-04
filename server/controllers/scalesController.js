@@ -83,10 +83,28 @@ async function updateItem(req, res) {
     })
 }
 
+async function deleteMMItem(req, res) {
+    let itemId = req.body.itemId;
+
+    await ScaleItems.destroy({
+        where: { itemId: itemId }
+    })
+    .then((result) => {
+        return res.status(200).send({
+            data: result
+        })
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
+
 module.exports = {
     getAllPorts,
     getMMItems,
     createPort,
     createMMItem,
     updateItem,
+    deleteMMItem,
 }

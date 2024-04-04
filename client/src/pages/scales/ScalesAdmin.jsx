@@ -10,6 +10,7 @@ import zeroScale from '../../services/scales/zeroScale';
 import createItem from '../../services/scales/createItem';
 import createMMItem from '../../services/scales/createMMItem';
 import deleteItem from '../../services/scales/deleteItem';
+import deleteMMItem from '../../services/scales/deleteMMItem';
 import updateItem from '../../services/scales/updateItem';
 import './scales.css'
 
@@ -38,6 +39,7 @@ export const ScalesAdmin = () => {
     const [currentScaleName, setCurrentScaleName] = useState('');
     const [currentItemName, setCurrentItemName] = useState('');
     const [currentScaleId, setCurrentScaleId] = useState(0);
+    const [currentItemId, setCurrentItemId] = useState(0);
     const [showDelete, setShowDelete] = useState(false);
     const [showEdit, setShowEdit] = useState(false);
     const [showDeleteItem, setShowDeleteItem] = useState(false);
@@ -122,6 +124,7 @@ export const ScalesAdmin = () => {
         setCurrentScaleName(scale.Name)
         setCurrentItemName(scale.ItemPartNumber)
         setCurrentScaleId(scale.ScaleId)
+        setCurrentItemId(scale.ItemId)
         setShowDeleteItem(true);
     };
     
@@ -139,10 +142,12 @@ export const ScalesAdmin = () => {
     
     const handleDeleteItem = async () => {
         try {
-            await deleteItem(currentScaleId)
+            await deleteItem(currentItemId)
+            await deleteMMItem(currentItemId)
             setCurrentScaleName('');
             setCurrentItemName('');
             setCurrentScaleId(0);
+            setCurrentItemId(0);
             await fetchData();
         } catch (err) {
             console.error(err);
@@ -250,8 +255,6 @@ export const ScalesAdmin = () => {
                         <Modal.Body className="text-center">
                             <div>Warning! Your Are About To Delete Item</div>
                             <div><b>{currentItemName}</b></div>
-                            <div className='mt-3'>This Will Also Delete Scale</div>
-                            <div><b>{currentScaleName}</b></div>
                             <div className='mt-3'>Are you sure?</div>
                         </Modal.Body>
                         <Modal.Footer className="justify-content-center">
@@ -523,6 +526,8 @@ export const ScalesAdmin = () => {
                                                 <th className='text-center'>Item Name MM</th>
                                                 <th className='text-center'>ScaleId</th>
                                                 <th className='text-center'>ScaleId MM</th>
+                                                <th className='text-center'>ItemId</th>
+                                                <th className='text-center'>ItemId MM</th>
                                                 <th className='text-center'>Item Bin Location</th>
                                                 <th className='text-center'>Item Bin Location MM</th>
                                                 <th className='text-center'>Alert Threshold</th>
@@ -540,6 +545,8 @@ export const ScalesAdmin = () => {
                                                             <td className='text-center' onClick={() => handleOpenItem(scale)}>{scale.itemName}</td>
                                                             <td className='text-center'>{scale.ScaleId}</td>
                                                             <td className='text-center'>{scale.scaleId}</td>
+                                                            <td className='text-center'>{scale.ItemId}</td>
+                                                            <td className='text-center'>{scale.itemId}</td>
                                                             <td className='text-center'>{scale.ItemDescription}</td>
                                                             <td className='text-center'>{scale.itemLocation}</td>
                                                             <td className='text-center'>{scale.AlertThreshold}</td>

@@ -8,5 +8,6 @@ router.get('/getMMItems', scalesController.getMMItems);
 router.post('/createPort', scalesController.createPort);
 router.post('/createMMItem', scalesController.createMMItem);
 router.post('/updateItem', scalesController.updateItem);
+router.post('/deleteMMItem', scalesController.deleteMMItem);
 
 module.exports = router;

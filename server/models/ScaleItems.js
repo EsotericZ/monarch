@@ -14,6 +14,10 @@ ScaleItems.init(
             type: DataTypes.INTEGER,
             unique: true,
         },
+        itemId: {
+            type: DataTypes.INTEGER,
+            unique: true,
+        },
         itemName: {
             type: DataTypes.STRING,
         },
