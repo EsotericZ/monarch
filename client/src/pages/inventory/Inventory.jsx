@@ -79,14 +79,13 @@ export const Inventory = () => {
                                 <Table striped hover>
                                     <thead>
                                         <tr>
-                                            {/* <th className='text-center'>Scale Name</th> */}
-                                            <th className='text-center'><input onChange={(e) => setSearchedValueName(e.target.value)} placeholder='&#xf002;  E2 Part No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center'>Qty</th>
-                                            <th className='text-center'>Alert</th>
-                                            <th className='text-center'><input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='&#xf002;  Area' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center'><input onChange={(e) => setSearchedValueRack(e.target.value)} placeholder='&#xf002;  Rack' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center'><input onChange={(e) => setSearchedValueShelf(e.target.value)} placeholder='&#xf002;  Shelf' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center'>Bin</th>
+                                            <th className='text-center' width='30%'><input onChange={(e) => setSearchedValueName(e.target.value)} placeholder='&#xf002;  E2 Part No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='10%'>Qty</th>
+                                            <th className='text-center' width='10%'>Alert</th>
+                                            <th className='text-center' width='20%'><input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='&#xf002;  Area' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueRack(e.target.value)} placeholder='&#xf002;  Rack' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueShelf(e.target.value)} placeholder='&#xf002;  Shelf' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='10%'>Bin</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -119,7 +118,6 @@ export const Inventory = () => {
                                                 const rowClass = (scale.Quantity <= scale.alert) ? 'expedite-row' : '';
                                                 return (
                                                     <tr key={index} scale={scale} className={rowClass}>
-                                                        {/* <td className='text-center jobBold'>{scale.Name}</td> */}
                                                         <CopyToClipboard text={scale.itemName} onCopy={() => { setShowToast(true); setPartCopy(`${scale.itemName}`) }}>
                                                             <td className='text-center'>{scale.itemName}</td>
                                                         </CopyToClipboard>
