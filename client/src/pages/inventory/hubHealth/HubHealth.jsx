@@ -162,7 +162,7 @@ export const HubHealth = () => {
                             </tbody>
                         </Table>
                     <button className='mmBtn mt-2' onClick={handleOpenAdd}>Add Hub</button>
-                    <Link to='/scalesadmin'>
+                    <Link to='/scales'>
                         <button className='invBtn'>Scales</button>
                     </Link>
                     </div>
