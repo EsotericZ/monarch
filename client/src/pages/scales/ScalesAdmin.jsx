@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Button, FloatingLabel, Form, Modal, Tab, Tabs, Table } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import { Button, Card, FloatingLabel, Form, ListGroup, Modal, ProgressBar, Tab, Tabs, Table } from 'react-bootstrap';
 
+import getAllChannels from "../../services/scales/getAllChannels";
+import getAllPorts from "../../services/scales/getAllPorts";
 import getAllSensors from "../../services/scales/getAllSensors";
 import getAllScales from '../../services/scales/getAllScales';
 import getMMItems from '../../services/scales/getMMItems';
@@ -31,6 +34,14 @@ export const ScalesAdmin = () => {
     const cookies = new Cookies();
 
     const [cookieData, setCookieData] = useState('');
+
+    const [totalHubs, setTotalHubs] =useState(0);
+    const [activeHubs, setActiveHubs] =useState(0);
+    const [inactiveHubs, setInactiveHubs] =useState(0);
+    const [percentActive, setPercentActive] = useState(0);
+    const [percentInactive, setPercentInactive] = useState(0);
+    const [loadingChannels, setLoadingChannles] = useState(true);
+    const [count, setCount] = useState(0);
 
     const [searchedValueScaleName, setSearchedValueScaleName] = useState('');
     const [searchedValueItemName, setSearchedValueItemName] = useState('');
@@ -67,6 +78,7 @@ export const ScalesAdmin = () => {
     const [itemBin, setItemBin] = useState('');
     const [itemArea, setItemArea] = useState('');
     
+    const [portHealth, setPortHealth] = useState('Port Health');
     const [newScale, setNewScale] = useState('Create Scale');
     const [modifyScale, setModifyScale] = useState('Modify Scale');
     const [newItem, setNewItem] = useState('Create Item');
@@ -99,6 +111,26 @@ export const ScalesAdmin = () => {
             console.log(err)
         }
     };
+
+    const fetchPortHealthData = async () => {
+        try {
+            const channels = await getAllChannels();
+            let channelArray = channels.split("\n")
+            let newChannelArray = [...new Set(channelArray.map((channel) => channel.slice(0,6)))]
+            setActiveHubs(newChannelArray.length);
+
+            const ports = await getAllPorts();
+            setTotalHubs(ports.data.length)
+            setInactiveHubs(ports.data.length - newChannelArray.length);
+
+            setPercentActive((newChannelArray.length/ports.data.length)*100);
+            setPercentInactive(100 - (newChannelArray.length/ports.data.length)*100);
+                    
+            setLoadingChannles(false)
+        } catch (err) {
+            console.log(err)
+        }
+    }
     
     const handleCheckboxChange = (channelId) => {
         const isChecked = selectedCheckboxes.includes(channelId);
@@ -245,6 +277,10 @@ export const ScalesAdmin = () => {
     useEffect(() => {
         fetchData();
     }, [])
+
+    useEffect(() => {
+        fetchPortHealthData();
+    }, []);
     
     return (
         <div style={{ display: 'flex' }}>
@@ -372,11 +408,38 @@ export const ScalesAdmin = () => {
                     </Modal>
                     
                     <Tabs
-                        defaultActiveKey="newScale"
+                        defaultActiveKey="portHealth"
                         id="justify-tab-example"
                         className='mb-3'
                         justify
                     >
+                        <Tab eventKey="portHealth" title={portHealth}>
+                            <Card style={{ width: '30%' }} className="cards">
+                                <Card.Body>
+                                    <Card.Title className="text-center">Hub Health</Card.Title>
+                                    <Card.Text className="text-center">Total Hubs: {totalHubs}</Card.Text>
+                                    <ProgressBar className="mb-3">
+                                        <ProgressBar variant='success' now={percentActive} />
+                                        <ProgressBar variant='danger' now={percentInactive} />
+                                    </ProgressBar>
+                                    <ListGroup>
+                                        <ListGroup.Item>{activeHubs} Active</ListGroup.Item>
+                                        <ListGroup.Item>
+                                            <div className="inactive">
+                                                {inactiveHubs} Down
+                                            </div>
+                                            <div className="inactive inicon">
+                                                {inactiveHubs ? <Icon align={'right'} icon={warning} size={18} style={{ color: 'red' }} /> : ''}
+                                            </div>
+                                        </ListGroup.Item>
+                                    </ListGroup>
+                                    <Link to='/hubHealth'>
+                                        <button className='invBtn'>Manage</button>
+                                    </Link>
+                                </Card.Body>
+                            </Card>
+                        </Tab>
+                        
                         <Tab eventKey="newScale" title={newScale}>
                             <div className='mx-3 centered-container'>
                                 <Form>
@@ -665,20 +728,13 @@ export const ScalesAdmin = () => {
                                     <Table striped hover>
                                         <thead>
                                             <tr>
-                                                {/* <th className='text-center'>Item Name</th> */}
                                                 <th className='text-center'><input onChange={(e) => setSearchedValueItemName(e.target.value)} placeholder='&#xf002;  Item Name' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                                {/* <th className='text-center'>ScaleId</th>
-                                                <th className='text-center'>ScaleId MM</th>
-                                                <th className='text-center'>ItemId</th>
-                                                <th className='text-center'>ItemId MM</th> */}
                                                 <th className='text-center'><input onChange={(e) => setSearchedValueRack(e.target.value)} placeholder='&#xf002;  Rack' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                                 <th className='text-center'><input onChange={(e) => setSearchedValueShelf(e.target.value)} placeholder='&#xf002;  Shelf' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                                 <th className='text-center'>Bin</th>
                                                 <th className='text-center'><input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='&#xf002;  Area' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                                {/* <th className='text-center'>Item Bin Location</th> */}
                                                 <th className='text-center'><input onChange={(e) => setSearchedValueLocation(e.target.value)} placeholder='&#xf002;  Bin Location' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                                 <th className='text-center'>Alert Threshold</th>
-                                                {/* <th className='text-center'>Alert Threshold MM</th> */}
                                                 <th className='text-center'>Delete Item</th>
                                             </tr>
                                         </thead>
@@ -718,19 +774,12 @@ export const ScalesAdmin = () => {
                                                 .map((scale, index) => {
                                                     return (
                                                         <tr key={index} scale={scale}>
-                                                            {/* <td className='text-center'>{scale.ItemPartNumber}</td> */}
                                                             <td className='text-center' onClick={() => handleOpenItem(scale)}>{scale.itemName}</td>
-                                                            {/* <td className='text-center'>{scale.ScaleId}</td>
-                                                            <td className='text-center'>{scale.scaleId}</td>
-                                                            <td className='text-center'>{scale.ItemId}</td>
-                                                            <td className='text-center'>{scale.itemId}</td> */}
                                                             <td className='text-center'>{scale.rack}</td>
                                                             <td className='text-center'>{scale.shelf}</td>
                                                             <td className='text-center'>{scale.bin}</td>
                                                             <td className='text-center'>{scale.area}</td>
-                                                            {/* <td className='text-center'>{scale.ItemDescription}</td> */}
                                                             <td className='text-center'>{scale.itemLocation}</td>
-                                                            {/* <td className='text-center'>{scale.AlertThreshold}</td> */}
                                                             <td className='text-center'>{scale.alert}</td>
                                                             <td className='text-center'>
                                                                 <Icon icon={remove} onClick={() => handleShowDeleteItem(scale)} />

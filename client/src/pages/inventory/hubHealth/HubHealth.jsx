@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from 'react-router-dom';
 import { Button, FloatingLabel, Form, Modal, Table } from 'react-bootstrap';
 import getAllChannels from "../../../services/scales/getAllChannels";
 import getAllPorts from "../../../services/scales/getAllPorts";
@@ -160,7 +161,10 @@ export const HubHealth = () => {
                                 }
                             </tbody>
                         </Table>
-                    <button className='mmBtn' onClick={handleOpenAdd}>Add Hub</button>
+                    <button className='mmBtn mt-2' onClick={handleOpenAdd}>Add Hub</button>
+                    <Link to='/scalesadmin'>
+                        <button className='invBtn'>Scales</button>
+                    </Link>
                     </div>
                 </div>
             }

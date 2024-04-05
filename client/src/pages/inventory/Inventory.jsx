@@ -1,15 +1,14 @@
-import { useEffect, useState } from "react";
-import { Link } from 'react-router-dom';
-import { Button, Card, Dropdown, FloatingLabel, Form, ListGroup, Modal, ProgressBar, Tab, Tabs, Table } from 'react-bootstrap';
-// import getAllScales from "../../services/scales/getAllScales";
-import getAllChannels from "../../services/scales/getAllChannels";
-import getAllPorts from "../../services/scales/getAllPorts";
+import { useEffect, useState } from 'react';
+import { Button, Tab, Tabs, Table, Toast, ToastContainer } from 'react-bootstrap';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import getAllScales from "../../services/scales/getAllScales";
+
+import { Icon } from 'react-icons-kit';
+import { refresh } from 'react-icons-kit/fa/refresh';
 
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
-
-import { Icon } from 'react-icons-kit';
-import {warning} from 'react-icons-kit/fa/warning'
+import PuffLoader from "react-spinners/PuffLoader";
 
 import { Sidebar } from '../sidebar/Sidebar';
 import './inventory.css';
@@ -17,32 +16,23 @@ import './inventory.css';
 export const Inventory = () => {
     const cookies = new Cookies();
 
+    const [allScales, setAllScales] = useState([]);
     const [cookieData, setCookieData] = useState('');
-    const [loggedIn, setLoggedIn] = useState(false);
 
-    const [totalHubs, setTotalHubs] =useState(0);
-    const [activeHubs, setActiveHubs] =useState(0);
-    const [inactiveHubs, setInactiveHubs] =useState(0);
-    const [percentActive, setPercentActive] = useState(0);
-    const [percentInactive, setPercentInactive] = useState(0);
-    const [loadingChannels, setLoadingChannles] = useState(true);
-    const [count, setCount] = useState(0);
+    const [searchedValuePartNo, setSearchedValuePartNo] = useState('');
+    const [searchedDescription, setSearchedDescription] = useState('');
+    const [searchedValueLocation, setSearchedValueLocation] = useState('');
+    const [showToast, setShowToast] = useState(false);
+    const [partCopy, setPartCopy] = useState('None');
+
+    const [allItems, setAllItems] = useState('All Items');
+    const [loading, setLoading] = useState(true);
 
     const fetchData = async () => {
         try {
-            const channels = await getAllChannels();
-            let channelArray = channels.split("\n")
-            let newChannelArray = [...new Set(channelArray.map((channel) => channel.slice(0,6)))]
-            setActiveHubs(newChannelArray.length);
-
-            const ports = await getAllPorts();
-            setTotalHubs(ports.data.length)
-            setInactiveHubs(ports.data.length - newChannelArray.length);
-
-            setPercentActive((newChannelArray.length/ports.data.length)*100);
-            setPercentInactive(100 - (newChannelArray.length/ports.data.length)*100);
-                    
-            setLoadingChannles(false)
+            const scales = await getAllScales();
+            setAllScales(scales)
+            setLoading(false)
         } catch (err) {
             console.log(err)
         }
@@ -50,59 +40,93 @@ export const Inventory = () => {
 
     useEffect(() => {
         fetchData();
-        try {
-            setCookieData(jwt_decode(cookies.get('jwt')));
-            fetchData()
-            setLoggedIn(true)
-        } catch {
-            setCookieData('');
-        }
-    }, [loggedIn]);
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setCount(count + 1);
-            fetchData();
-        }, 60000);
-
-        return () => clearInterval(interval);
-    }, [count])
+    }, [])
 
     return (
         <div style={{ display: 'flex' }}>
             <Sidebar />
-            {loadingChannels ? 
-                <p>Loading</p>
-                :
+            {loading ?
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
-                    <h1 className="text-center m-3">Inventory Managment</h1>
-
-                    <div>
-                        <Card style={{ width: '30%' }} className="cards">
-                            <Card.Body>
-                                <Card.Title className="text-center">Hub Health</Card.Title>
-                                <Card.Text className="text-center">Total Hubs: {totalHubs}</Card.Text>
-                                <ProgressBar className="mb-3">
-                                    <ProgressBar variant='success' now={percentActive} />
-                                    <ProgressBar variant='danger' now={percentInactive} />
-                                </ProgressBar>
-                                <ListGroup>
-                                    <ListGroup.Item>{activeHubs} Active</ListGroup.Item>
-                                    <ListGroup.Item>
-                                        <div className="inactive">
-                                            {inactiveHubs} Down
-                                        </div>
-                                        <div className="inactive inicon">
-                                            {inactiveHubs ? <Icon align={'right'} icon={warning} size={18} style={{ color: 'red' }} /> : ''}
-                                        </div>
-                                    </ListGroup.Item>
-                                </ListGroup>
-                                <Link to='/hubHealth'>
-                                    <button className='invBtn'>Manage</button>
-                                </Link>
-                            </Card.Body>
-                        </Card>
+                    <h1 className='text-center m-3'>Inventory</h1>
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '100px' }}>
+                        <PuffLoader color="red" />
                     </div>
+                </div>
+            :
+                <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
+                    <h1 className='text-center m-3'>Inventory</h1>
+                    <Tabs
+                        defaultActiveKey="allItems"
+                        id="justify-tab-example"
+                        className='mb-3'
+                        justify
+                    >
+                        <Tab eventKey="allItems" title={allItems}>
+                            <div className='mx-3'>
+                                <Table striped hover>
+                                    <thead>
+                                        <tr>
+                                            <th className='text-center' width='5%'>Scale Name</th>
+                                            <th className='text-center' width='7%'><input onChange={(e) => setSearchedValuePartNo(e.target.value)} placeholder='&#xf002;  E2 Part No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            {/* <th className='text-center' width='7%'><input onChange={(e) => setSearchedDescription(e.target.value)} placeholder='&#xf002;  Description' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th> */}
+                                            <th className='text-center' width='5%'>Description</th>
+                                            <th className='text-center' width='5%'>Qty</th>
+                                            <th className='text-center' width='5%'>Alert</th>
+                                            <th className='text-center' width='7%'><input onChange={(e) => setSearchedValueLocation(e.target.value)} placeholder='&#xf002;  Location' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {allScales
+                                            .filter((row) => 
+                                                !searchedValuePartNo || row.ItemPartNumber
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValuePartNo.toString().toLowerCase())
+                                            )
+                                            // .filter((row) => 
+                                            //     !searchedDescription || row.PartNo
+                                            //         .toString()
+                                            //         .toLowerCase()
+                                            //         .includes(searchedDescription.toString().toLowerCase())
+                                            // )
+                                            .filter((row) => 
+                                                !searchedValueLocation || row.ItemDescription
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueLocation.toString().toLowerCase())
+                                            )
+                                            .map((scale, index) => {
+                                                const rowClass = (scale.Quantity <= scale.AlertThreshold) ? 'expedite-row' : '';
+                                                return (
+                                                    <tr key={index} scale={scale} className={rowClass}>
+                                                        <td className='text-center jobBold'>{scale.Name}</td>
+                                                        <CopyToClipboard text={scale.ItemPartNumber} onCopy={() => { setShowToast(true); setPartCopy(`${scale.ItemPartNumber}`) }}>
+                                                            <td className='text-center'>{scale.ItemPartNumber}</td>
+                                                        </CopyToClipboard>
+                                                        <td className='text-center'>-</td>
+                                                        <td className='text-center'>{scale.Quantity}</td>
+                                                        <td className='text-center'>{scale.AlertThreshold}</td>
+                                                        <td className='text-center'>{scale.ItemDescription}</td>
+                                                    </tr>
+                                                )
+                                            })
+                                        }
+                                    </tbody>
+                                </Table>
+                                <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
+                                    <Icon size={24} icon={refresh}/>
+                                </Button>
+                                <ToastContainer className="toastCopy" style={{ zIndex: 1 }}>
+                                    <Toast bg='success' onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide animation>
+                                        <Toast.Body>
+                                            <strong className="mx-auto me-auto">{partCopy} Copied To Clipboard </strong>
+                                        </Toast.Body>
+                                    </Toast>
+                                </ToastContainer>
+                            </div>
+                        </Tab>
+
+                    </Tabs>
                 </div>
             }
         </div>
