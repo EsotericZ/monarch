@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Button, Tab, Tabs, Table, Toast, ToastContainer } from 'react-bootstrap';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+
 import getAllScales from "../../services/scales/getAllScales";
+import getMMItems from '../../services/scales/getMMItems';
 
 import { Icon } from 'react-icons-kit';
 import { refresh } from 'react-icons-kit/fa/refresh';
@@ -17,11 +19,14 @@ export const Inventory = () => {
     const cookies = new Cookies();
 
     const [allScales, setAllScales] = useState([]);
+    const [combinedData, setCombinedData] = useState([]);
     const [cookieData, setCookieData] = useState('');
 
-    const [searchedValuePartNo, setSearchedValuePartNo] = useState('');
-    const [searchedDescription, setSearchedDescription] = useState('');
-    const [searchedValueLocation, setSearchedValueLocation] = useState('');
+    const [searchedValueName, setSearchedValueName] = useState('');
+    const [searchedValueArea, setSearchedValueArea] = useState('');
+    const [searchedValueRack, setSearchedValueRack] = useState('');
+    const [searchedValueShelf, setSearchedValueShelf] = useState('');
+
     const [showToast, setShowToast] = useState(false);
     const [partCopy, setPartCopy] = useState('None');
 
@@ -30,8 +35,16 @@ export const Inventory = () => {
 
     const fetchData = async () => {
         try {
-            const scales = await getAllScales();
-            setAllScales(scales)
+            const [scales, mmItems] = await Promise.all([getAllScales(), getMMItems()]);
+            setAllScales(scales);
+
+            const combinedData = scales.map(scale => {
+                const matchingMMItem = mmItems.data.find(item => item.scaleId === scale.ScaleId);
+                return { ...scale, ...matchingMMItem };
+            });
+            
+            setCombinedData(combinedData);
+
             setLoading(false)
         } catch (err) {
             console.log(err)
@@ -66,47 +79,56 @@ export const Inventory = () => {
                                 <Table striped hover>
                                     <thead>
                                         <tr>
-                                            <th className='text-center' width='5%'>Scale Name</th>
-                                            <th className='text-center' width='7%'><input onChange={(e) => setSearchedValuePartNo(e.target.value)} placeholder='&#xf002;  E2 Part No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            {/* <th className='text-center' width='7%'><input onChange={(e) => setSearchedDescription(e.target.value)} placeholder='&#xf002;  Description' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th> */}
-                                            <th className='text-center' width='5%'>Description</th>
-                                            <th className='text-center' width='5%'>Qty</th>
-                                            <th className='text-center' width='5%'>Alert</th>
-                                            <th className='text-center' width='7%'><input onChange={(e) => setSearchedValueLocation(e.target.value)} placeholder='&#xf002;  Location' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            {/* <th className='text-center'>Scale Name</th> */}
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueName(e.target.value)} placeholder='&#xf002;  E2 Part No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'>Qty</th>
+                                            <th className='text-center'>Alert</th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='&#xf002;  Area' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueRack(e.target.value)} placeholder='&#xf002;  Rack' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'><input onChange={(e) => setSearchedValueShelf(e.target.value)} placeholder='&#xf002;  Shelf' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center'>Bin</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {allScales
+                                        {combinedData
                                             .filter((row) => 
-                                                !searchedValuePartNo || row.ItemPartNumber
+                                                !searchedValueName || row.itemName
                                                     .toString()
                                                     .toLowerCase()
-                                                    .includes(searchedValuePartNo.toString().toLowerCase())
+                                                    .includes(searchedValueName.toString().toLowerCase())
                                             )
-                                            // .filter((row) => 
-                                            //     !searchedDescription || row.PartNo
-                                            //         .toString()
-                                            //         .toLowerCase()
-                                            //         .includes(searchedDescription.toString().toLowerCase())
-                                            // )
                                             .filter((row) => 
-                                                !searchedValueLocation || row.ItemDescription
+                                                !searchedValueArea || row.area
                                                     .toString()
                                                     .toLowerCase()
-                                                    .includes(searchedValueLocation.toString().toLowerCase())
+                                                    .includes(searchedValueArea.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueRack || row.rack
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueRack.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueShelf || row.shelf
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueShelf.toString().toLowerCase())
                                             )
                                             .map((scale, index) => {
-                                                const rowClass = (scale.Quantity <= scale.AlertThreshold) ? 'expedite-row' : '';
+                                                const rowClass = (scale.Quantity <= scale.alert) ? 'expedite-row' : '';
                                                 return (
                                                     <tr key={index} scale={scale} className={rowClass}>
-                                                        <td className='text-center jobBold'>{scale.Name}</td>
-                                                        <CopyToClipboard text={scale.ItemPartNumber} onCopy={() => { setShowToast(true); setPartCopy(`${scale.ItemPartNumber}`) }}>
-                                                            <td className='text-center'>{scale.ItemPartNumber}</td>
+                                                        {/* <td className='text-center jobBold'>{scale.Name}</td> */}
+                                                        <CopyToClipboard text={scale.itemName} onCopy={() => { setShowToast(true); setPartCopy(`${scale.itemName}`) }}>
+                                                            <td className='text-center'>{scale.itemName}</td>
                                                         </CopyToClipboard>
-                                                        <td className='text-center'>-</td>
                                                         <td className='text-center'>{scale.Quantity}</td>
-                                                        <td className='text-center'>{scale.AlertThreshold}</td>
-                                                        <td className='text-center'>{scale.ItemDescription}</td>
+                                                        <td className='text-center'>{scale.alert}</td>
+                                                        <td className='text-center'>{scale.area}</td>
+                                                        <td className='text-center'>{scale.rack}</td>
+                                                        <td className='text-center'>{scale.shelf}</td>
+                                                        <td className='text-center'>{scale.bin}</td>
                                                     </tr>
                                                 )
                                             })
