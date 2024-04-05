@@ -4,6 +4,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import getAllScales from "../../services/scales/getAllScales";
 import getMMItems from '../../services/scales/getMMItems';
+import getScaleLogs from '../../services/scales/getScaleLogs';
 
 import { Icon } from 'react-icons-kit';
 import { refresh } from 'react-icons-kit/fa/refresh';
@@ -35,13 +36,23 @@ export const Inventory = () => {
 
     const fetchData = async () => {
         try {
-            const [scales, mmItems] = await Promise.all([getAllScales(), getMMItems()]);
+            const [scales, mmItems, logs] = await Promise.all([getAllScales(), getMMItems(), getScaleLogs()]);
             setAllScales(scales);
+
+            console.log(mmItems.data)
+            console.log(logs)
 
             const combinedData = scales.map(scale => {
                 const matchingMMItem = mmItems.data.find(item => item.scaleId === scale.ScaleId);
                 return { ...scale, ...matchingMMItem };
             });
+
+            const combinedLogs = logs.map(scale => {
+                const matchingItem = mmItems.data.find(item => item.itemLocation === scale.ItemName);
+                return { ...scale, ...matchingItem };
+            });
+
+            console.log(combinedLogs)
             
             setCombinedData(combinedData);
 
