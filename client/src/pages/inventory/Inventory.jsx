@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button, Tab, Tabs, Table, Toast, ToastContainer } from 'react-bootstrap';
+import { format, parseISO } from 'date-fns';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import getAllScales from "../../services/scales/getAllScales";
@@ -21,40 +22,39 @@ export const Inventory = () => {
 
     const [allScales, setAllScales] = useState([]);
     const [combinedData, setCombinedData] = useState([]);
+    const [logData, setLogData] = useState([]);
     const [cookieData, setCookieData] = useState('');
 
     const [searchedValueName, setSearchedValueName] = useState('');
     const [searchedValueArea, setSearchedValueArea] = useState('');
     const [searchedValueRack, setSearchedValueRack] = useState('');
     const [searchedValueShelf, setSearchedValueShelf] = useState('');
+    const [searchedValueEmployee, setSearchedValueEmployee] = useState('');
 
     const [showToast, setShowToast] = useState(false);
     const [partCopy, setPartCopy] = useState('None');
 
     const [allItems, setAllItems] = useState('All Items');
+    const [logs, setLogs] = useState('Logs');
     const [loading, setLoading] = useState(true);
 
     const fetchData = async () => {
         try {
-            const [scales, mmItems, logs] = await Promise.all([getAllScales(), getMMItems(), getScaleLogs()]);
+            const [scales, mmItems, log] = await Promise.all([getAllScales(), getMMItems(), getScaleLogs()]);
             setAllScales(scales);
-
-            console.log(mmItems.data)
-            console.log(logs)
 
             const combinedData = scales.map(scale => {
                 const matchingMMItem = mmItems.data.find(item => item.scaleId === scale.ScaleId);
                 return { ...scale, ...matchingMMItem };
             });
 
-            const combinedLogs = logs.map(scale => {
+            const combinedLogs = log.map(scale => {
                 const matchingItem = mmItems.data.find(item => item.itemLocation === scale.ItemName);
                 return { ...scale, ...matchingItem };
             });
 
-            console.log(combinedLogs)
-            
             setCombinedData(combinedData);
+            setLogData(combinedLogs);
 
             setLoading(false)
         } catch (err) {
@@ -138,6 +138,69 @@ export const Inventory = () => {
                                                         <td className='text-center'>{scale.rack}</td>
                                                         <td className='text-center'>{scale.shelf}</td>
                                                         <td className='text-center'>{scale.bin}</td>
+                                                    </tr>
+                                                )
+                                            })
+                                        }
+                                    </tbody>
+                                </Table>
+                                <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
+                                    <Icon size={24} icon={refresh}/>
+                                </Button>
+                                <ToastContainer className="toastCopy" style={{ zIndex: 1 }}>
+                                    <Toast bg='success' onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide animation>
+                                        <Toast.Body>
+                                            <strong className="mx-auto me-auto">{partCopy} Copied To Clipboard </strong>
+                                        </Toast.Body>
+                                    </Toast>
+                                </ToastContainer>
+                            </div>
+                        </Tab>
+
+                        <Tab eventKey="logs" title={logs}>
+                            <div className='mx-3'>
+                                <Table striped hover>
+                                    <thead>
+                                        <tr>
+                                            <th className='text-center' width='30%'><input onChange={(e) => setSearchedValueName(e.target.value)} placeholder='&#xf002;  E2 Part No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='10%'>Old Qty</th>
+                                            <th className='text-center' width='10%'>New Qty</th>
+                                            <th className='text-center' width='10%'>Timestamp</th>
+                                            <th className='text-center' width='20%'><input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='&#xf002;  Area' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='20%'><input onChange={(e) => setSearchedValueEmployee(e.target.value)} placeholder='&#xf002;  Employee' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {logData
+                                            .filter((row) => 
+                                                !searchedValueName || row.itemName
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueName.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueArea || row.area
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueArea.toString().toLowerCase())
+                                            )
+                                            .filter((row) => 
+                                                !searchedValueEmployee || row.EmployeeName
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueEmployee.toString().toLowerCase())
+                                            )
+                                            .map((scale, index) => {
+                                                return (
+                                                    <tr key={index} scale={scale}>
+                                                        <CopyToClipboard text={scale.itemName} onCopy={() => { setShowToast(true); setPartCopy(`${scale.itemName}`) }}>
+                                                            <td className='text-center'>{scale.itemName}</td>
+                                                        </CopyToClipboard>
+                                                        <td className='text-center'>{scale.OldQuantity}</td>
+                                                        <td className='text-center'>{scale.NewQuantity}</td>
+                                                        <td className='text-center'>{format(parseISO(scale.Timestamp), 'MM/dd/yy hh:ma')}</td>
+                                                        <td className='text-center'>{scale.area}</td>
+                                                        <td className='text-center'>{scale.EmployeeName}</td>
                                                     </tr>
                                                 )
                                             })
