@@ -23,8 +23,6 @@ mysqldump -u root -p monarch < mmbackup.sql
 
 Run before uploading to git
 
-
-
 ## Engineering
 Fix repeat next step bug
 Break requests into individual
