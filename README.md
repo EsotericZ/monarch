@@ -25,16 +25,9 @@ Run before uploading to git
 
 ## Engineering
 Fix repeat next step bug
-Break requests into individual
-
-## QC / Form / TLaser
-Break requests into individual
 
 ## Machining
 Get w/ Ramon
-
-## Supplies
-Editable
 
 ## Misc
 Add cut lists
@@ -43,4 +36,3 @@ Auto note
 New side nav
 
 Hardware page
-BD Test page **
