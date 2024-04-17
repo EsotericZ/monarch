@@ -3,6 +3,8 @@ import { Button, FloatingLabel, Form, Modal, Table } from 'react-bootstrap';
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 
+import PuffLoader from "react-spinners/PuffLoader";
+
 import { Icon } from 'react-icons-kit';
 import { plus } from 'react-icons-kit/fa/plus';
 
@@ -120,7 +122,9 @@ export const TapChart = () => {
             {loading ?
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
                     <h1 className='text-center'>Engineering</h1>
-                    <h2 className='text-center'>Loading</h2>
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '100px' }}>
+                        <PuffLoader color="red" />
+                    </div>
                 </div>
             :
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
