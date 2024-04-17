@@ -2,6 +2,7 @@ const BDChart = require('./BDChart');
 const Jobs = require('./Jobs');
 const Maintenance = require('./Maintenance');
 const Material = require('./Material');
+const QCInfo = require('./QCInfo');
 const ScaleItems = require('./ScaleItems');
 const Scales = require('./Scales');
 const Shipping = require('./Shipping');
@@ -16,6 +17,7 @@ module.exports = {
     Jobs,
     Maintenance,
     Material,
+    QCInfo,
     ScaleItems,
     Scales,
     Shipping,

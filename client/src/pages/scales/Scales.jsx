@@ -295,7 +295,7 @@ export const Scales = () => {
             <Sidebar />
             {loading ?
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
-                    <h1 className='text-center m-3'>Create Scale</h1>
+                    <h1 className='text-center m-3'>Scales</h1>
                     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '100px' }}>
                         <PuffLoader color="red" />
                     </div>
