@@ -28,6 +28,7 @@ const headers = [
 
 const headersContact = [
     { label: "Active", key: "Active" },
+    { label: "Customer Code", key: "Code" },
     { label: "First Name", key: "Contact" },
     { label: "Last Name", key: "Contact" },
     { label: "Title", key: "Title" },
@@ -142,9 +143,11 @@ export const VTiger = () => {
             const csvData = res.map(item => {
                 const firstName = item.Contact ? item.Contact.split(' ')[0] : '';
                 const lastName = item.Contact ? item.Contact.split(' ')[1] : '';
+                const active = item.Active == 'N' ? 'False' : 'True';
 
                 return {
-                    Active: item.Active,
+                    Active: active,
+                    Code: item.Code,
                     firstName: firstName,
                     lastName: lastName,
                     Title: item.Title,
@@ -184,9 +187,11 @@ export const VTiger = () => {
             const csvData = res.map(item => {
                 const firstName = item.Contact ? item.Contact.split(' ')[0] : '';
                 const lastName = item.Contact ? item.Contact.split(' ')[1] : '';
+                const active = item.Active == 'N' ? 'False' : 'True';
 
                 return {
-                    Active: item.Active,
+                    Active: active,
+                    Code: item.Code,
                     firstName: firstName,
                     lastName: lastName,
                     Title: item.Title,
