@@ -5,6 +5,8 @@ import { format, parseISO } from 'date-fns';
 import { Sidebar } from '../sidebar/Sidebar';
 import getAllCustomers from '../../services/vtiger/getAllCustomers';
 import getOneCustomer from '../../services/vtiger/getOneCustomer';
+import getAllContacts from '../../services/vtiger/getAllContacts';
+import getOneContact from '../../services/vtiger/getOneContact';
 import './test.css';
 
 const headers = [
@@ -117,33 +119,150 @@ export const VTiger = () => {
             console.error(err);
         }
     };
+
+    const fetchAllContactCSV = async () => {
+        try {
+            const res = await getAllContacts();
+            console.log(res)
+
+            // const csvData = res.map(item => {
+            //     const dateOpen = item.DateOpen ? item.DateOpen.split('T')[0] : '';
+            //     const dateLast = item.DateLast ? item.DateLast.split('T')[0] : '';
+            //     const active = item.Active == 'N' ? 'Inactive' : 'Active';
+
+            //     return {
+            //         CustCode: item.CustCode,
+            //         CustName: item.CustName,
+            //         Active: active,
+            //         SalesID: item.SalesID,
+            //         DateOpen: dateOpen,
+            //         Website: item.Website,
+            //         BAddr1: item.BAddr1, 
+            //         BCity: item.BCity, 
+            //         BState: item.BState, 
+            //         BZIPCode: item.BZIPCode, 
+            //         Phone: item.Phone, 
+            //         WorkCode: item.WorkCode,
+            //         DateLast: dateLast,
+            //         YTDSales: item.YTDSales,
+            //     }
+            // });
+
+            // const csvContent = [
+            //     headers.map(header => header.label).join(','),
+            //     ...csvData.map(item => Object.values(item).join(','))
+            // ].join('\n');
+
+            // const blob = new Blob([csvContent], { type: 'text/csv' });
+            // const url = window.URL.createObjectURL(blob);
+            // const link = document.createElement('a');
+            // link.href = url;
+            // link.setAttribute('download', 'AllCustomers.csv');
+            // document.body.appendChild(link);
+            // link.click();
+            // link.remove();
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const fetchOneContactCSV = async () => {
+        try {
+            const res = await getOneContact(custCode);
+            console.log(res)
+
+            // const csvData = res.map(item => {
+            //     const dateOpen = item.DateOpen ? item.DateOpen.split('T')[0] : '';
+            //     const dateLast = item.DateLast ? item.DateLast.split('T')[0] : '';
+            //     const active = item.Active == 'N' ? 'Inactive' : 'Active';
+
+            //     return {
+            //         CustCode: item.CustCode,
+            //         CustName: item.CustName,
+            //         Active: active,
+            //         SalesID: item.SalesID,
+            //         DateOpen: dateOpen,
+            //         Website: item.Website,
+            //         BAddr1: item.BAddr1, 
+            //         BCity: item.BCity, 
+            //         BState: item.BState, 
+            //         BZIPCode: item.BZIPCode, 
+            //         Phone: item.Phone, 
+            //         WorkCode: item.WorkCode,
+            //         DateLast: dateLast,
+            //         YTDSales: item.YTDSales,
+            //     }
+            // });
+
+            // const csvContent = [
+            //     headers.map(header => header.label).join(','),
+            //     ...csvData.map(item => Object.values(item).join(','))
+            // ].join('\n');
+
+            // const blob = new Blob([csvContent], { type: 'text/csv' });
+            // const url = window.URL.createObjectURL(blob);
+            // const link = document.createElement('a');
+            // link.href = url;
+            // link.setAttribute('download', `${custCode}.csv`);
+            // document.body.appendChild(link);
+            // link.click();
+            // link.remove();
+        } catch (err) {
+            console.error(err);
+        }
+    };
       
     return (
         <div style={{ display: 'flex' }}>
             <Sidebar />
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', marginLeft: '80px' }}>
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    <div className='mx-3'>
-                        <div style={{ width: 'fit-content', marginTop: '100px' }}>
-                            <div className="form-group mt-3">
+                <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
+                    <div className='mx-3' style={{ textAlign: 'center', marginTop: '50px' }}>
+                        <h1>Company Info</h1>
+                        <div style={{ width: 'fit-content', marginTop: '20px' }}>
+                            <div className="form-group mt-3" style={{ display: 'flex', alignItems: 'center' }}>
                                 <input 
                                     className='input form-control mt-1' 
                                     type='text' 
                                     placeholder='Customer Code' 
                                     onChange={(e) => {setCustCode(e.target.value)}}
+                                    style={{ marginRight: '10px' }}
                                 />
-                            </div>
-                            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '15px' }}>
-                            <Button className='vtiger' onClick={() => fetchOneExportCSV()}>
-                                Get Customer
-                            </Button>
+                                <Button className='vtiger' onClick={() => fetchOneExportCSV()}>
+                                    Submit
+                                </Button>
                             </div>
                         </div>
                     </div>
                     <div style={{ width: '75px' }}></div>
                     <div className='mx-3'>
-                        <div style={{ width: 'fit-content', marginTop: '100px' }}>
+                        <div style={{ width: 'fit-content', marginTop: '20px' }}>
                             <Button className='vtiger' onClick={() => fetchAllExportCSV()}>
+                                Get All Customers
+                            </Button>
+                        </div>
+                    </div>
+                    <div className='mx-3' style={{ textAlign: 'center', marginTop: '100px' }}>
+                        <h1>Contact Info</h1>
+                        <div style={{ width: 'fit-content', marginTop: '20px' }}>
+                            <div className="form-group mt-3" style={{ display: 'flex', alignItems: 'center' }}>
+                                <input 
+                                    className='input form-control mt-1' 
+                                    type='text' 
+                                    placeholder='Customer Code' 
+                                    onChange={(e) => {setCustCode(e.target.value)}}
+                                    style={{ marginRight: '10px' }}
+                                />
+                                <Button className='vtiger' onClick={() => fetchOneContactCSV()}>
+                                    Submit
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                    <div style={{ width: '75px' }}></div>
+                    <div className='mx-3'>
+                        <div style={{ width: 'fit-content', marginTop: '20px' }}>
+                            <Button className='vtiger' onClick={() => fetchAllContactCSV()}>
                                 Get All Customers
                             </Button>
                         </div>

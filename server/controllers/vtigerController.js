@@ -31,7 +31,6 @@ async function getAllCustomers(req, res) {
 
 async function getOneCustomer(req, res) {
     let custCode = req.body.custCode;
-    console.log(custCode)
     sql.connect(config, function(err,) {
         if (err) console.error(err);
         let request = new sql.Request();
@@ -46,7 +45,41 @@ async function getOneCustomer(req, res) {
     })
 };
 
+async function getAllContacts(req, res) {
+    sql.connect(config, function(err,) {
+        if (err) console.error(err);
+        let request = new sql.Request();
+
+        request.query("SELECT * FROM Contacts",
+        
+        function(err, recordset) {
+            if (err) console.error(err);
+            let records = recordset.recordsets[0];
+
+            res.send(records)
+        })
+    })
+};
+
+async function getOneContact(req, res) {
+    let custCode = req.body.custCode;
+    sql.connect(config, function(err,) {
+        if (err) console.error(err);
+        let request = new sql.Request();
+
+        request.input('custCode', sql.NVarChar, custCode)
+        .query('SELECT * FROM Contacts WHERE Code = @custCode', function(err, result) {
+            if (err) console.error(err);
+            let records = result.recordsets[0];
+
+            res.send(records)            
+        });
+    })
+};
+
 module.exports = {
     getAllCustomers,
     getOneCustomer,
+    getAllContacts,
+    getOneContact,
 }
