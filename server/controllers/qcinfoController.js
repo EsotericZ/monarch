@@ -2,7 +2,7 @@ const { QCInfo } = require('../models');
 require("dotenv").config();
 
 async function getAllQCNotes(req, res) {
-    await Material.QCInfo({
+    await QCInfo.findAll({
         order: [
             ['custCode', 'ASC']
         ],

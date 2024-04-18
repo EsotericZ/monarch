@@ -28,18 +28,28 @@ export const QualityInfo = () => {
     }
     
     const [searchedQC, setSearchedQC] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [searchedValueCustCode, setSearchedValueCustCode] = useState('');
+    const [loading, setLoading] = useState(true);
 
     const fetchData = async () => {
         try {
             const results = await getAllQCNotes();
-            setSearchedQC(results);
+            console.log(results.data)
+            setSearchedQC(results.data);
         } catch (err) {
             console.error(err);
         } finally {
             setLoading(false);
         }
     }
+
+    const handleOpenItem = (item) => {
+        console.log(item)
+    }
+
+    useEffect(() => {
+        fetchData();
+    }, [loading]);
 
     return (
         <div style={{ display: 'flex' }}>
@@ -54,7 +64,32 @@ export const QualityInfo = () => {
             :
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
                     <h1 className='text-center'>Quality Info</h1>
-                    <h2 className='text-center'>This Page is Under Construction</h2>
+                    <Table striped hover>
+                        <thead>
+                            <tr>
+                                <th className='text-center'><input onChange={(e) => setSearchedValueCustCode(e.target.value)} placeholder='&#xf002;  Customer Code' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                <th className='text-center'>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {searchedQC
+                                .filter((row) => 
+                                    !searchedValueCustCode || row.custCode
+                                        .toString()
+                                        .toLowerCase()
+                                        .includes(searchedValueCustCode.toString().toLowerCase())
+                                )
+                                .map((item, index) => {
+                                    return (
+                                        <tr key={index} item={item}>
+                                            <td onClick={() => handleOpenItem(item)} className='text-center jobBold'>{item.custCode}</td>
+                                            <td className='text-center'>{item.notes}</td>
+                                        </tr>
+                                    )
+                                })
+                            }
+                        </tbody>
+                    </Table>
                 </div>
             }
         </div>

@@ -158,6 +158,12 @@ export const Purchasing = () => {
         fetchData();
     }, [loading, update]);
 
+    useEffect(() => {
+        setInterval(() => {
+            fetchData();
+        }, 30000)
+    }, [])
+
     return (
         <div style={{ display: 'flex' }}>
             <Sidebar />
