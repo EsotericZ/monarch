@@ -26,6 +26,20 @@ const headers = [
     { label: "YTD Sales", key: "YTDSales" },
 ];
 
+const headersContact = [
+    { label: "Active", key: "Active" },
+    { label: "First Name", key: "Contact" },
+    { label: "Last Name", key: "Contact" },
+    { label: "Title", key: "Title" },
+    { label: "Office Phone", key: "Phone" },
+    { label: "Phone Ext", key: "Extension" },
+    { label: "Primary Email", key: "EMail" },
+    { label: "Mobile Phone", key: "Cell_Phone" },
+    { label: "Fax", key: "FAX" },
+    { label: "Secondary Email", key: "EMail" },
+    { label: "Comments", key: "Comments" },
+];
+
 export const VTiger = () => {
     const [details, setDetails] = useState('');
     const [custCode, setCustCode] = useState('');
@@ -125,42 +139,38 @@ export const VTiger = () => {
             const res = await getAllContacts();
             console.log(res)
 
-            // const csvData = res.map(item => {
-            //     const dateOpen = item.DateOpen ? item.DateOpen.split('T')[0] : '';
-            //     const dateLast = item.DateLast ? item.DateLast.split('T')[0] : '';
-            //     const active = item.Active == 'N' ? 'Inactive' : 'Active';
+            const csvData = res.map(item => {
+                const firstName = item.Contact ? item.Contact.split(' ')[0] : '';
+                const lastName = item.Contact ? item.Contact.split(' ')[1] : '';
 
-            //     return {
-            //         CustCode: item.CustCode,
-            //         CustName: item.CustName,
-            //         Active: active,
-            //         SalesID: item.SalesID,
-            //         DateOpen: dateOpen,
-            //         Website: item.Website,
-            //         BAddr1: item.BAddr1, 
-            //         BCity: item.BCity, 
-            //         BState: item.BState, 
-            //         BZIPCode: item.BZIPCode, 
-            //         Phone: item.Phone, 
-            //         WorkCode: item.WorkCode,
-            //         DateLast: dateLast,
-            //         YTDSales: item.YTDSales,
-            //     }
-            // });
+                return {
+                    Active: item.Active,
+                    firstName: firstName,
+                    lastName: lastName,
+                    Title: item.Title,
+                    Phone: item.Phone,
+                    Extension: item.Extension,
+                    EMail: item.EMail, 
+                    Cell_Phone: item.Cell_Phone,
+                    FAX: item.FAX, 
+                    EMail: item.EMail, 
+                    Comments: item.Comments, 
+                }
+            });
 
-            // const csvContent = [
-            //     headers.map(header => header.label).join(','),
-            //     ...csvData.map(item => Object.values(item).join(','))
-            // ].join('\n');
+            const csvContent = [
+                headersContact.map(header => header.label).join(','),
+                ...csvData.map(item => Object.values(item).join(','))
+            ].join('\n');
 
-            // const blob = new Blob([csvContent], { type: 'text/csv' });
-            // const url = window.URL.createObjectURL(blob);
-            // const link = document.createElement('a');
-            // link.href = url;
-            // link.setAttribute('download', 'AllCustomers.csv');
-            // document.body.appendChild(link);
-            // link.click();
-            // link.remove();
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'AllCustomersContacts.csv');
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
         } catch (err) {
             console.error(err);
         }
@@ -171,42 +181,38 @@ export const VTiger = () => {
             const res = await getOneContact(custCode);
             console.log(res)
 
-            // const csvData = res.map(item => {
-            //     const dateOpen = item.DateOpen ? item.DateOpen.split('T')[0] : '';
-            //     const dateLast = item.DateLast ? item.DateLast.split('T')[0] : '';
-            //     const active = item.Active == 'N' ? 'Inactive' : 'Active';
+            const csvData = res.map(item => {
+                const firstName = item.Contact ? item.Contact.split(' ')[0] : '';
+                const lastName = item.Contact ? item.Contact.split(' ')[1] : '';
 
-            //     return {
-            //         CustCode: item.CustCode,
-            //         CustName: item.CustName,
-            //         Active: active,
-            //         SalesID: item.SalesID,
-            //         DateOpen: dateOpen,
-            //         Website: item.Website,
-            //         BAddr1: item.BAddr1, 
-            //         BCity: item.BCity, 
-            //         BState: item.BState, 
-            //         BZIPCode: item.BZIPCode, 
-            //         Phone: item.Phone, 
-            //         WorkCode: item.WorkCode,
-            //         DateLast: dateLast,
-            //         YTDSales: item.YTDSales,
-            //     }
-            // });
+                return {
+                    Active: item.Active,
+                    firstName: firstName,
+                    lastName: lastName,
+                    Title: item.Title,
+                    Phone: item.Phone,
+                    Extension: item.Extension,
+                    EMail: item.EMail, 
+                    Cell_Phone: item.Cell_Phone,
+                    FAX: item.FAX, 
+                    EMail: item.EMail, 
+                    Comments: item.Comments, 
+                }
+            });
 
-            // const csvContent = [
-            //     headers.map(header => header.label).join(','),
-            //     ...csvData.map(item => Object.values(item).join(','))
-            // ].join('\n');
+            const csvContent = [
+                headersContact.map(header => header.label).join(','),
+                ...csvData.map(item => Object.values(item).join(','))
+            ].join('\n');
 
-            // const blob = new Blob([csvContent], { type: 'text/csv' });
-            // const url = window.URL.createObjectURL(blob);
-            // const link = document.createElement('a');
-            // link.href = url;
-            // link.setAttribute('download', `${custCode}.csv`);
-            // document.body.appendChild(link);
-            // link.click();
-            // link.remove();
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `${custCode} CONTACT.csv`);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
         } catch (err) {
             console.error(err);
         }
