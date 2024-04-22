@@ -168,10 +168,7 @@ export const Inventory = () => {
                                             <th className='text-center' width='30%'><input onChange={(e) => setSearchedValueName(e.target.value)} placeholder='&#xf002;  Material' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center' width='10%'>Qty</th>
                                             <th className='text-center' width='10%'>Alert</th>
-                                            {/* <th className='text-center' width='20%'><input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='&#xf002;  Area' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th> */}
                                             <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueRack(e.target.value)} placeholder='&#xf002;  Rack' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            {/* <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueShelf(e.target.value)} placeholder='&#xf002;  Shelf' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th> */}
-                                            {/* <th className='text-center' width='10%'>Bin</th> */}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -182,24 +179,12 @@ export const Inventory = () => {
                                                     .toLowerCase()
                                                     .includes(searchedValueName.toString().toLowerCase())
                                             )
-                                            // .filter((row) => 
-                                            //     !searchedValueArea || row.area
-                                            //         .toString()
-                                            //         .toLowerCase()
-                                            //         .includes(searchedValueArea.toString().toLowerCase())
-                                            // )
                                             .filter((row) => 
                                                 !searchedValueRack || row.rack
                                                     .toString()
                                                     .toLowerCase()
                                                     .includes(searchedValueRack.toString().toLowerCase())
                                             )
-                                            // .filter((row) => 
-                                            //     !searchedValueShelf || row.shelf
-                                            //         .toString()
-                                            //         .toLowerCase()
-                                            //         .includes(searchedValueShelf.toString().toLowerCase())
-                                            // )
                                             .map((scale, index) => {
                                                 if (scale.area === 'Material') {
                                                     const rowClass = (scale.Quantity <= scale.alert && scale.Quantity >= 0) ? 'expedite-row' : '';
@@ -209,15 +194,12 @@ export const Inventory = () => {
                                                                 <td className='text-center'>{scale.itemName}</td>
                                                             </CopyToClipboard>
                                                             {scale.Quantity < 0 ?
-                                                                <td className='text-center'>'Pallet Removed</td>
+                                                                <td className='text-center'>Pallet Removed</td>
                                                             :
                                                                 <td className='text-center'>{scale.Quantity}</td>
                                                             }
                                                             <td className='text-center'>{scale.alert}</td>
-                                                            {/* <td className='text-center'>{scale.area}</td> */}
                                                             <td className='text-center'>{scale.rack}</td>
-                                                            {/* <td className='text-center'>{scale.shelf}</td> */}
-                                                            {/* <td className='text-center'>{scale.bin}</td> */}
                                                         </tr>
                                                     )
                                                 }
