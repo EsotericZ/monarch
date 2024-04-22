@@ -202,13 +202,17 @@ export const Inventory = () => {
                                             // )
                                             .map((scale, index) => {
                                                 if (scale.area === 'Material') {
-                                                    const rowClass = (scale.Quantity <= scale.alert) ? 'expedite-row' : '';
+                                                    const rowClass = (scale.Quantity <= scale.alert && scale.Quantity >= 0) ? 'expedite-row' : '';
                                                     return (
                                                         <tr key={index} scale={scale} className={rowClass}>
                                                             <CopyToClipboard text={scale.itemName} onCopy={() => { setShowToast(true); setPartCopy(`${scale.itemName}`) }}>
                                                                 <td className='text-center'>{scale.itemName}</td>
                                                             </CopyToClipboard>
-                                                            <td className='text-center'>{scale.Quantity}</td>
+                                                            {scale.Quantity < 0 ?
+                                                                <td className='text-center'>'Pallet Removed</td>
+                                                            :
+                                                                <td className='text-center'>{scale.Quantity}</td>
+                                                            }
                                                             <td className='text-center'>{scale.alert}</td>
                                                             {/* <td className='text-center'>{scale.area}</td> */}
                                                             <td className='text-center'>{scale.rack}</td>
