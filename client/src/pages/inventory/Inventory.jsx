@@ -35,6 +35,7 @@ export const Inventory = () => {
     const [partCopy, setPartCopy] = useState('None');
 
     const [allItems, setAllItems] = useState('All Items');
+    const [materials, setMaterials] = useState('Materials');
     const [logs, setLogs] = useState('Logs');
     const [loading, setLoading] = useState(true);
 
@@ -126,20 +127,96 @@ export const Inventory = () => {
                                                     .includes(searchedValueShelf.toString().toLowerCase())
                                             )
                                             .map((scale, index) => {
-                                                const rowClass = (scale.Quantity <= scale.alert) ? 'expedite-row' : '';
-                                                return (
-                                                    <tr key={index} scale={scale} className={rowClass}>
-                                                        <CopyToClipboard text={scale.itemName} onCopy={() => { setShowToast(true); setPartCopy(`${scale.itemName}`) }}>
-                                                            <td className='text-center'>{scale.itemName}</td>
-                                                        </CopyToClipboard>
-                                                        <td className='text-center'>{scale.Quantity}</td>
-                                                        <td className='text-center'>{scale.alert}</td>
-                                                        <td className='text-center'>{scale.area}</td>
-                                                        <td className='text-center'>{scale.rack}</td>
-                                                        <td className='text-center'>{scale.shelf}</td>
-                                                        <td className='text-center'>{scale.bin}</td>
-                                                    </tr>
-                                                )
+                                                if (scale.rack != 'Material') {
+                                                    const rowClass = (scale.Quantity <= scale.alert) ? 'expedite-row' : '';
+                                                    return (
+                                                        <tr key={index} scale={scale} className={rowClass}>
+                                                            <CopyToClipboard text={scale.itemName} onCopy={() => { setShowToast(true); setPartCopy(`${scale.itemName}`) }}>
+                                                                <td className='text-center'>{scale.itemName}</td>
+                                                            </CopyToClipboard>
+                                                            <td className='text-center'>{scale.Quantity}</td>
+                                                            <td className='text-center'>{scale.alert}</td>
+                                                            <td className='text-center'>{scale.area}</td>
+                                                            <td className='text-center'>{scale.rack}</td>
+                                                            <td className='text-center'>{scale.shelf}</td>
+                                                            <td className='text-center'>{scale.bin}</td>
+                                                        </tr>
+                                                    )
+                                                }
+                                            })
+                                        }
+                                    </tbody>
+                                </Table>
+                                <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
+                                    <Icon size={24} icon={refresh}/>
+                                </Button>
+                                <ToastContainer className="toastCopy" style={{ zIndex: 1 }}>
+                                    <Toast bg='success' onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide animation>
+                                        <Toast.Body>
+                                            <strong className="mx-auto me-auto">{partCopy} Copied To Clipboard </strong>
+                                        </Toast.Body>
+                                    </Toast>
+                                </ToastContainer>
+                            </div>
+                        </Tab>
+
+                        <Tab eventKey="materials" title={materials}>
+                            <div className='mx-3'>
+                                <Table striped hover>
+                                    <thead>
+                                        <tr>
+                                            <th className='text-center' width='30%'><input onChange={(e) => setSearchedValueName(e.target.value)} placeholder='&#xf002;  Material' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='10%'>Qty</th>
+                                            <th className='text-center' width='10%'>Alert</th>
+                                            {/* <th className='text-center' width='20%'><input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='&#xf002;  Area' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th> */}
+                                            <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueRack(e.target.value)} placeholder='&#xf002;  Rack' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            {/* <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueShelf(e.target.value)} placeholder='&#xf002;  Shelf' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th> */}
+                                            {/* <th className='text-center' width='10%'>Bin</th> */}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {combinedData
+                                            .filter((row) => 
+                                                !searchedValueName || row.itemName
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueName.toString().toLowerCase())
+                                            )
+                                            // .filter((row) => 
+                                            //     !searchedValueArea || row.area
+                                            //         .toString()
+                                            //         .toLowerCase()
+                                            //         .includes(searchedValueArea.toString().toLowerCase())
+                                            // )
+                                            .filter((row) => 
+                                                !searchedValueRack || row.rack
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(searchedValueRack.toString().toLowerCase())
+                                            )
+                                            // .filter((row) => 
+                                            //     !searchedValueShelf || row.shelf
+                                            //         .toString()
+                                            //         .toLowerCase()
+                                            //         .includes(searchedValueShelf.toString().toLowerCase())
+                                            // )
+                                            .map((scale, index) => {
+                                                if (scale.rack === 'Material') {
+                                                    const rowClass = (scale.Quantity <= scale.alert) ? 'expedite-row' : '';
+                                                    return (
+                                                        <tr key={index} scale={scale} className={rowClass}>
+                                                            <CopyToClipboard text={scale.itemName} onCopy={() => { setShowToast(true); setPartCopy(`${scale.itemName}`) }}>
+                                                                <td className='text-center'>{scale.itemName}</td>
+                                                            </CopyToClipboard>
+                                                            <td className='text-center'>{scale.Quantity}</td>
+                                                            <td className='text-center'>{scale.alert}</td>
+                                                            {/* <td className='text-center'>{scale.area}</td> */}
+                                                            <td className='text-center'>{scale.rack}</td>
+                                                            {/* <td className='text-center'>{scale.shelf}</td> */}
+                                                            {/* <td className='text-center'>{scale.bin}</td> */}
+                                                        </tr>
+                                                    )
+                                                }
                                             })
                                         }
                                     </tbody>
