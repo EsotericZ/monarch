@@ -127,7 +127,7 @@ export const Inventory = () => {
                                                     .includes(searchedValueShelf.toString().toLowerCase())
                                             )
                                             .map((scale, index) => {
-                                                if (scale.rack != 'Material') {
+                                                if (scale.area != 'Material') {
                                                     const rowClass = (scale.Quantity <= scale.alert) ? 'expedite-row' : '';
                                                     return (
                                                         <tr key={index} scale={scale} className={rowClass}>
@@ -201,7 +201,7 @@ export const Inventory = () => {
                                             //         .includes(searchedValueShelf.toString().toLowerCase())
                                             // )
                                             .map((scale, index) => {
-                                                if (scale.rack === 'Material') {
+                                                if (scale.area === 'Material') {
                                                     const rowClass = (scale.Quantity <= scale.alert) ? 'expedite-row' : '';
                                                     return (
                                                         <tr key={index} scale={scale} className={rowClass}>
