@@ -50,7 +50,8 @@ async function getAllContacts(req, res) {
         if (err) console.error(err);
         let request = new sql.Request();
 
-        request.query("SELECT * FROM Contacts",
+        // request.query("SELECT * FROM Contacts",
+        request.query("SELECT * FROM CustCode AS CC JOIN Contacts AS C ON CC.CustCode = C.Code",
         
         function(err, recordset) {
             if (err) console.error(err);
@@ -68,7 +69,8 @@ async function getOneContact(req, res) {
         let request = new sql.Request();
 
         request.input('custCode', sql.NVarChar, custCode)
-        .query('SELECT * FROM Contacts WHERE Code = @custCode', function(err, result) {
+        // .query('SELECT * FROM Contacts WHERE Code = @custCode', function(err, result) {
+        .query('SELECT * FROM CustCode AS CC JOIN Contacts AS C ON CC.CustCode = C.Code WHERE C.Code = @custCode', function(err, result) {
             if (err) console.error(err);
             let records = result.recordsets[0];
 

@@ -27,8 +27,9 @@ const headers = [
 ];
 
 const headersContact = [
-    { label: "Active", key: "Active" },
+    { label: "Organization Name", key: "CustName" },
     { label: "Customer Code", key: "Code" },
+    { label: "Active", key: "Active" },
     { label: "First Name", key: "Contact" },
     { label: "Last Name", key: "Contact" },
     { label: "Title", key: "Title" },
@@ -146,8 +147,9 @@ export const VTiger = () => {
                 const active = item.Active == 'N' ? 'False' : 'True';
 
                 return {
-                    Active: active,
+                    CustName: item.CustName,
                     Code: item.Code,
+                    Active: active,
                     firstName: firstName,
                     lastName: lastName,
                     Title: item.Title,
@@ -190,8 +192,9 @@ export const VTiger = () => {
                 const active = item.Active == 'N' ? 'False' : 'True';
 
                 return {
-                    Active: active,
+                    CustName: item.CustName,
                     Code: item.Code,
+                    Active: active,
                     firstName: firstName,
                     lastName: lastName,
                     Title: item.Title,
