@@ -144,7 +144,7 @@ export const VTiger = () => {
             const csvData = res.map(item => {
                 const firstName = item.Contact ? item.Contact.split(' ')[0] : '';
                 const lastName = item.Contact ? item.Contact.split(' ')[1] : '';
-                const active = item.Active == 'N' ? 'False' : 'True';
+                const active = item.Active[1] == 'N' ? 'False' : 'True';
 
                 return {
                     CustName: item.CustName,
@@ -189,7 +189,7 @@ export const VTiger = () => {
             const csvData = res.map(item => {
                 const firstName = item.Contact ? item.Contact.split(' ')[0] : '';
                 const lastName = item.Contact ? item.Contact.split(' ')[1] : '';
-                const active = item.Active == 'N' ? 'False' : 'True';
+                const active = item.Active[1] == 'N' ? 'False' : 'True';
 
                 return {
                     CustName: item.CustName,
