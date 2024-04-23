@@ -157,7 +157,7 @@ export const VTiger = () => {
                     Extension: item.Extension,
                     EMail: item.EMail, 
                     Cell_Phone: item.Cell_Phone,
-                    FAX: item.FAX, 
+                    FAX: item.FAX[1], 
                     EMail: item.EMail, 
                     Comments: item.Comments, 
                 }
@@ -202,7 +202,7 @@ export const VTiger = () => {
                     Extension: item.Extension,
                     EMail: item.EMail, 
                     Cell_Phone: item.Cell_Phone,
-                    FAX: item.FAX, 
+                    FAX: item.FAX[1], 
                     EMail: item.EMail, 
                     Comments: item.Comments, 
                 }
