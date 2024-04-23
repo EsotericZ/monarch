@@ -38,7 +38,7 @@ const headersContact = [
     { label: "Primary Email", key: "EMail" },
     { label: "Mobile Phone", key: "Cell_Phone" },
     { label: "Fax", key: "FAX" },
-    { label: "Secondary Email", key: "EMail" },
+    { label: "Secondary Email", key: "Mobile" },
     { label: "Comments", key: "Comments" },
 ];
 
@@ -158,7 +158,7 @@ export const VTiger = () => {
                     EMail: item.EMail, 
                     Cell_Phone: item.Cell_Phone,
                     FAX: item.FAX[1], 
-                    EMail: item.EMail, 
+                    Mobile: item.Mobile, 
                     Comments: item.Comments, 
                 }
             });
@@ -203,7 +203,7 @@ export const VTiger = () => {
                     EMail: item.EMail, 
                     Cell_Phone: item.Cell_Phone,
                     FAX: item.FAX[1], 
-                    EMail: item.EMail, 
+                    Mobile: item.Mobile, 
                     Comments: item.Comments, 
                 }
             });
