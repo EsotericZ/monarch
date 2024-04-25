@@ -40,6 +40,10 @@ const headersContact = [
     { label: "Fax", key: "FAX" },
     { label: "Secondary Email", key: "Mobile" },
     { label: "Comments", key: "Comments" },
+    { label: "Mailing Street", key: "BAddr1" },
+    { label: "City", key: "BCity" },
+    { label: "State", key: "BState" },
+    { label: "zip", key: "BZIPCode" },
 ];
 
 export const VTiger = () => {
@@ -94,6 +98,7 @@ export const VTiger = () => {
     const fetchOneExportCSV = async () => {
         try {
             const res = await getOneCustomer(custCode);
+            console.log(res)
 
             const csvData = res.map(item => {
                 const dateOpen = item.DateOpen ? item.DateOpen.split('T')[0] : '';
@@ -159,7 +164,11 @@ export const VTiger = () => {
                     Cell_Phone: item.Cell_Phone,
                     FAX: item.FAX[1], 
                     Mobile: item.Mobile, 
-                    Comments: item.Comments, 
+                    Comments: item.Comments,
+                    BAddr1: item.BAddr1, 
+                    BCity: item.BCity, 
+                    BState: item.BState, 
+                    BZIPCode: item.BZIPCode,
                 }
             });
 
@@ -204,7 +213,11 @@ export const VTiger = () => {
                     Cell_Phone: item.Cell_Phone,
                     FAX: item.FAX[1], 
                     Mobile: item.Mobile, 
-                    Comments: item.Comments, 
+                    Comments: item.Comments,
+                    BAddr1: item.BAddr1, 
+                    BCity: item.BCity, 
+                    BState: item.BState, 
+                    BZIPCode: item.BZIPCode,
                 }
             });
 
