@@ -41,9 +41,9 @@ const headersContact = [
     { label: "Secondary Email", key: "Mobile" },
     { label: "Comments", key: "Comments" },
     { label: "Mailing Street", key: "BAddr1" },
-    { label: "City", key: "BCity" },
-    { label: "State", key: "BState" },
-    { label: "zip", key: "BZIPCode" },
+    { label: "Mailing City", key: "BCity" },
+    { label: "Mailing State", key: "BState" },
+    { label: "Mailing Zip", key: "BZIPCode" },
 ];
 
 export const VTiger = () => {
