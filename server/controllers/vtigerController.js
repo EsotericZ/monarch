@@ -18,7 +18,7 @@ async function getAllCustomers(req, res) {
         if (err) console.error(err);
         let request = new sql.Request();
 
-        request.query("SELECT * FROM CustCode",
+        request.query("SELECT * FROM CustCode WHERE Active='Y'",
         
         function(err, recordset) {
             if (err) console.error(err);
@@ -50,8 +50,7 @@ async function getAllContacts(req, res) {
         if (err) console.error(err);
         let request = new sql.Request();
 
-        // request.query("SELECT * FROM Contacts",
-        request.query("SELECT * FROM CustCode AS CC JOIN Contacts AS C ON CC.CustCode = C.Code",
+        request.query("SELECT * FROM CustCode AS CC JOIN Contacts AS C ON CC.CustCode = C.Code WHERE CC.Active = 'Y'",
         
         function(err, recordset) {
             if (err) console.error(err);
