@@ -7,6 +7,7 @@ import getAllCustomers from '../../services/vtiger/getAllCustomers';
 import getOneCustomer from '../../services/vtiger/getOneCustomer';
 import getAllContacts from '../../services/vtiger/getAllContacts';
 import getOneContact from '../../services/vtiger/getOneContact';
+import getAllQuotes from '../../services/vtiger/getAllQuotes';
 import './test.css';
 
 const headers = [
@@ -44,6 +45,19 @@ const headersContact = [
     { label: "Mailing City", key: "BCity" },
     { label: "Mailing State", key: "BState" },
     { label: "Mailing Zip", key: "BZIPCode" },
+];
+
+const headersQuote = [
+    { label: "Organization Name", key: "CustName" },
+    { label: "Customer Code", key: "" },
+    { label: "Opportunity Name", key: "" },
+    { label: "Amount", key: "" },
+    { label: "Quote Date", key: "" },
+    { label: "Followup Date", key: "" },
+    { label: "Expected Close Date", key: "" },
+    { label: "Sales Stage", key: "" },
+    { label: "Assigned To", key: "" },
+    { label: "Contact Name", key: "" },
 ];
 
 export const VTiger = () => {
@@ -238,6 +252,55 @@ export const VTiger = () => {
             console.error(err);
         }
     };
+
+    const fetchAllQuotesCSV = async () => {
+        try {
+            const res = await getAllQuotes();
+            console.log(res)
+
+            // const csvData = res.map(item => {
+            //     const firstName = item.Contact ? item.Contact.split(' ')[0] : '';
+            //     const lastName = item.Contact ? item.Contact.split(' ')[1] : '';
+            //     const active = item.Active[1] == 'N' ? 'False' : 'True';
+
+            //     return {
+            //         CustName: item.CustName,
+            //         Code: item.Code,
+            //         Active: active,
+            //         firstName: firstName,
+            //         lastName: lastName,
+            //         Title: item.Title,
+            //         Phone: item.Phone[1],
+            //         Extension: item.Extension,
+            //         EMail: item.EMail, 
+            //         Cell_Phone: item.Cell_Phone,
+            //         FAX: item.FAX[1], 
+            //         Mobile: item.Mobile, 
+            //         Comments: item.Comments,
+            //         BAddr1: item.BAddr1, 
+            //         BCity: item.BCity, 
+            //         BState: item.BState, 
+            //         BZIPCode: item.BZIPCode,
+            //     }
+            // });
+
+            // const csvContent = [
+            //     headersContact.map(header => header.label).join(','),
+            //     ...csvData.map(item => Object.values(item).join(','))
+            // ].join('\n');
+
+            // const blob = new Blob([csvContent], { type: 'text/csv' });
+            // const url = window.URL.createObjectURL(blob);
+            // const link = document.createElement('a');
+            // link.href = url;
+            // link.setAttribute('download', 'AllCustomersContacts.csv');
+            // document.body.appendChild(link);
+            // link.click();
+            // link.remove();
+        } catch (err) {
+            console.error(err);
+        }
+    };
       
     return (
         <div style={{ display: 'flex' }}>
@@ -291,6 +354,17 @@ export const VTiger = () => {
                         <div style={{ width: 'fit-content', marginTop: '20px' }}>
                             <Button className='vtiger' onClick={() => fetchAllContactCSV()}>
                                 Get All Customers
+                            </Button>
+                        </div>
+                    </div>
+                    <div className='mx-3' style={{ textAlign: 'center', marginTop: '100px' }}>
+                        <h1>Quotes</h1>
+                    </div>
+                    <div style={{ width: '75px' }}></div>
+                    <div className='mx-3'>
+                        <div style={{ width: 'fit-content', marginTop: '20px' }}>
+                            <Button className='vtiger' onClick={() => fetchAllQuotesCSV()}>
+                                Get All Quotes
                             </Button>
                         </div>
                     </div>
