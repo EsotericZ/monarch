@@ -68,7 +68,6 @@ async function getOneContact(req, res) {
         let request = new sql.Request();
 
         request.input('custCode', sql.NVarChar, custCode)
-        // .query('SELECT * FROM Contacts WHERE Code = @custCode', function(err, result) {
         .query('SELECT * FROM CustCode AS CC JOIN Contacts AS C ON CC.CustCode = C.Code WHERE C.Code = @custCode', function(err, result) {
             if (err) console.error(err);
             let records = result.recordsets[0];
@@ -84,10 +83,10 @@ async function getAllQuotes(req, res) {
         let request = new sql.Request();
 
         request.query("\
-            SELECT Q.QuoteNo, SUM(QD.Price1) AS TotalPrice1 \
+            SELECT Q.CustDesc, Q.CustCode, Q.QuoteNo, SUM(QD.Price1) AS TotalAmount, Q.DateEnt, Q.FollowUpDate, Q.ExpireDate, Q.QuotedBy \
             FROM Quote AS Q JOIN QuoteDet AS QD ON Q.QuoteNo = QD.QuoteNo \
             WHERE Q.User_Text4='ESTIMATED' \
-            GROUP BY Q.QuoteNo",
+            GROUP BY Q.CustDesc, Q.CustCode, Q.QuoteNo, Q.DateEnt, Q.FollowUpDate, Q.ExpireDate, Q.QuotedBy",
         
         function(err, recordset) {
             if (err) console.error(err);

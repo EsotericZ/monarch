@@ -51,13 +51,22 @@ const headersQuote = [
     { label: "Organization Name", key: "CustDesc" },
     { label: "Customer Code", key: "CustCode" },
     { label: "Opportunity Name", key: "QuoteNo" },
-    { label: "Amount", key: "" },
+    { label: "Amount", key: "TotalAmount" },
     { label: "Quote Date", key: "DateEnt" },
     { label: "Followup Date", key: "FollowUpDate" },
     { label: "Expected Close Date", key: "ExpireDate" },
-    { label: "Sales Stage", key: "" },
+    { label: "Sales Stage", key: "Stage" },
     { label: "Assigned To", key: "QuotedBy" },
-    { label: "Contact Name", key: "" },
+    { label: "Contact Name", key: "Contact" },
+];
+
+const employees = [
+    { number: 0, name: "Unknown" },
+    { number: 12, name: "Brent" },
+    { number: 13, name: "Stan" },
+    { number: 98, name: "Ken" },
+    { number: 120, name: "Brandon" },
+    { number: 206, name: "CJ" },
 ];
 
 export const VTiger = () => {
@@ -258,45 +267,42 @@ export const VTiger = () => {
             const res = await getAllQuotes();
             console.log(res)
 
-            // const csvData = res.map(item => {
-            //     const firstName = item.Contact ? item.Contact.split(' ')[0] : '';
-            //     const lastName = item.Contact ? item.Contact.split(' ')[1] : '';
-            //     const active = item.Active[1] == 'N' ? 'False' : 'True';
+            const csvData = res.map(item => {
+                const dateEnt = item.DateEnt ? item.DateEnt.split('T')[0] : '';
+                const dateFollow = item.FollowUpDate ? item.FollowUpDate.split('T')[0] : '';
+                const dateExpire = item.ExpireDate ? item.ExpireDate.split('T')[0] : '';
+                const empNumber = parseInt(item.QuotedBy);
+                const emp = employees.find(e => e.number === empNumber);
+                const empName = emp ? emp.name : "Unknown";
+                const custDesc = item.CustDesc.replace(/,/g, '');
 
-            //     return {
-            //         CustName: item.CustName,
-            //         Code: item.Code,
-            //         Active: active,
-            //         firstName: firstName,
-            //         lastName: lastName,
-            //         Title: item.Title,
-            //         Phone: item.Phone[1],
-            //         Extension: item.Extension,
-            //         EMail: item.EMail, 
-            //         Cell_Phone: item.Cell_Phone,
-            //         FAX: item.FAX[1], 
-            //         Mobile: item.Mobile, 
-            //         Comments: item.Comments,
-            //         BAddr1: item.BAddr1, 
-            //         BCity: item.BCity, 
-            //         BState: item.BState, 
-            //         BZIPCode: item.BZIPCode,
-            //     }
-            // });
+                return {
+                    CustDesc: custDesc,
+                    CustCode: item.CustCode,
+                    QuoteNo: `QUOTE ${item.QuoteNo}`,
+                    TotalAmount: item.TotalAmount,
+                    DateEnt: dateEnt,
+                    FollowUpDate: dateFollow,
+                    ExpireDate: dateExpire,
+                    Stage: "Proposal or Price Quote",
+                    QuotedBy: empName,
+                    Contact: "Looking For This",
+                }
+            });
 
-            // const csvContent = [
-            //     headersContact.map(header => header.label).join(','),
-            //     ...csvData.map(item => Object.values(item).join(','))
-            // ].join('\n');
+            const csvContent = [
+                headersQuote.map(header => header.label).join(','),
+                ...csvData.map(item => Object.values(item).join(','))
+            ].join('\n');
 
-            // const blob = new Blob([csvContent], { type: 'text/csv' });
-            // const url = window.URL.createObjectURL(blob);
-            // const link = document.createElement('a');
-            // link.href = url;
-            // link.setAttribute('download', 'AllCustomersContacts.csv');
-            // document.body.appendChild(link);
-            // link.click();
-            // link.remove();
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'AllQuotes.csv');
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
         } catch (err) {
             console.error(err);
         }
