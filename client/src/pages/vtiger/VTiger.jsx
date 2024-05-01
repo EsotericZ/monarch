@@ -48,15 +48,15 @@ const headersContact = [
 ];
 
 const headersQuote = [
-    { label: "Organization Name", key: "CustName" },
-    { label: "Customer Code", key: "" },
-    { label: "Opportunity Name", key: "" },
+    { label: "Organization Name", key: "CustDesc" },
+    { label: "Customer Code", key: "CustCode" },
+    { label: "Opportunity Name", key: "QuoteNo" },
     { label: "Amount", key: "" },
-    { label: "Quote Date", key: "" },
-    { label: "Followup Date", key: "" },
-    { label: "Expected Close Date", key: "" },
+    { label: "Quote Date", key: "DateEnt" },
+    { label: "Followup Date", key: "FollowUpDate" },
+    { label: "Expected Close Date", key: "ExpireDate" },
     { label: "Sales Stage", key: "" },
-    { label: "Assigned To", key: "" },
+    { label: "Assigned To", key: "QuotedBy" },
     { label: "Contact Name", key: "" },
 ];
 

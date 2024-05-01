@@ -78,9 +78,29 @@ async function getOneContact(req, res) {
     })
 };
 
+async function getAllQuotes(req, res) {
+    sql.connect(config, function(err) {
+        if (err) console.error(err);
+        let request = new sql.Request();
+
+        request.query("\
+            SELECT Q.QuoteNo, SUM(QD.Price1) AS TotalPrice1 \
+            FROM Quote AS Q JOIN QuoteDet AS QD ON Q.QuoteNo = QD.QuoteNo \
+            WHERE Q.User_Text4='ESTIMATED' \
+            GROUP BY Q.QuoteNo",
+        
+        function(err, recordset) {
+            if (err) console.error(err);
+
+            res.send(recordset.recordsets[0]);
+        })
+    })
+};
+
 module.exports = {
     getAllCustomers,
     getOneCustomer,
     getAllContacts,
     getOneContact,
+    getAllQuotes,
 }
