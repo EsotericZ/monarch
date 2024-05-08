@@ -83,10 +83,10 @@ async function getAllQuotes(req, res) {
         let request = new sql.Request();
 
         request.query("\
-            SELECT Q.CustDesc, Q.CustCode, Q.QuoteNo, SUM(QD.Price1) AS TotalAmount, Q.DateEnt, Q.FollowUpDate, Q.ExpireDate, Q.QuotedBy \
-            FROM Quote AS Q JOIN QuoteDet AS QD ON Q.QuoteNo = QD.QuoteNo \
-            WHERE Q.User_Text4='ESTIMATED' \
-            GROUP BY Q.CustDesc, Q.CustCode, Q.QuoteNo, Q.DateEnt, Q.FollowUpDate, Q.ExpireDate, Q.QuotedBy",
+        SELECT Q.CustDesc, Q.CustCode, Q.QuoteNo, SUM(QD.Price1 * QD.Qty1) AS TotalAmount, Q.DateEnt, Q.FollowUpDate, Q.ExpireDate, Q.QuotedBy \
+        FROM Quote AS Q JOIN QuoteDet AS QD ON Q.QuoteNo = QD.QuoteNo \
+        WHERE Q.User_Text4='ESTIMATED' \
+        GROUP BY Q.CustDesc, Q.CustCode, Q.QuoteNo, Q.DateEnt, Q.FollowUpDate, Q.ExpireDate, Q.QuotedBy",
         
         function(err, recordset) {
             if (err) console.error(err);
