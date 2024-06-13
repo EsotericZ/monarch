@@ -20,6 +20,7 @@ import getNextStep from '../../services/engineering/getNextStep';
 import getPrints from '../../services/engineering/getPrints';
 import getOutsourcePrints from '../../services/engineering/getOutsourcePrints';
 import getAllUsers from '../../services/users/getAllUsers';
+import getAllQCNotes from '../../services/qcinfo/getAllQCNotes';
 import updateModel from '../../services/engineering/updateModel';
 import updateExpedite from '../../services/engineering/updateExpedite';
 import updateEngineer from '../../services/engineering/updateEngineer';
@@ -65,6 +66,7 @@ export const Engineering = () => {
     const [fullRepeats, setFullRepeats] = useState([]);
     const [fullOutsource, setFullOutsource] = useState([]);
     const [engineeringUsers, setEngineeringUsers] = useState([]);
+    const [qcData, setQCData] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const [dropdownTBRTitles, setDropdownTBRTitles] = useState({});
@@ -263,6 +265,16 @@ export const Engineering = () => {
         }
     };
 
+    const fetchQCData = async () => {
+        try {
+            const results = await getAllQCNotes();
+            const custCodes = results.data.map(item => item.custCode);
+            setQCData(custCodes);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     const toggleModel = async (job) => {
         try {
             await updateModel(job.dataValues.id);
@@ -338,6 +350,10 @@ export const Engineering = () => {
     useEffect(() => {
         fetchData();
     }, [loading, update]);
+    
+    useEffect(() => {
+        fetchQCData();
+    }, []);
 
     let qcCustomers = [
         'AIRC',
@@ -453,7 +469,8 @@ export const Engineering = () => {
                                             })
                                             .map((job, index) => {
                                                 const rowClass = job.WorkCode == 'HOT' ? 'expedite-row' : '';
-                                                const qcClass = qcCustomers.includes(job.CustCode) ? 'qc-row' : '';
+                                                // const qcClass = qcCustomers.includes(job.CustCode) ? 'qc-row' : '';
+                                                const qcClass = qcData.includes(job.CustCode) ? 'qc-row' : '';
                                                 const dropdownTBRTitle = dropdownTBRTitles[job.JobNo] || job.dataValues.engineer;
                                                 const dropdownTBRStatus = dropdownTBRStatuses[job.JobNo] || job.dataValues.jobStatus;
                                                 return (
@@ -609,7 +626,8 @@ export const Engineering = () => {
                                             .map((job, index) => {
                                                 if (job.User_Text3 != 'REPEAT' && job.User_Text2 != '6. OUTSOURCE') {
                                                     const rowClass = job.WorkCode == 'HOT' ? 'expedite-row' : '';
-                                                    const qcClass = qcCustomers.includes(job.CustCode) ? 'qc-row' : '';
+                                                    // const qcClass = qcCustomers.includes(job.CustCode) ? 'qc-row' : '';
+                                                    const qcClass = qcData.includes(job.CustCode) ? 'qc-row' : '';
                                                     const dropdownFutureTitle = dropdownFutureTitles[job.JobNo] || job.dataValues.engineer;
                                                     const dropdownFutureStatus = dropdownFutureStatuses[job.JobNo] || job.dataValues.jobStatus;
                                                     return (
