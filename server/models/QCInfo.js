@@ -13,6 +13,21 @@ QCInfo.init(
         custCode: {
             type: DataTypes.STRING,
         },
+        coc: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: 0,
+        },
+        matlCert: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: 0,
+        },
+        platCert: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: 0,
+        },
         notes: {
             type: DataTypes.STRING,
         },
