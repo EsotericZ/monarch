@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Button, FloatingLabel, Form, Modal, Table } from 'react-bootstrap';
+import { Button, FloatingLabel, Form, Modal, Table, Toast, ToastContainer } from 'react-bootstrap';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 
@@ -33,6 +34,8 @@ export const QualityInfo = () => {
     const [loading, setLoading] = useState(true);
     const [show, setShow] = useState(false);
     const [showEdit, setShowEdit] = useState(false);
+    const [showToast, setShowToast] = useState(false);
+    const [copy, setCopy] = useState('None');
     
     const [id, setId] = useState(0);
     const [custCode, setCustCode] = useState('');
@@ -236,7 +239,7 @@ export const QualityInfo = () => {
                                     <th className='text-center' width='15%'>COC</th>
                                     <th className='text-center' width='15%'>Material Certs</th>
                                     <th className='text-center' width='15%'>Plating Certs</th>
-                                    <th className='text-center' width='40%'>Notes</th>
+                                    <th className='text-center' width='40%'>Engineering Note</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -266,13 +269,22 @@ export const QualityInfo = () => {
                                                         <Icon icon={check} />
                                                     }
                                                 </td>
-                                                <td className='text-center'>{item.notes}</td>
+                                                <CopyToClipboard text={item.notes} onCopy={() => { setShowToast(true); setCopy('Engineering Note Copied') }}>
+                                                    <td className='text-center'>{item.notes}</td>
+                                                </CopyToClipboard>
                                             </tr>
                                         )
                                     })
                                 }
                             </tbody>
                         </Table>
+                        <ToastContainer className="toastCopy" style={{ zIndex: 1 }}>
+                            <Toast bg='success' onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide animation>
+                                <Toast.Body>
+                                    <strong className="mx-auto me-auto">{copy}</strong>
+                                </Toast.Body>
+                            </Toast>
+                        </ToastContainer>
                         {cookieData.quality &&
                             <Button className='rounded-circle refreshBtn' onClick={() => handleShow()}>
                                 <Icon size={24} icon={plus}/>
