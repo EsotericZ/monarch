@@ -41,7 +41,10 @@ async function updateQCInfo(req, res) {
     
     await QCInfo.update(
         {
-            custCode, 
+            custCode,
+            coc,
+            matlCert,
+            platCert,
             notes, 
         },
         { where: { id: id }}

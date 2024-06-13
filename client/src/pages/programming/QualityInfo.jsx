@@ -32,6 +32,9 @@ export const QualityInfo = () => {
     const [searchedValueCustCode, setSearchedValueCustCode] = useState('');
     const [loading, setLoading] = useState(true);
     const [show, setShow] = useState(false);
+    const [showEdit, setShowEdit] = useState(false);
+    
+    const [id, setId] = useState(0);
     const [custCode, setCustCode] = useState('');
     const [coc, setCOC] = useState(false);
     const [matlCert, setMatlCert] = useState(false);
@@ -47,10 +50,6 @@ export const QualityInfo = () => {
         } finally {
             setLoading(false);
         }
-    }
-
-    const handleOpenItem = (item) => {
-        console.log(item)
     }
 
     const handleShow = () => {
@@ -74,6 +73,43 @@ export const QualityInfo = () => {
             fetchData();
         }
     };
+
+    const handleOpenItem = (item) => {
+        setId(item.id);
+        setCustCode(item.custCode);
+        setCOC(item.coc);
+        setMatlCert(item.matlCert);
+        setPlatCert(item.platCert);
+        setNotes(item.notes);
+        setShowEdit(true)
+    };
+
+    const handleUpdate = async () => {
+        try {
+            await updateQCInfo(id, custCode, coc, matlCert, platCert, notes);
+            setId(0);
+            setCustCode('');
+            setCOC(false);
+            setMatlCert(false);
+            setPlatCert(false);
+            setNotes('');
+            setShowEdit(false);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            fetchData();
+        }
+    }
+
+    const handleCancel = () => {
+        setId(0);
+        setCustCode('');
+        setCOC(false);
+        setMatlCert(false);
+        setPlatCert(false);
+        setNotes('');
+        setShowEdit(false);
+    }
 
     useEffect(() => {
         fetchData();
@@ -139,6 +175,54 @@ export const QualityInfo = () => {
                                 Cancel
                             </Button>
                             <Button className='modalBtnVerify' variant="primary" onClick={handleSave}>
+                                Save
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
+
+                    <Modal show={showEdit} onHide={handleCancel}>
+                        <Modal.Header closeButton>
+                            <Modal.Title className="justify-content-center">Update Customer Requirements</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body className="text-center">
+                            <Form>
+                                <FloatingLabel controlId="floatingInput" label="Customer Code" className="mb-3">
+                                    <Form.Control defaultValue={custCode} onChange={(e) => {setCustCode(e.target.value)}} />
+                                </FloatingLabel>
+                                <Form.Group controlId="formBasicCheckbox" className="d-flex align-items-center mb-3" style={{ justifyContent: 'flex-start' }}>
+                                    <Form.Label style={{ fontWeight: 'normal' }} className="me-2 mb-0">Certificate of Conformance Required</Form.Label>
+                                    <Form.Check 
+                                        type="checkbox" 
+                                        onChange={(e) => setCOC(e.target.checked)}
+                                        checked={coc}
+                                    />
+                                </Form.Group>
+                                <Form.Group controlId="formBasicCheckbox" className="d-flex align-items-center mb-3" style={{ justifyContent: 'flex-start' }}>
+                                    <Form.Label style={{ fontWeight: 'normal' }} className="me-2 mb-0">Material Certs Required</Form.Label>
+                                    <Form.Check 
+                                        type="checkbox" 
+                                        onChange={(e) => setMatlCert(e.target.checked)}
+                                        checked={matlCert}
+                                    />
+                                </Form.Group>
+                                <Form.Group controlId="formBasicCheckbox" className="d-flex align-items-center mb-3" style={{ justifyContent: 'flex-start' }}>
+                                    <Form.Label style={{ fontWeight: 'normal' }} className="me-2 mb-0">Plating Certs Required</Form.Label>
+                                    <Form.Check 
+                                        type="checkbox" 
+                                        onChange={(e) => setPlatCert(e.target.checked)}
+                                        checked={platCert}
+                                    />
+                                </Form.Group>
+                                <FloatingLabel controlId="floatingInput" label="Notes" className="mb-3">
+                                    <Form.Control defaultValue={notes} onChange={(e) => {setNotes(e.target.value)}} />
+                                </FloatingLabel>
+                            </Form>
+                        </Modal.Body>
+                        <Modal.Footer className="justify-content-center">
+                            <Button className='modalBtnCancel' variant="secondary" onClick={handleCancel}>
+                                Cancel
+                            </Button>
+                            <Button className='modalBtnVerify' variant="primary" onClick={handleUpdate}>
                                 Save
                             </Button>
                         </Modal.Footer>
