@@ -31,11 +31,16 @@ export const QualityInfo = () => {
     const [searchedQC, setSearchedQC] = useState([]);
     const [searchedValueCustCode, setSearchedValueCustCode] = useState('');
     const [loading, setLoading] = useState(true);
-
+    const [show, setShow] = useState(false);
+    const [custCode, setCustCode] = useState('');
+    const [coc, setCOC] = useState(false);
+    const [matlCert, setMatlCert] = useState(false);
+    const [platCert, setPlatCert] = useState(false);
+    const [notes, setNotes] = useState('');
+    
     const fetchData = async () => {
         try {
             const results = await getAllQCNotes();
-            console.log(results.data)
             setSearchedQC(results.data);
         } catch (err) {
             console.error(err);
@@ -47,6 +52,28 @@ export const QualityInfo = () => {
     const handleOpenItem = (item) => {
         console.log(item)
     }
+
+    const handleShow = () => {
+        setShow(true);
+    };
+
+    const handleClose = () => setShow(false);
+
+    const handleSave = async () => {
+        try {
+            await createQCNote(custCode, coc, matlCert, platCert, notes);
+            setShow(false);
+            setCustCode('');
+            setCOC(false);
+            setMatlCert(false);
+            setPlatCert(false);
+            setNotes('');
+        } catch (err) {
+            console.error(err);
+        } finally {
+            fetchData();
+        }
+    };
 
     useEffect(() => {
         fetchData();
@@ -65,14 +92,66 @@ export const QualityInfo = () => {
             :
                 <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
                     <h1 className='text-center'>Quality Info</h1>
+                    <Modal show={show} onHide={handleClose}>
+                        <Modal.Header closeButton>
+                            <Modal.Title className="justify-content-center">Add New</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body className="text-center">
+                            <Form>
+                                <FloatingLabel controlId="floatingInput" label="Customer Code" className="mb-3">
+                                    <Form.Control onChange={(e) => {setCustCode(e.target.value)}} />
+                                </FloatingLabel>
+                                <Form.Group controlId="formBasicCheckbox" className="d-flex align-items-center mb-3" style={{ justifyContent: 'flex-start' }}>
+                                    <Form.Label style={{ fontWeight: 'normal' }} className="me-2 mb-0">Certificate of Conformance Required</Form.Label>
+                                    <Form.Check 
+                                        type="checkbox" 
+                                        onChange={(e) => setCOC(e.target.checked)}
+                                        checked={coc}
+                                    />
+                                </Form.Group>
+                                <Form.Group controlId="formBasicCheckbox" className="d-flex align-items-center mb-3" style={{ justifyContent: 'flex-start' }}>
+                                    <Form.Label style={{ fontWeight: 'normal' }} className="me-2 mb-0">Material Certs Required</Form.Label>
+                                    <Form.Check 
+                                        type="checkbox" 
+                                        onChange={(e) => setMatlCert(e.target.checked)}
+                                        checked={matlCert}
+                                    />
+                                </Form.Group>
+                                <Form.Group controlId="formBasicCheckbox" className="d-flex align-items-center mb-3" style={{ justifyContent: 'flex-start' }}>
+                                    <Form.Label style={{ fontWeight: 'normal' }} className="me-2 mb-0">Plating Certs Required</Form.Label>
+                                    <Form.Check 
+                                        type="checkbox" 
+                                        onChange={(e) => setPlatCert(e.target.checked)}
+                                        checked={platCert}
+                                    />
+                                </Form.Group>
+                                <FloatingLabel controlId="floatingTextarea" label="Notes" className="mb-3">
+                                    <Form.Control 
+                                        as="textarea" 
+                                        rows={4}
+                                        onChange={(e) => setNotes(e.target.value)} 
+                                    />
+                                </FloatingLabel>
+                            </Form>
+                        </Modal.Body>
+                        <Modal.Footer className="justify-content-center">
+                            <Button className='modalBtnCancel' variant="secondary" onClick={handleClose}>
+                                Cancel
+                            </Button>
+                            <Button className='modalBtnVerify' variant="primary" onClick={handleSave}>
+                                Save
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
+
                     <div className='mx-3'>
                         <Table striped hover>
                             <thead>
                                 <tr>
-                                    <th className='text-center' width='20%'><input onChange={(e) => setSearchedValueCustCode(e.target.value)} placeholder='&#xf002;  Customer Code' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                    <th className='text-center' width='10%'>COC</th>
-                                    <th className='text-center' width='10%'>Material Certs</th>
-                                    <th className='text-center' width='10%'>Plating Certs</th>
+                                    <th className='text-center' width='15%'><input onChange={(e) => setSearchedValueCustCode(e.target.value)} placeholder='&#xf002;  Customer Code' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                    <th className='text-center' width='15%'>COC</th>
+                                    <th className='text-center' width='15%'>Material Certs</th>
+                                    <th className='text-center' width='15%'>Plating Certs</th>
                                     <th className='text-center' width='40%'>Notes</th>
                                 </tr>
                             </thead>
@@ -110,6 +189,11 @@ export const QualityInfo = () => {
                                 }
                             </tbody>
                         </Table>
+                        {cookieData.quality &&
+                            <Button className='rounded-circle refreshBtn' onClick={() => handleShow()}>
+                                <Icon size={24} icon={plus}/>
+                            </Button>
+                        }
                     </div>
                 </div>
             }

@@ -34,6 +34,9 @@ async function createQCNote(req, res) {
 async function updateQCInfo(req, res) {
     let id = req.body.id
     let custCode = req.body.custCode
+    let coc = req.body.coc
+    let matlCert = req.body.matlCert
+    let platCert = req.body.platCert
     let notes = req.body.notes
     
     await QCInfo.update(

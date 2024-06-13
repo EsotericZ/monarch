@@ -1,8 +1,11 @@
 import api from '../../api/api';
 
-const createQCNote = async (custCode, notes) => {
+const createQCNote = async (custCode, coc, matlCert, platCert, notes) => {
     const res = await api.post('/qcinfo/createQCNote', {
-        custCode, 
+        custCode,
+        coc,
+        matlCert,
+        platCert,
         notes, 
     });
     return res.data;
