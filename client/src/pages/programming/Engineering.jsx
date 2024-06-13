@@ -355,24 +355,24 @@ export const Engineering = () => {
         fetchQCData();
     }, []);
 
-    let qcCustomers = [
-        'AIRC',
-        'FAT',
-        'JFT',
-        'JUWI',
-        'MBI',
-        'MSM',
-        'NFT',
-        'PROVISION',
-        'PVM',
-        'QL',
-        'SFAB',
-        'STONEAGE',
-        'THS',
-        'TRELL',
-        'VERIS',
-        'WAR',
-    ];
+    // let qcCustomers = [
+    //     'AIRC',
+    //     'FAT',
+    //     'JFT',
+    //     'JUWI',
+    //     'MBI',
+    //     'MSM',
+    //     'NFT',
+    //     'PROVISION',
+    //     'PVM',
+    //     'QL',
+    //     'SFAB',
+    //     'STONEAGE',
+    //     'THS',
+    //     'TRELL',
+    //     'VERIS',
+    //     'WAR',
+    // ];
 
     return (
         <div style={{ display: 'flex' }}>
