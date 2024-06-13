@@ -42,6 +42,7 @@ export const QualityInfo = () => {
     const [coc, setCOC] = useState(false);
     const [matlCert, setMatlCert] = useState(false);
     const [platCert, setPlatCert] = useState(false);
+    const [addInfo, setAddInfo] = useState(false);
     const [notes, setNotes] = useState('');
     
     const fetchData = async () => {
@@ -63,12 +64,13 @@ export const QualityInfo = () => {
 
     const handleSave = async () => {
         try {
-            await createQCNote(custCode, coc, matlCert, platCert, notes);
+            await createQCNote(custCode, coc, matlCert, platCert, addInfo, notes);
             setShow(false);
             setCustCode('');
             setCOC(false);
             setMatlCert(false);
             setPlatCert(false);
+            setAddInfo(false);
             setNotes('');
         } catch (err) {
             console.error(err);
@@ -83,18 +85,20 @@ export const QualityInfo = () => {
         setCOC(item.coc);
         setMatlCert(item.matlCert);
         setPlatCert(item.platCert);
+        setAddInfo(item.addInfo);
         setNotes(item.notes);
         setShowEdit(true)
     };
 
     const handleUpdate = async () => {
         try {
-            await updateQCInfo(id, custCode, coc, matlCert, platCert, notes);
+            await updateQCInfo(id, custCode, coc, matlCert, platCert, addInfo, notes);
             setId(0);
             setCustCode('');
             setCOC(false);
             setMatlCert(false);
             setPlatCert(false);
+            setAddInfo(false);
             setNotes('');
             setShowEdit(false);
         } catch (err) {
@@ -110,6 +114,7 @@ export const QualityInfo = () => {
         setCOC(false);
         setMatlCert(false);
         setPlatCert(false);
+        setAddInfo(false);
         setNotes('');
         setShowEdit(false);
     }
@@ -164,6 +169,14 @@ export const QualityInfo = () => {
                                         checked={platCert}
                                     />
                                 </Form.Group>
+                                <Form.Group controlId="formBasicCheckbox" className="d-flex align-items-center mb-3" style={{ justifyContent: 'flex-start' }}>
+                                    <Form.Label style={{ fontWeight: 'normal' }} className="me-2 mb-0">Additional Info</Form.Label>
+                                    <Form.Check 
+                                        type="checkbox" 
+                                        onChange={(e) => setAddInfo(e.target.checked)}
+                                        checked={addInfo}
+                                    />
+                                </Form.Group>
                                 <FloatingLabel controlId="floatingTextarea" label="Notes" className="mb-3">
                                     <Form.Control 
                                         as="textarea" 
@@ -216,6 +229,14 @@ export const QualityInfo = () => {
                                         checked={platCert}
                                     />
                                 </Form.Group>
+                                <Form.Group controlId="formBasicCheckbox" className="d-flex align-items-center mb-3" style={{ justifyContent: 'flex-start' }}>
+                                    <Form.Label style={{ fontWeight: 'normal' }} className="me-2 mb-0">Additional Info</Form.Label>
+                                    <Form.Check 
+                                        type="checkbox" 
+                                        onChange={(e) => setAddInfo(e.target.checked)}
+                                        checked={addInfo}
+                                    />
+                                </Form.Group>
                                 <FloatingLabel controlId="floatingInput" label="Notes" className="mb-3">
                                     <Form.Control defaultValue={notes} onChange={(e) => {setNotes(e.target.value)}} />
                                 </FloatingLabel>
@@ -239,6 +260,7 @@ export const QualityInfo = () => {
                                     <th className='text-center' width='15%'>COC</th>
                                     <th className='text-center' width='15%'>Material Certs</th>
                                     <th className='text-center' width='15%'>Plating Certs</th>
+                                    <th className='text-center' width='15%'>Additional Info</th>
                                     <th className='text-center' width='40%'>Engineering Note</th>
                                 </tr>
                             </thead>
@@ -266,6 +288,11 @@ export const QualityInfo = () => {
                                                 </td>
                                                 <td className='text-center'>
                                                     {item.platCert &&
+                                                        <Icon icon={check} />
+                                                    }
+                                                </td>
+                                                <td className='text-center'>
+                                                    {item.addInfo &&
                                                         <Icon icon={check} />
                                                     }
                                                 </td>

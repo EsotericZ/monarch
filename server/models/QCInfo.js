@@ -28,6 +28,11 @@ QCInfo.init(
             allowNull: false,
             defaultValue: 0,
         },
+        addInfo: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: 0,
+        },
         notes: {
             type: DataTypes.STRING,
         },

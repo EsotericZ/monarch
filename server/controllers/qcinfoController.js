@@ -37,6 +37,7 @@ async function updateQCInfo(req, res) {
     let coc = req.body.coc
     let matlCert = req.body.matlCert
     let platCert = req.body.platCert
+    let addInfo = req.body.addInfo
     let notes = req.body.notes
     
     await QCInfo.update(
@@ -45,6 +46,7 @@ async function updateQCInfo(req, res) {
             coc,
             matlCert,
             platCert,
+            addInfo,
             notes, 
         },
         { where: { id: id }}
