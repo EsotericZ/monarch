@@ -354,7 +354,8 @@ export const Engineering = () => {
         'STONEAGE',
         'THS',
         'TRELL',
-        'VERIS'
+        'VERIS',
+        'WAR',
     ];
 
     return (
