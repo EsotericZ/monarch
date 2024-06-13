@@ -170,7 +170,7 @@ export const QualityInfo = () => {
                                     />
                                 </Form.Group>
                                 <Form.Group controlId="formBasicCheckbox" className="d-flex align-items-center mb-3" style={{ justifyContent: 'flex-start' }}>
-                                    <Form.Label style={{ fontWeight: 'normal' }} className="me-2 mb-0">Additional Info</Form.Label>
+                                    <Form.Label style={{ fontWeight: 'normal' }} className="me-2 mb-0">First Article</Form.Label>
                                     <Form.Check 
                                         type="checkbox" 
                                         onChange={(e) => setAddInfo(e.target.checked)}
@@ -230,7 +230,7 @@ export const QualityInfo = () => {
                                     />
                                 </Form.Group>
                                 <Form.Group controlId="formBasicCheckbox" className="d-flex align-items-center mb-3" style={{ justifyContent: 'flex-start' }}>
-                                    <Form.Label style={{ fontWeight: 'normal' }} className="me-2 mb-0">Additional Info</Form.Label>
+                                    <Form.Label style={{ fontWeight: 'normal' }} className="me-2 mb-0">First Article</Form.Label>
                                     <Form.Check 
                                         type="checkbox" 
                                         onChange={(e) => setAddInfo(e.target.checked)}
@@ -256,11 +256,11 @@ export const QualityInfo = () => {
                         <Table striped hover>
                             <thead>
                                 <tr>
-                                    <th className='text-center' width='15%'><input onChange={(e) => setSearchedValueCustCode(e.target.value)} placeholder='&#xf002;  Customer Code' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                    <th className='text-center' width='15%'>COC</th>
-                                    <th className='text-center' width='15%'>Material Certs</th>
-                                    <th className='text-center' width='15%'>Plating Certs</th>
-                                    <th className='text-center' width='15%'>Additional Info</th>
+                                    <th className='text-center' width='12%'><input onChange={(e) => setSearchedValueCustCode(e.target.value)} placeholder='&#xf002;  Customer Code' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                    <th className='text-center' width='12%'>COC</th>
+                                    <th className='text-center' width='12%'>Material Certs</th>
+                                    <th className='text-center' width='12%'>Plating Certs</th>
+                                    <th className='text-center' width='12%'>First Article</th>
                                     <th className='text-center' width='40%'>Engineering Note</th>
                                 </tr>
                             </thead>
