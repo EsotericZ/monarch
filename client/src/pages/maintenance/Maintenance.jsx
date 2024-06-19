@@ -316,11 +316,11 @@ export const Maintenance = () => {
                         <Modal.Body>
                             Approve: Record #{record}
                         </Modal.Body>
-                        <Modal.Footer>
-                            <Button variant="secondary" onClick={handleApproveNo}>
+                        <Modal.Footer className="justify-content-center">
+                            <Button className='modalBtnCancel' variant="secondary" onClick={handleApproveNo}>
                                 No
                             </Button>
-                            <Button variant="primary" onClick={handleApproveYes}>
+                            <Button className='modalBtnVerify' variant="primary" onClick={handleApproveYes}>
                                 Yes
                             </Button>
                         </Modal.Footer>
@@ -333,11 +333,11 @@ export const Maintenance = () => {
                         <Modal.Body>
                             Deny: Record #{record}
                         </Modal.Body>
-                        <Modal.Footer>
-                            <Button variant="secondary" onClick={handleDenyNo}>
+                        <Modal.Footer className="justify-content-center">
+                            <Button className='modalBtnCancel' variant="secondary" onClick={handleDenyNo}>
                                 No
                             </Button>
-                            <Button variant="primary" onClick={handleDenyYes}>
+                            <Button className='modalBtnVerify' variant="primary" onClick={handleDenyYes}>
                                 Yes
                             </Button>
                         </Modal.Footer>
@@ -350,11 +350,11 @@ export const Maintenance = () => {
                         <Modal.Body>
                             Hold: Record #{record}
                         </Modal.Body>
-                        <Modal.Footer>
-                            <Button variant="secondary" onClick={handleHoldNo}>
+                        <Modal.Footer className="justify-content-center">
+                            <Button className='modalBtnCancel' variant="secondary" onClick={handleHoldNo}>
                                 No
                             </Button>
-                            <Button variant="primary" onClick={handleHoldYes}>
+                            <Button className='modalBtnVerify' variant="primary" onClick={handleHoldYes}>
                                 Yes
                             </Button>
                         </Modal.Footer>
@@ -367,11 +367,11 @@ export const Maintenance = () => {
                         <Modal.Body>
                             Finished: Record #{record}
                         </Modal.Body>
-                        <Modal.Footer>
-                            <Button variant="secondary" onClick={handleDoneNo}>
+                        <Modal.Footer className="justify-content-center">
+                            <Button className='modalBtnCancel' variant="secondary" onClick={handleDoneNo}>
                                 No
                             </Button>
-                            <Button variant="primary" onClick={handleDoneYes}>
+                            <Button className='modalBtnVerify' variant="primary" onClick={handleDoneYes}>
                                 Yes
                             </Button>
                         </Modal.Footer>
@@ -415,12 +415,12 @@ export const Maintenance = () => {
                                 </FloatingLabel>
                             </Form>
                         </Modal.Body>
-                        <Modal.Footer>
-                            <Button variant="secondary" onClick={handleCloseAdd}>
+                        <Modal.Footer className="justify-content-center">
+                            <Button className='modalBtnCancel' variant="secondary" onClick={handleCloseAdd}>
                                 Cancel
                             </Button>
-                            <Button variant="primary" onClick={handleSave}>
-                                Save Changes
+                            <Button className='modalBtnVerify' variant="primary" onClick={handleSave}>
+                                Save
                             </Button>
                         </Modal.Footer>
                     </Modal>
@@ -451,12 +451,12 @@ export const Maintenance = () => {
                                 </FloatingLabel>
                             </Form>
                         </Modal.Body>
-                        <Modal.Footer>
-                            <Button variant="secondary" onClick={handleCloseUpdate}>
+                        <Modal.Footer className="justify-content-center">
+                            <Button className='modalBtnCancel' variant="secondary" onClick={handleCloseUpdate}>
                                 Cancel
                             </Button>
-                            <Button variant="primary" onClick={handleUpdate}>
-                                Save Changes
+                            <Button className='modalBtnVerify' variant="primary" onClick={handleUpdate}>
+                                Save
                             </Button>
                         </Modal.Footer>
                     </Modal>
@@ -499,12 +499,12 @@ export const Maintenance = () => {
                                 </FloatingLabel>
                             </Form>
                         </Modal.Body>
-                        <Modal.Footer>
-                            <Button variant="secondary" onClick={handleCloseActive}>
+                        <Modal.Footer className="justify-content-center">
+                            <Button className='modalBtnCancel' variant="secondary" onClick={handleCloseActive}>
                                 Cancel
                             </Button>
-                            <Button variant="primary" onClick={handleUpdateActive}>
-                                Save Changes
+                            <Button className='modalBtnVerify' variant="primary" onClick={handleUpdateActive}>
+                                Save
                             </Button>
                         </Modal.Footer>
                     </Modal>
