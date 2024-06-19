@@ -638,18 +638,18 @@ export const Maintenance = () => {
                                 <Table striped hover>
                                     <thead>
                                         <tr>
-                                            <th className='text-center'>Record<input onChange={(e) => setSearchedValueRecord(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Requester<input onChange={(e) => setSearchedValueRequester(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center align-middle'>Created</th>
-                                            <th className='text-center'>Area<input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Equipment<input onChange={(e) => setSearchedValueEquipment(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Type<input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Description<input onChange={(e) => setSearchedValueDescription(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Comments<input onChange={(e) => setSearchedValueComments(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
+                                            <th className='text-center' width='6%'><input onChange={(e) => setSearchedValueRecord(e.target.value)} placeholder='&#xf002;  Record' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='8%'><input onChange={(e) => setSearchedValueRequester(e.target.value)} placeholder='&#xf002;  Requester' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='8%'>Created</th>
+                                            <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='&#xf002;  Area' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueEquipment(e.target.value)} placeholder='&#xf002; Equipment' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='8%'><input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='&#xf002;  Type' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='20%'><input onChange={(e) => setSearchedValueDescription(e.target.value)} placeholder='&#xf002;  Description' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='20%'><input onChange={(e) => setSearchedValueComments(e.target.value)} placeholder='&#xf002;  Comments' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             {cookieData.maintenance ?
-                                                <th className='text-center align-middle'>Actions</th>
+                                                <th className='text-center align-middle' width='10%'>Actions</th>
                                                 :
-                                                <th className='text-center align-middle'>Status</th>
+                                                <th className='text-center align-middle' width='10%'>Status</th>
                                             }
                                         </tr>
                                     </thead>
@@ -739,14 +739,18 @@ export const Maintenance = () => {
                                 <Table striped hover>
                                     <thead>
                                         <tr>
-                                            <th className='text-center'>Record<input onChange={(e) => setSearchedValueRecord(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Requester<input onChange={(e) => setSearchedValueRequester(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Area<input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Equipment<input onChange={(e) => setSearchedValueEquipment(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Type<input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Description<input onChange={(e) => setSearchedValueDescription(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Comments<input onChange={(e) => setSearchedValueComments(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center align-middle'>Actions</th>
+                                            <th className='text-center' width='8%'><input onChange={(e) => setSearchedValueRecord(e.target.value)} placeholder='&#xf002;  Record' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='12%'><input onChange={(e) => setSearchedValueRequester(e.target.value)} placeholder='&#xf002;  Requester' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='12%'><input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='&#xf002;  Area' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='12%'><input onChange={(e) => setSearchedValueEquipment(e.target.value)} placeholder='&#xf002; Equipment' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='12%'><input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='&#xf002;  Type' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='23%'><input onChange={(e) => setSearchedValueDescription(e.target.value)} placeholder='&#xf002;  Description' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='23%'><input onChange={(e) => setSearchedValueComments(e.target.value)} placeholder='&#xf002;  Comments' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            {cookieData.maintenance ?
+                                                <th className='text-center align-middle'>Actions</th>
+                                                :
+                                                <th className='text-center align-middle'>Status</th>
+                                            }
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -828,13 +832,13 @@ export const Maintenance = () => {
                                 <Table striped hover>
                                     <thead>
                                         <tr>
-                                            <th className='text-center'>Record<input onChange={(e) => setSearchedValueRecord(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Area<input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Equipment<input onChange={(e) => setSearchedValueEquipment(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Type<input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Description<input onChange={(e) => setSearchedValueDescription(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Comments<input onChange={(e) => setSearchedValueComments(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center align-middle'>Completed</th>
+                                            <th className='text-center' width='8%'><input onChange={(e) => setSearchedValueRecord(e.target.value)} placeholder='&#xf002;  Record' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='12%'><input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='&#xf002;  Area' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='12%'><input onChange={(e) => setSearchedValueEquipment(e.target.value)} placeholder='&#xf002; Equipment' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='12%'><input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='&#xf002;  Type' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='23%'><input onChange={(e) => setSearchedValueDescription(e.target.value)} placeholder='&#xf002;  Description' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='23%'><input onChange={(e) => setSearchedValueComments(e.target.value)} placeholder='&#xf002;  Comments' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center align-middle' width='10%'>Completed</th>
                                         </tr>
                                     </thead>
                                     <tbody>
