@@ -549,13 +549,13 @@ export const Maintenance = () => {
                                 <Table striped hover>
                                     <thead>
                                         <tr>
-                                            <th className='text-center'>Record<input onChange={(e) => setSearchedValueRecord(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Area<input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Equipment<input onChange={(e) => setSearchedValueEquipment(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Type<input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Description<input onChange={(e) => setSearchedValueDescription(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center'>Comments<input onChange={(e) => setSearchedValueComments(e.target.value)} placeholder='...' className='text-center' style={{width: '100%'}} /></th>
-                                            <th className='text-center align-middle'>Updated</th>
+                                            <th className='text-center' width='8%'><input onChange={(e) => setSearchedValueRecord(e.target.value)} placeholder='&#xf002;  Record' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='12%'><input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='&#xf002;  Area' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='12%'><input onChange={(e) => setSearchedValueEquipment(e.target.value)} placeholder='&#xf002; Equipment' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='12%'><input onChange={(e) => setSearchedValueType(e.target.value)} placeholder='&#xf002;  Type' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='23%'><input onChange={(e) => setSearchedValueDescription(e.target.value)} placeholder='&#xf002;  Description' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='23%'><input onChange={(e) => setSearchedValueComments(e.target.value)} placeholder='&#xf002;  Comments' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center align-middle' width='6%'>Updated</th>
                                             {cookieData.maintenance &&
                                                 <th className='text-center align-middle'>Actions</th>
                                             }
@@ -587,18 +587,24 @@ export const Maintenance = () => {
                                                     .toLowerCase()
                                                     .includes(searchedValueType.toString().toLowerCase())
                                             )
-                                            .filter((row) => 
-                                                !searchedValueDescription || row.description
+                                            .filter((row) => {
+                                                if (!searchedValueDescription) { return true; }
+                                                if (!row || !row.description) { return false; }
+                                                
+                                                return row.description
                                                     .toString()
                                                     .toLowerCase()
                                                     .includes(searchedValueDescription.toString().toLowerCase())
-                                            )
-                                            .filter((row) => 
-                                                !searchedValueComments || row.comments
+                                            })
+                                            .filter((row) => {
+                                                if (!searchedValueComments) { return true; }
+                                                if (!row || !row.comments) { return false; }
+                                                
+                                                return row.comments
                                                     .toString()
                                                     .toLowerCase()
                                                     .includes(searchedValueComments.toString().toLowerCase())
-                                            )
+                                            })
                                             .map((request, index) => {
                                                 if (request.approvedBy && !request.done) {
                                                     return (
@@ -679,18 +685,24 @@ export const Maintenance = () => {
                                                     .toLowerCase()
                                                     .includes(searchedValueType.toString().toLowerCase())
                                             )
-                                            .filter((row) => 
-                                                !searchedValueDescription || row.description
+                                            .filter((row) => {
+                                                if (!searchedValueDescription) { return true; }
+                                                if (!row || !row.description) { return false; }
+                                                
+                                                return row.description
                                                     .toString()
                                                     .toLowerCase()
                                                     .includes(searchedValueDescription.toString().toLowerCase())
-                                            )
-                                            .filter((row) => 
-                                                !searchedValueComments || row.comments
+                                            })
+                                            .filter((row) => {
+                                                if (!searchedValueComments) { return true; }
+                                                if (!row || !row.comments) { return false; }
+                                                
+                                                return row.comments
                                                     .toString()
                                                     .toLowerCase()
                                                     .includes(searchedValueComments.toString().toLowerCase())
-                                            )
+                                            })
                                             .map((request, index) => {
                                                 if (!request.approvedBy && !request.hold && !request.done) {
                                                     return (
@@ -769,18 +781,24 @@ export const Maintenance = () => {
                                                     .toLowerCase()
                                                     .includes(searchedValueType.toString().toLowerCase())
                                             )
-                                            .filter((row) => 
-                                                !searchedValueDescription || row.description
+                                            .filter((row) => {
+                                                if (!searchedValueDescription) { return true; }
+                                                if (!row || !row.description) { return false; }
+                                                
+                                                return row.description
                                                     .toString()
                                                     .toLowerCase()
                                                     .includes(searchedValueDescription.toString().toLowerCase())
-                                            )
-                                            .filter((row) => 
-                                                !searchedValueComments || row.comments
+                                            })
+                                            .filter((row) => {
+                                                if (!searchedValueComments) { return true; }
+                                                if (!row || !row.comments) { return false; }
+                                                
+                                                return row.comments
                                                     .toString()
                                                     .toLowerCase()
                                                     .includes(searchedValueComments.toString().toLowerCase())
-                                            )
+                                            })
                                             .map((request, index) => {
                                                 if (!request.approvedBy && request.hold && !request.done) {
                                                     return (
@@ -845,18 +863,24 @@ export const Maintenance = () => {
                                                     .toLowerCase()
                                                     .includes(searchedValueType.toString().toLowerCase())
                                             )
-                                            .filter((row) => 
-                                                !searchedValueDescription || row.description
+                                            .filter((row) => {
+                                                if (!searchedValueDescription) { return true; }
+                                                if (!row || !row.description) { return false; }
+                                                
+                                                return row.description
                                                     .toString()
                                                     .toLowerCase()
                                                     .includes(searchedValueDescription.toString().toLowerCase())
-                                            )
-                                            .filter((row) => 
-                                                !searchedValueComments || row.comments
+                                            })
+                                            .filter((row) => {
+                                                if (!searchedValueComments) { return true; }
+                                                if (!row || !row.comments) { return false; }
+                                                
+                                                return row.comments
                                                     .toString()
                                                     .toLowerCase()
                                                     .includes(searchedValueComments.toString().toLowerCase())
-                                            )
+                                            })
                                             .map((request, index) => {
                                                 if (request.done) {
                                                     return (
