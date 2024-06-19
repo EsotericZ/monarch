@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Dropdown, FloatingLabel, Form, Modal, Tab, Tabs, Table } from 'react-bootstrap';
+import { Button, Dropdown, DropdownButton, FloatingLabel, Form, Modal, Tab, Tabs, Table } from 'react-bootstrap';
 import { format, parseISO } from 'date-fns';
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
@@ -609,18 +609,20 @@ export const Maintenance = () => {
                                                 if (request.approvedBy && !request.done) {
                                                     return (
                                                         <tr key={index} request={request}>
-                                                            <td onClick={() => handleOpenActive(request)} className='text-center'>{request.record}</td>
-                                                            <td onClick={() => handleOpenActive(request)} className='text-center'>{request.area}</td>
-                                                            <td onClick={() => handleOpenActive(request)} className='text-center'>{request.equipment}</td>
-                                                            <td onClick={() => handleOpenActive(request)} className='text-center'>{request.requestType}</td>
+                                                            <td onClick={() => handleOpenActive(request)} className='text-center align-middle'>{request.record}</td>
+                                                            <td onClick={() => handleOpenActive(request)} className='text-center align-middle'>{request.area}</td>
+                                                            <td onClick={() => handleOpenActive(request)} className='text-center align-middle'>{request.equipment}</td>
+                                                            <td onClick={() => handleOpenActive(request)} className='text-center align-middle'>{request.requestType}</td>
                                                             <td onClick={() => handleOpenActive(request)}>{request.description}</td>
                                                             <td onClick={() => handleOpenActive(request)}>{request.comments}</td>
-                                                            <td onClick={() => handleOpenActive(request)} className='text-center'>{format(parseISO(request.updatedAt), 'MM/dd h:mmb')}</td>
+                                                            <td onClick={() => handleOpenActive(request)} className='text-center align-middle'>{format(parseISO(request.updatedAt), 'MM/dd h:mmb')}</td>
                                                             {cookieData.maintenance &&
-                                                                <td>
-                                                                    <Icon icon={checkCircleO} size={18} style={{ color: '#5BC236' }} onClick={() => handleDone(request)} />
-                                                                    <Icon icon={timesCircleO} size={18} style={{ color: '#CC0202' }} onClick={() => handleDeny(request)} />
-                                                                    <Icon icon={compass} size={18} style={{ color: '#F0D500' }} onClick={() => handleHold(request)} />
+                                                                <td className='text-center'>
+                                                                    <DropdownButton title='Active' align={{ lg: 'start' }} className='text-center dropDowns dropstart align-middle'>
+                                                                        <Dropdown.Item onClick={() => handleDone(request)} className='dropDownItem'>COMPLETED</Dropdown.Item>
+                                                                        <Dropdown.Item onClick={() => handleDeny(request)} className='dropDownItem'>DENY</Dropdown.Item>
+                                                                        <Dropdown.Item onClick={() => handleHold(request)} className='dropDownItem'>HOLD</Dropdown.Item>
+                                                                    </DropdownButton>
                                                                 </td>
                                                             }
                                                         </tr>
@@ -707,21 +709,23 @@ export const Maintenance = () => {
                                                 if (!request.approvedBy && !request.hold && !request.done) {
                                                     return (
                                                         <tr key={index} request={request}>
-                                                            <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.record}</td>
-                                                            <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.requestedBy}</td>
-                                                            <td onClick={() => handleOpenUpdate(request)} className='text-center'>{format(parseISO(request.createdAt), 'MM/dd h:mmb')}</td>
-                                                            <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.area}</td>
-                                                            <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.equipment}</td>
-                                                            <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.requestType}</td>
+                                                            <td onClick={() => handleOpenUpdate(request)} className='text-center align-middle'>{request.record}</td>
+                                                            <td onClick={() => handleOpenUpdate(request)} className='text-center align-middle'>{request.requestedBy}</td>
+                                                            <td onClick={() => handleOpenUpdate(request)} className='text-center align-middle'>{format(parseISO(request.createdAt), 'MM/dd h:mmb')}</td>
+                                                            <td onClick={() => handleOpenUpdate(request)} className='text-center align-middle'>{request.area}</td>
+                                                            <td onClick={() => handleOpenUpdate(request)} className='text-center align-middle'>{request.equipment}</td>
+                                                            <td onClick={() => handleOpenUpdate(request)} className='text-center align-middle'>{request.requestType}</td>
                                                             <td onClick={() => handleOpenUpdate(request)}>{request.description}</td>
                                                             <td onClick={() => handleOpenUpdate(request)}>{request.comments}</td>
                                                             {cookieData.maintenance ?
                                                                 <td className='text-center'>
-                                                                    <Icon icon={checkCircleO} size={18} style={{ color: '#5BC236' }} onClick={() => handleApprove(request)} />
-                                                                    <Icon icon={timesCircleO} size={18} style={{ color: '#CC0202' }} onClick={() => handleDeny(request)} />
-                                                                    <Icon icon={compass} size={18} style={{ color: '#F0D500' }} onClick={() => handleHold(request)} />
+                                                                    <DropdownButton title='Options' align={{ lg: 'start' }} className='text-center dropDowns'>
+                                                                        <Dropdown.Item onClick={() => handleApprove(request)} className='dropDownItem'>APPROVE</Dropdown.Item>
+                                                                        <Dropdown.Item onClick={() => handleDeny(request)} className='dropDownItem'>DENY</Dropdown.Item>
+                                                                        <Dropdown.Item onClick={() => handleHold(request)} className='dropDownItem'>HOLD</Dropdown.Item>
+                                                                    </DropdownButton>
                                                                 </td>
-                                                                :
+                                                            :
                                                                 <td onClick={() => handleOpenUpdate(request)} className='text-center'>Pending</td>
                                                             }
                                                         </tr>
@@ -807,16 +811,18 @@ export const Maintenance = () => {
                                                 if (!request.approvedBy && request.hold && !request.done) {
                                                     return (
                                                         <tr key={index} request={request}>
-                                                            <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.record}</td>
-                                                            <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.requestedBy}</td>
-                                                            <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.area}</td>
-                                                            <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.equipment}</td>
-                                                            <td onClick={() => handleOpenUpdate(request)} className='text-center'>{request.requestType}</td>
+                                                            <td onClick={() => handleOpenUpdate(request)} className='text-center align-middle'>{request.record}</td>
+                                                            <td onClick={() => handleOpenUpdate(request)} className='text-center align-middle'>{request.requestedBy}</td>
+                                                            <td onClick={() => handleOpenUpdate(request)} className='text-center align-middle'>{request.area}</td>
+                                                            <td onClick={() => handleOpenUpdate(request)} className='text-center align-middle'>{request.equipment}</td>
+                                                            <td onClick={() => handleOpenUpdate(request)} className='text-center align-middle'>{request.requestType}</td>
                                                             <td onClick={() => handleOpenUpdate(request)}>{request.description}</td>
                                                             <td onClick={() => handleOpenUpdate(request)}>{request.comments}</td>
                                                             <td className='text-center'>
-                                                                <Icon icon={checkCircleO} size={18} style={{ color: '#5BC236' }} onClick={() => handleApprove(request)} />
-                                                                <Icon icon={timesCircleO} size={18} style={{ color: '#CC0202' }} onClick={() => handleDeny(request)} />
+                                                                <DropdownButton title='Action' align={{ lg: 'start' }} className='text-center dropDowns dropstart align-middle'>
+                                                                    <Dropdown.Item onClick={() => handleApprove(request)} className='dropDownItem'>APPROVE</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={() => handleDeny(request)} className='dropDownItem'>DENY</Dropdown.Item>
+                                                                </DropdownButton>
                                                             </td>
                                                         </tr>
                                                     )
