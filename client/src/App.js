@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.min.css';
 
 import { Admin } from './pages/admin/Admin';
+import { AdminNew } from './pages/admin/AdminNew';
 import { Calendar } from './pages/calendar/Calendar';
 
 import { Programming } from './pages/programming/Programming';
@@ -58,6 +59,10 @@ export const App = () => {
         <Route
           path='/admin'
           element={<Admin />}
+        />
+        <Route
+          path='/adminNew'
+          element={<AdminNew />}
         />
         <Route
           path='/calendar'
