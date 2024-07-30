@@ -8,7 +8,7 @@ import PuffLoader from "react-spinners/PuffLoader";
 import { Icon } from 'react-icons-kit';
 import { plus } from 'react-icons-kit/entypo/plus';
 
-import getAllJobs from '../../services/engineering/getAllJobs';
+import getAllJobs from '../../services/backlog/getAllJobs';
 import { Sidebar } from '../sidebar/Sidebar';
 import './backlog.css';
 
