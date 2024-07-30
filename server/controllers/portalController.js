@@ -41,6 +41,7 @@ async function login(req, res) {
                     punch: userInfo.punch,
                     shear: userInfo.shear,
                     purchasing: userInfo.purchasing,
+                    backlog: userInfo.backlog,
                 },
                 process.env.JWT_SECRET_KEY || 'pass',
                 { expiresIn: '1d' }

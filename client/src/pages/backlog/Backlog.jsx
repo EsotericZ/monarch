@@ -34,12 +34,12 @@ export const Backlog = () => {
                     </div>
                 </div>
             :
-                (cookieData.role = 'admin' ?
+                (cookieData.backlog ?
                     <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
                         <h1 className='text-center m-3'>Backlog</h1>
                     </div>
                 :
-                    <div style={{ display: 'inline', width: '100%' }}>
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '100px', width: '100%' }}>
                         <h1>You don't have access to this page</h1>
                     </div>
                 )
