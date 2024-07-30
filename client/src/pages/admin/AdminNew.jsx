@@ -26,6 +26,7 @@ import updateShear from '../../services/users/updateShear';
 import updateShipping from '../../services/users/updateShipping';
 import updateTLaser from '../../services/users/updateTLaser';
 import updatePurchasing from '../../services/users/updatePurchasing';
+import updateBacklog from '../../services/users/updateBacklog';
 
 import getAllRFID from '../../services/rfid/getAllRFID';
 import { Sidebar } from '../sidebar/Sidebar';
@@ -65,6 +66,7 @@ export const AdminNew = () => {
         saw: 0,
         punch: 0,
         shear: 0,
+        backlog: 0,
     });
     const [updateSingleUser, setUpdateSingleUser] = useState({
         id: '',
@@ -92,6 +94,7 @@ export const AdminNew = () => {
     const [maintenance, setMaintenance] = useState(0);
     const [shipping, setShipping] = useState(0);
     const [purchasing, setPurchasing] = useState(0);
+    const [backlog, setBacklog] = useState(0);
 
     const [searchName, setSearchName] = useState('');
     const [searchDepartment, setSearchDepartment] = useState('');
@@ -124,6 +127,11 @@ export const AdminNew = () => {
     async function togglePurchasing(user) {
         updatePurchasing(user);
         setUpdate('Purchasing');
+    }
+
+    async function toggleBacklog(user) {
+        updateBacklog(user);
+        setUpdate('Backlog');
     }
 
     async function toggleEngineering(user) {
@@ -222,6 +230,7 @@ export const AdminNew = () => {
             setMaintenance(user.maintenance);
             setShipping(user.shipping);
             setPurchasing(user.purchasing);
+            setBacklog(user.backlog);
             setShowUpdate(true);    
         })
     };
@@ -258,6 +267,7 @@ export const AdminNew = () => {
         'maintenance',
         'shipping',
         'purchasing',
+        'backlog',
     ]
     const filteredUsersByDepartment = allUsers.filter(user => {
         return !searchDepartment || departmentKeywords.some(keyword => 
@@ -442,6 +452,14 @@ export const AdminNew = () => {
                                                 type="checkbox" 
                                                 onChange={(e) => {setPurchasing(e.target.checked); togglePurchasing(userID)}}
                                                 checked={purchasing}
+                                            />
+                                        </div>
+                                        <div className="d-flex align-items-center mb-2 mx-2">
+                                            <Form.Label style={{ fontWeight: 'normal' }} className="me-2 mb-0">Backlog</Form.Label>
+                                            <Form.Check 
+                                                type="checkbox" 
+                                                onChange={(e) => {setBacklog(e.target.checked); toggleBacklog(userID)}}
+                                                checked={backlog}
                                             />
                                         </div>
                                     </Form.Group>

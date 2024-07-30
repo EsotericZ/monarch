@@ -84,6 +84,9 @@ export const EmployeeCard = ({ user, handleOpenUpdate }) => {
                     {user.purchasing &&
                         <Badge pill bg='secondary' style={{ fontSize: '13px', width: '100px' }}>Purchasing</Badge>
                     }
+                    {user.backlog &&
+                        <Badge pill bg='secondary' style={{ fontSize: '13px', width: '100px' }}>Backlog</Badge>
+                    }
                 </div>
             </Card.Body>
         </Card>
