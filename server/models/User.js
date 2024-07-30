@@ -79,6 +79,10 @@ User.init(
             type: DataTypes.BOOLEAN,
             defaultValue: false,
         },
+        backlog: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
     }, {
         sequelize,
         tableName: 'users',

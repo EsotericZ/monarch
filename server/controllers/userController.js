@@ -596,6 +596,47 @@ async function updatePurchasing(req, res) {
     })
 }
 
+async function updateBacklog(req, res) {
+    let id = req.body.id
+
+    await User.findOne({
+        where: {id: id}
+    })
+    .then((result) => {
+        if (result.backlog) {
+            User.update(
+                { backlog: 0 },
+                { where: { id:id }}
+            ).then((result) => {
+                return res.status(200).send({
+                    data: result
+                })
+            }).catch((err) => {
+                return res.status(500).send({
+                    status: err
+                })
+            })
+        } else {
+            User.update(
+                { backlog: 1 },
+                { where: { id:id }}
+            ).then((result) => {
+                return res.status(200).send({
+                    data: result
+                })
+            }).catch((err) => {
+                return res.status(500).send({
+                    status: err
+                })
+            })
+        }
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+}
+
 module.exports = {
     getAllUsers,
     getUserPassword,
@@ -614,4 +655,5 @@ module.exports = {
     updatePunch,
     updateShear,
     updatePurchasing,
+    updateBacklog,
 }
