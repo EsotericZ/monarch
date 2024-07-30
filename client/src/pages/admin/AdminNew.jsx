@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Button, Dropdown, FloatingLabel, Form, Modal, Tab, Tabs, Table } from 'react-bootstrap';
+import { Button, FloatingLabel, Form, Modal } from 'react-bootstrap';
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 
 import PuffLoader from "react-spinners/PuffLoader";
-
 import { Icon } from 'react-icons-kit';
-import { circle_ok } from 'react-icons-kit/ikons/circle_ok';
-import { circle_minus } from 'react-icons-kit/ikons/circle_minus';
+import { plus } from 'react-icons-kit/fa/plus';
 
 import './admin.css';
 
@@ -76,10 +74,24 @@ export const AdminNew = () => {
         password: '',
     });
 
+    const [userID, setUserID] = useState('');
     const [name, setName] = useState('');
     const [username, setUsername] = useState('');
     const [number, setNumber] = useState('');
     const [password, setPassword] = useState('');
+
+    const [engineering, setEngineering] = useState(0);
+    const [machining, setMachining] = useState(0);
+    const [quality, setQuality] = useState(0);
+    const [laser, setLaser] = useState(0);
+    const [forming, setForming] = useState(0);
+    const [tlaser, setTLaser] = useState(0);
+    const [saw, setSaw] = useState(0);
+    const [punch, setPunch] = useState(0);
+    const [shear, setShear] = useState(0);
+    const [maintenance, setMaintenance] = useState(0);
+    const [shipping, setShipping] = useState(0);
+    const [purchasing, setPurchasing] = useState(0);
 
     async function fetchData() {
         try {
@@ -107,62 +119,62 @@ export const AdminNew = () => {
     }
 
     async function toggleMaintenance(user) {
-        updateMaintenance(user.id);
+        updateMaintenance(user);
         setUpdate('Maintenace');
     }
 
     async function toggleShipping(user) {
-        updateShipping(user.id);
+        updateShipping(user);
         setUpdate('Shipping');
     }
 
     async function togglePurchasing(user) {
-        updatePurchasing(user.id);
+        updatePurchasing(user);
         setUpdate('Purchasing');
     }
 
     async function toggleEngineering(user) {
-        updateEngineering(user.id)
+        updateEngineering(user)
         setUpdate('Engineering')
     }
 
     async function toggleTLaser(user) {
-        updateTLaser(user.id)
+        updateTLaser(user)
         setUpdate('Tube Laser')
     }
 
     async function toggleQuality(user) {
-        updateQuality(user.id)
+        updateQuality(user)
         setUpdate('Quality')
     }
 
     async function toggleForming(user) {
-        updateForming(user.id)
+        updateForming(user)
         setUpdate('Forming')
     }
 
     async function toggleMachining(user) {
-        updateMachining(user.id)
+        updateMachining(user)
         setUpdate('Machining')
     }
 
     async function toggleLaser(user) {
-        updateLaser(user.id)
+        updateLaser(user)
         setUpdate('Laser')
     }
 
     async function toggleSaw(user) {
-        updateSaw(user.id)
+        updateSaw(user)
         setUpdate('Saw')
     }
 
     async function togglePunch(user) {
-        updatePunch(user.id)
+        updatePunch(user)
         setUpdate('Punch')
     }
 
     async function toggleShear(user) {
-        updateShear(user.id)
+        updateShear(user)
         setUpdate('Shear')
     }
 
@@ -201,9 +213,22 @@ export const AdminNew = () => {
             })
             setPassword(res.data)
         }).then(() => {
+            setUserID(user.id);
             setName(user.name);
             setUsername(user.username);
             setNumber(user.number);
+            setEngineering(user.engineering);
+            setMachining(user.machining);
+            setQuality(user.quality);
+            setLaser(user.laser);
+            setForming(user.forming);
+            setTLaser(user.tlaser);
+            setSaw(user.saw);
+            setPunch(user.punch);
+            setShear(user.shear);
+            setMaintenance(user.maintenance);
+            setShipping(user.shipping);
+            setPurchasing(user.purchasing);
             setShowUpdate(true);    
         })
     };
@@ -239,7 +264,7 @@ export const AdminNew = () => {
                 (cookieData.name ?
                     <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
                         <h1 className='text-center m-3'>Employee Database</h1>
-                        <Modal show={showAdd}>
+                        <Modal show={showAdd} onHide={handleCloseAdd}>
                             <Modal.Header>
                                 <Modal.Title>Add User</Modal.Title>
                             </Modal.Header>
@@ -259,17 +284,17 @@ export const AdminNew = () => {
                                     </FloatingLabel>
                                 </Form>  
                             </Modal.Body>
-                            <Modal.Footer>
-                                <Button variant="secondary" onClick={handleCloseAdd}>
+                            <Modal.Footer className="justify-content-center">
+                                <Button className='modalBtnCancel' variant="secondary" onClick={handleCloseAdd}>
                                     Cancel
                                 </Button>
-                                <Button variant="primary" onClick={handleSave}>
+                                <Button className='modalBtnVerify' variant="primary" onClick={handleSave}>
                                     Save
                                 </Button>
                             </Modal.Footer>
                         </Modal>
 
-                        <Modal show={showUpdate}>
+                        <Modal show={showUpdate} onHide={handleCloseUpdate}>
                             <Modal.Header>
                                 <Modal.Title>Update Employee {name}</Modal.Title>
                             </Modal.Header>
@@ -287,16 +312,116 @@ export const AdminNew = () => {
                                     <FloatingLabel label="Password" className="mb-2">
                                         <Form.Control defaultValue={password} name="password" onChange={handleChangeUpdate} />
                                     </FloatingLabel>
+
+                                    <Form.Group className="d-flex flex-wrap justify-content-center m-3">
+                                        <div className="d-flex align-items-center mb-2 mx-2">
+                                            <Form.Label style={{ fontWeight: 'normal' }} className="me-2 mb-0">Engineering</Form.Label>
+                                            <Form.Check 
+                                                type="checkbox" 
+                                                onChange={(e) => {setEngineering(e.target.checked); toggleEngineering(userID)}}
+                                                checked={engineering}
+                                            />
+                                        </div>
+                                        <div className="d-flex align-items-center mb-2 mx-2">
+                                            <Form.Label style={{ fontWeight: 'normal' }} className="me-2 mb-0">Machining</Form.Label>
+                                            <Form.Check 
+                                                type="checkbox" 
+                                                onChange={(e) => {setMachining(e.target.checked); toggleMachining(userID)}}
+                                                checked={machining}
+                                            />
+                                        </div>
+                                        <div className="d-flex align-items-center mb-2 mx-2">
+                                            <Form.Label style={{ fontWeight: 'normal' }} className="me-2 mb-0">Quality</Form.Label>
+                                            <Form.Check 
+                                                type="checkbox" 
+                                                onChange={(e) => {setQuality(e.target.checked); toggleQuality(userID)}}
+                                                checked={quality}
+                                            />
+                                        </div>
+                                        <div className="d-flex align-items-center mb-2 mx-2">
+                                            <Form.Label style={{ fontWeight: 'normal' }} className="me-2 mb-0">Laser</Form.Label>
+                                            <Form.Check 
+                                                type="checkbox" 
+                                                onChange={(e) => {setLaser(e.target.checked); toggleLaser(userID)}}
+                                                checked={laser}
+                                            />
+                                        </div>
+                                        <div className="d-flex align-items-center mb-2 mx-2">
+                                            <Form.Label style={{ fontWeight: 'normal' }} className="me-2 mb-0">Forming</Form.Label>
+                                            <Form.Check 
+                                                type="checkbox" 
+                                                onChange={(e) => {setForming(e.target.checked); toggleForming(userID)}}
+                                                checked={forming}
+                                            />
+                                        </div>
+                                        <div className="d-flex align-items-center mb-2 mx-2">
+                                            <Form.Label style={{ fontWeight: 'normal' }} className="me-2 mb-0">TLaser</Form.Label>
+                                            <Form.Check 
+                                                type="checkbox" 
+                                                onChange={(e) => {setTLaser(e.target.checked); toggleTLaser(userID)}}
+                                                checked={tlaser}
+                                            />
+                                        </div>
+                                        <div className="d-flex align-items-center mb-2 mx-2">
+                                            <Form.Label style={{ fontWeight: 'normal' }} className="me-2 mb-0">Saw</Form.Label>
+                                            <Form.Check 
+                                                type="checkbox" 
+                                                onChange={(e) => {setSaw(e.target.checked); toggleSaw(userID)}}
+                                                checked={saw}
+                                            />
+                                        </div>
+                                        <div className="d-flex align-items-center mb-2 mx-2">
+                                            <Form.Label style={{ fontWeight: 'normal' }} className="me-2 mb-0">Punch</Form.Label>
+                                            <Form.Check 
+                                                type="checkbox" 
+                                                onChange={(e) => {setPunch(e.target.checked); togglePunch(userID)}}
+                                                checked={punch}
+                                            />
+                                        </div>
+                                        <div className="d-flex align-items-center mb-2 mx-2">
+                                            <Form.Label style={{ fontWeight: 'normal' }} className="me-2 mb-0">Shear</Form.Label>
+                                            <Form.Check 
+                                                type="checkbox" 
+                                                onChange={(e) => {setShear(e.target.checked); toggleShear(userID)}}
+                                                checked={shear}
+                                            />
+                                        </div>
+                                        <div className="d-flex align-items-center mb-2 mx-2">
+                                            <Form.Label style={{ fontWeight: 'normal' }} className="me-2 mb-0">Maintenance</Form.Label>
+                                            <Form.Check 
+                                                type="checkbox" 
+                                                onChange={(e) => {setMaintenance(e.target.checked); toggleMaintenance(userID)}}
+                                                checked={maintenance}
+                                            />
+                                        </div>
+                                        <div className="d-flex align-items-center mb-2 mx-2">
+                                            <Form.Label style={{ fontWeight: 'normal' }} className="me-2 mb-0">Shipping</Form.Label>
+                                            <Form.Check 
+                                                type="checkbox" 
+                                                onChange={(e) => {setShipping(e.target.checked); toggleShipping(userID)}}
+                                                checked={shipping}
+                                            />
+                                        </div>
+                                        <div className="d-flex align-items-center mb-2 mx-2">
+                                            <Form.Label style={{ fontWeight: 'normal' }} className="me-2 mb-0">Purchasing</Form.Label>
+                                            <Form.Check 
+                                                type="checkbox" 
+                                                onChange={(e) => {setPurchasing(e.target.checked); togglePurchasing(userID)}}
+                                                checked={purchasing}
+                                            />
+                                        </div>
+                                    </Form.Group>
+
                                 </Form>  
                             </Modal.Body>
-                            <Modal.Footer>
-                                <Button variant="danger" onClick={handleDelete}>
+                            <Modal.Footer className="justify-content-center">
+                                {/* <Button className='modalBtnCancel' variant="secondary" onClick={handleDelete}>
                                     Delete
-                                </Button>
-                                <Button variant="secondary" onClick={handleCloseUpdate}>
+                                </Button> */}
+                                <Button className='modalBtnCancel' variant="secondary" onClick={handleCloseUpdate}>
                                     Cancel
                                 </Button>
-                                <Button variant="primary" onClick={handleUpdate}>
+                                <Button className='modalBtnVerify' variant="primary" onClick={handleUpdate}>
                                     Save
                                 </Button>
                             </Modal.Footer>
@@ -305,158 +430,13 @@ export const AdminNew = () => {
                         <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '20px' }}>
                             {allUsers.map((user, index) => {
                                 return (
-                                    <EmployeeCard key={index} user={user} />
+                                    <EmployeeCard key={index} user={user} handleOpenUpdate={handleOpenUpdate}/>
                                 )
                             })}
                         </div>
-
-                        {/* <div className='mx-3'>
-                            <Table striped hover>
-                                <thead>
-                                    <tr>
-                                        <th className='text-center'>Name</th>
-                                        <th className='text-center'>Username</th>
-                                        <th className='text-center'>Number</th>
-                                        <th className='text-center'>Role</th>
-                                        <th className='text-center'>RFID</th>
-                                        <th className='text-center' width='75px'>Eng</th>
-                                        <th className='text-center' width='75px'>Mach</th>
-                                        <th className='text-center' width='75px'>QC</th>
-                                        <th className='text-center' width='75px'>Laser</th>
-                                        <th className='text-center' width='75px'>Form</th>
-                                        <th className='text-center' width='75px'>TL</th>
-                                        <th className='text-center' width='75px'>Saw</th>
-                                        <th className='text-center' width='75px'>Punch</th>
-                                        <th className='text-center' width='75px'>Shear</th>
-                                        <th className='text-center' width='75px'>Maint</th>
-                                        <th className='text-center' width='75px'>Ship</th>
-                                        <th className='text-center' width='75px'>Purch</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {allUsers.map((user, index) => {
-                                        return (
-                                            <tr key={index} user={user}>
-                                                <td onClick={() => handleOpenUpdate(user)} className='text-center'>{user.name}</td>
-                                                <td onClick={() => handleOpenUpdate(user)} className='text-center'>{user.username}</td>
-                                                <td onClick={() => handleOpenUpdate(user)} className='text-center'>{user.number}</td>
-                                                <td className='text-center'>{user.role}</td>
-                                                <td className='text-center'><a href='http://10.0.1.45:3000/' target='__blank'>{user.etch}</a></td>
-                                                {user.engineering ?
-                                                    <td className='text-center' onClick={() => toggleEngineering(user)}>
-                                                        <Icon icon={circle_ok} style={{ color: '#5BC326' }} />
-                                                    </td>
-                                                :
-                                                    <td className='text-center' onClick={() => toggleEngineering(user)}>
-                                                        <Icon icon={circle_minus} style={{ color: '#CC0202' }} />
-                                                    </td>
-                                                }
-                                                {user.machining ?
-                                                    <td className='text-center' onClick={() => toggleMachining(user)}>
-                                                        <Icon icon={circle_ok} style={{ color: '#5BC326' }} />
-                                                    </td>
-                                                :
-                                                    <td className='text-center' onClick={() => toggleMachining(user)}>
-                                                        <Icon icon={circle_minus} style={{ color: '#CC0202' }} />
-                                                    </td>
-                                                }
-                                                {user.quality ?
-                                                    <td className='text-center' onClick={() => toggleQuality(user)}>
-                                                        <Icon icon={circle_ok} style={{ color: '#5BC326' }} />
-                                                    </td>
-                                                :
-                                                    <td className='text-center' onClick={() => toggleQuality(user)}>
-                                                        <Icon icon={circle_minus} style={{ color: '#CC0202' }} />
-                                                    </td>
-                                                }
-                                                {user.laser ?
-                                                    <td className='text-center' onClick={() => toggleLaser(user)}>
-                                                        <Icon icon={circle_ok} style={{ color: '#5BC326' }} />
-                                                    </td>
-                                                :
-                                                    <td className='text-center' onClick={() => toggleLaser(user)}>
-                                                        <Icon icon={circle_minus} style={{ color: '#CC0202' }} />
-                                                    </td>
-                                                }
-                                                {user.forming ?
-                                                    <td className='text-center' onClick={() => toggleForming(user)}>
-                                                        <Icon icon={circle_ok} style={{ color: '#5BC326' }} />
-                                                    </td>
-                                                :
-                                                    <td className='text-center' onClick={() => toggleForming(user)}>
-                                                        <Icon icon={circle_minus} style={{ color: '#CC0202' }} />
-                                                    </td>
-                                                }
-                                                {user.tlaser ?
-                                                    <td className='text-center' onClick={() => toggleTLaser(user)}>
-                                                        <Icon icon={circle_ok} style={{ color: '#5BC326' }} />
-                                                    </td>
-                                                :
-                                                    <td className='text-center' onClick={() => toggleTLaser(user)}>
-                                                        <Icon icon={circle_minus} style={{ color: '#CC0202' }} />
-                                                    </td>
-                                                }
-                                                {user.saw ?
-                                                    <td className='text-center' onClick={() => toggleSaw(user)}>
-                                                        <Icon icon={circle_ok} style={{ color: '#5BC326' }} />
-                                                    </td>
-                                                :
-                                                    <td className='text-center' onClick={() => toggleSaw(user)}>
-                                                        <Icon icon={circle_minus} style={{ color: '#CC0202' }} />
-                                                    </td>
-                                                }
-                                                {user.punch ?
-                                                    <td className='text-center' onClick={() => togglePunch(user)}>
-                                                        <Icon icon={circle_ok} style={{ color: '#5BC326' }} />
-                                                    </td>
-                                                :
-                                                    <td className='text-center' onClick={() => togglePunch(user)}>
-                                                        <Icon icon={circle_minus} style={{ color: '#CC0202' }} />
-                                                    </td>
-                                                }
-                                                {user.shear ?
-                                                    <td className='text-center' onClick={() => toggleShear(user)}>
-                                                        <Icon icon={circle_ok} style={{ color: '#5BC326' }} />
-                                                    </td>
-                                                :
-                                                    <td className='text-center' onClick={() => toggleShear(user)}>
-                                                        <Icon icon={circle_minus} style={{ color: '#CC0202' }} />
-                                                    </td>
-                                                }
-                                                {user.maintenance ?
-                                                    <td className='text-center' onClick={() => toggleMaintenance(user)}>
-                                                        <Icon icon={circle_ok} style={{ color: '#5BC326' }} />
-                                                    </td>
-                                                :
-                                                    <td className='text-center' onClick={() => toggleMaintenance(user)}>
-                                                        <Icon icon={circle_minus} style={{ color: '#CC0202' }} />
-                                                    </td>
-                                                }
-                                                {user.shipping ?
-                                                    <td className='text-center' onClick={() => toggleShipping(user)}>
-                                                        <Icon icon={circle_ok} style={{ color: '#5BC326' }} />
-                                                    </td>
-                                                :
-                                                    <td className='text-center' onClick={() => toggleShipping(user)}>
-                                                        <Icon icon={circle_minus} style={{ color: '#CC0202' }} />
-                                                    </td>
-                                                }
-                                                {user.purchasing ?
-                                                    <td className='text-center' onClick={() => togglePurchasing(user)}>
-                                                        <Icon icon={circle_ok} style={{ color: '#5BC326' }} />
-                                                    </td>
-                                                :
-                                                    <td className='text-center' onClick={() => togglePurchasing(user)}>
-                                                        <Icon icon={circle_minus} style={{ color: '#CC0202' }} />
-                                                    </td>
-                                                }
-                                            </tr>
-                                        )
-                                    })}
-                                </tbody>
-                            </Table>
-                        </div> */}
-                        <button className='mmBtn' onClick={handleOpenAdd}>Add User</button>
+                        <Button className='rounded-circle refreshBtn' onClick={() => handleOpenAdd()}>
+                            <Icon size={24} icon={plus}/>
+                        </Button>
                     </div>
                 :
                     <div style={{ display: 'inline', width: '100%' }}>
