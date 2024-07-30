@@ -25,10 +25,10 @@ async function getAllJobs(req, res) {
         if (err) console.error(err);
         let request = new sql.Request();
 
-        request.query("SELECT R.JobNo, D.PartNo, D.Revision, R.EstimQty, D.DueDate, O.CustCode, D.User_Text3, D.User_Text2, D.User_Number3, R.OrderNo, R.StepNo, D.QuoteNo, D.WorkCode, R.WorkCntr, R.Status, D.MasterJobNo\
+        request.query("SELECT R.JobNo, D.PartNo, D.Revision, R.EstimQty, D.DueDate, O.CustCode, D.User_Text3, D.User_Text2, D.User_Number3, R.OrderNo, R.StepNo, D.QuoteNo, D.WorkCode, R.WorkCntr, D.MasterJobNo, O.Status\
             FROM OrderRouting R INNER JOIN OrderDet D ON R.JobNo=D.JobNo INNER JOIN ORDERS O ON D.OrderNo=O.OrderNo\
-            WHERE D.Status='Open' AND O.User_Text3!='UNCONFIRMED' AND R.Status='Current'\
-            ORDER BY D.DueDate", 
+            WHERE (D.Status='Open' AND O.User_Text3!='UNCONFIRMED' AND R.Status='Current') OR (O.Status='O' AND D.MasterJobNo!='' AND D.User_Text2='4. DONE' AND R.StepNo=10)\
+            ORDER BY D.DueDate, R.JobNo", 
 
         function(err, recordset) {
             if (err) console.error(err);
