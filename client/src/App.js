@@ -56,12 +56,12 @@ export const App = () => {
           path='/requests'
           element={<Requests />}
         />
-        <Route
+        {/* <Route
           path='/admin'
           element={<Admin />}
-        />
+        /> */}
         <Route
-          path='/adminNew'
+          path='/admin'
           element={<AdminNew />}
         />
         <Route

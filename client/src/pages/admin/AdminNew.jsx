@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, FloatingLabel, Form, Modal } from 'react-bootstrap';
+import { Button, FloatingLabel, Form, Modal, InputGroup, FormControl } from 'react-bootstrap';
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
 
@@ -43,7 +43,7 @@ export const AdminNew = () => {
         };
     }
 
-    const [allUsers, setAllUsers] = useState('');
+    const [allUsers, setAllUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [update, setUpdate] = useState('');
     const [showAdd, setShowAdd] = useState(false);
@@ -93,26 +93,19 @@ export const AdminNew = () => {
     const [shipping, setShipping] = useState(0);
     const [purchasing, setPurchasing] = useState(0);
 
+    const [searchName, setSearchName] = useState('');
+    const [searchDepartment, setSearchDepartment] = useState('');
+
     async function fetchData() {
         try {
-            getAllRFID()
-            .then((res) => {
-                let dataRFID = res.data;
-                getAllUsers()
-                .then((res) => {
-                    let userData = res.data;
-                    userData.map((x) => {
-                        x.etch = '-';
-                        dataRFID.map((y) => {
-                            if (x.number == y.empNo) {
-                                x.etch = y.etch;
-                            } 
-                        });
-                    });
-                    setAllUsers(userData)
-                    setLoading(false)
-                });
-            })
+            const rfidData = await getAllRFID();
+            const usersData = await getAllUsers();
+            const userDataWithRFID = usersData.data.map(user => {
+                const rfid = rfidData.data.find(r => r.empNo === user.number);
+                return { ...user, etch: rfid ? rfid.etch : '-' };
+            });
+            setAllUsers(userDataWithRFID);
+            setLoading(false);
         } catch (err) {
             console.log(err);
         }
@@ -250,6 +243,28 @@ export const AdminNew = () => {
         setUpdate('');
     }, [showAdd, update, showUpdate]);
 
+    const filteredUsersByName = allUsers.filter(user => user.name.toLowerCase().includes(searchName.toLowerCase()));
+
+    const departmentKeywords = [
+        'engineering',
+        'machining',
+        'quality',
+        'laser',
+        'forming',
+        'tlaser',
+        'saw',
+        'punch',
+        'shear',
+        'maintenance',
+        'shipping',
+        'purchasing',
+    ]
+    const filteredUsersByDepartment = allUsers.filter(user => {
+        return !searchDepartment || departmentKeywords.some(keyword => 
+            keyword.includes(searchDepartment.toLowerCase()) && user[keyword]
+        );
+    });
+
     return (
         <div style={{ display: 'flex' }}>
             <Sidebar />
@@ -264,6 +279,25 @@ export const AdminNew = () => {
                 (cookieData.name ?
                     <div style={{ display: 'block', width: '100%', marginLeft: '80px' }}>
                         <h1 className='text-center m-3'>Employee Database</h1>
+                        <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '20px' }}>
+                            <InputGroup className='mb-3' style={{ width: '35%' }}>
+                                <FormControl
+                                    placeholder='Search by Name'
+                                    aria-label='Search by Name'
+                                    aria-describedby='search-name'
+                                    onChange={(e) => setSearchName(e.target.value)}
+                                />
+                            </InputGroup>
+                            <InputGroup className="mb-3" style={{ width: '35%' }}>
+                                <FormControl
+                                    placeholder="Search by Department"
+                                    aria-label="Search by Department"
+                                    aria-describedby="search-department"
+                                    onChange={(e) => setSearchDepartment(e.target.value)}
+                                />
+                            </InputGroup>
+                        </div>
+
                         <Modal show={showAdd} onHide={handleCloseAdd}>
                             <Modal.Header>
                                 <Modal.Title>Add User</Modal.Title>
@@ -428,11 +462,9 @@ export const AdminNew = () => {
                         </Modal>
 
                         <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '20px' }}>
-                            {allUsers.map((user, index) => {
-                                return (
-                                    <EmployeeCard key={index} user={user} handleOpenUpdate={handleOpenUpdate}/>
-                                )
-                            })}
+                            {(searchName ? filteredUsersByName : filteredUsersByDepartment).map((user, index) => (
+                                <EmployeeCard key={index} user={user} handleOpenUpdate={handleOpenUpdate}/>
+                            ))}
                         </div>
                         <Button className='rounded-circle refreshBtn' onClick={() => handleOpenAdd()}>
                             <Icon size={24} icon={plus}/>
