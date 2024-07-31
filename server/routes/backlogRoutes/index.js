@@ -5,5 +5,6 @@ const backlogController = require('../../controllers/backlogController');
 
 router.get('/getAllJobs', backlogController.getAllJobs);
 router.post('/getAllSubJobs', backlogController.getAllSubJobs);
+router.get('/getTest', backlogController.getTest);
 
 module.exports = router;

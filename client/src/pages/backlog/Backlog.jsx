@@ -66,6 +66,7 @@ export const Backlog = () => {
         } else {
             try {
                 const subs = await getAllSubJobs(JobNo);
+                console.log(subs)
                 setSubJobs({
                     ...subJobs,
                     [JobNo]: subs
@@ -106,47 +107,17 @@ export const Backlog = () => {
                                         <th className='text-center'>Customer</th>
                                         <th className='text-center'>Quantity</th>
                                         <th className='text-center'>Current Area</th>
+                                        {/* <th className='text-center'>Total</th> */}
                                     </tr>
                                 </thead>
-                                {/* <tbody>
-                                    {jobs
-                                        .map((job, index) => {
-                                            // const rowClass = job.MasterJobNo  ? 'hide-row' : '';
-                                            if (!job.MasterJobNo) {
-                                                return (
-                                                    <tr key={index} job={job}>
-                                                        {job.HasSubs ?
-                                                            <td className='text-center' onClick={() => toggleSub(job.JobNo)}>
-                                                                <Icon icon={plus}/>
-                                                            </td>
-                                                        :
-                                                            <td className='text-center'></td>
-                                                        }
-                                                        <td className='text-center'>{job.OrderNo}</td>
-                                                        <td className='text-center'>{job.JobNo}</td>
-                                                        <td className='text-center'>{(job.DueDate).split('-')[1] + '/' + ((job.DueDate).split('-')[2]).split('T')[0]}</td>
-                                                        <td className='text-center'>{job.CustCode}</td>
-                                                        <td className='text-center'>{job.EstimQty}</td>
-                                                        {job.WorkCntr && job.User_Text2!='4. DONE' ?
-                                                            <td className='text-center'>{(job.WorkCntr).split(' ')[1]}</td>
-                                                        :
-                                                            <td className='text-center'>{(job.User_Text2).split(' ')[1]}</td>
-                                                        }
-                                                    </tr>
-                                                )
-                                            }
-                                        })
-                                    }
-                                </tbody> */}
-
-
                                 <tbody>
                                     {jobs
                                         .map((job, index) => {
+                                            const profitClass = (job.OrderTotal > 5000) ? 'profit-row' : '';
                                             if (!job.MasterJobNo) {
                                                 return (
                                                     <Fragment key={index}>
-                                                        <tr job={job}>
+                                                        <tr job={job} className={`${profitClass}`}>
                                                             {job.HasSubs ?
                                                                 <td className='text-center' onClick={() => toggleSub(job.JobNo)}>
                                                                     <Icon icon={plus}/>
@@ -164,6 +135,7 @@ export const Backlog = () => {
                                                                 :
                                                                 <td className='text-center'>{(job.User_Text2).split(' ')[1]}</td>
                                                             }
+                                                            {/* <td className='text-center'>{job.OrderTotal}</td> */}
                                                         </tr>
                                                         {expandedRows.includes(job.JobNo) && subJobs[job.JobNo] && subJobs[job.JobNo].map((subJob, subIndex) => (
                                                             <tr key={subIndex} className='subjob-row'>
@@ -173,7 +145,7 @@ export const Backlog = () => {
                                                                 <td className='text-center'>{(subJob.DueDate).split('-')[1] + '/' + ((subJob.DueDate).split('-')[2]).split('T')[0]}</td>
                                                                 <td className='text-center'>{subJob.CustCode}</td>
                                                                 <td className='text-center'>{subJob.EstimQty}</td>
-                                                                {job.WorkCntr && job.User_Text2 !== '4. DONE' ?
+                                                                {subJob.WorkCntr && subJob.User_Text2 !== '4. DONE' ?
                                                                     <td className='text-center'>{(subJob.WorkCntr).split(' ')[1]}</td>
                                                                     :
                                                                     <td className='text-center'>{(subJob.User_Text2).split(' ')[1]}</td>

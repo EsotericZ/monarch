@@ -1,3 +1,7 @@
-.hide-row {
-    display: none;
+.profit-row {
+    background-color: lightgreen;
+}
+
+.subjob-row {
+    background-color: lightyellow;
 }
