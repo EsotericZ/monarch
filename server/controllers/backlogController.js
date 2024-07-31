@@ -115,19 +115,84 @@ async function updateJob(req, res) {
     })
 };
 
-async function getTest(req, res) {
+async function updateEmail(req, res) {
+    let id = req.body.id;
 
-    sql.connect(config, function(err,) {
-        if (err) console.error(err);
-        let request = new sql.Request();
+    await Jobs.findOne({
+        where: {id: id}
+    })
+    .then((result) => {
+        if (result.email) {
+            Jobs.update(
+                { email: 0 },
+                { where: { id:id }}
+            ).then((result) => {
+                return res.status(200).send({
+                    data: result
+                })
+            }).catch((err) => {
+                return res.status(500).send({
+                    status: err
+                })
+            })
+        } else {
+            Jobs.update(
+                { email: 1 },
+                { where: { id:id }}
+            ).then((result) => {
+                return res.status(200).send({
+                    data: result
+                })
+            }).catch((err) => {
+                return res.status(500).send({
+                    status: err
+                })
+            })
+        }
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+};
 
-        request.query("SELECT * FROM OrderRouting WHERE JobNo='152250'", 
+async function updateHold(req, res) {
+    let id = req.body.id;
 
-        function(err, recordset) {
-            if (err) console.error(err);
-            let records = recordset.recordsets[0];
-
-            res.send(records)
+    await Jobs.findOne({
+        where: {id: id}
+    })
+    .then((result) => {
+        if (result.hold) {
+            Jobs.update(
+                { hold: 0 },
+                { where: { id:id }}
+            ).then((result) => {
+                return res.status(200).send({
+                    data: result
+                })
+            }).catch((err) => {
+                return res.status(500).send({
+                    status: err
+                })
+            })
+        } else {
+            Jobs.update(
+                { hold: 1 },
+                { where: { id:id }}
+            ).then((result) => {
+                return res.status(200).send({
+                    data: result
+                })
+            }).catch((err) => {
+                return res.status(500).send({
+                    status: err
+                })
+            })
+        }
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
         })
     })
 };
@@ -137,5 +202,6 @@ module.exports = {
     getAllSubJobs,
     getSingleJob,
     updateJob,
-    getTest,
+    updateEmail,
+    updateHold,
 }

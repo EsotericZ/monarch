@@ -13,6 +13,8 @@ import getAllJobs from '../../services/backlog/getAllJobs';
 import getAllSubJobs from '../../services/backlog/getAllSubJobs';
 import getSingleJob from '../../services/backlog/getSingleJob';
 import updateJob from '../../services/backlog/updateJob';
+import updateEmail from '../../services/backlog/updateEmail';
+import updateHold from '../../services/backlog/updateHold';
 import { Sidebar } from '../sidebar/Sidebar';
 import './backlog.css';
 
@@ -40,6 +42,7 @@ export const Backlog = () => {
     const [ariba, setAriba] = useState('');
     const [email, setEmail] = useState(0);
     const [hold, setHold] = useState(0);
+    const [update, setUpdate] = useState('');
 
     const [jobs, setJobs] = useState([]);
     const [subJobs, setSubJobs] = useState([]);
@@ -75,6 +78,16 @@ export const Backlog = () => {
             setLoading(false);
         }
     };
+
+    async function toggleEmail(id) {
+        updateEmail(id);
+        setUpdate('Email');
+    }
+
+    async function toggleHold(id) {
+        updateHold(id);
+        setUpdate('Hold');
+    }
 
     const toggleSub = async (JobNo) => {
         if (expandedRows.includes(JobNo)) {
@@ -150,7 +163,8 @@ export const Backlog = () => {
 
     useEffect(() => {
         fetchData();
-    }, []);
+        setUpdate('');
+    }, [update]);
 
     const formatDate = (dateStr) => {
         if (!dateStr) return new Date(0);
@@ -249,6 +263,24 @@ export const Backlog = () => {
                                 <FloatingLabel label="Ariba" className="mb-3">
                                     <Form.Control defaultValue={ariba} onChange={(e) => setAriba(e.target.value)} />
                                 </FloatingLabel>
+                                <Form.Group className="d-flex flex-wrap justify-content-center m-3 gap-5">
+                                    <div className="d-flex align-items-center mx-2">
+                                        <Form.Label style={{ fontWeight: 'normal', fontSize: '16px' }} className="me-2 mb-0">Email/Expedite</Form.Label>
+                                        <Form.Check 
+                                            type="checkbox" 
+                                            onChange={(e) => {setEmail(e.target.checked); toggleEmail(id)}}
+                                            checked={email}
+                                        />
+                                    </div>
+                                    <div className="d-flex align-items-center mx-2">
+                                        <Form.Label style={{ fontWeight: 'normal', fontSize: '16px' }} className="me-2 mb-0">Hold</Form.Label>
+                                        <Form.Check 
+                                            type="checkbox" 
+                                            onChange={(e) => {setHold(e.target.checked); toggleHold(id)}}
+                                            checked={hold}
+                                        />
+                                    </div>
+                                </Form.Group>
                             </Modal.Body>
                             <Modal.Footer className="justify-content-center">
                                 <Button className='modalBtnCancel' variant="secondary" onClick={handleCancel}>
@@ -264,17 +296,17 @@ export const Backlog = () => {
                             <Table striped hover>
                                 <thead>
                                     <tr>
-                                        <th className='text-center'>Master</th>
-                                        <th className='text-center'>Order No</th>
-                                        <th className='text-center'>Job No</th>
-                                        <th className='text-center'>Due Date</th>
-                                        <th className='text-center'>Customer</th>
-                                        <th className='text-center'>Quantity</th>
-                                        <th className='text-center'>Current Area</th>
-                                        <th className='text-center'>OSV</th>
-                                        <th className='text-center'>OSV Status</th>
-                                        <th className='text-center'>Ariba</th>
-                                        <th className='text-center'>Notes</th>
+                                        <th className='text-center' width='5%'></th>
+                                        <th className='text-center' width='7%'>Order No</th>
+                                        <th className='text-center' width='7%'>Job No</th>
+                                        <th className='text-center' width='7%'>Due Date</th>
+                                        <th className='text-center' width='7%'>Customer</th>
+                                        <th className='text-center' width='7%'>Quantity</th>
+                                        <th className='text-center' width='10%'>Current Area</th>
+                                        <th className='text-center' width='5%'>OSV</th>
+                                        <th className='text-center' width='12%'>OSV Status</th>
+                                        <th className='text-center' width='13%'>Ariba</th>
+                                        <th className='text-center' width='20%'>Notes</th>
                                         {/* <th className='text-center'>Total</th> */}
                                     </tr>
                                 </thead>
@@ -282,10 +314,12 @@ export const Backlog = () => {
                                     {pastJobs
                                         .map((job, index) => {
                                             const profitClass = (job.OrderTotal > 5000) ? 'profit-row' : '';
+                                            const expediteClass = (job.dataValues.email) ? 'bl-expedite-row' : '';
+                                            const holdClass = (job.dataValues.hold) ? 'hold-row' : '';
                                             if (!job.MasterJobNo) {
                                                 return (
                                                     <Fragment key={index}>
-                                                        <tr job={job} className={`${profitClass}`}>
+                                                        <tr job={job} className={`${expediteClass} ${holdClass} ${profitClass}`}>
                                                             {job.HasSubs ?
                                                                 <td className='text-center' onClick={() => toggleSub(job.JobNo)}>
                                                                     <Icon icon={plus}/>
@@ -294,7 +328,7 @@ export const Backlog = () => {
                                                                 <td className='text-center'></td>
                                                             }
                                                             <td onClick={() => handleOpenJob(job)} className='text-center'>{job.OrderNo}</td>
-                                                            <td className='text-center'>{job.JobNo}</td>
+                                                            <td onClick={() => handleOpenJob(job)} className='text-center'>{job.JobNo}</td>
                                                             <td className='text-center'>{(job.DueDate).split('-')[1] + '/' + ((job.DueDate).split('-')[2]).split('T')[0]}</td>
                                                             <td className='text-center'>{job.CustCode}</td>
                                                             <td className='text-center'>{job.EstimQty}</td>
@@ -305,17 +339,17 @@ export const Backlog = () => {
                                                             }
                                                             {job.User_Text2 == '6. OUTSOURCE' ?
                                                                 <td className='text-center'>{job.VendCode}</td>
-                                                                :
+                                                            :
                                                                 <td className='text-center'></td>
                                                             }
-                                                            <td className='text-center'>{job.dataValues.osvnotes}</td>
-                                                            <td className='text-center'>{job.dataValues.ariba}</td>
-                                                            <td className='text-center'>{job.dataValues.blnotes}</td>
+                                                            <td onClick={() => handleOpenJob(job)} className='text-center'>{job.dataValues.osvnotes}</td>
+                                                            <td onClick={() => handleOpenJob(job)} className='text-center'>{job.dataValues.ariba}</td>
+                                                            <td onClick={() => handleOpenJob(job)} className='text-center'>{job.dataValues.blnotes}</td>
                                                             {/* <td className='text-center'>{job.OrderTotal}</td> */}
                                                         </tr>
                                                         {expandedRows.includes(job.JobNo) && subJobs[job.JobNo] && subJobs[job.JobNo].map((subJob, subIndex) => (
                                                             <tr key={subIndex} className='subjob-row'>
-                                                                <td className='text-center'>{subJob.MasterJobNo}</td>
+                                                                <td className='text-center'></td>
                                                                 <td className='text-center'>{subJob.OrderNo}</td>
                                                                 <td className='text-center'>{subJob.JobNo}</td>
                                                                 <td className='text-center'>{(subJob.DueDate).split('-')[1] + '/' + ((subJob.DueDate).split('-')[2]).split('T')[0]}</td>
@@ -327,13 +361,16 @@ export const Backlog = () => {
                                                                     <td className='text-center' onClick={() => toggleRoute(subJob)}>{(subJob.User_Text2).split(' ')[1]}</td>
                                                                 }
                                                                 {job.User_Text2 == '6. OUTSOURCE' ?
-                                                                    <td className='text-center'>{job.VendCode}</td>
+                                                                    <td className='text-center'>{subJob.VendCode}</td>
                                                                 :
                                                                     <td className='text-center'></td>
                                                                 }
-                                                                <td className='text-center'>{job.dataValues.osvnotes}</td>
-                                                                <td className='text-center'>{job.dataValues.ariba}</td>
-                                                                <td className='text-center'>{job.dataValues.blnotes}</td>
+                                                                <td className='text-center'></td>
+                                                                <td className='text-center'></td>
+                                                                <td className='text-center'></td>
+                                                                {/* <td onClick={() => handleOpenJob(subJob)} className='text-center'>{subJob.dataValues.osvnotes}</td>
+                                                                <td onClick={() => handleOpenJob(subJob)} className='text-center'>{subJob.dataValues.ariba}</td>
+                                                                <td onClick={() => handleOpenJob(subJob)} className='text-center'>{subJob.dataValues.blnotes}</td> */}
                                                             </tr>
                                                         ))}
                                                     </Fragment>
@@ -341,14 +378,16 @@ export const Backlog = () => {
                                             }
                                         })
                                     }
-                                    <tr className='empty-row late-row'><td colSpan="7">-</td></tr>
+                                    <tr className='empty-row late-row'><td colSpan="11">-</td></tr>
                                     {futureJobs
                                         .map((job, index) => {
                                             const profitClass = (job.OrderTotal > 5000) ? 'profit-row' : '';
+                                            const expediteClass = (job.dataValues.email) ? 'bl-expedite-row' : '';
+                                            const holdClass = (job.dataValues.hold) ? 'hold-row' : '';
                                             if (!job.MasterJobNo) {
                                                 return (
                                                     <Fragment key={index}>
-                                                        <tr job={job} className={`${profitClass}`}>
+                                                        <tr job={job} className={`${expediteClass} ${holdClass} ${profitClass}`}>
                                                             {job.HasSubs ?
                                                                 <td className='text-center' onClick={() => toggleSub(job.JobNo)}>
                                                                     <Icon icon={plus}/>
@@ -356,8 +395,8 @@ export const Backlog = () => {
                                                                 :
                                                                 <td className='text-center'></td>
                                                             }
-                                                            <td className='text-center'>{job.OrderNo}</td>
-                                                            <td className='text-center'>{job.JobNo}</td>
+                                                            <td onClick={() => handleOpenJob(job)} className='text-center'>{job.OrderNo}</td>
+                                                            <td onClick={() => handleOpenJob(job)} className='text-center'>{job.JobNo}</td>
                                                             <td className='text-center'>{(job.DueDate).split('-')[1] + '/' + ((job.DueDate).split('-')[2]).split('T')[0]}</td>
                                                             <td className='text-center'>{job.CustCode}</td>
                                                             <td className='text-center'>{job.EstimQty}</td>
@@ -366,11 +405,19 @@ export const Backlog = () => {
                                                             :
                                                                 <td className='text-center' onClick={() => toggleRoute(job)}>{(job.User_Text2).split(' ')[1]}</td>
                                                             }
+                                                            {job.User_Text2 == '6. OUTSOURCE' ?
+                                                                <td className='text-center'>{job.VendCode}</td>
+                                                            :
+                                                                <td className='text-center'></td>
+                                                            }
+                                                            <td onClick={() => handleOpenJob(job)} className='text-center'>{job.dataValues.osvnotes}</td>
+                                                            <td onClick={() => handleOpenJob(job)} className='text-center'>{job.dataValues.ariba}</td>
+                                                            <td onClick={() => handleOpenJob(job)} className='text-center'>{job.dataValues.blnotes}</td>
                                                             {/* <td className='text-center'>{job.OrderTotal}</td> */}
                                                         </tr>
                                                         {expandedRows.includes(job.JobNo) && subJobs[job.JobNo] && subJobs[job.JobNo].map((subJob, subIndex) => (
                                                             <tr key={subIndex} className='subjob-row'>
-                                                                <td className='text-center'>{subJob.MasterJobNo}</td>
+                                                                <td className='text-center'></td>
                                                                 <td className='text-center'>{subJob.OrderNo}</td>
                                                                 <td className='text-center'>{subJob.JobNo}</td>
                                                                 <td className='text-center'>{(subJob.DueDate).split('-')[1] + '/' + ((subJob.DueDate).split('-')[2]).split('T')[0]}</td>
@@ -381,6 +428,12 @@ export const Backlog = () => {
                                                                 :
                                                                     <td className='text-center' onClick={() => toggleRoute(subJob)}>{(subJob.User_Text2).split(' ')[1]}</td>
                                                                 }
+                                                                <td className='text-center'></td>
+                                                                <td className='text-center'></td>
+                                                                <td className='text-center'></td>
+                                                                {/* <td onClick={() => handleOpenJob(subJob)} className='text-center'>{subJob.dataValues.osvnotes}</td>
+                                                                <td onClick={() => handleOpenJob(subJob)} className='text-center'>{subJob.dataValues.ariba}</td>
+                                                                <td onClick={() => handleOpenJob(subJob)} className='text-center'>{subJob.dataValues.blnotes}</td> */}
                                                             </tr>
                                                         ))}
                                                     </Fragment>

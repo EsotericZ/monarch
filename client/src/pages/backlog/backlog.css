@@ -6,6 +6,14 @@
     background-color: lightyellow;
 }
 
+.bl-expedite-row {
+    background-color: yellow;
+}
+
+.hold-row {
+    background-color: hotpink;
+}
+
 .late-row {
     background-color: darkslategrey;
     color: darkslategrey;
