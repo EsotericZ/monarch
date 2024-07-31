@@ -52,6 +52,25 @@ Jobs.init(
             allowNull: false,
             defaultValue: 0,
         },
+        blnotes: {
+            type: DataTypes.STRING,
+        },
+        osvnotes: {
+            type: DataTypes.STRING,
+        },
+        ariba: {
+            type: DataTypes.STRING,
+        },
+        email: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: 0,
+        },
+        hold: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: 0,
+        },
         createdAt : {
             type: DataTypes.DATE,
         },

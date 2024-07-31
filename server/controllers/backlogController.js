@@ -36,7 +36,15 @@ async function getAllJobs(req, res) {
 
             const filteredRecords = records.filter(record => new Date(record.DueDate) < firstDayOfNextMonth);
 
-            res.send(filteredRecords)
+            const jobDataMap = new Map();
+            jobData.forEach(job => jobDataMap.set(job.jobNo, job));
+
+            const mergedRecords = filteredRecords.map(record => {
+                const job = jobDataMap.get(record.JobNo);
+                return job ? { ...record, ...job } : record;
+            });
+
+            res.send(mergedRecords)
         })
     })
 };
@@ -83,6 +91,30 @@ async function getSingleJob(req, res) {
     })
 };
 
+async function updateJob(req, res) {
+    let id = req.body.id
+    let blnotes = req.body.blNotes
+    let osvnotes = req.body.osvNotes
+    let ariba = req.body.ariba
+    
+    await Jobs.update(
+        {
+            blnotes,
+            osvnotes,
+            ariba,
+        },
+        { where: { id: id }}
+    ).then((result) => {
+        return res.status(200).send({
+            data: result
+        })
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+};
+
 async function getTest(req, res) {
 
     sql.connect(config, function(err,) {
@@ -104,5 +136,6 @@ module.exports = {
     getAllJobs,
     getAllSubJobs,
     getSingleJob,
+    updateJob,
     getTest,
 }

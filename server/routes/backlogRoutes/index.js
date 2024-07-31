@@ -7,5 +7,6 @@ router.get('/getAllJobs', backlogController.getAllJobs);
 router.post('/getAllSubJobs', backlogController.getAllSubJobs);
 router.post('/getSingleJob', backlogController.getSingleJob);
 router.get('/getTest', backlogController.getTest);
+router.post('/updateJob', backlogController.updateJob);
 
 module.exports = router;
