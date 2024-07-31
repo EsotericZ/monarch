@@ -1,6 +1,5 @@
 import { useEffect, useState, Fragment } from 'react';
 import { Button, FloatingLabel, Form, Modal, Table } from 'react-bootstrap';
-import { format, parseISO } from 'date-fns';
 
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
@@ -29,6 +28,12 @@ export const Backlog = () => {
             'role': 'employee',
         };
     }
+
+    const [searchedValueOrderNo, setSearchedValueOrderNo] = useState('');
+    const [searchedValueJobNo, setSearchedValueJobNo] = useState('');
+    const [searchedValueCustomer, setSearchedValueCustomer] = useState('');
+    const [searchedValueArea, setSearchedValueArea] = useState('');
+    const [searchedValueOSV, setSearchedValueOSV] = useState('');
 
     const [jobNo, setJobNo] = useState('');
     const [jobType, setJobType] = useState('');
@@ -297,13 +302,14 @@ export const Backlog = () => {
                                 <thead>
                                     <tr>
                                         <th className='text-center' width='5%'></th>
-                                        <th className='text-center' width='7%'>Order No</th>
-                                        <th className='text-center' width='7%'>Job No</th>
+                                        <th className='text-center' width='7%'><input onChange={(e) => setSearchedValueOrderNo(e.target.value)} placeholder='&#xf002;  Order No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                        <th className='text-center' width='7%'><input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='&#xf002;  Job No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                         <th className='text-center' width='7%'>Due Date</th>
-                                        <th className='text-center' width='7%'>Customer</th>
+                                        <th className='text-center' width='7%'><input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='&#xf002;  Customer' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                         <th className='text-center' width='7%'>Quantity</th>
+                                        {/* <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='&#xf002;  Current Area' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th> */}
                                         <th className='text-center' width='10%'>Current Area</th>
-                                        <th className='text-center' width='5%'>OSV</th>
+                                        <th className='text-center' width='5%'><input onChange={(e) => setSearchedValueOSV(e.target.value)} placeholder='&#xf002;  OSV' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                         <th className='text-center' width='12%'>OSV Status</th>
                                         <th className='text-center' width='13%'>Ariba</th>
                                         <th className='text-center' width='20%'>Notes</th>
@@ -312,6 +318,39 @@ export const Backlog = () => {
                                 </thead>
                                 <tbody>
                                     {pastJobs
+                                        .filter((row) => 
+                                            !searchedValueOrderNo || row.OrderNo
+                                                .toString()
+                                                .toLowerCase()
+                                                .includes(searchedValueOrderNo.toString().toLowerCase())
+                                        )
+                                        .filter((row) => 
+                                            !searchedValueJobNo || row.JobNo
+                                                .toString()
+                                                .toLowerCase()
+                                                .includes(searchedValueJobNo.toString().toLowerCase())
+                                        )
+                                        .filter((row) => 
+                                            !searchedValueCustomer || row.CustCode
+                                                .toString()
+                                                .toLowerCase()
+                                                .includes(searchedValueCustomer.toString().toLowerCase())
+                                        )
+                                        // .filter((row) => 
+                                        //     !searchedValueArea || row.WorkCntr || row.User_Text2
+                                        //         .toString()
+                                        //         .toLowerCase()
+                                        //         .includes(searchedValueArea.toString().toLowerCase())
+                                        // )
+                                        .filter((row) => {
+                                            if (!searchedValueOSV) { return true; }
+                                            if (!row || !row.VendCode) { return false; }
+                                            
+                                            return row.VendCode
+                                                .toString()
+                                                .toLowerCase()                                           
+                                                .includes(searchedValueOSV.toString().toLowerCase())
+                                        })
                                         .map((job, index) => {
                                             const profitClass = (job.OrderTotal > 5000) ? 'profit-row' : '';
                                             const expediteClass = (job.dataValues.email) ? 'bl-expedite-row' : '';
@@ -380,6 +419,39 @@ export const Backlog = () => {
                                     }
                                     <tr className='empty-row late-row'><td colSpan="11">-</td></tr>
                                     {futureJobs
+                                        .filter((row) => 
+                                            !searchedValueOrderNo || row.OrderNo
+                                                .toString()
+                                                .toLowerCase()
+                                                .includes(searchedValueOrderNo.toString().toLowerCase())
+                                        )
+                                        .filter((row) => 
+                                            !searchedValueJobNo || row.JobNo
+                                                .toString()
+                                                .toLowerCase()
+                                                .includes(searchedValueJobNo.toString().toLowerCase())
+                                        )
+                                        .filter((row) => 
+                                            !searchedValueCustomer || row.CustCode
+                                                .toString()
+                                                .toLowerCase()
+                                                .includes(searchedValueCustomer.toString().toLowerCase())
+                                        )
+                                        // .filter((row) => 
+                                        //     !searchedValueArea || row.WorkCntr || row.User_Text2
+                                        //         .toString()
+                                        //         .toLowerCase()
+                                        //         .includes(searchedValueArea.toString().toLowerCase())
+                                        // )
+                                        .filter((row) => {
+                                            if (!searchedValueOSV) { return true; }
+                                            if (!row || !row.VendCode) { return false; }
+                                            
+                                            return row.VendCode
+                                                .toString()
+                                                .toLowerCase()                                           
+                                                .includes(searchedValueOSV.toString().toLowerCase())
+                                        })
                                         .map((job, index) => {
                                             const profitClass = (job.OrderTotal > 5000) ? 'profit-row' : '';
                                             const expediteClass = (job.dataValues.email) ? 'bl-expedite-row' : '';
