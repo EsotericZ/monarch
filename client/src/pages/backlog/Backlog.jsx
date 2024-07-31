@@ -166,7 +166,11 @@ export const Backlog = () => {
                                             return (
                                                 <tr step={step} key={index}>
                                                     <td className='text-center'>{step.StepNo}</td>
-                                                    <td className='text-center'>{step.WorkCntr}</td>
+                                                    {step.WorkCntr ?
+                                                        <td className='text-center'>{step.WorkCntr}</td>
+                                                    :
+                                                        <td className='text-center'>{step.VendCode}</td>
+                                                    }
                                                     <td className='text-center'>{step.Status}</td>
                                                     <td className='text-center'>{step.EmplCode}</td>
                                                     {step.ActualEndDate ? 
@@ -193,6 +197,9 @@ export const Backlog = () => {
                                         <th className='text-center'>Customer</th>
                                         <th className='text-center'>Quantity</th>
                                         <th className='text-center'>Current Area</th>
+                                        <th className='text-center'>OSV</th>
+                                        <th className='text-center'>OSV Status</th>
+                                        <th className='text-center'>Notes</th>
                                         {/* <th className='text-center'>Total</th> */}
                                     </tr>
                                 </thead>
@@ -221,6 +228,11 @@ export const Backlog = () => {
                                                             :
                                                                 <td className='text-center' onClick={() => toggleRoute(job)}>{(job.User_Text2).split(' ')[1]}</td>
                                                             }
+                                                            {job.User_Text2 == '6. OUTSOURCE' ?
+                                                                <td className='text-center'>{job.VendCode}</td>
+                                                            :
+                                                                <td className='text-center'></td>
+                                                            }
                                                             {/* <td className='text-center'>{job.OrderTotal}</td> */}
                                                         </tr>
                                                         {expandedRows.includes(job.JobNo) && subJobs[job.JobNo] && subJobs[job.JobNo].map((subJob, subIndex) => (
@@ -235,6 +247,11 @@ export const Backlog = () => {
                                                                     <td className='text-center' onClick={() => toggleRoute(subJob)}>{(subJob.WorkCntr).split(' ')[1]}</td>
                                                                 :
                                                                     <td className='text-center' onClick={() => toggleRoute(subJob)}>{(subJob.User_Text2).split(' ')[1]}</td>
+                                                                }
+                                                                {job.User_Text2 == '6. OUTSOURCE' ?
+                                                                    <td className='text-center'>{job.VendCode}</td>
+                                                                :
+                                                                    <td className='text-center'></td>
                                                                 }
                                                             </tr>
                                                         ))}

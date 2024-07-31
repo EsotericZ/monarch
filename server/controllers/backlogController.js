@@ -25,7 +25,7 @@ async function getAllJobs(req, res) {
         if (err) console.error(err);
         let request = new sql.Request();
 
-        request.query("SELECT R.JobNo, D.PartNo, D.Revision, R.EstimQty, D.DueDate, O.CustCode, D.User_Text3, D.User_Text2, D.User_Number3, R.OrderNo, R.StepNo, D.QuoteNo, D.WorkCode, R.WorkCntr, D.MasterJobNo, O.Status, O.OrderTotal\
+        request.query("SELECT R.JobNo, D.PartNo, D.Revision, R.EstimQty, D.DueDate, O.CustCode, D.User_Text3, D.User_Text2, D.User_Number3, R.OrderNo, R.StepNo, D.QuoteNo, D.WorkCode, R.WorkCntr, D.MasterJobNo, O.Status, O.OrderTotal, R.VendCode\
             FROM OrderRouting R INNER JOIN OrderDet D ON R.JobNo=D.JobNo INNER JOIN ORDERS O ON D.OrderNo=O.OrderNo\
             WHERE (D.Status='Open' AND O.User_Text3!='UNCONFIRMED' AND R.Status='Current') OR (O.Status='O' AND D.MasterJobNo!='' AND D.User_Text2='4. DONE' AND R.StepNo=10)\
             ORDER BY D.DueDate, R.JobNo", 
@@ -69,7 +69,7 @@ async function getSingleJob(req, res) {
         if (err) console.error(err);
         let request = new sql.Request();
  
-        request.query(`SELECT R.JobNo, D.PartNo, D.Revision, R.EstimQty, D.DueDate, O.CustCode, D.User_Text3, D.User_Text2, D.User_Number3, R.OrderNo, R.StepNo, D.QuoteNo, D.WorkCode, R.WorkCntr, D.MasterJobNo, R.Status, R.ActualEndDate, R.EmplCode\
+        request.query(`SELECT R.JobNo, D.PartNo, D.Revision, R.EstimQty, D.DueDate, O.CustCode, D.User_Text3, D.User_Text2, D.User_Number3, R.OrderNo, R.StepNo, D.QuoteNo, D.WorkCode, R.WorkCntr, D.MasterJobNo, R.Status, R.ActualEndDate, R.EmplCode, R.WorkOrVend, R.VendCode\
         FROM OrderRouting R INNER JOIN OrderDet D ON R.JobNo=D.JobNo INNER JOIN ORDERS O ON D.OrderNo=O.OrderNo\
         WHERE D.JobNo=${JobNo}\
         ORDER BY R.StepNo`, 
@@ -89,7 +89,7 @@ async function getTest(req, res) {
         if (err) console.error(err);
         let request = new sql.Request();
 
-        request.query("SELECT * FROM OrderRouting WHERE JobNo='151812'", 
+        request.query("SELECT * FROM OrderRouting WHERE JobNo='152250'", 
 
         function(err, recordset) {
             if (err) console.error(err);
