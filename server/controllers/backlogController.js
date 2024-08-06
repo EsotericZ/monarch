@@ -49,6 +49,81 @@ async function getAllJobs(req, res) {
     })
 };
 
+async function getNextMonthJobs(req, res) {
+    const jobData = await Jobs.findAll();
+
+    const currentDate = new Date();
+    const firstDayOfNextMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
+    firstDayOfNextMonth.setUTCHours(0, 0, 0, 0);
+    const firstDayOfFollowingMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 2, 1);
+    firstDayOfFollowingMonth.setUTCHours(0, 0, 0, 0);
+
+    sql.connect(config, function(err,) {
+        if (err) console.error(err);
+        let request = new sql.Request();
+
+        request.query("SELECT R.JobNo, D.PartNo, D.Revision, R.EstimQty, D.DueDate, O.CustCode, D.User_Text3, D.User_Text2, D.User_Number3, R.OrderNo, R.StepNo, D.QuoteNo, D.WorkCode, R.WorkCntr, D.MasterJobNo, O.Status, O.OrderTotal, R.VendCode\
+            FROM OrderRouting R INNER JOIN OrderDet D ON R.JobNo=D.JobNo INNER JOIN ORDERS O ON D.OrderNo=O.OrderNo\
+            WHERE (D.Status='Open' AND O.User_Text3!='UNCONFIRMED' AND R.Status='Current') OR (O.Status='O' AND D.MasterJobNo!='' AND D.User_Text2='4. DONE' AND R.StepNo=10)\
+            ORDER BY D.DueDate, R.JobNo", 
+
+        function(err, recordset) {
+            if (err) console.error(err);
+            let records = recordset.recordsets[0];
+
+            const filteredRecords = records.filter(record => {
+                const dueDate = new Date(record.DueDate);
+                return dueDate >= firstDayOfNextMonth && dueDate < firstDayOfFollowingMonth;
+            });
+
+            const jobDataMap = new Map();
+            jobData.forEach(job => jobDataMap.set(job.jobNo, job));
+
+            const mergedRecords = filteredRecords.map(record => {
+                const job = jobDataMap.get(record.JobNo);
+                return job ? { ...record, ...job } : record;
+            });
+
+            res.send(mergedRecords)
+        })
+    })
+};
+
+async function getFutureJobs(req, res) {
+    const jobData = await Jobs.findAll();
+
+    const currentDate = new Date();
+    const firstDayOfFutureMonths = new Date(currentDate.getFullYear(), currentDate.getMonth() + 2, 1);
+    firstDayOfFutureMonths.setUTCHours(0, 0, 0, 0);
+
+    sql.connect(config, function(err,) {
+        if (err) console.error(err);
+        let request = new sql.Request();
+
+        request.query("SELECT R.JobNo, D.PartNo, D.Revision, R.EstimQty, D.DueDate, O.CustCode, D.User_Text3, D.User_Text2, D.User_Number3, R.OrderNo, R.StepNo, D.QuoteNo, D.WorkCode, R.WorkCntr, D.MasterJobNo, O.Status, O.OrderTotal, R.VendCode\
+            FROM OrderRouting R INNER JOIN OrderDet D ON R.JobNo=D.JobNo INNER JOIN ORDERS O ON D.OrderNo=O.OrderNo\
+            WHERE (D.Status='Open' AND O.User_Text3!='UNCONFIRMED' AND R.Status='Current') OR (O.Status='O' AND D.MasterJobNo!='' AND D.User_Text2='4. DONE' AND R.StepNo=10)\
+            ORDER BY D.DueDate, R.JobNo", 
+
+        function(err, recordset) {
+            if (err) console.error(err);
+            let records = recordset.recordsets[0];
+
+            const filteredRecords = records.filter(record => new Date(record.DueDate) >= firstDayOfFutureMonths);
+
+            const jobDataMap = new Map();
+            jobData.forEach(job => jobDataMap.set(job.jobNo, job));
+
+            const mergedRecords = filteredRecords.map(record => {
+                const job = jobDataMap.get(record.JobNo);
+                return job ? { ...record, ...job } : record;
+            });
+
+            res.send(mergedRecords)
+        })
+    })
+};
+
 async function getAllSubJobs(req, res) {
     const JobNo = req.body.JobNo;
     const jobData = await Jobs.findAll();
@@ -208,6 +283,8 @@ async function updateHold(req, res) {
 
 module.exports = {
     getAllJobs,
+    getNextMonthJobs,
+    getFutureJobs,
     getAllSubJobs,
     getSingleJob,
     updateJob,
