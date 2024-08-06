@@ -51,6 +51,7 @@ async function getAllJobs(req, res) {
 
 async function getAllSubJobs(req, res) {
     const JobNo = req.body.JobNo;
+    const jobData = await Jobs.findAll();
 
     sql.connect(config, function(err,) {
         if (err) console.error(err);
@@ -65,7 +66,15 @@ async function getAllSubJobs(req, res) {
             if (err) console.error(err);
             let records = recordset.recordsets[0];
 
-            res.send(records)
+            const jobDataMap = new Map();
+            jobData.forEach(job => jobDataMap.set(job.jobNo, job));
+
+            const mergedRecords = records.map(record => {
+                const job = jobDataMap.get(record.JobNo);
+                return job ? { ...record, ...job } : record;
+            });
+
+            res.send(mergedRecords)
         })
     })
 };

@@ -325,7 +325,7 @@ export const Backlog = () => {
                                         <th className='text-center' width='10%'>Current Area</th>
                                         <th className='text-center' width='5%'><input onChange={(e) => setSearchedValueOSV(e.target.value)} placeholder='&#xf002;  OSV' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                         <th className='text-center' width='12%'>OSV Status</th>
-                                        <th className='text-center' width='13%'>Ariba</th>
+                                        <th className='text-center' width='13%'>Commitment Date</th>
                                         <th className='text-center' width='20%'>Notes</th>
                                         {/* <th className='text-center'>Total</th> */}
                                     </tr>
@@ -418,9 +418,6 @@ export const Backlog = () => {
                                                                 :
                                                                     <td className='text-center'></td>
                                                                 }
-                                                                <td className='text-center'></td>
-                                                                <td className='text-center'></td>
-                                                                <td className='text-center'></td>
                                                                 <td onClick={() => handleOpenJob(subJob)} className='text-center'>{subJob.dataValues.osvnotes}</td>
                                                                 <td onClick={() => handleOpenJob(subJob)} className='text-center'>{subJob.dataValues.ariba}</td>
                                                                 <td onClick={() => handleOpenJob(subJob)} className='text-center'>{subJob.dataValues.blnotes}</td>
@@ -515,9 +512,6 @@ export const Backlog = () => {
                                                                 :
                                                                     <td className='text-center' onClick={() => toggleRoute(subJob)}>{(subJob.User_Text2).split(' ')[1]}</td>
                                                                 }
-                                                                <td className='text-center'></td>
-                                                                <td className='text-center'></td>
-                                                                <td className='text-center'></td>
                                                                 <td onClick={() => handleOpenJob(subJob)} className='text-center'>{subJob.dataValues.osvnotes}</td>
                                                                 <td onClick={() => handleOpenJob(subJob)} className='text-center'>{subJob.dataValues.ariba}</td>
                                                                 <td onClick={() => handleOpenJob(subJob)} className='text-center'>{subJob.dataValues.blnotes}</td>
