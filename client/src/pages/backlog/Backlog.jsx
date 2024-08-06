@@ -91,18 +91,14 @@ export const Backlog = () => {
             const today = new Date();
             const yesterday = new Date(today);
             yesterday.setDate(yesterday.getDate() - 1);
-            console.log(yesterday)
 
             const sortedJobs = allJobs.sort((a, b) => formatDate(a.DueDate) - formatDate(b.DueDate));
             const pastJobs = sortedJobs.filter(job => formatDate(job.DueDate) < yesterday);
             const futureJobs = sortedJobs.filter(job => formatDate(job.DueDate) >= yesterday);
 
-            console.log(pastJobs)
-
             setPastJobs(pastJobs);
             setFutureJobs(futureJobs);
 
-            console.log(pastJobs)
             console.log(futureJobs)
 
         } catch (err) {
@@ -494,9 +490,9 @@ export const Backlog = () => {
                                                             :
                                                                 <td className='text-center'></td>
                                                             }
-                                                            {/* <td onClick={() => handleOpenJob(job)} className='text-center'>{job.dataValues.osvnotes}</td>
+                                                            <td onClick={() => handleOpenJob(job)} className='text-center'>{job.dataValues.osvnotes}</td>
                                                             <td onClick={() => handleOpenJob(job)} className='text-center'>{job.dataValues.ariba}</td>
-                                                            <td onClick={() => handleOpenJob(job)} className='text-center'>{job.dataValues.blnotes}</td> */}
+                                                            <td onClick={() => handleOpenJob(job)} className='text-center'>{job.dataValues.blnotes}</td>
                                                             {/* <td className='text-center'>{job.OrderTotal}</td> */}
                                                         </tr>
                                                         {expandedRows.includes(job.JobNo) && subJobs[job.JobNo] && subJobs[job.JobNo].map((subJob, subIndex) => (
