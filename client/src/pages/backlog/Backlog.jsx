@@ -409,7 +409,7 @@ export const Backlog = () => {
                                                                 :
                                                                     <td className='text-center' onClick={() => toggleRoute(subJob)}>{(subJob.User_Text2).split(' ')[1]}</td>
                                                                 }
-                                                                {job.User_Text2 == '6. OUTSOURCE' ?
+                                                                {subJob.User_Text2 == '6. OUTSOURCE' ?
                                                                     <td className='text-center'>{subJob.VendCode}</td>
                                                                 :
                                                                     <td className='text-center'></td>
@@ -507,6 +507,11 @@ export const Backlog = () => {
                                                                     <td className='text-center' onClick={() => toggleRoute(subJob)}>{(subJob.WorkCntr).split(' ')[1]}</td>
                                                                 :
                                                                     <td className='text-center' onClick={() => toggleRoute(subJob)}>{(subJob.User_Text2).split(' ')[1]}</td>
+                                                                }
+                                                                {subJob.User_Text2 == '6. OUTSOURCE' ?
+                                                                    <td className='text-center'>{subJob.VendCode}</td>
+                                                                :
+                                                                    <td className='text-center'></td>
                                                                 }
                                                                 <td onClick={() => handleOpenJob(subJob)} className='text-center'>{subJob.dataValues.osvnotes}</td>
                                                                 <td onClick={() => handleOpenJob(subJob)} className='text-center'>{subJob.dataValues.ariba}</td>
