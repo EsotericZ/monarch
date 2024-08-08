@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button, Dropdown, DropdownButton, Tab, Tabs, Table, Toast, ToastContainer } from 'react-bootstrap';
-import { format, parseISO } from 'date-fns';
+// import { format, parseISO } from 'date-fns';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
@@ -255,7 +255,8 @@ export const FormingProg = () => {
                                                             </CopyToClipboard>
                                                             <td className='text-center'>{job.Revision}</td>
                                                             <td className='text-center'>{job.EstimQty}</td>
-                                                            <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
+                                                            {/*     <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td> */}
+                                                            <td className='text-center'>{(job.DueDate).split('-')[1] + '/' + ((job.DueDate).split('-')[2]).split('T')[0]}</td>
                                                             <td className='text-center'>{job.CustCode}</td>
                                                             <td className='text-center'>{job.User_Text3}</td>
                                                             <td className='text-center'>{job.dataValues.engineer}</td>
@@ -388,7 +389,8 @@ export const FormingProg = () => {
                                                             </CopyToClipboard>
                                                             <td className='text-center'>{job.Revision}</td>
                                                             <td className='text-center'>{job.EstimQty}</td>
-                                                            <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
+                                                            {/* <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td> */}
+                                                            <td className='text-center'>{(job.DueDate).split('-')[1] + '/' + ((job.DueDate).split('-')[2]).split('T')[0]}</td>
                                                             <td className='text-center'>{job.CustCode}</td>
                                                             <td className='text-center'>{job.User_Text3}</td>
                                                             <td className='text-center'>{job.dataValues.engineer}</td>
@@ -497,7 +499,8 @@ export const FormingProg = () => {
                                                             </CopyToClipboard>
                                                             <td className='text-center'>{job.Revision}</td>
                                                             <td className='text-center'>{job.EstimQty}</td>
-                                                            <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
+                                                            {/* <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td> */}
+                                                            <td className='text-center'>{(job.DueDate).split('-')[1] + '/' + ((job.DueDate).split('-')[2]).split('T')[0]}</td>
                                                             <td className='text-center'>{job.CustCode}</td>
                                                             <td className='text-center'>{job.User_Text3}</td>
                                                             <td className='text-center'>{job.User_Text2}</td>
