@@ -377,7 +377,8 @@ export const Laser = () => {
                                                         <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td>
                                                         <td className='text-center'>{job.Revision}</td>
                                                         <td className='text-center'>{job.EstimQty}</td>
-                                                        <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
+                                                        {/* <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td> */}
+                                                        <td className='text-center'>{(job.DueDate).split('-')[1] + '/' + ((job.DueDate).split('-')[2]).split('T')[0]}</td>
                                                         <td className='text-center'>
                                                             {job.User_Date1 &&
                                                                 <Icon icon={check}/>
@@ -436,7 +437,8 @@ export const Laser = () => {
                                                             <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td>
                                                             <td className='text-center'>{job.Revision}</td>
                                                             <td className='text-center'>{job.EstimQty}</td>
-                                                            <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
+                                                            {/* <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td> */}
+                                                            <td className='text-center'>{(job.DueDate).split('-')[1] + '/' + ((job.DueDate).split('-')[2]).split('T')[0]}</td>
                                                             <td className='text-center'>
                                                                 {job.User_Date1 &&
                                                                     <Icon icon={check}/>
@@ -711,7 +713,8 @@ export const Laser = () => {
                                                         <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td>
                                                         <td className='text-center'>{job.Revision}</td>
                                                         <td className='text-center'>{job.EstimQty}</td>
-                                                        <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
+                                                        {/* <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td> */}
+                                                        <td className='text-center'>{(job.DueDate).split('-')[1] + '/' + ((job.DueDate).split('-')[2]).split('T')[0]}</td>
                                                         <td className='text-center'>
                                                             {job.User_Date1 &&
                                                                 <Icon icon={check}/>
@@ -769,7 +772,8 @@ export const Laser = () => {
                                                         <td className='text-center' onClick={() => { navigator.clipboard.writeText(`${job.PartNo}`); setShowToast(true); setPartCopy(`${job.PartNo}`) }}>{job.PartNo}</td>
                                                         <td className='text-center'>{job.Revision}</td>
                                                         <td className='text-center'>{job.EstimQty}</td>
-                                                        <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td>
+                                                        {/* <td className='text-center'>{format(parseISO(job.DueDate), 'MM/dd')}</td> */}
+                                                        <td className='text-center'>{(job.DueDate).split('-')[1] + '/' + ((job.DueDate).split('-')[2]).split('T')[0]}</td>
                                                         <td className='text-center'>
                                                             {job.User_Date1 &&
                                                                 <Icon icon={check}/>
