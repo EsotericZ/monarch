@@ -66,6 +66,11 @@ export const Backlog = () => {
     const [nextMonth, setNextMonth] = useState('N');
     const [futureMonths, setFutureMonths] = useState('F');
     const [overview, setOverview] = useState('Overview');
+    
+    const [lateJobs, setLateJobs] = useState(0);
+    const [upcomingJobs, setUpcomingJobs] = useState(0);
+    const [monthJobs, setMonthJobs] = useState(0);
+    const [totalJobs, setTotalJobs] = useState(0);
 
     const formatDate = (dateStr) => {
         if (!dateStr) return new Date(0);
@@ -122,6 +127,8 @@ export const Backlog = () => {
             const sortedJobs = allJobs.sort((a, b) => formatDate(a.DueDate) - formatDate(b.DueDate));
             const pastJobs = sortedJobs.filter(job => formatDate(job.DueDate) < yesterday);
             const futureJobs = sortedJobs.filter(job => formatDate(job.DueDate) >= yesterday);
+            const pastJobsNo = pastJobs.filter(job => !job.MasterJobNo);
+            const sortedJobsNo = sortedJobs.filter(job => !job.MasterJobNo);
 
             const thisMonthNo = today.getMonth();
             const nextMonthNo = today.getMonth() + 1;
@@ -139,7 +146,11 @@ export const Backlog = () => {
                 'October',
                 'November',
                 'December',
-            ]
+            ];
+
+            setLateJobs(pastJobsNo.length);
+            setUpcomingJobs(sortedJobsNo.length - pastJobsNo.length);
+            setMonthJobs(sortedJobsNo.length);
 
             setCurrent(months[thisMonthNo]);
             setNextMonth(months[nextMonthNo]);
@@ -829,7 +840,15 @@ export const Backlog = () => {
 
                             <Tab eventKey="overview" title={overview}>
                                 <div className='mx-3'>
-                                    Details
+                                    <div>
+                                        Late Jobs: {lateJobs}
+                                    </div>
+                                    <div>
+                                        Upcoming Jobs: {upcomingJobs}
+                                    </div>
+                                    <div>
+                                        Total Month Jobs: {monthJobs}
+                                    </div>
                                 </div>
                             </Tab>
                         </Tabs>
