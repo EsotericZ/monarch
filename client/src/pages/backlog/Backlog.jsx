@@ -1,5 +1,5 @@
 import { useEffect, useState, Fragment, Component } from 'react';
-import { Button, FloatingLabel, Form, Modal, Table } from 'react-bootstrap';
+import { Button, FloatingLabel, Form, Modal, Tab, Tabs, Table } from 'react-bootstrap';
 
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
@@ -9,6 +9,8 @@ import { Icon } from 'react-icons-kit';
 import { plus } from 'react-icons-kit/entypo/plus';
 
 import getAllJobs from '../../services/backlog/getAllJobs';
+import getNextMonthJobs from '../../services/backlog/getNextMonthJobs';
+import getFutureJobs from '../../services/backlog/getFutureJobs';
 import getAllSubJobs from '../../services/backlog/getAllSubJobs';
 import getSingleJob from '../../services/backlog/getSingleJob';
 import updateJob from '../../services/backlog/updateJob';
@@ -50,6 +52,8 @@ export const Backlog = () => {
     const [update, setUpdate] = useState('');
 
     const [jobs, setJobs] = useState([]);
+    const [nextMonthJobs, setNextMonthJobs] = useState([]);
+    const [allFutureJobs, setAllFutueJobs] = useState([]);
     const [subJobs, setSubJobs] = useState([]);
     const [futureJobs, setFutureJobs] = useState([]);
     const [pastJobs, setPastJobs] = useState([]);
@@ -57,6 +61,10 @@ export const Backlog = () => {
     const [showRoute, setShowRoute] = useState(false);
     const [showEdit, setShowEdit] = useState(false);
     const [loading, setLoading] = useState(true);
+
+    const [current, setCurrent] = useState('C');
+    const [nextMonth, setNextMonth] = useState('N');
+    const [futureMonths, setFutureMonths] = useState('F');
 
     const formatDate = (dateStr) => {
         if (!dateStr) return new Date(0);
@@ -67,10 +75,12 @@ export const Backlog = () => {
     const fetchData = async () => {
         setLoading(true);
         try {
-            const [allJobs] = await Promise.all([
+            const [allJobs, nextJobs, moreJobs] = await Promise.all([
                 getAllJobs(),
+                getNextMonthJobs(),
+                getFutureJobs(),
             ]);
-            setJobs(allJobs);
+            // setJobs(allJobs);
             let masters = allJobs.filter(row => row.MasterJobNo != null);
             let masterJobs = []
             masters.forEach((e) => {
@@ -85,9 +95,25 @@ export const Backlog = () => {
                     e.HasSubs = 0
                 }
             })
-
-            console.log(allJobs)
-
+            
+            nextJobs.forEach((e) => {
+                if (nonEmptyJobs.includes(e.JobNo)) {
+                    e.HasSubs = 1
+                } else {
+                    e.HasSubs = 0
+                }
+            })
+            setNextMonthJobs(nextJobs);
+            
+            moreJobs.forEach((e) => {
+                if (nonEmptyJobs.includes(e.JobNo)) {
+                    e.HasSubs = 1
+                } else {
+                    e.HasSubs = 0
+                }
+            })
+            setAllFutueJobs(moreJobs);
+            
             const today = new Date();
             const yesterday = new Date(today);
             yesterday.setDate(yesterday.getDate() - 1);
@@ -98,9 +124,6 @@ export const Backlog = () => {
 
             setPastJobs(pastJobs);
             setFutureJobs(futureJobs);
-
-            console.log(futureJobs)
-
         } catch (err) {
             console.error(err);
         } finally {
@@ -307,225 +330,235 @@ export const Backlog = () => {
                             </Modal.Footer>
                         </Modal>
 
-                        <div className='mx-3'>
-                            <Table striped hover>
-                                <thead>
-                                    <tr>
-                                        <th className='text-center' width='5%'></th>
-                                        <th className='text-center' width='7%'><input onChange={(e) => setSearchedValueOrderNo(e.target.value)} placeholder='&#xf002;  Order No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                        <th className='text-center' width='7%'><input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='&#xf002;  Job No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                        <th className='text-center' width='7%'>Due Date</th>
-                                        <th className='text-center' width='7%'><input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='&#xf002;  Customer' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                        <th className='text-center' width='7%'>Quantity</th>
-                                        {/* <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='&#xf002;  Current Area' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th> */}
-                                        <th className='text-center' width='10%'>Current Area</th>
-                                        <th className='text-center' width='5%'><input onChange={(e) => setSearchedValueOSV(e.target.value)} placeholder='&#xf002;  OSV' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                        <th className='text-center' width='12%'>OSV Status</th>
-                                        <th className='text-center' width='13%'>Commitment Date</th>
-                                        <th className='text-center' width='20%'>Notes</th>
-                                        {/* <th className='text-center'>Total</th> */}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {pastJobs
-                                        .filter((row) => 
-                                            !searchedValueOrderNo || row.OrderNo
-                                                .toString()
-                                                .toLowerCase()
-                                                .includes(searchedValueOrderNo.toString().toLowerCase())
-                                        )
-                                        .filter((row) => 
-                                            !searchedValueJobNo || row.JobNo
-                                                .toString()
-                                                .toLowerCase()
-                                                .includes(searchedValueJobNo.toString().toLowerCase())
-                                        )
-                                        .filter((row) => 
-                                            !searchedValueCustomer || row.CustCode
-                                                .toString()
-                                                .toLowerCase()
-                                                .includes(searchedValueCustomer.toString().toLowerCase())
-                                        )
-                                        // .filter((row) => 
-                                        //     !searchedValueArea || row.WorkCntr || row.User_Text2
-                                        //         .toString()
-                                        //         .toLowerCase()
-                                        //         .includes(searchedValueArea.toString().toLowerCase())
-                                        // )
-                                        .filter((row) => {
-                                            if (!searchedValueOSV) { return true; }
-                                            if (!row || !row.VendCode) { return false; }
-                                            
-                                            return row.VendCode
-                                                .toString()
-                                                .toLowerCase()                                           
-                                                .includes(searchedValueOSV.toString().toLowerCase())
-                                        })
-                                        .map((job, index) => {
-                                            const profitClass = (job.OrderTotal > 5000) ? 'profit-row' : '';
-                                            const expediteClass = (job.dataValues.email) ? 'bl-expedite-row' : '';
-                                            const holdClass = (job.dataValues.hold) ? 'hold-row' : '';
-                                            if (!job.MasterJobNo) {
-                                                return (
-                                                    <Fragment key={index}>
-                                                        <tr job={job} className={`${expediteClass} ${holdClass} ${profitClass}`}>
-                                                            {job.HasSubs ?
-                                                                <td className='text-center' onClick={() => toggleSub(job.JobNo)}>
-                                                                    <Icon icon={plus}/>
-                                                                </td>
-                                                                :
-                                                                <td className='text-center'></td>
-                                                            }
-                                                            <td onClick={() => handleOpenJob(job)} className='text-center'>{job.OrderNo}</td>
-                                                            <td onClick={() => handleOpenJob(job)} className='text-center'>{job.JobNo}</td>
-                                                            <td className='text-center'>{(job.DueDate).split('-')[1] + '/' + ((job.DueDate).split('-')[2]).split('T')[0]}</td>
-                                                            <td className='text-center'>{job.CustCode}</td>
-                                                            <td className='text-center'>{job.EstimQty}</td>
-                                                            {job.WorkCntr && job.User_Text2 !== '4. DONE' ?
-                                                                <td className='text-center' onClick={() => toggleRoute(job)}>{(job.WorkCntr).split(' ')[1]}</td>
-                                                                :
-                                                                <td className='text-center' onClick={() => toggleRoute(job)}>{(job.User_Text2).split(' ')[1]}</td>
-                                                            }
-                                                            {job.User_Text2 == '6. OUTSOURCE' ?
-                                                                <td className='text-center'>{job.VendCode}</td>
-                                                            :
-                                                                <td className='text-center'></td>
-                                                            }
-                                                            <td onClick={() => handleOpenJob(job)} className='text-center'>{job.dataValues.osvnotes}</td>
-                                                            <td onClick={() => handleOpenJob(job)} className='text-center'>{job.dataValues.ariba}</td>
-                                                            <td onClick={() => handleOpenJob(job)} className='text-center'>{job.dataValues.blnotes}</td>
-                                                            {/* <td className='text-center'>{job.OrderTotal}</td> */}
-                                                        </tr>
-                                                        {expandedRows.includes(job.JobNo) && subJobs[job.JobNo] && subJobs[job.JobNo].map((subJob, subIndex) => (
-                                                            <tr key={subIndex} className='subjob-row'>
-                                                                <td className='text-center'></td>
-                                                                <td className='text-center'>{subJob.OrderNo}</td>
-                                                                <td className='text-center'>{subJob.JobNo}</td>
-                                                                <td className='text-center'>{(subJob.DueDate).split('-')[1] + '/' + ((subJob.DueDate).split('-')[2]).split('T')[0]}</td>
-                                                                <td className='text-center'>{subJob.CustCode}</td>
-                                                                <td className='text-center'>{subJob.EstimQty}</td>
-                                                                {subJob.WorkCntr && subJob.User_Text2 !== '4. DONE' ?
-                                                                    <td className='text-center' onClick={() => toggleRoute(subJob)}>{(subJob.WorkCntr).split(' ')[1]}</td>
-                                                                :
-                                                                    <td className='text-center' onClick={() => toggleRoute(subJob)}>{(subJob.User_Text2).split(' ')[1]}</td>
-                                                                }
-                                                                {subJob.User_Text2 == '6. OUTSOURCE' ?
-                                                                    <td className='text-center'>{subJob.VendCode}</td>
-                                                                :
-                                                                    <td className='text-center'></td>
-                                                                }
-                                                                <td onClick={() => handleOpenJob(subJob)} className='text-center'>{subJob.dataValues.osvnotes}</td>
-                                                                <td onClick={() => handleOpenJob(subJob)} className='text-center'>{subJob.dataValues.ariba}</td>
-                                                                <td onClick={() => handleOpenJob(subJob)} className='text-center'>{subJob.dataValues.blnotes}</td>
-                                                            </tr>
-                                                        ))}
-                                                    </Fragment>
+                        <Tabs
+                            defaultActiveKey="current"
+                            id="justify-tab-example"
+                            className='mb-3'
+                            justify
+                        >
+                            <Tab eventKey="current" title={current}>
+
+                                <div className='mx-3'>
+                                    <Table striped hover>
+                                        <thead>
+                                            <tr>
+                                                <th className='text-center' width='5%'></th>
+                                                <th className='text-center' width='7%'><input onChange={(e) => setSearchedValueOrderNo(e.target.value)} placeholder='&#xf002;  Order No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                                <th className='text-center' width='7%'><input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='&#xf002;  Job No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                                <th className='text-center' width='7%'>Due Date</th>
+                                                <th className='text-center' width='7%'><input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='&#xf002;  Customer' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                                <th className='text-center' width='7%'>Quantity</th>
+                                                {/* <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='&#xf002;  Current Area' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th> */}
+                                                <th className='text-center' width='10%'>Current Area</th>
+                                                <th className='text-center' width='5%'><input onChange={(e) => setSearchedValueOSV(e.target.value)} placeholder='&#xf002;  OSV' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                                <th className='text-center' width='12%'>OSV Status</th>
+                                                <th className='text-center' width='13%'>Commitment Date</th>
+                                                <th className='text-center' width='20%'>Notes</th>
+                                                {/* <th className='text-center'>Total</th> */}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {pastJobs
+                                                .filter((row) => 
+                                                    !searchedValueOrderNo || row.OrderNo
+                                                        .toString()
+                                                        .toLowerCase()
+                                                        .includes(searchedValueOrderNo.toString().toLowerCase())
                                                 )
-                                            }
-                                        })
-                                    }
-                                    <tr className='empty-row late-row'><td colSpan="11">-</td></tr>
-                                    {futureJobs
-                                        .filter((row) => 
-                                            !searchedValueOrderNo || row.OrderNo
-                                                .toString()
-                                                .toLowerCase()
-                                                .includes(searchedValueOrderNo.toString().toLowerCase())
-                                        )
-                                        .filter((row) => 
-                                            !searchedValueJobNo || row.JobNo
-                                                .toString()
-                                                .toLowerCase()
-                                                .includes(searchedValueJobNo.toString().toLowerCase())
-                                        )
-                                        .filter((row) => 
-                                            !searchedValueCustomer || row.CustCode
-                                                .toString()
-                                                .toLowerCase()
-                                                .includes(searchedValueCustomer.toString().toLowerCase())
-                                        )
-                                        // .filter((row) => 
-                                        //     !searchedValueArea || row.WorkCntr || row.User_Text2
-                                        //         .toString()
-                                        //         .toLowerCase()
-                                        //         .includes(searchedValueArea.toString().toLowerCase())
-                                        // )
-                                        .filter((row) => {
-                                            if (!searchedValueOSV) { return true; }
-                                            if (!row || !row.VendCode) { return false; }
-                                            
-                                            return row.VendCode
-                                                .toString()
-                                                .toLowerCase()                                           
-                                                .includes(searchedValueOSV.toString().toLowerCase())
-                                        })
-                                        .map((job, index) => {
-                                            const profitClass = (job.OrderTotal > 5000) ? 'profit-row' : '';
-                                            // const expediteClass = (job.dataValues.email) ? 'bl-expedite-row' : '';
-                                            // const holdClass = (job.dataValues.hold) ? 'hold-row' : '';
-                                            if (!job.MasterJobNo) {
-                                                return (
-                                                    <Fragment key={index}>
-                                                        {/* <tr job={job} className={`${expediteClass} ${holdClass} ${profitClass}`}> */}
-                                                        <tr job={job} className={`${profitClass}`}>
-                                                            {job.HasSubs ?
-                                                                <td className='text-center' onClick={() => toggleSub(job.JobNo)}>
-                                                                    <Icon icon={plus}/>
-                                                                </td>
-                                                                :
-                                                                <td className='text-center'></td>
-                                                            }
-                                                            <td onClick={() => handleOpenJob(job)} className='text-center'>{job.OrderNo}</td>
-                                                            <td onClick={() => handleOpenJob(job)} className='text-center'>{job.JobNo}</td>
-                                                            <td className='text-center'>{(job.DueDate).split('-')[1] + '/' + ((job.DueDate).split('-')[2]).split('T')[0]}</td>
-                                                            <td className='text-center'>{job.CustCode}</td>
-                                                            <td className='text-center'>{job.EstimQty}</td>
-                                                            {job.WorkCntr && job.User_Text2 !== '4. DONE' ?
-                                                                <td className='text-center' onClick={() => toggleRoute(job)}>{(job.WorkCntr).split(' ')[1]}</td>
-                                                            :
-                                                                <td className='text-center' onClick={() => toggleRoute(job)}>{(job.User_Text2).split(' ')[1]}</td>
-                                                            }
-                                                            {job.User_Text2 == '6. OUTSOURCE' ?
-                                                                <td className='text-center'>{job.VendCode}</td>
-                                                            :
-                                                                <td className='text-center'></td>
-                                                            }
-                                                            <td onClick={() => handleOpenJob(job)} className='text-center'>{job.dataValues.osvnotes}</td>
-                                                            <td onClick={() => handleOpenJob(job)} className='text-center'>{job.dataValues.ariba}</td>
-                                                            <td onClick={() => handleOpenJob(job)} className='text-center'>{job.dataValues.blnotes}</td>
-                                                            {/* <td className='text-center'>{job.OrderTotal}</td> */}
-                                                        </tr>
-                                                        {expandedRows.includes(job.JobNo) && subJobs[job.JobNo] && subJobs[job.JobNo].map((subJob, subIndex) => (
-                                                            <tr key={subIndex} className='subjob-row'>
-                                                                <td className='text-center'></td>
-                                                                <td className='text-center'>{subJob.OrderNo}</td>
-                                                                <td className='text-center'>{subJob.JobNo}</td>
-                                                                <td className='text-center'>{(subJob.DueDate).split('-')[1] + '/' + ((subJob.DueDate).split('-')[2]).split('T')[0]}</td>
-                                                                <td className='text-center'>{subJob.CustCode}</td>
-                                                                <td className='text-center'>{subJob.EstimQty}</td>
-                                                                {subJob.WorkCntr && subJob.User_Text2 !== '4. DONE' ?
-                                                                    <td className='text-center' onClick={() => toggleRoute(subJob)}>{(subJob.WorkCntr).split(' ')[1]}</td>
-                                                                :
-                                                                    <td className='text-center' onClick={() => toggleRoute(subJob)}>{(subJob.User_Text2).split(' ')[1]}</td>
-                                                                }
-                                                                {subJob.User_Text2 == '6. OUTSOURCE' ?
-                                                                    <td className='text-center'>{subJob.VendCode}</td>
-                                                                :
-                                                                    <td className='text-center'></td>
-                                                                }
-                                                                <td onClick={() => handleOpenJob(subJob)} className='text-center'>{subJob.dataValues.osvnotes}</td>
-                                                                <td onClick={() => handleOpenJob(subJob)} className='text-center'>{subJob.dataValues.ariba}</td>
-                                                                <td onClick={() => handleOpenJob(subJob)} className='text-center'>{subJob.dataValues.blnotes}</td>
-                                                            </tr>
-                                                        ))}
-                                                    </Fragment>
+                                                .filter((row) => 
+                                                    !searchedValueJobNo || row.JobNo
+                                                        .toString()
+                                                        .toLowerCase()
+                                                        .includes(searchedValueJobNo.toString().toLowerCase())
                                                 )
+                                                .filter((row) => 
+                                                    !searchedValueCustomer || row.CustCode
+                                                        .toString()
+                                                        .toLowerCase()
+                                                        .includes(searchedValueCustomer.toString().toLowerCase())
+                                                )
+                                                // .filter((row) => 
+                                                //     !searchedValueArea || row.WorkCntr || row.User_Text2
+                                                //         .toString()
+                                                //         .toLowerCase()
+                                                //         .includes(searchedValueArea.toString().toLowerCase())
+                                                // )
+                                                .filter((row) => {
+                                                    if (!searchedValueOSV) { return true; }
+                                                    if (!row || !row.VendCode) { return false; }
+                                                    
+                                                    return row.VendCode
+                                                        .toString()
+                                                        .toLowerCase()                                           
+                                                        .includes(searchedValueOSV.toString().toLowerCase())
+                                                })
+                                                .map((job, index) => {
+                                                    const profitClass = (job.OrderTotal > 5000) ? 'profit-row' : '';
+                                                    const expediteClass = (job.dataValues.email) ? 'bl-expedite-row' : '';
+                                                    const holdClass = (job.dataValues.hold) ? 'hold-row' : '';
+                                                    if (!job.MasterJobNo) {
+                                                        return (
+                                                            <Fragment key={index}>
+                                                                <tr job={job} className={`${expediteClass} ${holdClass} ${profitClass}`}>
+                                                                    {job.HasSubs ?
+                                                                        <td className='text-center' onClick={() => toggleSub(job.JobNo)}>
+                                                                            <Icon icon={plus}/>
+                                                                        </td>
+                                                                        :
+                                                                        <td className='text-center'></td>
+                                                                    }
+                                                                    <td onClick={() => handleOpenJob(job)} className='text-center'>{job.OrderNo}</td>
+                                                                    <td onClick={() => handleOpenJob(job)} className='text-center'>{job.JobNo}</td>
+                                                                    <td className='text-center'>{(job.DueDate).split('-')[1] + '/' + ((job.DueDate).split('-')[2]).split('T')[0]}</td>
+                                                                    <td className='text-center'>{job.CustCode}</td>
+                                                                    <td className='text-center'>{job.EstimQty}</td>
+                                                                    {job.WorkCntr && job.User_Text2 !== '4. DONE' ?
+                                                                        <td className='text-center' onClick={() => toggleRoute(job)}>{(job.WorkCntr).split(' ')[1]}</td>
+                                                                        :
+                                                                        <td className='text-center' onClick={() => toggleRoute(job)}>{(job.User_Text2).split(' ')[1]}</td>
+                                                                    }
+                                                                    {job.User_Text2 == '6. OUTSOURCE' ?
+                                                                        <td className='text-center'>{job.VendCode}</td>
+                                                                    :
+                                                                        <td className='text-center'></td>
+                                                                    }
+                                                                    <td onClick={() => handleOpenJob(job)} className='text-center'>{job.dataValues.osvnotes}</td>
+                                                                    <td onClick={() => handleOpenJob(job)} className='text-center'>{job.dataValues.ariba}</td>
+                                                                    <td onClick={() => handleOpenJob(job)} className='text-center'>{job.dataValues.blnotes}</td>
+                                                                    {/* <td className='text-center'>{job.OrderTotal}</td> */}
+                                                                </tr>
+                                                                {expandedRows.includes(job.JobNo) && subJobs[job.JobNo] && subJobs[job.JobNo].map((subJob, subIndex) => (
+                                                                    <tr key={subIndex} className='subjob-row'>
+                                                                        <td className='text-center'></td>
+                                                                        <td className='text-center'>{subJob.OrderNo}</td>
+                                                                        <td className='text-center'>{subJob.JobNo}</td>
+                                                                        <td className='text-center'>{(subJob.DueDate).split('-')[1] + '/' + ((subJob.DueDate).split('-')[2]).split('T')[0]}</td>
+                                                                        <td className='text-center'>{subJob.CustCode}</td>
+                                                                        <td className='text-center'>{subJob.EstimQty}</td>
+                                                                        {subJob.WorkCntr && subJob.User_Text2 !== '4. DONE' ?
+                                                                            <td className='text-center' onClick={() => toggleRoute(subJob)}>{(subJob.WorkCntr).split(' ')[1]}</td>
+                                                                        :
+                                                                            <td className='text-center' onClick={() => toggleRoute(subJob)}>{(subJob.User_Text2).split(' ')[1]}</td>
+                                                                        }
+                                                                        {subJob.User_Text2 == '6. OUTSOURCE' ?
+                                                                            <td className='text-center'>{subJob.VendCode}</td>
+                                                                        :
+                                                                            <td className='text-center'></td>
+                                                                        }
+                                                                        <td onClick={() => handleOpenJob(subJob)} className='text-center'>{subJob.dataValues.osvnotes}</td>
+                                                                        <td onClick={() => handleOpenJob(subJob)} className='text-center'>{subJob.dataValues.ariba}</td>
+                                                                        <td onClick={() => handleOpenJob(subJob)} className='text-center'>{subJob.dataValues.blnotes}</td>
+                                                                    </tr>
+                                                                ))}
+                                                            </Fragment>
+                                                        )
+                                                    }
+                                                })
                                             }
-                                        })
-                                    }
-                                </tbody>
-                            </Table>
-                        </div>
+                                            <tr className='empty-row late-row'><td colSpan="11">-</td></tr>
+                                            {futureJobs
+                                                .filter((row) => 
+                                                    !searchedValueOrderNo || row.OrderNo
+                                                        .toString()
+                                                        .toLowerCase()
+                                                        .includes(searchedValueOrderNo.toString().toLowerCase())
+                                                )
+                                                .filter((row) => 
+                                                    !searchedValueJobNo || row.JobNo
+                                                        .toString()
+                                                        .toLowerCase()
+                                                        .includes(searchedValueJobNo.toString().toLowerCase())
+                                                )
+                                                .filter((row) => 
+                                                    !searchedValueCustomer || row.CustCode
+                                                        .toString()
+                                                        .toLowerCase()
+                                                        .includes(searchedValueCustomer.toString().toLowerCase())
+                                                )
+                                                // .filter((row) => 
+                                                //     !searchedValueArea || row.WorkCntr || row.User_Text2
+                                                //         .toString()
+                                                //         .toLowerCase()
+                                                //         .includes(searchedValueArea.toString().toLowerCase())
+                                                // )
+                                                .filter((row) => {
+                                                    if (!searchedValueOSV) { return true; }
+                                                    if (!row || !row.VendCode) { return false; }
+                                                    
+                                                    return row.VendCode
+                                                        .toString()
+                                                        .toLowerCase()                                           
+                                                        .includes(searchedValueOSV.toString().toLowerCase())
+                                                })
+                                                .map((job, index) => {
+                                                    const profitClass = (job.OrderTotal > 5000) ? 'profit-row' : '';
+                                                    // const expediteClass = (job.dataValues.email) ? 'bl-expedite-row' : '';
+                                                    // const holdClass = (job.dataValues.hold) ? 'hold-row' : '';
+                                                    if (!job.MasterJobNo) {
+                                                        return (
+                                                            <Fragment key={index}>
+                                                                {/* <tr job={job} className={`${expediteClass} ${holdClass} ${profitClass}`}> */}
+                                                                <tr job={job} className={`${profitClass}`}>
+                                                                    {job.HasSubs ?
+                                                                        <td className='text-center' onClick={() => toggleSub(job.JobNo)}>
+                                                                            <Icon icon={plus}/>
+                                                                        </td>
+                                                                        :
+                                                                        <td className='text-center'></td>
+                                                                    }
+                                                                    <td onClick={() => handleOpenJob(job)} className='text-center'>{job.OrderNo}</td>
+                                                                    <td onClick={() => handleOpenJob(job)} className='text-center'>{job.JobNo}</td>
+                                                                    <td className='text-center'>{(job.DueDate).split('-')[1] + '/' + ((job.DueDate).split('-')[2]).split('T')[0]}</td>
+                                                                    <td className='text-center'>{job.CustCode}</td>
+                                                                    <td className='text-center'>{job.EstimQty}</td>
+                                                                    {job.WorkCntr && job.User_Text2 !== '4. DONE' ?
+                                                                        <td className='text-center' onClick={() => toggleRoute(job)}>{(job.WorkCntr).split(' ')[1]}</td>
+                                                                    :
+                                                                        <td className='text-center' onClick={() => toggleRoute(job)}>{(job.User_Text2).split(' ')[1]}</td>
+                                                                    }
+                                                                    {job.User_Text2 == '6. OUTSOURCE' ?
+                                                                        <td className='text-center'>{job.VendCode}</td>
+                                                                    :
+                                                                        <td className='text-center'></td>
+                                                                    }
+                                                                    <td onClick={() => handleOpenJob(job)} className='text-center'>{job.dataValues.osvnotes}</td>
+                                                                    <td onClick={() => handleOpenJob(job)} className='text-center'>{job.dataValues.ariba}</td>
+                                                                    <td onClick={() => handleOpenJob(job)} className='text-center'>{job.dataValues.blnotes}</td>
+                                                                    {/* <td className='text-center'>{job.OrderTotal}</td> */}
+                                                                </tr>
+                                                                {expandedRows.includes(job.JobNo) && subJobs[job.JobNo] && subJobs[job.JobNo].map((subJob, subIndex) => (
+                                                                    <tr key={subIndex} className='subjob-row'>
+                                                                        <td className='text-center'></td>
+                                                                        <td className='text-center'>{subJob.OrderNo}</td>
+                                                                        <td className='text-center'>{subJob.JobNo}</td>
+                                                                        <td className='text-center'>{(subJob.DueDate).split('-')[1] + '/' + ((subJob.DueDate).split('-')[2]).split('T')[0]}</td>
+                                                                        <td className='text-center'>{subJob.CustCode}</td>
+                                                                        <td className='text-center'>{subJob.EstimQty}</td>
+                                                                        {subJob.WorkCntr && subJob.User_Text2 !== '4. DONE' ?
+                                                                            <td className='text-center' onClick={() => toggleRoute(subJob)}>{(subJob.WorkCntr).split(' ')[1]}</td>
+                                                                        :
+                                                                            <td className='text-center' onClick={() => toggleRoute(subJob)}>{(subJob.User_Text2).split(' ')[1]}</td>
+                                                                        }
+                                                                        {subJob.User_Text2 == '6. OUTSOURCE' ?
+                                                                            <td className='text-center'>{subJob.VendCode}</td>
+                                                                        :
+                                                                            <td className='text-center'></td>
+                                                                        }
+                                                                        <td onClick={() => handleOpenJob(subJob)} className='text-center'>{subJob.dataValues.osvnotes}</td>
+                                                                        <td onClick={() => handleOpenJob(subJob)} className='text-center'>{subJob.dataValues.ariba}</td>
+                                                                        <td onClick={() => handleOpenJob(subJob)} className='text-center'>{subJob.dataValues.blnotes}</td>
+                                                                    </tr>
+                                                                ))}
+                                                            </Fragment>
+                                                        )
+                                                    }
+                                                })
+                                            }
+                                        </tbody>
+                                    </Table>
+                                </div>
+                            </Tab>
+                        </Tabs>
                     </div>
                 :
                     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '100px', width: '100%' }}>
