@@ -198,6 +198,11 @@ export const Home = () => {
                                             <div className="col">
                                                 <h3>{cookieData.name}</h3>
                                                 <Link to='/profile'>Quick Links</Link>
+                                                {cookieData.backlog &&
+                                                    <div>
+                                                        <Link to='/backlog'>Backlog</Link>
+                                                    </div>
+                                                }
                                             </div>
                                         </div>
                                         <div className="row homeBox">
