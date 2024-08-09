@@ -7,6 +7,7 @@ import jwt_decode from 'jwt-decode';
 import PuffLoader from "react-spinners/PuffLoader";
 import { Icon } from 'react-icons-kit';
 import { plus } from 'react-icons-kit/entypo/plus';
+import { Bar, Doughnut } from 'react-chartjs-2';
 
 import getAllJobs from '../../services/backlog/getAllJobs';
 import getNextMonthJobs from '../../services/backlog/getNextMonthJobs';
@@ -71,6 +72,31 @@ export const Backlog = () => {
     const [upcomingJobs, setUpcomingJobs] = useState(0);
     const [monthJobs, setMonthJobs] = useState(0);
     const [totalJobs, setTotalJobs] = useState(0);
+    
+    const [lateEng, setLateEng] = useState(0);
+    const [lateShear, setLateShear] = useState(0);
+    const [latePunch, setLatePunch] = useState(0);
+    const [lateLaser, setLateLaser] = useState(0);
+    const [lateBrake, setLateBrake] = useState(0);
+    const [lateHard, setLateHard] = useState(0);
+    const [lateTLaser, setLateTLaser] = useState(0);
+    const [lateSaw, setLateSaw] = useState(0);
+    const [lateWeld, setLateWeld] = useState(0);
+    const [lateAssy, setLateAssy] = useState(0);
+    const [latePowder, setLatePowder] = useState(0);
+    const [lateOSV, setLateOSV] = useState(0);
+    const [futureEng, setFutureEng] = useState(0);
+    const [futureShear, setFutureShear] = useState(0);
+    const [futurePunch, setFuturePunch] = useState(0);
+    const [futureLaser, setFutureLaser] = useState(0);
+    const [futureBrake, setFutureBrake] = useState(0);
+    const [futureHard, setFutureHard] = useState(0);
+    const [futureTLaser, setFutureTLaser] = useState(0);
+    const [futureSaw, setFutureSaw] = useState(0);
+    const [futureWeld, setFutureWeld] = useState(0);
+    const [futureAssy, setFutureAssy] = useState(0);
+    const [futurePowder, setFuturePowder] = useState(0);
+    const [futureOSV, setFutureOSV] = useState(0);
 
     const formatDate = (dateStr) => {
         if (!dateStr) return new Date(0);
@@ -148,13 +174,42 @@ export const Backlog = () => {
                 'December',
             ];
 
+            console.log(pastJobsNo)
+
             setLateJobs(pastJobsNo.length);
             setUpcomingJobs(sortedJobsNo.length - pastJobsNo.length);
             setMonthJobs(sortedJobsNo.length);
 
+            setLateEng((pastJobsNo.filter(row => row.WorkCntr == '101 ENGIN')).length)
+            setLateShear((pastJobsNo.filter(row => row.WorkCntr == '201 SHEAR')).length)
+            setLatePunch((pastJobsNo.filter(row => row.WorkCntr == '202 PUNCH')).length)
+            setLateLaser((pastJobsNo.filter(row => row.WorkCntr == '203 LASER')).length)
+            setLateBrake((pastJobsNo.filter(row => row.WorkCntr == '204 BRAKE')).length)
+            setLateHard((pastJobsNo.filter(row => row.WorkCntr == '206 HARD')).length)
+            setLateTLaser((pastJobsNo.filter(row => row.WorkCntr == '211 TLASER')).length)
+            setLateSaw((pastJobsNo.filter(row => row.WorkCntr == '301 SAW')).length)
+            setLateWeld((pastJobsNo.filter(row => row.WorkCntr == '402 WELD')).length)
+            setLateAssy((pastJobsNo.filter(row => row.WorkCntr == '702 ASSEM')).length)
+            setLatePowder((pastJobsNo.filter(row => row.WorkCntr == '601 POWDER')).length)
+            setLateOSV(((pastJobsNo.filter(row => row.User_Text2 == '6. OUTSOURCE')).length));
+            
+            setFutureEng((sortedJobsNo.filter(row => row.WorkCntr == '101 ENGIN')).length - (pastJobsNo.filter(row => row.WorkCntr == '101 ENGIN')).length)
+            setFutureShear((sortedJobsNo.filter(row => row.WorkCntr == '201 SHEAR')).length - (pastJobsNo.filter(row => row.WorkCntr == '201 SHEAR')).length)
+            setFuturePunch((sortedJobsNo.filter(row => row.WorkCntr == '202 PUNCH')).length - (pastJobsNo.filter(row => row.WorkCntr == '202 PUNCH')).length)
+            setFutureLaser((sortedJobsNo.filter(row => row.WorkCntr == '203 LASER')).length - (pastJobsNo.filter(row => row.WorkCntr == '203 LASER')).length)
+            setFutureBrake((sortedJobsNo.filter(row => row.WorkCntr == '204 BRAKE')).length - (pastJobsNo.filter(row => row.WorkCntr == '204 BRAKE')).length)
+            setFutureHard((sortedJobsNo.filter(row => row.WorkCntr == '206 HARD')).length - (pastJobsNo.filter(row => row.WorkCntr == '206 HARD')).length)
+            setFutureTLaser((sortedJobsNo.filter(row => row.WorkCntr == '211 TLASER')).length - (pastJobsNo.filter(row => row.WorkCntr == '211 TLASER')).length)
+            setFutureSaw((sortedJobsNo.filter(row => row.WorkCntr == '301 SAW')).length - (pastJobsNo.filter(row => row.WorkCntr == '301 SAW')).length)
+            setFutureWeld((sortedJobsNo.filter(row => row.WorkCntr == '402 WELD')).length - (pastJobsNo.filter(row => row.WorkCntr == '402 WELD')).length)
+            setFutureAssy((sortedJobsNo.filter(row => row.WorkCntr == '702 ASSEM')).length - (pastJobsNo.filter(row => row.WorkCntr == '702 ASSEM')).length)
+            setFuturePowder((sortedJobsNo.filter(row => row.WorkCntr == '601 POWDER')).length - (pastJobsNo.filter(row => row.WorkCntr == '601 POWDER')).length)
+            setFutureOSV((sortedJobsNo.filter(row => row.User_Text2 == '6. OUTSOURCE')).length - (pastJobsNo.filter(row => row.User_Text2 == '6. OUTSOURCE')).length);
+
             setCurrent(months[thisMonthNo]);
             setNextMonth(months[nextMonthNo]);
             setFutureMonths(`${months[futureMonthNo]} +`);
+            setOverview(`Overview (${months[thisMonthNo]})`);
             setPastJobs(pastJobs);
             setFutureJobs(futureJobs);
         } catch (err) {
@@ -250,6 +305,62 @@ export const Backlog = () => {
         fetchData();
         setUpdate('');
     }, [update]);
+
+    const donutDataJobs = {
+        labels: ['Late', 'Future'],
+        datasets: [
+            {
+                label: 'Jobs',
+                data: [
+                    (lateJobs),
+                    (upcomingJobs)
+                ],
+                backgroundColor: [
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 206, 86, 1)',
+                ],
+                borderWidth: 1,
+            }
+        ]
+    };
+
+    const options = {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'bottom',
+            },
+            title: {
+                display: true,
+                text: 'Chart.js Bar Chart',
+            },
+        },
+        onClick: function(event, element) {
+            console.log(element)
+        },
+    };
+    
+    const labels = ['Eng', 'Shear', 'Punch', 'Laser', 'Brake', 'Hard', 'TLaser', 'Saw', 'Weld', 'Assy', 'Powder', 'OSV'];
+    
+    const data = {
+        labels,
+        datasets: [
+            {
+                label: 'Late',
+                data: [lateEng, lateShear, latePunch, lateLaser, lateBrake, lateHard, lateTLaser, lateSaw, lateWeld, lateAssy, latePowder, lateOSV],
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+            },
+            {
+                label: 'Future',
+                data: [futureEng, futureShear, futurePunch, futureLaser, futureBrake, futureHard, futureTLaser, futureSaw, futureWeld, futureAssy, futurePowder, futureOSV],
+                backgroundColor: 'rgba(53, 162, 235, 0.5)',
+            },
+        ],
+    };
 
     return (
         <div style={{ display: 'flex' }}>
@@ -840,14 +951,39 @@ export const Backlog = () => {
 
                             <Tab eventKey="overview" title={overview}>
                                 <div className='mx-3'>
-                                    <div>
-                                        Late Jobs: {lateJobs}
-                                    </div>
-                                    <div>
-                                        Upcoming Jobs: {upcomingJobs}
-                                    </div>
-                                    <div>
-                                        Total Month Jobs: {monthJobs}
+                                    <div className="row homeFlex">
+                                        <div className="homeLeft">
+                                            <div className="row homeBox">
+                                                <div className="row jobTitle">  
+                                                    <h2 className='text-center'>{current}</h2>
+                                                    <table>
+                                                        <tbody>
+                                                            <tr>
+                                                                <th className='text-end tableKey'>Total Jobs</th>
+                                                                <th className='text-start tableValue'>{monthJobs}</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th className='text-end tableKey'>Late Jobs</th>
+                                                                <th className='text-start tableValue'>{lateJobs}</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th className='text-end tableKey'>Future Jobs</th>
+                                                                <th className='text-start tableValue'>{upcomingJobs}</th>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div className="row homeBox homeBottom">
+                                                <Doughnut data={donutDataJobs} />
+                                            </div>
+                                        </div>
+                                        <div className="homeRight homeBox">
+                                            <Bar 
+                                                options={options} 
+                                                data={data} 
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             </Tab>
