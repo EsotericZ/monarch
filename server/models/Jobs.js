@@ -59,7 +59,8 @@ Jobs.init(
             type: DataTypes.STRING,
         },
         ariba: {
-            type: DataTypes.STRING,
+            type: DataTypes.DATE,
+            defaultValue: null,
         },
         email: {
             type: DataTypes.BOOLEAN,

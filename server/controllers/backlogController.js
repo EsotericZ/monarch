@@ -1,4 +1,4 @@
-const { Op } = require("sequelize");
+const { Op, literal } = require("sequelize");
 const { Jobs } = require('../models');
 let sql = require('mssql');
 require("dotenv").config();
@@ -25,7 +25,7 @@ async function getAllJobs(req, res) {
         if (err) console.error(err);
         let request = new sql.Request();
 
-        request.query("SELECT R.JobNo, D.PartNo, D.Revision, R.EstimQty, D.DueDate, O.CustCode, D.User_Text3, D.User_Text2, D.User_Number3, R.OrderNo, R.StepNo, D.QuoteNo, D.WorkCode, R.WorkCntr, D.MasterJobNo, O.Status, O.OrderTotal, R.VendCode\
+        request.query("SELECT R.JobNo, D.PartNo, D.Revision, R.EstimQty, D.DueDate, O.CustCode, D.User_Text3, D.User_Text2, D.User_Number3, R.OrderNo, R.StepNo, D.QuoteNo, D.WorkCode, R.WorkCntr, D.MasterJobNo, O.Status, O.OrderTotal, R.VendCode, D.UnitPrice, D.QtyOrdered, D.QtyShipped2Cust\
             FROM OrderRouting R INNER JOIN OrderDet D ON R.JobNo=D.JobNo INNER JOIN ORDERS O ON D.OrderNo=O.OrderNo\
             WHERE (D.Status='Open' AND O.User_Text3!='UNCONFIRMED' AND R.Status='Current') OR (O.Status='O' AND D.MasterJobNo!='' AND D.User_Text2='4. DONE' AND R.StepNo=10)\
             ORDER BY D.DueDate, R.JobNo", 
@@ -62,7 +62,7 @@ async function getNextMonthJobs(req, res) {
         if (err) console.error(err);
         let request = new sql.Request();
 
-        request.query("SELECT R.JobNo, D.PartNo, D.Revision, R.EstimQty, D.DueDate, O.CustCode, D.User_Text3, D.User_Text2, D.User_Number3, R.OrderNo, R.StepNo, D.QuoteNo, D.WorkCode, R.WorkCntr, D.MasterJobNo, O.Status, O.OrderTotal, R.VendCode\
+        request.query("SELECT R.JobNo, D.PartNo, D.Revision, R.EstimQty, D.DueDate, O.CustCode, D.User_Text3, D.User_Text2, D.User_Number3, R.OrderNo, R.StepNo, D.QuoteNo, D.WorkCode, R.WorkCntr, D.MasterJobNo, O.Status, O.OrderTotal, R.VendCode, D.UnitPrice, D.QtyOrdered, D.QtyShipped2Cust\
             FROM OrderRouting R INNER JOIN OrderDet D ON R.JobNo=D.JobNo INNER JOIN ORDERS O ON D.OrderNo=O.OrderNo\
             WHERE (D.Status='Open' AND O.User_Text3!='UNCONFIRMED' AND R.Status='Current') OR (O.Status='O' AND D.MasterJobNo!='' AND D.User_Text2='4. DONE' AND R.StepNo=10)\
             ORDER BY D.DueDate, R.JobNo", 
@@ -100,7 +100,7 @@ async function getFutureJobs(req, res) {
         if (err) console.error(err);
         let request = new sql.Request();
 
-        request.query("SELECT R.JobNo, D.PartNo, D.Revision, R.EstimQty, D.DueDate, O.CustCode, D.User_Text3, D.User_Text2, D.User_Number3, R.OrderNo, R.StepNo, D.QuoteNo, D.WorkCode, R.WorkCntr, D.MasterJobNo, O.Status, O.OrderTotal, R.VendCode\
+        request.query("SELECT R.JobNo, D.PartNo, D.Revision, R.EstimQty, D.DueDate, O.CustCode, D.User_Text3, D.User_Text2, D.User_Number3, R.OrderNo, R.StepNo, D.QuoteNo, D.WorkCode, R.WorkCntr, D.MasterJobNo, O.Status, O.OrderTotal, R.VendCode, D.UnitPrice, D.QtyOrdered, D.QtyShipped2Cust\
             FROM OrderRouting R INNER JOIN OrderDet D ON R.JobNo=D.JobNo INNER JOIN ORDERS O ON D.OrderNo=O.OrderNo\
             WHERE (D.Status='Open' AND O.User_Text3!='UNCONFIRMED' AND R.Status='Current') OR (O.Status='O' AND D.MasterJobNo!='' AND D.User_Text2='4. DONE' AND R.StepNo=10)\
             ORDER BY D.DueDate, R.JobNo", 
@@ -132,7 +132,7 @@ async function getAllSubJobs(req, res) {
         if (err) console.error(err);
         let request = new sql.Request();
 
-        request.query(`SELECT R.JobNo, D.PartNo, D.Revision, R.EstimQty, D.DueDate, O.CustCode, D.User_Text3, D.User_Text2, D.User_Number3, R.OrderNo, R.StepNo, D.QuoteNo, D.WorkCode, R.WorkCntr, D.MasterJobNo, O.Status\
+        request.query(`SELECT R.JobNo, D.PartNo, D.Revision, R.EstimQty, D.DueDate, O.CustCode, D.User_Text3, D.User_Text2, D.User_Number3, R.OrderNo, R.StepNo, D.QuoteNo, D.WorkCode, R.WorkCntr, D.MasterJobNo, O.Status, D.UnitPrice, D.QtyOrdered, D.QtyShipped2Cust\
             FROM OrderRouting R INNER JOIN OrderDet D ON R.JobNo=D.JobNo INNER JOIN ORDERS O ON D.OrderNo=O.OrderNo\
             WHERE (D.MasterJobNo=${JobNo} AND R.Status='Current') OR (D.MasterJobNo=${JobNo} AND R.StepNo=10 AND D.User_Text2='4. DONE')\
             ORDER BY R.JobNo`, 
@@ -161,7 +161,7 @@ async function getSingleJob(req, res) {
         if (err) console.error(err);
         let request = new sql.Request();
  
-        request.query(`SELECT R.JobNo, D.PartNo, D.Revision, R.EstimQty, D.DueDate, O.CustCode, D.User_Text3, D.User_Text2, D.User_Number3, R.OrderNo, R.StepNo, D.QuoteNo, D.WorkCode, R.WorkCntr, D.MasterJobNo, R.Status, R.ActualEndDate, R.EmplCode, R.WorkOrVend, R.VendCode\
+        request.query(`SELECT R.JobNo, D.PartNo, D.Revision, R.EstimQty, D.DueDate, O.CustCode, D.User_Text3, D.User_Text2, D.User_Number3, R.OrderNo, R.StepNo, D.QuoteNo, D.WorkCode, R.WorkCntr, D.MasterJobNo, R.Status, R.ActualEndDate, R.EmplCode, R.WorkOrVend, R.VendCode, D.UnitPrice, D.QtyOrdered, D.QtyShipped2Cust\
         FROM OrderRouting R INNER JOIN OrderDet D ON R.JobNo=D.JobNo INNER JOIN ORDERS O ON D.OrderNo=O.OrderNo\
         WHERE D.JobNo=${JobNo}\
         ORDER BY R.StepNo`, 
@@ -180,12 +180,15 @@ async function updateJob(req, res) {
     let blnotes = req.body.blNotes
     let osvnotes = req.body.osvNotes
     let ariba = req.body.ariba
-    
+
+    const dateObj = new Date(`${ariba}T00:00:00Z`);
+    const utcDate = dateObj.toISOString().split('T')[0];
+
     await Jobs.update(
         {
             blnotes,
             osvnotes,
-            ariba,
+            ariba: literal(`'${utcDate}'`),
         },
         { where: { id: id }}
     ).then((result) => {
@@ -281,6 +284,25 @@ async function updateHold(req, res) {
     })
 };
 
+async function Test(req, res) {
+
+    sql.connect(config, function(err,) {
+        if (err) console.error(err);
+        let request = new sql.Request();
+
+        request.query("SELECT *\
+            FROM OrderDet\
+            WHERE JobNo='153748'",
+
+        function(err, recordset) {
+            if (err) console.error(err);
+            let records = recordset.recordsets[0];
+
+            res.send(records)
+        })
+    })
+};
+
 module.exports = {
     getAllJobs,
     getNextMonthJobs,
@@ -290,4 +312,5 @@ module.exports = {
     updateJob,
     updateEmail,
     updateHold,
+    Test,
 }
