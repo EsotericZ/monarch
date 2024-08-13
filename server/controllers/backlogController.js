@@ -179,16 +179,19 @@ async function updateJob(req, res) {
     let id = req.body.id
     let blnotes = req.body.blNotes
     let osvnotes = req.body.osvNotes
-    let ariba = req.body.ariba
+    // let ariba = req.body.ariba
+    let cdate = req.body.cdate
 
-    const dateObj = new Date(`${ariba}T00:00:00Z`);
+    // const dateObj = new Date(`${ariba}T00:00:00Z`);
+    const dateObj = new Date(`${cdate}T00:00:00Z`);
     const utcDate = dateObj.toISOString().split('T')[0];
 
     await Jobs.update(
         {
             blnotes,
             osvnotes,
-            ariba: literal(`'${utcDate}'`),
+            // ariba: literal(`'${utcDate}'`),
+            cdate: literal(`'${utcDate}'`),
         },
         { where: { id: id }}
     ).then((result) => {

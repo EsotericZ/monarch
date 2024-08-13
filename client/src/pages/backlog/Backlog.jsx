@@ -47,7 +47,8 @@ export const Backlog = () => {
     const [id, setId] = useState('');
     const [blNotes, setBlNotes] = useState('');
     const [osvNotes, setOsvNotes] = useState('');
-    const [ariba, setAriba] = useState('');
+    // const [ariba, setAriba] = useState('');
+    const [cdate, setCdate] = useState('');
     const [email, setEmail] = useState(0);
     const [hold, setHold] = useState(0);
     const [update, setUpdate] = useState('');
@@ -379,7 +380,8 @@ export const Backlog = () => {
         setId(job.dataValues.id);
         setBlNotes(job.dataValues.blnotes);
         setOsvNotes(job.dataValues.osvnotes);
-        setAriba(job.dataValues.ariba);
+        // setAriba(job.dataValcdate);
+        setCdate(job.dataValues.cdate);
         setEmail(job.dataValues.email);
         setHold(job.dataValues.hold);
         setShowEdit(true)
@@ -389,20 +391,22 @@ export const Backlog = () => {
         setId('');
         setBlNotes('');
         setOsvNotes('');
-        setAriba('');
+        // setAriba('');
+        setCdate('');
         setEmail(0);
         setHold(0);
         setShowEdit(false);
     };
 
     const handleUpdate = async () => {
-        console.log(ariba)
         try {
-            await updateJob(id, blNotes, osvNotes, ariba);
+            // await updateJob(id, blNotes, osvNotes, ariba);
+            await updateJob(id, blNotes, osvNotes, cdate);
             setId(0);
             setBlNotes('');
             setOsvNotes('');
-            setAriba('');
+            // setAriba('');
+            setCdate('');
             setShowEdit(false);
         } catch (err) {
             console.error(err);
@@ -553,7 +557,8 @@ export const Backlog = () => {
                                     <Form.Control defaultValue={osvNotes} onChange={(e) => setOsvNotes(e.target.value)} />
                                 </FloatingLabel>
                                 <FloatingLabel label="Commitment Date" className="mb-3">
-                                    <Form.Control type="date" defaultValue={ariba} onChange={(e) => setAriba(e.target.value)} />
+                                    {/* <Form.Control type="date" defaultValue={ariba} onChange={(e) => setAriba(e.target.value)} /> */}
+                                    <Form.Control type="date" defaultValue={cdate} onChange={(e) => setCdate(e.target.value)} />
                                 </FloatingLabel>
                                 <Form.Group className="d-flex flex-wrap justify-content-center m-3 gap-5">
                                     <div className="d-flex align-items-center mx-2">
@@ -678,8 +683,13 @@ export const Backlog = () => {
                                                                         <td className='text-center'></td>
                                                                     }
                                                                     <td onClick={() => handleOpenJob(job)} className='text-center'>{job.dataValues.osvnotes}</td>
-                                                                    {job.dataValues.ariba ? 
+                                                                    {/* {job.dataValues.ariba ? 
                                                                         <td onClick={() => handleOpenJob(job)} className='text-center'>{(job.dataValues.ariba).split('-')[1] + '/' + (job.dataValues.ariba).split('-')[2] + '/' + (job.dataValues.ariba).split('-')[0]}</td>
+                                                                    :
+                                                                        <td onClick={() => handleOpenJob(job)} className='text-center'></td>
+                                                                    } */}
+                                                                    {job.dataValues.cdate ? 
+                                                                        <td onClick={() => handleOpenJob(job)} className='text-center'>{(job.dataValues.cdate).split('-')[1] + '/' + (job.dataValues.cdate).split('-')[2] + '/' + (job.dataValues.cdate).split('-')[0]}</td>
                                                                     :
                                                                         <td onClick={() => handleOpenJob(job)} className='text-center'></td>
                                                                     }
@@ -707,8 +717,13 @@ export const Backlog = () => {
                                                                             <td className='text-center'></td>
                                                                         }
                                                                         <td onClick={() => handleOpenJob(subJob)} className='text-center'>{subJob.dataValues.osvnotes}</td>
-                                                                        {subJob.dataValues.ariba ?
+                                                                        {/* {subJob.dataValues.ariba ?
                                                                             <td onClick={() => handleOpenJob(subJob)} className='text-center'>{(subJob.dataValues.ariba).split('-')[1] + '/' + (subJob.dataValues.ariba).split('-')[2] + '/' + (subJob.dataValues.ariba).split('-')[0]}</td>
+                                                                        :
+                                                                            <td onClick={() => handleOpenJob(subJob)} className='text-center'></td>
+                                                                        } */}
+                                                                        {subJob.dataValues.cdate ? 
+                                                                            <td onClick={() => handleOpenJob(subJob)} className='text-center'>{(subJob.dataValues.cdate).split('-')[1] + '/' + (subJob.dataValues.cdate).split('-')[2] + '/' + (subJob.dataValues.cdate).split('-')[0]}</td>
                                                                         :
                                                                             <td onClick={() => handleOpenJob(subJob)} className='text-center'></td>
                                                                         }
@@ -788,8 +803,13 @@ export const Backlog = () => {
                                                                         <td className='text-center'></td>
                                                                     }
                                                                     <td onClick={() => handleOpenJob(job)} className='text-center'>{job.dataValues.osvnotes}</td>
-                                                                    {job.dataValues.ariba ? 
+                                                                    {/* {job.dataValues.ariba ? 
                                                                         <td onClick={() => handleOpenJob(job)} className='text-center'>{(job.dataValues.ariba).split('-')[1] + '/' + (job.dataValues.ariba).split('-')[2] + '/' + (job.dataValues.ariba).split('-')[0]}</td>
+                                                                    :
+                                                                        <td onClick={() => handleOpenJob(job)} className='text-center'></td>
+                                                                    } */}
+                                                                    {job.dataValues.cdate ? 
+                                                                        <td onClick={() => handleOpenJob(job)} className='text-center'>{(job.dataValues.cdate).split('-')[1] + '/' + (job.dataValues.cdate).split('-')[2] + '/' + (job.dataValues.cdate).split('-')[0]}</td>
                                                                     :
                                                                         <td onClick={() => handleOpenJob(job)} className='text-center'></td>
                                                                     }
@@ -817,8 +837,13 @@ export const Backlog = () => {
                                                                             <td className='text-center'></td>
                                                                         }
                                                                         <td onClick={() => handleOpenJob(subJob)} className='text-center'>{subJob.dataValues.osvnotes}</td>
-                                                                        {subJob.dataValues.ariba ?
+                                                                        {/* {subJob.dataValues.ariba ?
                                                                             <td onClick={() => handleOpenJob(subJob)} className='text-center'>{(subJob.dataValues.ariba).split('-')[1] + '/' + (subJob.dataValues.ariba).split('-')[2] + '/' + (subJob.dataValues.ariba).split('-')[0]}</td>
+                                                                        :
+                                                                            <td onClick={() => handleOpenJob(subJob)} className='text-center'></td>
+                                                                        } */}
+                                                                        {subJob.dataValues.cdate ? 
+                                                                            <td onClick={() => handleOpenJob(subJob)} className='text-center'>{(subJob.dataValues.cdate).split('-')[1] + '/' + (subJob.dataValues.cdate).split('-')[2] + '/' + (subJob.dataValues.cdate).split('-')[0]}</td>
                                                                         :
                                                                             <td onClick={() => handleOpenJob(subJob)} className='text-center'></td>
                                                                         }
@@ -922,8 +947,13 @@ export const Backlog = () => {
                                                                         <td className='text-center'></td>
                                                                     }
                                                                     <td onClick={() => handleOpenJob(job)} className='text-center'>{job.dataValues.osvnotes}</td>
-                                                                    {job.dataValues.ariba ? 
+                                                                    {/* {job.dataValues.ariba ? 
                                                                         <td onClick={() => handleOpenJob(job)} className='text-center'>{(job.dataValues.ariba).split('-')[1] + '/' + (job.dataValues.ariba).split('-')[2] + '/' + (job.dataValues.ariba).split('-')[0]}</td>
+                                                                    :
+                                                                        <td onClick={() => handleOpenJob(job)} className='text-center'></td>
+                                                                    } */}
+                                                                    {job.dataValues.cdate ? 
+                                                                        <td onClick={() => handleOpenJob(job)} className='text-center'>{(job.dataValues.cdate).split('-')[1] + '/' + (job.dataValues.cdate).split('-')[2] + '/' + (job.dataValues.cdate).split('-')[0]}</td>
                                                                     :
                                                                         <td onClick={() => handleOpenJob(job)} className='text-center'></td>
                                                                     }
@@ -951,8 +981,13 @@ export const Backlog = () => {
                                                                             <td className='text-center'></td>
                                                                         }
                                                                         <td onClick={() => handleOpenJob(subJob)} className='text-center'>{subJob.dataValues.osvnotes}</td>
-                                                                        {subJob.dataValues.ariba ? 
+                                                                        {/* {subJob.dataValues.ariba ? 
                                                                             <td onClick={() => handleOpenJob(subJob)} className='text-center'>{(subJob.dataValues.ariba).split('-')[1] + '/' + (subJob.dataValues.ariba).split('-')[2] + '/' + (subJob.dataValues.ariba).split('-')[0]}</td>
+                                                                        :
+                                                                            <td onClick={() => handleOpenJob(subJob)} className='text-center'></td>
+                                                                        } */}
+                                                                        {subJob.dataValues.cdate ? 
+                                                                            <td onClick={() => handleOpenJob(subJob)} className='text-center'>{(subJob.dataValues.cdate).split('-')[1] + '/' + (subJob.dataValues.cdate).split('-')[2] + '/' + (subJob.dataValues.cdate).split('-')[0]}</td>
                                                                         :
                                                                             <td onClick={() => handleOpenJob(subJob)} className='text-center'></td>
                                                                         }
@@ -1055,8 +1090,13 @@ export const Backlog = () => {
                                                                         <td className='text-center'></td>
                                                                     }
                                                                     <td onClick={() => handleOpenJob(job)} className='text-center'>{job.dataValues.osvnotes}</td>
-                                                                    {job.dataValues.ariba ? 
+                                                                    {/* {job.dataValues.ariba ? 
                                                                         <td onClick={() => handleOpenJob(job)} className='text-center'>{(job.dataValues.ariba).split('-')[1] + '/' + (job.dataValues.ariba).split('-')[2] + '/' + (job.dataValues.ariba).split('-')[0]}</td>
+                                                                    :
+                                                                        <td onClick={() => handleOpenJob(job)} className='text-center'></td>
+                                                                    } */}
+                                                                    {job.dataValues.cdate ? 
+                                                                        <td onClick={() => handleOpenJob(job)} className='text-center'>{(job.dataValues.cdate).split('-')[1] + '/' + (job.dataValues.cdate).split('-')[2] + '/' + (job.dataValues.cdate).split('-')[0]}</td>
                                                                     :
                                                                         <td onClick={() => handleOpenJob(job)} className='text-center'></td>
                                                                     }
@@ -1083,8 +1123,13 @@ export const Backlog = () => {
                                                                             <td className='text-center'></td>
                                                                         }
                                                                         <td onClick={() => handleOpenJob(subJob)} className='text-center'>{subJob.dataValues.osvnotes}</td>
-                                                                        {subJob.dataValues.ariba ? 
+                                                                        {/* {subJob.dataValues.ariba ? 
                                                                             <td onClick={() => handleOpenJob(subJob)} className='text-center'>{(subJob.dataValues.ariba).split('-')[1] + '/' + (subJob.dataValues.ariba).split('-')[2] + '/' + (subJob.dataValues.ariba).split('-')[0]}</td>
+                                                                        :
+                                                                            <td onClick={() => handleOpenJob(subJob)} className='text-center'></td>
+                                                                        } */}
+                                                                        {subJob.dataValues.cdate ? 
+                                                                            <td onClick={() => handleOpenJob(subJob)} className='text-center'>{(subJob.dataValues.cdate).split('-')[1] + '/' + (subJob.dataValues.cdate).split('-')[2] + '/' + (subJob.dataValues.cdate).split('-')[0]}</td>
                                                                         :
                                                                             <td onClick={() => handleOpenJob(subJob)} className='text-center'></td>
                                                                         }

@@ -59,6 +59,10 @@ Jobs.init(
             type: DataTypes.STRING,
         },
         ariba: {
+            type: DataTypes.STRING,
+            defaultValue: null,
+        },
+        cdate: {
             type: DataTypes.DATE,
             defaultValue: null,
         },
