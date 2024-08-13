@@ -492,8 +492,7 @@ export const Backlog = () => {
                                                 <th className='text-center' width='7%'>Due Date</th>
                                                 <th className='text-center' width='7%'><input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='&#xf002;  Customer' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                                 <th className='text-center' width='7%'>Quantity</th>
-                                                {/* <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='&#xf002;  Current Area' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th> */}
-                                                <th className='text-center' width='10%'>Current Area</th>
+                                                <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='&#xf002;  Current Area' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                                 <th className='text-center' width='5%'><input onChange={(e) => setSearchedValueOSV(e.target.value)} placeholder='&#xf002;  OSV' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                                 <th className='text-center' width='12%'>OSV Status</th>
                                                 <th className='text-center' width='13%'>Commitment Date</th>
@@ -521,12 +520,11 @@ export const Backlog = () => {
                                                         .toLowerCase()
                                                         .includes(searchedValueCustomer.toString().toLowerCase())
                                                 )
-                                                // .filter((row) => 
-                                                //     !searchedValueArea || row.WorkCntr || row.User_Text2
-                                                //         .toString()
-                                                //         .toLowerCase()
-                                                //         .includes(searchedValueArea.toString().toLowerCase())
-                                                // )
+                                                .filter((row) => {
+                                                    const searchTarget = row.WorkCntr && row.User_Text2 !== '4. DONE' ? row.WorkCntr : row.User_Text2;
+                                                    return !searchedValueArea || 
+                                                        searchTarget.toString().toLowerCase().includes(searchedValueArea.toString().toLowerCase());
+                                                })
                                                 .filter((row) => {
                                                     if (!searchedValueOSV) { return true; }
                                                     if (!row || !row.VendCode) { return false; }
@@ -619,12 +617,11 @@ export const Backlog = () => {
                                                         .toLowerCase()
                                                         .includes(searchedValueCustomer.toString().toLowerCase())
                                                 )
-                                                // .filter((row) => 
-                                                //     !searchedValueArea || row.WorkCntr || row.User_Text2
-                                                //         .toString()
-                                                //         .toLowerCase()
-                                                //         .includes(searchedValueArea.toString().toLowerCase())
-                                                // )
+                                                .filter((row) => {
+                                                    const searchTarget = row.WorkCntr && row.User_Text2 !== '4. DONE' ? row.WorkCntr : row.User_Text2;
+                                                    return !searchedValueArea || 
+                                                        searchTarget.toString().toLowerCase().includes(searchedValueArea.toString().toLowerCase());
+                                                })
                                                 .filter((row) => {
                                                     if (!searchedValueOSV) { return true; }
                                                     if (!row || !row.VendCode) { return false; }
@@ -636,8 +633,8 @@ export const Backlog = () => {
                                                 })
                                                 .map((job, index) => {
                                                     const profitClass = (job.OrderTotal > 5000) ? 'profit-row' : '';
-                                                    // const expediteClass = (job.dataValues.email) ? 'bl-expedite-row' : '';
-                                                    // const holdClass = (job.dataValues.hold) ? 'hold-row' : '';
+                                                    const expediteClass = (job.dataValues.email) ? 'bl-expedite-row' : '';
+                                                    const holdClass = (job.dataValues.hold) ? 'hold-row' : '';
                                                     if (!job.MasterJobNo) {
                                                         return (
                                                             <Fragment key={index}>
@@ -714,8 +711,7 @@ export const Backlog = () => {
                                                 <th className='text-center' width='7%'>Due Date</th>
                                                 <th className='text-center' width='7%'><input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='&#xf002;  Customer' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                                 <th className='text-center' width='7%'>Quantity</th>
-                                                {/* <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='&#xf002;  Current Area' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th> */}
-                                                <th className='text-center' width='10%'>Current Area</th>
+                                                <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='&#xf002;  Current Area' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                                 <th className='text-center' width='5%'><input onChange={(e) => setSearchedValueOSV(e.target.value)} placeholder='&#xf002;  OSV' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                                 <th className='text-center' width='12%'>OSV Status</th>
                                                 <th className='text-center' width='13%'>Commitment Date</th>
@@ -743,12 +739,11 @@ export const Backlog = () => {
                                                         .toLowerCase()
                                                         .includes(searchedValueCustomer.toString().toLowerCase())
                                                 )
-                                                // .filter((row) => 
-                                                //     !searchedValueArea || row.WorkCntr || row.User_Text2
-                                                //         .toString()
-                                                //         .toLowerCase()
-                                                //         .includes(searchedValueArea.toString().toLowerCase())
-                                                // )
+                                                .filter((row) => {
+                                                    const searchTarget = row.WorkCntr && row.User_Text2 !== '4. DONE' ? row.WorkCntr : row.User_Text2;
+                                                    return !searchedValueArea || 
+                                                        searchTarget.toString().toLowerCase().includes(searchedValueArea.toString().toLowerCase());
+                                                })
                                                 .filter((row) => {
                                                     if (!searchedValueOSV) { return true; }
                                                     if (!row || !row.VendCode) { return false; }
@@ -837,8 +832,7 @@ export const Backlog = () => {
                                                 <th className='text-center' width='7%'>Due Date</th>
                                                 <th className='text-center' width='7%'><input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='&#xf002;  Customer' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                                 <th className='text-center' width='7%'>Quantity</th>
-                                                {/* <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='&#xf002;  Current Area' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th> */}
-                                                <th className='text-center' width='10%'>Current Area</th>
+                                                <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='&#xf002;  Current Area' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                                 <th className='text-center' width='5%'><input onChange={(e) => setSearchedValueOSV(e.target.value)} placeholder='&#xf002;  OSV' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                                 <th className='text-center' width='12%'>OSV Status</th>
                                                 <th className='text-center' width='13%'>Commitment Date</th>
@@ -866,12 +860,11 @@ export const Backlog = () => {
                                                         .toLowerCase()
                                                         .includes(searchedValueCustomer.toString().toLowerCase())
                                                 )
-                                                // .filter((row) => 
-                                                //     !searchedValueArea || row.WorkCntr || row.User_Text2
-                                                //         .toString()
-                                                //         .toLowerCase()
-                                                //         .includes(searchedValueArea.toString().toLowerCase())
-                                                // )
+                                                .filter((row) => {
+                                                    const searchTarget = row.WorkCntr && row.User_Text2 !== '4. DONE' ? row.WorkCntr : row.User_Text2;
+                                                    return !searchedValueArea || 
+                                                        searchTarget.toString().toLowerCase().includes(searchedValueArea.toString().toLowerCase());
+                                                })
                                                 .filter((row) => {
                                                     if (!searchedValueOSV) { return true; }
                                                     if (!row || !row.VendCode) { return false; }
