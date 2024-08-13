@@ -19,6 +19,10 @@
     color: darkslategrey;
 }
 
+.ship-row {
+    background-color: lightskyblue;
+}
+
 .modal-footer-custom {
     display: flex;
     justify-content: space-between;

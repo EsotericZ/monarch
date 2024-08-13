@@ -654,10 +654,11 @@ export const Backlog = () => {
                                                     const profitClass = (job.OrderTotal > 5000) ? 'profit-row' : '';
                                                     const expediteClass = (job.dataValues.email) ? 'bl-expedite-row' : '';
                                                     const holdClass = (job.dataValues.hold) ? 'hold-row' : '';
+                                                    const shipClass = (job.User_Text2=='4. DONE') ? 'ship-row' : '';
                                                     if (!job.MasterJobNo) {
                                                         return (
                                                             <Fragment key={index}>
-                                                                <tr job={job} className={`${expediteClass} ${holdClass} ${profitClass}`}>
+                                                                <tr job={job} className={`${expediteClass} ${holdClass} ${profitClass} ${shipClass}`}>
                                                                     {job.HasSubs ?
                                                                         <td className='text-center' onClick={() => toggleSub(job.JobNo)}>
                                                                             <Icon icon={plus}/>
@@ -773,11 +774,12 @@ export const Backlog = () => {
                                                     const profitClass = (job.OrderTotal > 5000) ? 'profit-row' : '';
                                                     const expediteClass = (job.dataValues.email) ? 'bl-expedite-row' : '';
                                                     const holdClass = (job.dataValues.hold) ? 'hold-row' : '';
+                                                    const shipClass = (job.User_Text2=='4. DONE') ? 'ship-row' : '';
                                                     if (!job.MasterJobNo) {
                                                         return (
                                                             <Fragment key={index}>
-                                                                {/* <tr job={job} className={`${expediteClass} ${holdClass} ${profitClass}`}> */}
-                                                                <tr job={job} className={`${profitClass}`}>
+                                                                <tr job={job} className={`${expediteClass} ${holdClass} ${profitClass} ${shipClass}`}>
+                                                                {/* <tr job={job} className={`${profitClass}`}> */}
                                                                     {job.HasSubs ?
                                                                         <td className='text-center' onClick={() => toggleSub(job.JobNo)}>
                                                                             <Icon icon={plus}/>
@@ -918,10 +920,11 @@ export const Backlog = () => {
                                                     const profitClass = (job.OrderTotal > 5000) ? 'profit-row' : '';
                                                     const expediteClass = (job.dataValues.email) ? 'bl-expedite-row' : '';
                                                     const holdClass = (job.dataValues.hold) ? 'hold-row' : '';
+                                                    const shipClass = (job.User_Text2=='4. DONE') ? 'ship-row' : '';
                                                     if (!job.MasterJobNo) {
                                                         return (
                                                             <Fragment key={index}>
-                                                                <tr job={job} className={`${expediteClass} ${holdClass} ${profitClass}`}>
+                                                                <tr job={job} className={`${expediteClass} ${holdClass} ${profitClass} ${shipClass}`}>
                                                                     {job.HasSubs ?
                                                                         <td className='text-center' onClick={() => toggleSub(job.JobNo)}>
                                                                             <Icon icon={plus}/>
@@ -1062,10 +1065,11 @@ export const Backlog = () => {
                                                     const profitClass = (job.OrderTotal > 5000) ? 'profit-row' : '';
                                                     const expediteClass = (job.dataValues.email) ? 'bl-expedite-row' : '';
                                                     const holdClass = (job.dataValues.hold) ? 'hold-row' : '';
+                                                    const shipClass = (job.User_Text2=='4. DONE') ? 'ship-row' : '';
                                                     if (!job.MasterJobNo) {
                                                         return (
                                                             <Fragment key={index}>
-                                                                <tr job={job} className={`${expediteClass} ${holdClass} ${profitClass}`}>
+                                                                <tr job={job} className={`${expediteClass} ${holdClass} ${profitClass} ${shipClass}`}>
                                                                     {job.HasSubs ?
                                                                         <td className='text-center' onClick={() => toggleSub(job.JobNo)}>
                                                                             <Icon icon={plus}/>
