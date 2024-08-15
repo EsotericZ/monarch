@@ -86,6 +86,7 @@ export const Backlog = () => {
     const [lateAssy, setLateAssy] = useState(0);
     const [latePowder, setLatePowder] = useState(0);
     const [lateOSV, setLateOSV] = useState(0);
+    const [lateSum, setLateSum] = useState(0);
     const [futureEng, setFutureEng] = useState(0);
     const [futureShear, setFutureShear] = useState(0);
     const [futurePunch, setFuturePunch] = useState(0);
@@ -98,6 +99,7 @@ export const Backlog = () => {
     const [futureAssy, setFutureAssy] = useState(0);
     const [futurePowder, setFuturePowder] = useState(0);
     const [futureOSV, setFutureOSV] = useState(0);
+    const [futureSum, setFutureSum] = useState(0);
 
     const formatDate = (dateStr) => {
         if (!dateStr) return new Date(0);
@@ -181,7 +183,7 @@ export const Backlog = () => {
             setUpcomingJobs(sortedJobsNo.length - pastJobsNo.length);
             setMonthJobs(sortedJobsNo.length);
 
-            setLateEng((pastJobsNo.filter(row => row.WorkCntr == '101 ENGIN')).length)
+            setLateEng((pastJobsNo.filter(row => row.WorkCntr == '101 ENGIN' && row.User_Text2!='4. DONE')).length)
             setLateShear((pastJobsNo.filter(row => row.WorkCntr == '201 SHEAR')).length)
             setLatePunch((pastJobsNo.filter(row => row.WorkCntr == '202 PUNCH')).length)
             setLateLaser((pastJobsNo.filter(row => row.WorkCntr == '203 LASER')).length)
@@ -193,8 +195,14 @@ export const Backlog = () => {
             setLateAssy((pastJobsNo.filter(row => row.WorkCntr == '702 ASSEM')).length)
             setLatePowder((pastJobsNo.filter(row => row.WorkCntr == '601 POWDER')).length)
             setLateOSV(((pastJobsNo.filter(row => row.User_Text2 == '6. OUTSOURCE')).length));
+
+            const totalLateSum = pastJobsNo.reduce((sum, job) => {
+                const value = (job.QtyOrdered - job.QtyShipped2Cust) * job.UnitPrice;
+                return sum + value;
+            }, 0);
+            setLateSum(totalLateSum);
             
-            setFutureEng((sortedJobsNo.filter(row => row.WorkCntr == '101 ENGIN')).length - (pastJobsNo.filter(row => row.WorkCntr == '101 ENGIN')).length)
+            setFutureEng((sortedJobsNo.filter(row => row.WorkCntr == '101 ENGIN' && row.User_Text2!='4. DONE')).length - (pastJobsNo.filter(row => row.WorkCntr == '101 ENGIN' && row.User_Text2!='4. DONE')).length)
             setFutureShear((sortedJobsNo.filter(row => row.WorkCntr == '201 SHEAR')).length - (pastJobsNo.filter(row => row.WorkCntr == '201 SHEAR')).length)
             setFuturePunch((sortedJobsNo.filter(row => row.WorkCntr == '202 PUNCH')).length - (pastJobsNo.filter(row => row.WorkCntr == '202 PUNCH')).length)
             setFutureLaser((sortedJobsNo.filter(row => row.WorkCntr == '203 LASER')).length - (pastJobsNo.filter(row => row.WorkCntr == '203 LASER')).length)
@@ -206,6 +214,12 @@ export const Backlog = () => {
             setFutureAssy((sortedJobsNo.filter(row => row.WorkCntr == '702 ASSEM')).length - (pastJobsNo.filter(row => row.WorkCntr == '702 ASSEM')).length)
             setFuturePowder((sortedJobsNo.filter(row => row.WorkCntr == '601 POWDER')).length - (pastJobsNo.filter(row => row.WorkCntr == '601 POWDER')).length)
             setFutureOSV((sortedJobsNo.filter(row => row.User_Text2 == '6. OUTSOURCE')).length - (pastJobsNo.filter(row => row.User_Text2 == '6. OUTSOURCE')).length);
+
+            const totalFutureSum = sortedJobsNo.reduce((sum, job) => {
+                const value = (job.QtyOrdered - job.QtyShipped2Cust) * job.UnitPrice;
+                return sum + value;
+            }, 0);
+            setFutureSum(totalFutureSum - totalLateSum);
 
             setCurrent(months[thisMonthNo]);
             setNextMonth(months[nextMonthNo]);
@@ -304,6 +318,12 @@ export const Backlog = () => {
             setLateAssy((pastJobsNo.filter(row => row.WorkCntr == '702 ASSEM')).length)
             setLatePowder((pastJobsNo.filter(row => row.WorkCntr == '601 POWDER')).length)
             setLateOSV(((pastJobsNo.filter(row => row.User_Text2 == '6. OUTSOURCE')).length));
+
+            const totalLateSum = pastJobsNo.reduce((sum, job) => {
+                const value = (job.QtyOrdered - job.QtyShipped2Cust) * job.UnitPrice;
+                return sum + value;
+            }, 0);
+            setLateSum(totalLateSum);
             
             setFutureEng((sortedJobsNo.filter(row => row.WorkCntr == '101 ENGIN')).length - (pastJobsNo.filter(row => row.WorkCntr == '101 ENGIN')).length)
             setFutureShear((sortedJobsNo.filter(row => row.WorkCntr == '201 SHEAR')).length - (pastJobsNo.filter(row => row.WorkCntr == '201 SHEAR')).length)
@@ -317,6 +337,12 @@ export const Backlog = () => {
             setFutureAssy((sortedJobsNo.filter(row => row.WorkCntr == '702 ASSEM')).length - (pastJobsNo.filter(row => row.WorkCntr == '702 ASSEM')).length)
             setFuturePowder((sortedJobsNo.filter(row => row.WorkCntr == '601 POWDER')).length - (pastJobsNo.filter(row => row.WorkCntr == '601 POWDER')).length)
             setFutureOSV((sortedJobsNo.filter(row => row.User_Text2 == '6. OUTSOURCE')).length - (pastJobsNo.filter(row => row.User_Text2 == '6. OUTSOURCE')).length);
+
+            const totalFutureSum = sortedJobsNo.reduce((sum, job) => {
+                const value = (job.QtyOrdered - job.QtyShipped2Cust) * job.UnitPrice;
+                return sum + value;
+            }, 0);
+            setFutureSum(totalFutureSum - totalLateSum);
 
             setCurrent(months[thisMonthNo]);
             setNextMonth(months[nextMonthNo]);
@@ -1170,6 +1196,26 @@ export const Backlog = () => {
                                                             <tr>
                                                                 <th className='text-end tableKey'>Future Jobs</th>
                                                                 <th className='text-start tableValue'>{upcomingJobs}</th>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div className="row homeBox">
+                                                <div className="row jobTitle">  
+                                                    <table>
+                                                        <tbody>
+                                                            <tr>
+                                                                <th className='text-end tableKey'>Late Revenue</th>
+                                                                <th className='text-start tableValue'>{lateSum.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th className='text-end tableKey'>Upcoming Revenue</th>
+                                                                <th className='text-start tableValue'>{futureSum.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th className='text-end tableKey'>Week</th>
+                                                                <th className='text-start tableValue'></th>
                                                             </tr>
                                                         </tbody>
                                                     </table>
