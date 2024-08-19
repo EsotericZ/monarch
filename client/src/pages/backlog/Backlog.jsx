@@ -100,6 +100,10 @@ export const Backlog = () => {
     const [futureOSV, setFutureOSV] = useState(0);
     const [futureSum, setFutureSum] = useState(0);
 
+    const [thisWeekSum, setThisWeekSum] = useState(0);
+    const [secondWeekSum, setSecondWeekSum] = useState(0);
+    const [thirdWeekSum, setThirdWeekSum] = useState(0);
+
     const formatDate = (dateStr) => {
         if (!dateStr) return new Date(0);
         const [year, month, day] = dateStr.split('-');
@@ -176,6 +180,41 @@ export const Backlog = () => {
                 'November',
                 'December',
             ];
+
+            const dayOfWeek = today.getDay();
+            const sunday = new Date(today);
+            const saturday = new Date(today);
+            sunday.setDate(today.getDate() - dayOfWeek);
+            saturday.setDate(today.getDate() - dayOfWeek +6);
+            const secondSunday = new Date(today);
+            const secondSaturday = new Date(today);
+            secondSunday.setDate(today.getDate() - dayOfWeek +7);
+            secondSaturday.setDate(today.getDate() - dayOfWeek +13);
+            const thirdSunday = new Date(today);
+            const thirdSaturday = new Date(today);
+            thirdSunday.setDate(today.getDate() - dayOfWeek +14);
+            thirdSaturday.setDate(today.getDate() - dayOfWeek +20);
+
+            let thisWeekProjected = 0;
+            let secondWeekProjected = 0;
+            let thirdWeekProjected = 0;
+
+            allJobs.forEach(job => {
+                const jobDate = new Date(job.dataValues.cdate);
+                const value = (job.QtyOrdered - job.QtyShipped2Cust) * job.UnitPrice;
+            
+                if (jobDate >= sunday && jobDate <= saturday) {
+                    thisWeekProjected += value;
+                } else if (jobDate >= secondSunday && jobDate <= secondSaturday) {
+                    secondWeekProjected += value;
+                } else if (jobDate >= thirdSunday && jobDate <= thirdSaturday) {
+                    thirdWeekProjected += value;
+                }
+            });
+
+            setThisWeekSum(thisWeekProjected);
+            setSecondWeekSum(secondWeekProjected);
+            setThirdWeekSum(thirdWeekProjected);
 
             setLateJobs(pastJobsNo.length);
             setUpcomingJobs(sortedJobsNo.length - pastJobsNo.length);
@@ -299,6 +338,41 @@ export const Backlog = () => {
                 'November',
                 'December',
             ];
+
+            const dayOfWeek = today.getDay();
+            const sunday = new Date(today);
+            const saturday = new Date(today);
+            sunday.setDate(today.getDate() - dayOfWeek);
+            saturday.setDate(today.getDate() - dayOfWeek +6);
+            const secondSunday = new Date(today);
+            const secondSaturday = new Date(today);
+            secondSunday.setDate(today.getDate() - dayOfWeek +7);
+            secondSaturday.setDate(today.getDate() - dayOfWeek +13);
+            const thirdSunday = new Date(today);
+            const thirdSaturday = new Date(today);
+            thirdSunday.setDate(today.getDate() - dayOfWeek +14);
+            thirdSaturday.setDate(today.getDate() - dayOfWeek +20);
+
+            let thisWeekProjected = 0;
+            let secondWeekProjected = 0;
+            let thirdWeekProjected = 0;
+
+            allJobs.forEach(job => {
+                const jobDate = new Date(job.dataValues.cdate);
+                const value = (job.QtyOrdered - job.QtyShipped2Cust) * job.UnitPrice;
+            
+                if (jobDate >= sunday && jobDate <= saturday) {
+                    thisWeekProjected += value;
+                } else if (jobDate >= secondSunday && jobDate <= secondSaturday) {
+                    secondWeekProjected += value;
+                } else if (jobDate >= thirdSunday && jobDate <= thirdSaturday) {
+                    thirdWeekProjected += value;
+                }
+            });
+
+            setThisWeekSum(thisWeekProjected);
+            setSecondWeekSum(secondWeekProjected);
+            setThirdWeekSum(thirdWeekProjected);
 
             setLateJobs(pastJobsNo.length);
             setUpcomingJobs(sortedJobsNo.length - pastJobsNo.length);
@@ -1153,8 +1227,19 @@ export const Backlog = () => {
                                                                 <th className='text-start tableValue'>{futureSum.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</th>
                                                             </tr>
                                                             <tr>
-                                                                <th className='text-end tableKey'>Week</th>
-                                                                <th className='text-start tableValue'></th>
+                                                                <th colSpan="2" className='text-center projectedRevenue'>Projected Revenue</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th className='text-end tableKey'>Current Week</th>
+                                                                <th className='text-start tableValue'>{thisWeekSum.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th className='text-end tableKey'>Next Week</th>
+                                                                <th className='text-start tableValue'>{secondWeekSum.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th className='text-end tableKey'>Third Week</th>
+                                                                <th className='text-start tableValue'>{thirdWeekSum.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</th>
                                                             </tr>
                                                         </tbody>
                                                     </table>

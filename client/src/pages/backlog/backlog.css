@@ -42,3 +42,9 @@
     line-height: normal;
     vertical-align: top;
 }
+
+.projectedRevenue {
+    padding-top: 20px;
+    font-weight: bold;
+    text-align: center;
+}
