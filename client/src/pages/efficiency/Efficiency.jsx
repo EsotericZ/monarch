@@ -35,12 +35,12 @@ export const Efficiency = () => {
     }
 
     const [singleJob, setSingleJob] = useState('');
-    const [multiJob, setMultiJob] = useState('');
+    const [startJob, setStartJob] = useState('');
+    const [finishJob, setFinishJob] = useState('');
 
     const fetchSingleExportCSV = async () => {
         try {
             const res = await getSingleJob(singleJob);
-            console.log(res)
 
             const csvData = res.map(item => {
                 const startDate = item.ActualStartDate ? item.ActualStartDate.split('T')[0] : '';
@@ -75,6 +75,43 @@ export const Efficiency = () => {
         }
     };
 
+    const fetchMultiExportCSV = async () => {
+        try {
+            const res = await getJobRange(startJob, finishJob);
+
+            const csvData = res.map(item => {
+                const startDate = item.ActualStartDate ? item.ActualStartDate.split('T')[0] : '';
+
+                return {
+                    JobNo: item.JobNo,
+                    PartNo: item.PartNo,
+                    StepNo: item.StepNo,
+                    WorkCntr: item.WorkCntr,
+                    ActualStartDate: startDate,
+                    TotEstHrs: item.TotEstHrs, 
+                    TotActHrs: item.TotActHrs, 
+                    Status: item.Status, 
+                }
+            });
+
+            const csvContent = [
+                headers.map(header => header.label).join(','),
+                ...csvData.map(item => Object.values(item).join(','))
+            ].join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `${startJob}-${finishJob}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     return (
         <div style={{ display: 'flex' }}>
             <Sidebar />
@@ -100,31 +137,31 @@ export const Efficiency = () => {
                                     </div>
                                 </div>
                                 <div style={{ width: '75px' }}></div>
-                                {/* <div className='mx-3'>
-                                    <div style={{ width: 'fit-content', marginTop: '20px' }}>
-                                        <Button className='vtiger' onClick={() => fetchAllExportCSV()}>
-                                            Get All Customers
-                                        </Button>
-                                    </div>
-                                </div>
                                 <div className='mx-3' style={{ textAlign: 'center', marginTop: '100px' }}>
-                                    <h1>Contact Info</h1>
+                                    <h1>Job Range</h1>
                                     <div style={{ width: 'fit-content', marginTop: '20px' }}>
                                         <div className="form-group mt-3" style={{ display: 'flex', alignItems: 'center' }}>
                                             <input 
                                                 className='input form-control mt-1' 
                                                 type='text' 
-                                                placeholder='Customer Code' 
-                                                onChange={(e) => {setCustCode(e.target.value)}}
+                                                placeholder='Lower Job No' 
+                                                onChange={(e) => {setStartJob(e.target.value)}}
                                                 style={{ marginRight: '10px' }}
                                             />
-                                            <Button className='vtiger' onClick={() => fetchOneContactCSV()}>
+                                            <input 
+                                                className='input form-control mt-1' 
+                                                type='text' 
+                                                placeholder='Upper Job No' 
+                                                onChange={(e) => {setFinishJob(e.target.value)}}
+                                                style={{ marginRight: '10px' }}
+                                            />
+                                            <Button className='vtiger' onClick={() => fetchMultiExportCSV()}>
                                                 Submit
                                             </Button>
                                         </div>
                                     </div>
                                 </div>
-                                <div style={{ width: '75px' }}></div>
+                                {/* <div style={{ width: '75px' }}></div>
                                 <div className='mx-3'>
                                     <div style={{ width: 'fit-content', marginTop: '20px' }}>
                                         <Button className='vtiger' onClick={() => fetchAllContactCSV()}>

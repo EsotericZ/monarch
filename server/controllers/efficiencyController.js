@@ -34,24 +34,24 @@ async function getSingleJob(req, res) {
 };
 
 async function getJobRange(req, res) {
-    let StartJobNo = req.body.StartJobNo;
-    let FinishJobNo = req.body.FinishJobNo;
+    const StartJobNo = req.body.StartJobNo;
+    const FinishJobNo = req.body.FinishJobNo;
 
-    sql.connect(config, function(err,) {
-        if (err) console.error(err);
-        let request = new sql.Request();
 
-        request.query("SELECT JobNo, PartNo, StepNo, WorkCntr, ActualStartDate, TotEstHrs, TotActHrs, Status\
-            FROM OrderRouting\
-            WHERE JobNo='152991'",
-        
-        function(err, recordset) {
-            if (err) console.error(err);
-            let records = recordset.recordsets[0];
+    await sql.connect(config);
+    const request = new sql.Request();
 
-            res.send(records)
-        })
-    })
+    const query = `
+        SELECT JobNo, PartNo, StepNo, WorkCntr, ActualStartDate, TotEstHrs, TotActHrs, Status
+        FROM OrderRouting
+        WHERE JobNo >= @StartJobNo AND JobNo <= @FinishJobNo`;
+
+    request.input('StartJobNo', sql.VarChar, StartJobNo);
+    request.input('FinishJobNo', sql.VarChar, FinishJobNo);
+
+    const result = await request.query(query);
+
+    res.status(200).json(result.recordset);
 };
 
 module.exports = {
