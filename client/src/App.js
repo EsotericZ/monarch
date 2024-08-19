@@ -6,6 +6,7 @@ import 'font-awesome/css/font-awesome.min.css';
 import { AdminNew } from './pages/admin/AdminNew';
 import { Backlog } from './pages/backlog/Backlog';
 import { Calendar } from './pages/calendar/Calendar';
+import { Efficiency } from './pages/efficiency/Efficiency';
 
 import { Programming } from './pages/programming/Programming';
 import { Engineering } from './pages/programming/Engineering';
@@ -72,6 +73,10 @@ export const App = () => {
                 <Route
                     path='/calendar'
                     element={<Calendar />}
+                />
+                <Route
+                    path='/efficiency'
+                    element={<Efficiency />}
                 />
 
                 <Route
