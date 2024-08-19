@@ -8,6 +8,7 @@ import PuffLoader from "react-spinners/PuffLoader";
 
 import getSingleJob from '../../services/efficiency/getSingleJob';
 import getJobRange from '../../services/efficiency/getJobRange';
+import getLastTwenty from '../../services/efficiency/getLastTwenty';
 import { Sidebar } from '../sidebar/Sidebar';
 
 const headers = [
@@ -112,6 +113,44 @@ export const Efficiency = () => {
         }
     };
 
+    const fetchLastTwentyCSV = async () => {
+        try {
+            const res = await getLastTwenty();
+            console.log(res)
+            
+            const csvData = res.map(item => {
+                const startDate = item.ActualStartDate ? item.ActualStartDate.split('T')[0] : '';
+
+                return {
+                    JobNo: item.JobNo,
+                    PartNo: item.PartNo,
+                    StepNo: item.StepNo,
+                    WorkCntr: item.WorkCntr,
+                    ActualStartDate: startDate,
+                    TotEstHrs: item.TotEstHrs, 
+                    TotActHrs: item.TotActHrs, 
+                    Status: item.Status, 
+                }
+            });
+
+            const csvContent = [
+                headers.map(header => header.label).join(','),
+                ...csvData.map(item => Object.values(item).join(','))
+            ].join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `LastTen.csv`);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     return (
         <div style={{ display: 'flex' }}>
             <Sidebar />
@@ -161,25 +200,18 @@ export const Efficiency = () => {
                                         </div>
                                     </div>
                                 </div>
-                                {/* <div style={{ width: '75px' }}></div>
-                                <div className='mx-3'>
-                                    <div style={{ width: 'fit-content', marginTop: '20px' }}>
-                                        <Button className='vtiger' onClick={() => fetchAllContactCSV()}>
-                                            Get All Customers
-                                        </Button>
-                                    </div>
-                                </div>
+                                <div style={{ width: '75px' }}></div>
                                 <div className='mx-3' style={{ textAlign: 'center', marginTop: '100px' }}>
-                                    <h1>Quotes</h1>
+                                    <h1>Get Last 10 Closed Orders</h1>
                                 </div>
                                 <div style={{ width: '75px' }}></div>
                                 <div className='mx-3'>
                                     <div style={{ width: 'fit-content', marginTop: '20px' }}>
-                                        <Button className='vtiger' onClick={() => fetchAllQuotesCSV()}>
-                                            Get All Quotes
+                                        <Button className='vtiger' onClick={() => fetchLastTwentyCSV()}>
+                                            Submit
                                         </Button>
                                     </div>
-                                </div> */}
+                                </div>
                             </div>
                         </div>
                 </div>

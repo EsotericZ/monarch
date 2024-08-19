@@ -44,7 +44,9 @@ async function getJobRange(req, res) {
     const query = `
         SELECT JobNo, PartNo, StepNo, WorkCntr, ActualStartDate, TotEstHrs, TotActHrs, Status
         FROM OrderRouting
-        WHERE JobNo >= @StartJobNo AND JobNo <= @FinishJobNo`;
+        WHERE CAST(JobNo AS INT) >= CAST(@StartJobNo AS INT)
+        AND CAST(JobNo AS INT) <= CAST(@FinishJobNo AS INT)
+        ORDER BY JobNo, StepNo`;
 
     request.input('StartJobNo', sql.VarChar, StartJobNo);
     request.input('FinishJobNo', sql.VarChar, FinishJobNo);
@@ -54,7 +56,34 @@ async function getJobRange(req, res) {
     res.status(200).json(result.recordset);
 };
 
+async function getLastTwenty(req, res) {
+
+    sql.connect(config, function(err,) {
+        if (err) console.error(err);
+        let request = new sql.Request();
+
+        request.query(`SELECT JobNo, OrderNo, PartNo, StepNo, WorkCntr, ActualStartDate, TotEstHrs, TotActHrs, Status
+            FROM OrderRouting
+            WHERE OrderNo IN (
+                SELECT TOP 10 OrderNo
+                FROM Orders
+                WHERE Status = 'C' AND ISNUMERIC(OrderNo) = 1
+                ORDER BY CAST(OrderNo AS INT) DESC
+            )
+            ORDER BY JobNo, StepNo`,
+
+        function(err, recordset) {
+            if (err) console.error(err);
+            let records = recordset.recordsets[0];
+            console.log(records)
+
+            res.send(records)
+        })
+    })
+};
+
 module.exports = {
     getSingleJob,
     getJobRange,
+    getLastTwenty,
 }
