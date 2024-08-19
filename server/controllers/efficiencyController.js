@@ -19,13 +19,14 @@ async function getSingleJob(req, res) {
         if (err) console.error(err);
         let request = new sql.Request();
 
-        request.query("SELECT JobNo, PartNo, StepNo, WorkCntr, ActualStartDate, TotEstHrs, TotActHrs, Status\
+        request.query(`SELECT JobNo, PartNo, StepNo, WorkCntr, ActualStartDate, TotEstHrs, TotActHrs, Status\
             FROM OrderRouting\
-            WHERE JobNo='153343'",
+            WHERE JobNo='${JobNo}'`,
 
         function(err, recordset) {
             if (err) console.error(err);
             let records = recordset.recordsets[0];
+            console.log(records)
 
             res.send(records)
         })

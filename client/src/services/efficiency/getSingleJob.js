@@ -1,8 +1,9 @@
 import api from '../../api/api';
 
 const getSingleJob = async (JobNo) => {
-    const res = await api.post('/backlog/getSingleJob', {
-        JobNo: JobNo
+    console.log(JobNo)
+    const res = await api.post('/efficiency/getSingleJob', {
+        JobNo
     });
     return res.data
 };
