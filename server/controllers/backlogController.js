@@ -289,15 +289,34 @@ async function updateHold(req, res) {
     })
 };
 
+// async function Test(req, res) {
+
+//     sql.connect(config, function(err,) {
+//         if (err) console.error(err);
+//         let request = new sql.Request();
+
+//         request.query("SELECT *\
+//             FROM OrderDet\
+//             WHERE JobNo='152676'",
+
+//         function(err, recordset) {
+//             if (err) console.error(err);
+//             let records = recordset.recordsets[0];
+
+//             res.send(records)
+//         })
+//     })
+// };
+
 async function Test(req, res) {
 
     sql.connect(config, function(err,) {
         if (err) console.error(err);
         let request = new sql.Request();
 
-        request.query("SELECT *\
-            FROM OrderDet\
-            WHERE JobNo='152991'",
+        request.query("SELECT O.CustCode, D.PartNo, D.Revision, D.DueDate, D.User_Text3 \
+            FROM ORDERS O INNER JOIN OrderDet D ON O.OrderNo=D.OrderNo\
+            WHERE O.User_Text3='UNCONFIRMED'",
 
         function(err, recordset) {
             if (err) console.error(err);
