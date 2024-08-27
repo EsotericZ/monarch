@@ -27,7 +27,7 @@ async function getAllJobs(req, res) {
 
         request.query("SELECT R.JobNo, D.PartNo, D.Revision, R.EstimQty, D.DueDate, O.CustCode, D.User_Text3, D.User_Text2, D.User_Number3, R.OrderNo, R.StepNo, D.QuoteNo, D.WorkCode, R.WorkCntr, D.MasterJobNo, O.Status, O.OrderTotal, R.VendCode, D.UnitPrice, D.QtyOrdered, D.QtyShipped2Cust\
             FROM OrderRouting R INNER JOIN OrderDet D ON R.JobNo=D.JobNo INNER JOIN ORDERS O ON D.OrderNo=O.OrderNo\
-            WHERE (D.Status='Open' AND O.User_Text3!='UNCONFIRMED' AND R.Status='Current') OR (O.Status='O' AND D.MasterJobNo!='' AND R.StepNo=10) OR (O.Status='O' AND D.Status='Open' AND R.StepNo=10 AND D.User_Text2='4. DONE')\
+            WHERE (D.Status='Open' AND O.User_Text3!='UNCONFIRMED' AND R.Status='Current') OR (O.Status='O' AND D.MasterJobNo!='' AND R.StepNo=10) OR (O.Status='O' AND D.Status='Open' AND R.StepNo=10 AND D.User_Text2='4. DONE') OR (O.Status='O' AND D.Status='Open' AND D.User_Text3='' AND D.User_Text2='')\
             ORDER BY D.DueDate, R.JobNo", 
 
         function(err, recordset) {
@@ -64,7 +64,7 @@ async function getNextMonthJobs(req, res) {
 
         request.query("SELECT R.JobNo, D.PartNo, D.Revision, R.EstimQty, D.DueDate, O.CustCode, D.User_Text3, D.User_Text2, D.User_Number3, R.OrderNo, R.StepNo, D.QuoteNo, D.WorkCode, R.WorkCntr, D.MasterJobNo, O.Status, O.OrderTotal, R.VendCode, D.UnitPrice, D.QtyOrdered, D.QtyShipped2Cust\
             FROM OrderRouting R INNER JOIN OrderDet D ON R.JobNo=D.JobNo INNER JOIN ORDERS O ON D.OrderNo=O.OrderNo\
-            WHERE (D.Status='Open' AND O.User_Text3!='UNCONFIRMED' AND R.Status='Current') OR (O.Status='O' AND D.MasterJobNo!='' AND R.StepNo=10) OR (O.Status='O' AND D.Status='Open' AND R.StepNo=10 AND D.User_Text2='4. DONE')\
+            WHERE (D.Status='Open' AND O.User_Text3!='UNCONFIRMED' AND R.Status='Current') OR (O.Status='O' AND D.MasterJobNo!='' AND R.StepNo=10) OR (O.Status='O' AND D.Status='Open' AND R.StepNo=10 AND D.User_Text2='4. DONE') OR (O.Status='O' AND D.Status='Open' AND D.User_Text3='' AND D.User_Text2='')\
             ORDER BY D.DueDate, R.JobNo", 
 
         function(err, recordset) {
@@ -102,7 +102,7 @@ async function getFutureJobs(req, res) {
 
         request.query("SELECT R.JobNo, D.PartNo, D.Revision, R.EstimQty, D.DueDate, O.CustCode, D.User_Text3, D.User_Text2, D.User_Number3, R.OrderNo, R.StepNo, D.QuoteNo, D.WorkCode, R.WorkCntr, D.MasterJobNo, O.Status, O.OrderTotal, R.VendCode, D.UnitPrice, D.QtyOrdered, D.QtyShipped2Cust\
             FROM OrderRouting R INNER JOIN OrderDet D ON R.JobNo=D.JobNo INNER JOIN ORDERS O ON D.OrderNo=O.OrderNo\
-            WHERE (D.Status='Open' AND O.User_Text3!='UNCONFIRMED' AND R.Status='Current') OR (O.Status='O' AND D.MasterJobNo!='' AND R.StepNo=10) OR (O.Status='O' AND D.Status='Open' AND R.StepNo=10 AND D.User_Text2='4. DONE')\
+            WHERE (D.Status='Open' AND O.User_Text3!='UNCONFIRMED' AND R.Status='Current') OR (O.Status='O' AND D.MasterJobNo!='' AND R.StepNo=10) OR (O.Status='O' AND D.Status='Open' AND R.StepNo=10 AND D.User_Text2='4. DONE') OR (O.Status='O' AND D.Status='Open' AND D.User_Text3='' AND D.User_Text2='')\
             ORDER BY D.DueDate, R.JobNo", 
 
         function(err, recordset) {
@@ -289,26 +289,7 @@ async function updateHold(req, res) {
     })
 };
 
-// async function Test(req, res) {
-
-//     sql.connect(config, function(err,) {
-//         if (err) console.error(err);
-//         let request = new sql.Request();
-
-//         request.query("SELECT *\
-//             FROM OrderDet\
-//             WHERE JobNo='152676'",
-
-//         function(err, recordset) {
-//             if (err) console.error(err);
-//             let records = recordset.recordsets[0];
-
-//             res.send(records)
-//         })
-//     })
-// };
-
-async function Test(req, res) {
+async function Unconfirmed(req, res) {
 
     sql.connect(config, function(err,) {
         if (err) console.error(err);
@@ -317,6 +298,26 @@ async function Test(req, res) {
         request.query("SELECT O.CustCode, D.PartNo, D.Revision, D.DueDate, D.User_Text3 \
             FROM ORDERS O INNER JOIN OrderDet D ON O.OrderNo=D.OrderNo\
             WHERE O.User_Text3='UNCONFIRMED'",
+
+        function(err, recordset) {
+            if (err) console.error(err);
+            let records = recordset.recordsets[0];
+
+            res.send(records)
+        })
+    })
+};
+
+async function Test(req, res) {
+
+    sql.connect(config, function(err,) {
+        if (err) console.error(err);
+        let request = new sql.Request();
+
+        request.query("SELECT O.CustCode, D.PartNo, D.Revision, D.DueDate, D.User_Text3, D.Status, O.User_Text3, O.Status, D.User_Text2 \
+            FROM ORDERS O INNER JOIN OrderDet D ON O.OrderNo=D.OrderNo\
+            WHERE (O.Status='O' AND D.Status='Open' AND D.User_Text3='' AND D.User_Text2='')",
+            // WHERE D.JobNo='153764'",
 
         function(err, recordset) {
             if (err) console.error(err);
@@ -336,5 +337,6 @@ module.exports = {
     updateJob,
     updateEmail,
     updateHold,
+    Unconfirmed,
     Test,
 }

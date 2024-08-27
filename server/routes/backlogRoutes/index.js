@@ -11,6 +11,7 @@ router.post('/getSingleJob', backlogController.getSingleJob);
 router.post('/updateJob', backlogController.updateJob);
 router.post('/updateEmail', backlogController.updateEmail);
 router.post('/updateHold', backlogController.updateHold);
+router.get('/unconfirmed', backlogController.Unconfirmed);
 router.get('/test', backlogController.Test);
 
 module.exports = router;
