@@ -314,7 +314,7 @@ async function Test(req, res) {
         if (err) console.error(err);
         let request = new sql.Request();
 
-        request.query("SELECT O.CustCode, D.PartNo, D.Revision, D.DueDate, D.User_Text3, D.Status, O.User_Text3, O.Status, D.User_Text2 \
+        request.query("SELECT D.JobNo, O.CustCode, D.PartNo, D.DueDate, D.Revision, D.DueDate, D.User_Text3, D.Status, O.User_Text3, O.Status, D.User_Text2 \
             FROM ORDERS O INNER JOIN OrderDet D ON O.OrderNo=D.OrderNo\
             WHERE (O.Status='O' AND D.Status='Open' AND D.User_Text3='' AND D.User_Text2='')",
             // WHERE D.JobNo='153764'",

@@ -118,6 +118,7 @@ export const Backlog = () => {
                 getNextMonthJobs(),
                 getFutureJobs(),
             ]);
+            console.log(allJobs)
             let masters = allJobs.filter(row => row.MasterJobNo != null);
             let masterJobs = []
             masters.forEach((e) => {
