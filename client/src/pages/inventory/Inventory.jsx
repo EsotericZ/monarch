@@ -6,6 +6,8 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import getAllScales from "../../services/scales/getAllScales";
 import getMMItems from '../../services/scales/getMMItems';
 import getScaleLogs from '../../services/scales/getScaleLogs';
+import getNewRFIDLogs from '../../services/rfid/getNewRFIDLogs';
+import addNewScaleLog from '../../services/scaleLogs/addNewScaleLog';
 
 import { Icon } from 'react-icons-kit';
 import { refresh } from 'react-icons-kit/fa/refresh';
@@ -63,8 +65,37 @@ export const Inventory = () => {
         }
     }
 
+    const fetchRFID = async () => {
+        try {
+            const [rfidLog, logs] = await Promise.all([getNewRFIDLogs(), getScaleLogs()]);
+            const fiveMinutesAgo = new Date(new Date().getTime() - 5 * 60 * 1000);
+            const filteredLogs = logs.filter(log => new Date(log.Timestamp) >= fiveMinutesAgo);
+
+            console.log('ran')
+            console.log(rfidLog.data)
+            console.log(filteredLogs)
+
+            if (rfidLog.data && rfidLog.data.length > 0) {
+                for (const log of filteredLogs) {
+                    console.log(log)
+                    await addNewScaleLog(log);
+                };
+            }
+        } catch (err) {
+            console.log(err)   
+        }
+    }
+
+    useEffect(() => {
+        // const intervalId = setInterval(fetchRFID, 150000); // 2.5 minutes
+        const intervalId = setInterval(fetchRFID, 60000); // 1 minute
+    
+        return () => clearInterval(intervalId);
+    }, []);
+
     useEffect(() => {
         fetchData();
+        fetchRFID()
     }, [])
 
     return (

@@ -295,7 +295,7 @@ async function Unconfirmed(req, res) {
         if (err) console.error(err);
         let request = new sql.Request();
 
-        request.query("SELECT O.CustCode, D.PartNo, D.Revision, D.DueDate, D.User_Text3 \
+        request.query("SELECT O.CustCode, D.PartNo, D.Revision, D.DueDate, D.User_Text3, D.JobNo \
             FROM ORDERS O INNER JOIN OrderDet D ON O.OrderNo=D.OrderNo\
             WHERE O.User_Text3='UNCONFIRMED'",
 
