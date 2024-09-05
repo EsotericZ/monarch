@@ -4,7 +4,12 @@ const addNewScaleLog = async (log) => {
     console.log('addNewScaleLog')
     console.log(log)
     const res = await api.post('/scaleLog/addNewScaleLog', {
-        log
+        scaleName: log.ScaleName,
+        itemName: log.ItemName,
+        oldQty: log.OldQuantity,
+        newQty: log.NewQuantity,
+        employee: log.EmployeeName.trim(),
+        timeStamp: log.Timestamp,
     });
     return res.data;
 }

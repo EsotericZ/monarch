@@ -75,9 +75,8 @@ export const Inventory = () => {
             console.log(rfidLog.data)
             console.log(filteredLogs)
 
-            if (rfidLog.data && rfidLog.data.length > 0) {
+            if (rfidLog.data && rfidLog.data.length > 0 && filteredLogs.length > 0) {
                 for (const log of filteredLogs) {
-                    console.log(log)
                     await addNewScaleLog(log);
                 };
             }
