@@ -11,6 +11,7 @@ async function addNewScaleLog(req, res) {
             }
         });
 
+        console.log(req.body.itemName)
         const smallItemCheck = await ScaleItems.findOne({
             where: {
                 itemName: req.body.itemName
@@ -18,12 +19,14 @@ async function addNewScaleLog(req, res) {
         })
 
         if (!smallItemCheck) {
+            console.log('Scale Item Not Found')
             return res.status(404).send({
                 message: 'ScaleItem not found'
             });
         }
 
         const quantityDifference = Math.abs(req.body.oldQty - req.body.newQty);
+        console.log(quantityDifference)
 
         if (smallItemCheck.smallItem) {
             if (quantityDifference <= 2) {
