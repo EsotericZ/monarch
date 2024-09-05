@@ -39,6 +39,10 @@ ScaleItems.init(
         area: {
             type: DataTypes.STRING,
         },
+        smallItem: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
     },
     {
         sequelize,
