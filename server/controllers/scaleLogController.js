@@ -1,10 +1,33 @@
 const Op = require('sequelize').Op;
 const { ScaleItems, ScaleLogs } = require('../models');
 
-async function addNewScaleLog(req, res) {
-    console.log('###############  NEW TRY  ##################')
-    console.log(req.body)
+async function getMMScaleLogs(req, res) {
+    try {
+        await ScaleLogs.findAll({
+            order: [
+                ['timeStamp', 'DESC']
+            ]
+        })
+        .then((result) => {
+            console.log(result)
+            return res.status(200).send({
+                data: result
+            })
+        }).catch((err) => {
+            return res.status(500).send({
+                status: err
+            })
+        })
+    } catch (err) {
+        console.error('Error retrieving scale logs:', err);
+        return res.status(500).send({
+            status: 'error',
+            message: err.message
+        });
+    }
+}
 
+async function addNewScaleLog(req, res) {
     try {
         const existingLogs = await ScaleLogs.findAll({
             where: {
@@ -64,5 +87,6 @@ async function addNewScaleLog(req, res) {
 };
 
 module.exports = {
+    getMMScaleLogs,
     addNewScaleLog,
 }

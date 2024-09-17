@@ -6,6 +6,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import getAllScales from "../../services/scales/getAllScales";
 import getMMItems from '../../services/scales/getMMItems';
 import getScaleLogs from '../../services/scales/getScaleLogs';
+import getMMScaleLogs from '../../services/scaleLogs/getMMScaleLogs';
 import getNewRFIDLogs from '../../services/rfid/getNewRFIDLogs';
 import addNewScaleLog from '../../services/scaleLogs/addNewScaleLog';
 
@@ -43,16 +44,22 @@ export const Inventory = () => {
 
     const fetchData = async () => {
         try {
-            const [scales, mmItems, log] = await Promise.all([getAllScales(), getMMItems(), getScaleLogs()]);
+            const [scales, mmItems, log, mmLog] = await Promise.all([getAllScales(), getMMItems(), getScaleLogs(), getMMScaleLogs()]);
             setAllScales(scales);
 
             const combinedData = scales.map(scale => {
                 const matchingMMItem = mmItems.data.find(item => item.scaleId === scale.ScaleId);
                 return { ...scale, ...matchingMMItem };
             });
+            console.log(mmItems.data)
+            console.log(mmLog.data)
 
-            const combinedLogs = log.map(scale => {
-                const matchingItem = mmItems.data.find(item => item.itemLocation === scale.ItemName);
+            // const combinedLogs = log.map(scale => {
+            //     const matchingItem = mmItems.data.find(item => item.itemLocation === scale.ItemName);
+            //     return { ...scale, ...matchingItem };
+            // });
+            const combinedLogs = mmLog.data.map(scale => {
+                const matchingItem = mmItems.data.find(item => item.itemLocation === scale.itemName);
                 return { ...scale, ...matchingItem };
             });
 
