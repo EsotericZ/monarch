@@ -59,7 +59,7 @@ export const Inventory = () => {
             //     return { ...scale, ...matchingItem };
             // });
             const combinedLogs = mmLog.data.map(scale => {
-                const matchingItem = mmItems.data.find(item => item.itemLocation === scale.itemName);
+                const matchingItem = mmItems.data.find(item => item.itemLocation === scale.itemLocation);
                 return { ...scale, ...matchingItem };
             });
 

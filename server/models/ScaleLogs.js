@@ -13,7 +13,7 @@ ScaleLogs.init(
         scaleName: {
             type: DataTypes.STRING,
         },
-        itemName: {
+        itemLocation: {
             type: DataTypes.STRING,
         },
         oldQty: {
