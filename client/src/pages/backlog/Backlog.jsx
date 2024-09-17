@@ -201,7 +201,14 @@ export const Backlog = () => {
             let thirdWeekProjected = 0;
 
             allJobs.forEach(job => {
-                const jobDate = new Date(job.dataValues.cdate);
+                const jobDate = job.dataValues?.cdate ? new Date(job.dataValues.cdate) : null;
+    
+                // If jobDate is null, skip this iteration
+                if (!jobDate) {
+                    // console.warn('Skipping job with null cdate:', job);
+                    return; 
+                }
+                // const jobDate = new Date(job.dataValues.cdate);
                 const value = (job.QtyOrdered - job.QtyShipped2Cust) * job.UnitPrice;
             
                 if (jobDate >= sunday && jobDate <= saturday) {
@@ -697,14 +704,15 @@ export const Backlog = () => {
                                             <tr>
                                                 <th className='text-center' width='2%'></th>
                                                 <th className='text-center' width='7%'><input onChange={(e) => setSearchedValueOrderNo(e.target.value)} placeholder='&#xf002;  Order No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                                <th className='text-center' width='7%'><input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='&#xf002;  Job No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                                <th className='text-center' width='7%'>Due Date</th>
+                                                <th className='text-center' width='6%'><input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='&#xf002;  Job No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                                <th className='text-center' width='6%'>Due Date</th>
                                                 <th className='text-center' width='7%'><input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='&#xf002;  Customer' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                                <th className='text-center' width='7%'>Quantity</th>
-                                                <th className='text-center' width='7%'>Unit Price</th>
+                                                <th className='text-center' width='6%'>Quantity</th>
+                                                <th className='text-center' width='6%'>Unit Price</th>
+                                                <th className='text-center' width='6%'>Order Total</th>
                                                 <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='&#xf002;  Current Area' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                                 <th className='text-center' width='5%'><input onChange={(e) => setSearchedValueOSV(e.target.value)} placeholder='&#xf002;  OSV' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                                <th className='text-center' width='12%'>OSV Status</th>
+                                                <th className='text-center' width='11%'>OSV Status</th>
                                                 <th className='text-center' width='9%'>Commitment Date</th>
                                                 <th className='text-center' width='20%'>Notes</th>
                                             </tr>
@@ -765,6 +773,7 @@ export const Backlog = () => {
                                                                     <td className='text-center'>{job.CustCode}</td>
                                                                     <td className='text-center'>{job.QtyOrdered - job.QtyShipped2Cust}</td>
                                                                     <td className='text-center'>{job.UnitPrice.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
+                                                                    <td className='text-center'>{job.OrderTotal.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
                                                                     {job.WorkCntr && job.User_Text2 !== '4. DONE' ?
                                                                         <td className='text-center' onClick={() => toggleRoute(job)}>{(job.WorkCntr).split(' ')[1]}</td>
                                                                         :
@@ -792,6 +801,7 @@ export const Backlog = () => {
                                                                         <td className='text-center'>{subJob.CustCode}</td>
                                                                         <td className='text-center'>{subJob.QtyOrdered - subJob.QtyShipped2Cust}</td>
                                                                         <td className='text-center'>{subJob.UnitPrice.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
+                                                                        <td className='text-center'></td>
                                                                         {subJob.WorkCntr && subJob.User_Text2 !== '4. DONE' ?
                                                                             <td className='text-center' onClick={() => toggleRoute(subJob)}>{(subJob.WorkCntr).split(' ')[1]}</td>
                                                                         :
@@ -816,7 +826,7 @@ export const Backlog = () => {
                                                     }
                                                 })
                                             }
-                                            <tr className='empty-row late-row'><td colSpan="12">-</td></tr>
+                                            <tr className='empty-row late-row'><td colSpan="13">-</td></tr>
                                             {futureJobs
                                                 .filter((row) => 
                                                     !searchedValueOrderNo || row.OrderNo
@@ -852,8 +862,8 @@ export const Backlog = () => {
                                                 })
                                                 .map((job, index) => {
                                                     const profitClass = (job.OrderTotal > 5000) ? 'profit-row' : '';
-                                                    const expediteClass = (job.dataValues.email) ? 'bl-expedite-row' : '';
-                                                    const holdClass = (job.dataValues.hold) ? 'hold-row' : '';
+                                                    const expediteClass = (job.dataValues?.email) ? 'bl-expedite-row' : '';
+                                                    const holdClass = (job.dataValues?.hold) ? 'hold-row' : '';
                                                     const shipClass = (job.User_Text2=='4. DONE') ? 'ship-row' : '';
                                                     if (!job.MasterJobNo) {
                                                         return (
@@ -872,6 +882,7 @@ export const Backlog = () => {
                                                                     <td className='text-center'>{job.CustCode}</td>
                                                                     <td className='text-center'>{job.QtyOrdered - job.QtyShipped2Cust}</td>
                                                                     <td className='text-center'>{job.UnitPrice.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
+                                                                    <td className='text-center'>{job.OrderTotal.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
                                                                     {job.WorkCntr && job.User_Text2 !== '4. DONE' ?
                                                                         <td className='text-center' onClick={() => toggleRoute(job)}>{(job.WorkCntr).split(' ')[1]}</td>
                                                                     :
@@ -882,13 +893,13 @@ export const Backlog = () => {
                                                                     :
                                                                         <td className='text-center'></td>
                                                                     }
-                                                                    <td onClick={() => handleOpenJob(job)} className='text-center'>{job.dataValues.osvnotes}</td>
-                                                                    {job.dataValues.cdate ? 
+                                                                    <td onClick={() => handleOpenJob(job)} className='text-center'>{job.dataValues?.osvnotes || ''}</td>
+                                                                    {job.dataValues?.cdate ? 
                                                                         <td onClick={() => handleOpenJob(job)} className='text-center'>{(job.dataValues.cdate).split('-')[1] + '/' + (job.dataValues.cdate).split('-')[2] + '/' + (job.dataValues.cdate).split('-')[0]}</td>
                                                                     :
                                                                         <td onClick={() => handleOpenJob(job)} className='text-center'></td>
                                                                     }
-                                                                    <td onClick={() => handleOpenJob(job)} className='text-center'>{job.dataValues.blnotes}</td>
+                                                                    <td onClick={() => handleOpenJob(job)} className='text-center'>{job.dataValues?.blnotes || ''}</td>
                                                                 </tr>
                                                                 {expandedRows.includes(job.JobNo) && subJobs[job.JobNo] && subJobs[job.JobNo].map((subJob, subIndex) => (
                                                                     <tr key={subIndex} className='subjob-row'>
@@ -899,6 +910,7 @@ export const Backlog = () => {
                                                                         <td className='text-center'>{subJob.CustCode}</td>
                                                                         <td className='text-center'>{subJob.QtyOrdered - subJob.QtyShipped2Cust}</td>
                                                                         <td className='text-center'>{subJob.UnitPrice.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
+                                                                        <td className='text-center'></td>
                                                                         {subJob.WorkCntr && subJob.User_Text2 !== '4. DONE' ?
                                                                             <td className='text-center' onClick={() => toggleRoute(subJob)}>{(subJob.WorkCntr).split(' ')[1]}</td>
                                                                         :

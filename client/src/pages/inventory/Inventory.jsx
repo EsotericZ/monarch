@@ -85,16 +85,16 @@ export const Inventory = () => {
         }
     }
 
-    useEffect(() => {
-        // const intervalId = setInterval(fetchRFID, 150000); // 2.5 minutes
-        const intervalId = setInterval(fetchRFID, 60000); // 1 minute
+    // useEffect(() => {
+    //     // const intervalId = setInterval(fetchRFID, 150000); // 2.5 minutes
+    //     const intervalId = setInterval(fetchRFID, 60000); // 1 minute
     
-        return () => clearInterval(intervalId);
-    }, []);
+    //     return () => clearInterval(intervalId);
+    // }, []);
 
     useEffect(() => {
         fetchData();
-        fetchRFID()
+        // fetchRFID()
     }, [])
 
     return (
