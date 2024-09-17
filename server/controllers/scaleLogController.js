@@ -3,6 +3,7 @@ const { ScaleItems, ScaleLogs } = require('../models');
 
 async function addNewScaleLog(req, res) {
     console.log('###############  NEW TRY  ##################')
+    console.log(req.body)
 
     try {
         const existingLogs = await ScaleLogs.findAll({
@@ -11,10 +12,11 @@ async function addNewScaleLog(req, res) {
             }
         });
 
+        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         console.log(req.body.itemName)
         const smallItemCheck = await ScaleItems.findOne({
             where: {
-                itemName: req.body.itemName
+                itemLocation: req.body.itemLocation
             }
         })
 

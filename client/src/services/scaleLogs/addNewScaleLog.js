@@ -5,7 +5,7 @@ const addNewScaleLog = async (log) => {
     console.log(log)
     const res = await api.post('/scaleLog/addNewScaleLog', {
         scaleName: log.ScaleName,
-        itemName: log.ItemName,
+        itemLocation: log.ItemName,
         oldQty: log.OldQuantity,
         newQty: log.NewQuantity,
         employee: log.EmployeeName.trim(),
