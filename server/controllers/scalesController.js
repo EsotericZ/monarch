@@ -68,6 +68,7 @@ async function updateItem(req, res) {
     let shelf = req.body.itemShelf
     let bin = req.body.itemBin
     let area = req.body.itemArea
+    let smallItem = req.body.itemSmall
     
     await ScaleItems.update(
         {
@@ -78,6 +79,7 @@ async function updateItem(req, res) {
             shelf,
             bin,
             area,
+            smallItem
         },
         { where: { itemId: itemId }}
     ).then((result) => {

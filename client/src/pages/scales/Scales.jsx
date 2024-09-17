@@ -85,6 +85,7 @@ export const Scales = () => {
     const [itemShelf, setItemShelf] = useState(0);
     const [itemBin, setItemBin] = useState('');
     const [itemArea, setItemArea] = useState('');
+    const [itemSmall, setItemSmall] = useState(false);
     
     const [portHealth, setPortHealth] = useState('Port Health');
     const [newScale, setNewScale] = useState('Create Scale');
@@ -240,6 +241,7 @@ export const Scales = () => {
             setItemShelf(0);
             setItemBin('');
             setItemArea('');
+            setItemSmall(false);
             await fetchData();
         } catch (err) {
             console.error(err)
@@ -256,16 +258,28 @@ export const Scales = () => {
         setItemShelf(parseInt(scale.shelf));
         setItemBin(scale.bin);
         setItemArea(scale.area);
+        setItemSmall(scale.smallItem);
         setShowEdit(true);
     };
 
     const handleCancelEdit = () => {
+        setItemName('');
+        setItemLocation('');
+        setCurrentScaleId(0);
+        setCurrentItemId(0);
+        setItemAlert(0);
+        setItemRack(0);
+        setItemShelf(0)
+        setItemBin('');
+        setItemArea('');
+        setItemSmall(false);
+        setShowEdit(false);
         setShowEdit(false);
     };
     
     const handleUpdateItem = async () => {
         try {
-            await updateItem(itemName, itemLocation, currentItemId, itemAlert, itemRack, itemShelf, itemBin, itemArea);
+            await updateItem(itemName, itemLocation, currentItemId, itemAlert, itemRack, itemShelf, itemBin, itemArea, itemSmall);
         } catch (err) {
             console.error(err)
         }
@@ -278,6 +292,7 @@ export const Scales = () => {
         setItemShelf(0)
         setItemBin('');
         setItemArea('');
+        setItemSmall(false);
         setShowEdit(false);
         await fetchData();
     }
@@ -367,9 +382,7 @@ export const Scales = () => {
                                     </FloatingLabel>
                                 </div>
                             </div>
-                            <FloatingLabel controlId="floatingInput" label="Alert Threshold" className="mb-3">
-                                <Form.Control defaultValue={itemAlert} onChange={(e) => {setItemAlert(parseInt(e.target.value))}} />
-                            </FloatingLabel>
+                            
                             <div className="row">
                                 <div className="col">
                                     <FloatingLabel controlId="floatingInput" label="Rack" className="mb-3">
@@ -402,6 +415,21 @@ export const Scales = () => {
                                             <option>Weld</option>
                                         </Form.Control>
                                     </FloatingLabel>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col">
+                                    <FloatingLabel controlId="floatingInput" label="Alert Threshold" className="mb-3">
+                                        <Form.Control defaultValue={itemAlert} onChange={(e) => {setItemAlert(parseInt(e.target.value))}} />
+                                    </FloatingLabel>
+                                </div>
+                                <div className="col d-flex align-items-center">
+                                    <Form.Check 
+                                        type="checkbox"
+                                        label="Small Item"
+                                        checked={itemSmall}
+                                        onChange={(e) => setItemSmall(e.target.checked)}
+                                    />
                                 </div>
                             </div>
                         </Modal.Body>
@@ -744,6 +772,7 @@ export const Scales = () => {
                                                     <th className='text-center'><input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='&#xf002;  Area' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                                     <th className='text-center'><input onChange={(e) => setSearchedValueLocation(e.target.value)} placeholder='&#xf002;  Bin Location' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                                     <th className='text-center'>Alert Threshold</th>
+                                                    <th className='text-center'>Small Item</th>
                                                     <th className='text-center'>Delete Item</th>
                                                 </tr>
                                             </thead>
@@ -790,6 +819,11 @@ export const Scales = () => {
                                                                 <td className='text-center'>{scale.area}</td>
                                                                 <td className='text-center'>{scale.itemLocation}</td>
                                                                 <td className='text-center'>{scale.alert}</td>
+                                                                <td className='text-center'>
+                                                                    {scale.smallItem &&
+                                                                        <Icon icon={check}/>
+                                                                    }
+                                                                </td>
                                                                 <td className='text-center'>
                                                                     <Icon icon={remove} onClick={() => handleShowDeleteItem(scale)} />
                                                                 </td>

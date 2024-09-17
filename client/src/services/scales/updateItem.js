@@ -1,6 +1,6 @@
 import api from '../../api/api';
 
-const updateItem = async (itemName, itemLocation, currentItemId, itemAlert, itemRack, itemShelf, itemBin, itemArea) => {
+const updateItem = async (itemName, itemLocation, currentItemId, itemAlert, itemRack, itemShelf, itemBin, itemArea, itemSmall) => {
     const res = await api.post('/scales/updateItem', {
         itemName,
         itemLocation,
@@ -9,7 +9,8 @@ const updateItem = async (itemName, itemLocation, currentItemId, itemAlert, item
         itemRack,
         itemShelf,
         itemBin,
-        itemArea
+        itemArea,
+        itemSmall
     });
     return res.data;
 }
