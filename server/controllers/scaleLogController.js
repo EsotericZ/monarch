@@ -2,7 +2,7 @@ const Op = require('sequelize').Op;
 const { ScaleItems, ScaleLogs } = require('../models');
 
 async function addNewScaleLog(req, res) {
-    console.log('NEW TRY')
+    console.log('###############  NEW TRY  ##################')
 
     try {
         const existingLogs = await ScaleLogs.findAll({

@@ -94,7 +94,7 @@ export const Inventory = () => {
 
     useEffect(() => {
         fetchData();
-        // fetchRFID()
+        fetchRFID()
     }, [])
 
     return (
