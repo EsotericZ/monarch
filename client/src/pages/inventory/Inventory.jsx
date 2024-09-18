@@ -51,18 +51,11 @@ export const Inventory = () => {
                 const matchingMMItem = mmItems.data.find(item => item.scaleId === scale.ScaleId);
                 return { ...scale, ...matchingMMItem };
             });
-            console.log(mmItems.data)
-            console.log(mmLog.data)
 
-            // const combinedLogs = log.map(scale => {
-            //     const matchingItem = mmItems.data.find(item => item.itemLocation === scale.ItemName);
-            //     return { ...scale, ...matchingItem };
-            // });
             const combinedLogs = mmLog.data.map(scale => {
                 const matchingItem = mmItems.data.find(item => item.itemLocation === scale.itemLocation);
                 return { ...scale, ...matchingItem };
             });
-            console.log(combinedLogs)
 
             setCombinedData(combinedData);
             setLogData(combinedLogs);
@@ -80,12 +73,15 @@ export const Inventory = () => {
             const filteredLogs = logs.filter(log => new Date(log.Timestamp) >= fiveMinutesAgo);
 
             console.log('ran')
-            console.log(rfidLog.data)
+            console.log(rfidLog.data[0].created)
             console.log(filteredLogs)
 
             if (rfidLog.data && rfidLog.data.length > 0 && filteredLogs.length > 0) {
                 for (const log of filteredLogs) {
-                    await addNewScaleLog(log);
+                    if (new Date(log.Timestamp) > new Date(rfidLog.data[0].created)) {
+                        console.log(log);
+                        await addNewScaleLog(log);
+                    }
                 };
             }
         } catch (err) {
@@ -101,7 +97,7 @@ export const Inventory = () => {
 
     useEffect(() => {
         fetchData();
-        // fetchRFID()
+        fetchRFID();
     }, [])
 
     return (
@@ -291,7 +287,6 @@ export const Inventory = () => {
                                                     .includes(searchedValueEmployee.toString().toLowerCase())
                                             )
                                             .map((scale, index) => {
-                                                console.log(scale)
                                                 return (
                                                     <tr key={index} scale={scale}>
                                                         <CopyToClipboard text={scale.itemName} onCopy={() => { setShowToast(true); setPartCopy(`${scale.itemName}`) }}>
