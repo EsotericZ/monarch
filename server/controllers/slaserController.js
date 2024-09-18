@@ -16,7 +16,6 @@ let config = {
 
 async function getAllJobs(req, res) {
     const jobData = await TLJobs.findAll();
-    console.log(jobData)
     sql.connect(config, function(err,) {
         if (err) console.error(err);
         let request = new sql.Request();
@@ -56,7 +55,6 @@ async function getTBRJobs(req, res) {
         function(err, recordset) {
             if (err) console.error(err);
             let records = recordset.recordsets[0];
-            console.log(records)
             
             const map = new Map();
             records.forEach(item => map.set(item.JobNo, item));

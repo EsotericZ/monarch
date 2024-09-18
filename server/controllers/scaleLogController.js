@@ -9,7 +9,6 @@ async function getMMScaleLogs(req, res) {
             ]
         })
         .then((result) => {
-            console.log(result)
             return res.status(200).send({
                 data: result
             })
@@ -35,8 +34,6 @@ async function addNewScaleLog(req, res) {
             }
         });
 
-        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        console.log(req.body.itemName)
         const smallItemCheck = await ScaleItems.findOne({
             where: {
                 itemLocation: req.body.itemLocation
@@ -44,18 +41,17 @@ async function addNewScaleLog(req, res) {
         })
 
         if (!smallItemCheck) {
-            console.log('Scale Item Not Found')
+            // console.log('Scale Item Not Found')
             return res.status(404).send({
                 message: 'ScaleItem not found'
             });
         }
 
         const quantityDifference = Math.abs(req.body.oldQty - req.body.newQty);
-        console.log(quantityDifference)
 
         if (smallItemCheck.smallItem) {
             if (quantityDifference <= 2) {
-                console.log('This is a small item with minimal change and should not be logged.');
+                // console.log('This is a small item with minimal change and should not be logged.');
                 return res.status(200).send({
                     message: 'Small item change is below the threshold and will not be logged.'
                 });
@@ -63,14 +59,12 @@ async function addNewScaleLog(req, res) {
         }
 
         if (existingLogs.length > 0) {
-            console.log('Log with the same timestamp already exists.');
+            // console.log('Log with the same timestamp already exists.');
             return res.status(409).send({
                 message: 'Log with the same timestamp already exists.'
             });
         } else {
             // Proceed with log creation
-            console.log('THIS SHOULD BE CREATED');
-            console.log(req.body);
             const newLog = await ScaleLogs.create(req.body);
             return res.status(200).send({
                 data: newLog
@@ -86,7 +80,24 @@ async function addNewScaleLog(req, res) {
     }
 };
 
+async function deleteScaleLog(req, res) {
+    let id = req.body.id;
+
+    await ScaleLogs.destroy({ 
+        where: { id: id }
+    }).then((result) => {
+        return res.status(200).send({
+            data: result
+        })
+    }).catch((err) => {
+        return res.status(500).send({
+            status: err
+        })
+    })
+};
+
 module.exports = {
     getMMScaleLogs,
     addNewScaleLog,
+    deleteScaleLog,
 }

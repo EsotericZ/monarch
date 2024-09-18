@@ -29,7 +29,6 @@ async function getTest(req, res) {
             if (err) console.error(err);
             let records = recordset.recordsets[0];
             
-            // console.log(records)
             res.json(records)
         })
     })

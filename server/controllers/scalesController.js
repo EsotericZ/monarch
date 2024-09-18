@@ -20,7 +20,6 @@ async function getAllPorts(req, res) {
 }
 
 async function getMMItems(req, res) {
-    console.log('hit')
     await ScaleItems.findAll()
     .then((result) => {
         return res.status(200).send({

@@ -12,7 +12,6 @@ async function getStandardTaps(req, res) {
         ],
     })
     .then((result) => {
-        console.log(result)
         return res.status(200).send({
             data: result
         })

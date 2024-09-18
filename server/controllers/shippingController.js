@@ -116,9 +116,7 @@ async function scheduleRequest(req, res) {
 }
 
 async function deleteSchedule(req, res) {
-    console.log(req.body)
     let id = req.body.id;
-    console.log(id)
 
     await Shipping.update(
         {

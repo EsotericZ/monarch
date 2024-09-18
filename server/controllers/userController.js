@@ -32,7 +32,6 @@ async function getUserPassword(req, res) {
         process.env.SECRET_KEY || '1234'
     );
     const decryptedPassword = bytes.toString(CryptoJS.enc.Utf8)
-    console.log(decryptedPassword)
 
     return res.status(200).send({
         data: decryptedPassword

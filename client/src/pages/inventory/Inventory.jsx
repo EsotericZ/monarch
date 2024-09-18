@@ -9,9 +9,11 @@ import getScaleLogs from '../../services/scales/getScaleLogs';
 import getMMScaleLogs from '../../services/scaleLogs/getMMScaleLogs';
 import getNewRFIDLogs from '../../services/rfid/getNewRFIDLogs';
 import addNewScaleLog from '../../services/scaleLogs/addNewScaleLog';
+import deleteScaleLog from '../../services/scaleLogs/deleteScaleLog';
 
 import { Icon } from 'react-icons-kit';
 import { refresh } from 'react-icons-kit/fa/refresh';
+import { trashO } from 'react-icons-kit/fa/trashO';
 
 import Cookies from 'universal-cookie';
 import jwt_decode from 'jwt-decode';
@@ -41,6 +43,15 @@ export const Inventory = () => {
     const [materials, setMaterials] = useState('Materials');
     const [logs, setLogs] = useState('Logs');
     const [loading, setLoading] = useState(true);
+
+    const handleDelete = async (record) => {
+        try {
+            await deleteScaleLog(record);
+            fetchData();
+        } catch (err) {
+            console.log(err)
+        }
+    };
 
     const fetchData = async () => {
         try {
@@ -72,14 +83,9 @@ export const Inventory = () => {
             const fiveMinutesAgo = new Date(new Date().getTime() - 5 * 60 * 1000);
             const filteredLogs = logs.filter(log => new Date(log.Timestamp) >= fiveMinutesAgo);
 
-            console.log('ran')
-            console.log(rfidLog.data[0].created)
-            console.log(filteredLogs)
-
             if (rfidLog.data && rfidLog.data.length > 0 && filteredLogs.length > 0) {
                 for (const log of filteredLogs) {
                     if (new Date(log.Timestamp) > new Date(rfidLog.data[0].created)) {
-                        console.log(log);
                         await addNewScaleLog(log);
                     }
                 };
@@ -258,12 +264,13 @@ export const Inventory = () => {
                                 <Table striped hover>
                                     <thead>
                                         <tr>
-                                            <th className='text-center' width='30%'><input onChange={(e) => setSearchedValueName(e.target.value)} placeholder='&#xf002;  E2 Part No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='25%'><input onChange={(e) => setSearchedValueName(e.target.value)} placeholder='&#xf002;  E2 Part No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center' width='10%'>Old Qty</th>
                                             <th className='text-center' width='10%'>New Qty</th>
                                             <th className='text-center' width='10%'>Timestamp</th>
                                             <th className='text-center' width='20%'><input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='&#xf002;  Area' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                             <th className='text-center' width='20%'><input onChange={(e) => setSearchedValueEmployee(e.target.value)} placeholder='&#xf002;  Employee' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='5%'></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -297,6 +304,14 @@ export const Inventory = () => {
                                                         <td className='text-center'>{format(parseISO(scale.timeStamp), 'MM/dd/yy hh:ma')}</td>
                                                         <td className='text-center'>{scale.area}</td>
                                                         <td className='text-center'>{scale.employee}</td>
+                                                        <td className='text-center'>
+                                                            <Icon 
+                                                                icon={trashO} 
+                                                                size={20} 
+                                                                onClick={() => handleDelete(scale)} 
+                                                                style={{ cursor: 'pointer' }} 
+                                                            />
+                                                        </td>
                                                     </tr>
                                                 )
                                             })
