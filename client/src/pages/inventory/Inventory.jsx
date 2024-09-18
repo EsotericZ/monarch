@@ -49,7 +49,7 @@ export const Inventory = () => {
             await deleteScaleLog(record);
             fetchData();
         } catch (err) {
-            console.log(err)
+            console.error(err)
         }
     };
 
@@ -65,7 +65,7 @@ export const Inventory = () => {
 
             const combinedLogs = mmLog.data.map(scale => {
                 const matchingItem = mmItems.data.find(item => item.itemLocation === scale.itemLocation);
-                return { ...scale, ...matchingItem };
+                return { logid: scale.id, ...scale, ...matchingItem };
             });
 
             setCombinedData(combinedData);
@@ -73,7 +73,7 @@ export const Inventory = () => {
 
             setLoading(false)
         } catch (err) {
-            console.log(err)
+            console.error(err)
         }
     }
 
@@ -103,7 +103,6 @@ export const Inventory = () => {
 
     useEffect(() => {
         fetchData();
-        fetchRFID();
     }, [])
 
     return (
@@ -301,7 +300,7 @@ export const Inventory = () => {
                                                         </CopyToClipboard>
                                                         <td className='text-center'>{scale.oldQty}</td>
                                                         <td className='text-center'>{scale.newQty}</td>
-                                                        <td className='text-center'>{format(parseISO(scale.timeStamp), 'MM/dd/yy hh:ma')}</td>
+                                                        <td className='text-center'>{format(parseISO(scale.timeStamp), 'MM/dd/yy hh:mm a')}</td>
                                                         <td className='text-center'>{scale.area}</td>
                                                         <td className='text-center'>{scale.employee}</td>
                                                         <td className='text-center'>
