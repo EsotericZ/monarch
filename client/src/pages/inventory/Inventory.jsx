@@ -36,6 +36,38 @@ export const Inventory = () => {
     const [searchedValueShelf, setSearchedValueShelf] = useState('');
     const [searchedValueEmployee, setSearchedValueEmployee] = useState('');
 
+    // PAGINATION SETUP
+    const [currentPage, setCurrentPage] = useState(1);
+    const rowsPerPage = 25;
+    const indexOfLastRow = currentPage * rowsPerPage;
+    const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+    const currentRows = logData.slice(indexOfFirstRow, indexOfLastRow);
+
+    const generatePageNumbers = () => {
+        const totalPages = Math.ceil(logData.length / rowsPerPage);
+        const pages = [];
+        const maxPagesToShow = 5;
+    
+        if (totalPages <= maxPagesToShow) {
+            for (let i = 1; i <= totalPages; i++) {
+                pages.push(i);
+            }
+        } else {
+            pages.push(1);
+            if (currentPage > 3) pages.push('...');
+            const startPage = Math.max(2, currentPage - 1);
+            const endPage = Math.min(totalPages - 1, currentPage + 1);
+    
+            for (let i = startPage; i <= endPage; i++) {
+                pages.push(i);
+            }
+    
+            if (currentPage < totalPages - 2) pages.push('...');
+            pages.push(totalPages);
+        }
+        return pages;
+    };
+
     const [showToast, setShowToast] = useState(false);
     const [partCopy, setPartCopy] = useState('None');
 
@@ -273,7 +305,7 @@ export const Inventory = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {logData
+                                        {currentRows
                                             .filter((row) => 
                                                 !searchedValueName || row.itemName
                                                     .toString()
@@ -317,6 +349,36 @@ export const Inventory = () => {
                                         }
                                     </tbody>
                                 </Table>
+                                <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+                                    <div className="pagination-container">
+                                        <Button
+                                            onClick={() => setCurrentPage(currentPage - 1)}
+                                            disabled={currentPage === 1}
+                                            className="pagination-arrow"
+                                        >
+                                            &larr; Previous
+                                        </Button>
+
+                                        {generatePageNumbers().map((page, index) => (
+                                            <Button
+                                                key={index}
+                                                onClick={() => page !== '...' && setCurrentPage(page)}
+                                                disabled={page === '...'}
+                                                className={`pagination-number ${page === currentPage ? 'selected' : ''}`}
+                                            >
+                                                {page}
+                                            </Button>
+                                        ))}
+
+                                        <Button
+                                            onClick={() => setCurrentPage(currentPage + 1)}
+                                            disabled={currentPage === Math.ceil(logData.length / rowsPerPage)}
+                                            className="pagination-arrow"
+                                        >
+                                            Next &rarr;
+                                        </Button>
+                                    </div>
+                                </div>
                                 <Button className='rounded-circle refreshBtn' onClick={() => fetchData()}>
                                     <Icon size={24} icon={refresh}/>
                                 </Button>
