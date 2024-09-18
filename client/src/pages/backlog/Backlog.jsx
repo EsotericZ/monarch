@@ -118,7 +118,6 @@ export const Backlog = () => {
                 getNextMonthJobs(),
                 getFutureJobs(),
             ]);
-            console.log(allJobs)
             let masters = allJobs.filter(row => row.MasterJobNo != null);
             let masterJobs = []
             masters.forEach((e) => {
@@ -134,8 +133,6 @@ export const Backlog = () => {
                 }
             })
 
-            console.log(allJobs)
-            
             nextJobs.forEach((e) => {
                 if (nonEmptyJobs.includes(e.JobNo)) {
                     e.HasSubs = 1
@@ -457,7 +454,7 @@ export const Backlog = () => {
                 });
                 setExpandedRows([...expandedRows, JobNo]);
             } catch (err) {
-                console.log(err);
+                console.error(err);
             }
         }
     };
@@ -467,7 +464,7 @@ export const Backlog = () => {
             const routing = await getSingleJob(job.JobNo);
             handleOpenRoute(job, routing);
         } catch (err) {
-            console.log(err);
+            console.error(err);
         }
     };
 
@@ -704,16 +701,16 @@ export const Backlog = () => {
                                             <tr>
                                                 <th className='text-center' width='2%'></th>
                                                 <th className='text-center' width='7%'><input onChange={(e) => setSearchedValueOrderNo(e.target.value)} placeholder='&#xf002;  Order No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                                <th className='text-center' width='6%'><input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='&#xf002;  Job No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                                <th className='text-center' width='6%'>Due Date</th>
+                                                <th className='text-center' width='7%'><input onChange={(e) => setSearchedValueJobNo(e.target.value)} placeholder='&#xf002;  Job No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                                <th className='text-center' width='7%'>Due Date</th>
                                                 <th className='text-center' width='7%'><input onChange={(e) => setSearchedValueCustomer(e.target.value)} placeholder='&#xf002;  Customer' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                                <th className='text-center' width='6%'>Quantity</th>
-                                                <th className='text-center' width='6%'>Unit Price</th>
-                                                <th className='text-center' width='6%'>Order Total</th>
+                                                <th className='text-center' width='7%'>Quantity</th>
+                                                <th className='text-center' width='7%'>Total Price</th>
+                                                {/* <th className='text-center' width='6%'>Order Total</th> */}
                                                 <th className='text-center' width='10%'><input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='&#xf002;  Current Area' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                                 <th className='text-center' width='5%'><input onChange={(e) => setSearchedValueOSV(e.target.value)} placeholder='&#xf002;  OSV' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
                                                 <th className='text-center' width='11%'>OSV Status</th>
-                                                <th className='text-center' width='9%'>Commitment Date</th>
+                                                <th className='text-center' width='10%'>Commitment Date</th>
                                                 <th className='text-center' width='20%'>Notes</th>
                                             </tr>
                                         </thead>
@@ -772,8 +769,8 @@ export const Backlog = () => {
                                                                     <td className='text-center'>{(job.DueDate).split('-')[1] + '/' + ((job.DueDate).split('-')[2]).split('T')[0]}</td>
                                                                     <td className='text-center'>{job.CustCode}</td>
                                                                     <td className='text-center'>{job.QtyOrdered - job.QtyShipped2Cust}</td>
-                                                                    <td className='text-center'>{job.UnitPrice.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
-                                                                    <td className='text-center'>{job.OrderTotal.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
+                                                                    {/* <td className='text-center'>{job.UnitPrice.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td> */}
+                                                                    <td className='text-center'>{((job.QtyOrdered - job.QtyShipped2Cust) * job.UnitPrice).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
                                                                     {job.WorkCntr && job.User_Text2 !== '4. DONE' ?
                                                                         <td className='text-center' onClick={() => toggleRoute(job)}>{(job.WorkCntr).split(' ')[1]}</td>
                                                                         :
@@ -800,8 +797,7 @@ export const Backlog = () => {
                                                                         <td className='text-center'>{(subJob.DueDate).split('-')[1] + '/' + ((subJob.DueDate).split('-')[2]).split('T')[0]}</td>
                                                                         <td className='text-center'>{subJob.CustCode}</td>
                                                                         <td className='text-center'>{subJob.QtyOrdered - subJob.QtyShipped2Cust}</td>
-                                                                        <td className='text-center'>{subJob.UnitPrice.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
-                                                                        <td className='text-center'></td>
+                                                                        <td className='text-center'>{((subJob.QtyOrdered - subJob.QtyShipped2Cust) * subJob.UnitPrice).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
                                                                         {subJob.WorkCntr && subJob.User_Text2 !== '4. DONE' ?
                                                                             <td className='text-center' onClick={() => toggleRoute(subJob)}>{(subJob.WorkCntr).split(' ')[1]}</td>
                                                                         :
@@ -826,7 +822,7 @@ export const Backlog = () => {
                                                     }
                                                 })
                                             }
-                                            <tr className='empty-row late-row'><td colSpan="13">-</td></tr>
+                                            <tr className='empty-row late-row'><td colSpan="12">-</td></tr>
                                             {futureJobs
                                                 .filter((row) => 
                                                     !searchedValueOrderNo || row.OrderNo
@@ -881,8 +877,8 @@ export const Backlog = () => {
                                                                     <td className='text-center'>{(job.DueDate).split('-')[1] + '/' + ((job.DueDate).split('-')[2]).split('T')[0]}</td>
                                                                     <td className='text-center'>{job.CustCode}</td>
                                                                     <td className='text-center'>{job.QtyOrdered - job.QtyShipped2Cust}</td>
-                                                                    <td className='text-center'>{job.UnitPrice.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
-                                                                    <td className='text-center'>{job.OrderTotal.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
+                                                                    {/* <td className='text-center'>{job.UnitPrice.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td> */}
+                                                                    <td className='text-center'>{((job.QtyOrdered - job.QtyShipped2Cust) * job.UnitPrice).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
                                                                     {job.WorkCntr && job.User_Text2 !== '4. DONE' ?
                                                                         <td className='text-center' onClick={() => toggleRoute(job)}>{(job.WorkCntr).split(' ')[1]}</td>
                                                                     :
@@ -909,8 +905,7 @@ export const Backlog = () => {
                                                                         <td className='text-center'>{(subJob.DueDate).split('-')[1] + '/' + ((subJob.DueDate).split('-')[2]).split('T')[0]}</td>
                                                                         <td className='text-center'>{subJob.CustCode}</td>
                                                                         <td className='text-center'>{subJob.QtyOrdered - subJob.QtyShipped2Cust}</td>
-                                                                        <td className='text-center'>{subJob.UnitPrice.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
-                                                                        <td className='text-center'></td>
+                                                                        <td className='text-center'>{((subJob.QtyOrdered - subJob.QtyShipped2Cust) * subJob.UnitPrice).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
                                                                         {subJob.WorkCntr && subJob.User_Text2 !== '4. DONE' ?
                                                                             <td className='text-center' onClick={() => toggleRoute(subJob)}>{(subJob.WorkCntr).split(' ')[1]}</td>
                                                                         :
