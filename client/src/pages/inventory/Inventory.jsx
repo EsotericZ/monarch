@@ -62,6 +62,7 @@ export const Inventory = () => {
                 const matchingItem = mmItems.data.find(item => item.itemLocation === scale.itemLocation);
                 return { ...scale, ...matchingItem };
             });
+            console.log(combinedLogs)
 
             setCombinedData(combinedData);
             setLogData(combinedLogs);
@@ -92,11 +93,11 @@ export const Inventory = () => {
         }
     }
 
-    // useEffect(() => {
-    //     const intervalId = setInterval(fetchRFID, 150000); // 2.5 minutes
+    useEffect(() => {
+        const intervalId = setInterval(fetchRFID, 150000); // 2.5 minutes
     
-    //     return () => clearInterval(intervalId);
-    // }, []);
+        return () => clearInterval(intervalId);
+    }, []);
 
     useEffect(() => {
         fetchData();
@@ -290,16 +291,17 @@ export const Inventory = () => {
                                                     .includes(searchedValueEmployee.toString().toLowerCase())
                                             )
                                             .map((scale, index) => {
+                                                console.log(scale)
                                                 return (
                                                     <tr key={index} scale={scale}>
                                                         <CopyToClipboard text={scale.itemName} onCopy={() => { setShowToast(true); setPartCopy(`${scale.itemName}`) }}>
                                                             <td className='text-center'>{scale.itemName}</td>
                                                         </CopyToClipboard>
-                                                        <td className='text-center'>{scale.OldQuantity}</td>
-                                                        <td className='text-center'>{scale.NewQuantity}</td>
-                                                        <td className='text-center'>{format(parseISO(scale.Timestamp), 'MM/dd/yy hh:ma')}</td>
+                                                        <td className='text-center'>{scale.oldQty}</td>
+                                                        <td className='text-center'>{scale.newQty}</td>
+                                                        <td className='text-center'>{format(parseISO(scale.timeStamp), 'MM/dd/yy hh:ma')}</td>
                                                         <td className='text-center'>{scale.area}</td>
-                                                        <td className='text-center'>{scale.EmployeeName}</td>
+                                                        <td className='text-center'>{scale.employee}</td>
                                                     </tr>
                                                 )
                                             })
