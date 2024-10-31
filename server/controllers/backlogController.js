@@ -328,6 +328,22 @@ async function Test(req, res) {
     })
 };
 
+        // GET ALL TABLE NAMES
+        // request.query(`
+        //     SELECT TABLE_NAME
+        //     FROM INFORMATION_SCHEMA.TABLES
+        //     WHERE TABLE_TYPE = 'BASE TABLE'
+        //     ORDER BY TABLE_NAME ASC
+        // `,
+
+        // GET COLUMN NAMES OF A TABLE
+        // request.query(`
+        //    SELECT COLUMN_NAME
+        //     FROM INFORMATION_SCHEMA.COLUMNS
+        //     WHERE TABLE_NAME = 'POReleases'
+        //     ORDER BY COLUMN_NAME ASC
+        // `,
+
 module.exports = {
     getAllJobs,
     getNextMonthJobs,

@@ -44,6 +44,7 @@ import { Maintenance } from './pages/maintenance/Maintenance';
 import { HubHealth } from './pages/inventory/hubHealth/HubHealth';
 import { Profile } from './pages/profile/Profile';
 import { Shipping } from './pages/shipping/Shipping';
+import { SheetInventory } from './pages/inventory/SheetInventory';
 import { Test } from './pages/test/Test';
 
 export const App = () => {
@@ -179,6 +180,10 @@ export const App = () => {
                 <Route
                     path='/inventory'
                     element={<Inventory />}
+                />
+                <Route
+                    path='/sheetInventory'
+                    element={<SheetInventory />}
                 />
                 <Route
                     path='/login'
