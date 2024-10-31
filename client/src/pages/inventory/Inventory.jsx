@@ -38,10 +38,9 @@ export const Inventory = () => {
 
     // PAGINATION SETUP
     const [currentPage, setCurrentPage] = useState(1);
-    const rowsPerPage = 25;
+    const rowsPerPage = 15;
     const indexOfLastRow = currentPage * rowsPerPage;
     const indexOfFirstRow = indexOfLastRow - rowsPerPage;
-    const currentRows = logData.slice(indexOfFirstRow, indexOfLastRow);
 
     const generatePageNumbers = () => {
         const totalPages = Math.ceil(logData.length / rowsPerPage);
@@ -67,6 +66,43 @@ export const Inventory = () => {
         }
         return pages;
     };
+
+    const handleSearchName = (e) => {
+        setSearchedValueName(e.target.value);
+        setCurrentPage(1);
+    };
+
+    const handleSearchArea = (e) => {
+        setSearchedValueArea(e.target.value);
+        setCurrentPage(1);
+    };
+
+    const handleSearchEmployee = (e) => {
+        setSearchedValueEmployee(e.target.value);
+        setCurrentPage(1);
+    };
+
+    const filteredData = logData
+    .filter((row) => 
+        !searchedValueName || row.itemName
+            .toString()
+            .toLowerCase()
+            .includes(searchedValueName.toString().toLowerCase())
+    )
+    .filter((row) => 
+        !searchedValueArea || row.area
+            .toString()
+            .toLowerCase()
+            .includes(searchedValueArea.toString().toLowerCase())
+    )
+    .filter((row) => 
+        !searchedValueEmployee || row.EmployeeName
+            .toString()
+            .toLowerCase()
+            .includes(searchedValueEmployee.toString().toLowerCase())
+    );
+
+    const currentRows = filteredData.slice(indexOfFirstRow, indexOfLastRow);
 
     const [showToast, setShowToast] = useState(false);
     const [partCopy, setPartCopy] = useState('None');
@@ -295,35 +331,38 @@ export const Inventory = () => {
                                 <Table striped hover>
                                     <thead>
                                         <tr>
-                                            <th className='text-center' width='25%'><input onChange={(e) => setSearchedValueName(e.target.value)} placeholder='&#xf002;  E2 Part No' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='25%'>
+                                                <input 
+                                                    onChange={handleSearchName} 
+                                                    placeholder='&#xf002;  E2 Part No' 
+                                                    className='text-center searchBox' 
+                                                    style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} 
+                                                />
+                                            </th>
                                             <th className='text-center' width='10%'>Old Qty</th>
                                             <th className='text-center' width='10%'>New Qty</th>
                                             <th className='text-center' width='10%'>Timestamp</th>
-                                            <th className='text-center' width='20%'><input onChange={(e) => setSearchedValueArea(e.target.value)} placeholder='&#xf002;  Area' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
-                                            <th className='text-center' width='20%'><input onChange={(e) => setSearchedValueEmployee(e.target.value)} placeholder='&#xf002;  Employee' className='text-center searchBox' style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} /></th>
+                                            <th className='text-center' width='20%'>
+                                                <input 
+                                                    onChange={handleSearchArea} 
+                                                    placeholder='&#xf002;  Area' 
+                                                    className='text-center searchBox' 
+                                                    style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} 
+                                                />
+                                            </th>
+                                            <th className='text-center' width='20%'>
+                                                <input 
+                                                    onChange={handleSearchEmployee} 
+                                                    placeholder='&#xf002;  Employee' 
+                                                    className='text-center searchBox' 
+                                                    style={{width: '100%', fontFamily: 'Segoe UI, FontAwesome'}} 
+                                                />
+                                            </th>
                                             <th className='text-center' width='5%'></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {currentRows
-                                            .filter((row) => 
-                                                !searchedValueName || row.itemName
-                                                    .toString()
-                                                    .toLowerCase()
-                                                    .includes(searchedValueName.toString().toLowerCase())
-                                            )
-                                            .filter((row) => 
-                                                !searchedValueArea || row.area
-                                                    .toString()
-                                                    .toLowerCase()
-                                                    .includes(searchedValueArea.toString().toLowerCase())
-                                            )
-                                            .filter((row) => 
-                                                !searchedValueEmployee || row.EmployeeName
-                                                    .toString()
-                                                    .toLowerCase()
-                                                    .includes(searchedValueEmployee.toString().toLowerCase())
-                                            )
                                             .map((scale, index) => {
                                                 return (
                                                     <tr key={index} scale={scale}>
