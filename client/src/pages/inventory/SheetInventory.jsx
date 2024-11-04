@@ -26,7 +26,6 @@ export const SheetInventory = () => {
     const fetchPODate = async () => {
         try {
             const res = await getAllPOsDate(startDate, endDate);
-            console.log(res)
             setPoData(res);
             setDataFetched(true);
         } catch (err) {
@@ -42,7 +41,7 @@ export const SheetInventory = () => {
         setEndDate('');
     };
 
-    const totalEstSqFt = poData.reduce((sum, item) => sum + item.EstimatedSQFTJob, 0).toFixed(2);
+    const totalEstSqFt = poData.reduce((sum, item) => sum + (item.MaterialQty * item.JobQty), 0).toFixed(2);
     const totalActSqFt = poData.reduce((sum, item) => sum + item.ActualSQFTJob, 0).toFixed(2);
     const totalDifference = (totalEstSqFt - totalActSqFt).toFixed(2);
     const totalPercentageDiff = ((totalDifference / totalEstSqFt) * 100).toFixed(1);
@@ -106,8 +105,9 @@ export const SheetInventory = () => {
                                     </thead>
                                     <tbody>
                                         {poData.map((item, index) => {
-                                            const difference = (item.EstimatedSQFTJob - item.ActualSQFTJob).toFixed(2);
-                                            const percentageDiff = ((difference / item.EstimatedSQFTJob) * 100).toFixed(1);
+                                            const EstimatedSQFTJob = (item.MaterialQty * item.JobQty).toFixed(2);
+                                            const difference = (EstimatedSQFTJob - item.ActualSQFTJob).toFixed(2);
+                                            const percentageDiff = ((difference / EstimatedSQFTJob) * 100).toFixed(1);
 
                                             return (
                                                 <tr key={index}>
@@ -115,9 +115,9 @@ export const SheetInventory = () => {
                                                     <td>{item.JobNo}</td>
                                                     <td>{item.PartNo}</td>
                                                     <td>{item.Material}</td>
-                                                    <td>{item.EstimatedSQFTJob}</td>
+                                                    <td>{EstimatedSQFTJob}</td>
                                                     <td>{item.ActualSQFTJob}</td>
-                                                    <td style={{ color: difference > 0 ? 'green' : 'red', fontWeight: 'bold', }}      >{difference}</td>
+                                                    <td style={{ color: difference >= 0 ? 'green' : 'red', fontWeight: 'bold', }}>{difference}</td>
                                                     <td>{percentageDiff}%</td>
                                                 </tr>
                                             )
@@ -138,7 +138,7 @@ export const SheetInventory = () => {
                                         <tr>
                                             <td>{totalEstSqFt}</td>
                                             <td>{totalActSqFt}</td>
-                                            <td style={{ color: totalDifference > 0 ? 'green' : 'red', fontWeight: 'bold' }}>
+                                            <td style={{ color: totalDifference >= 0 ? 'green' : 'red', fontWeight: 'bold' }}>
                                                 {totalDifference}
                                             </td>
                                             <td>{totalPercentageDiff}%</td>

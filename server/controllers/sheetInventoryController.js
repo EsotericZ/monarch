@@ -29,38 +29,37 @@ async function getAllPOsDate(req, res) {
                 POReleases.PONum AS "PONo",
                 POReleases.JobNo AS "JobNo",
                 MAX(OrderDet.PartNo) AS "PartNo",
-                SUM(COALESCE(CAST(JobReq.PurchQty AS DECIMAL(10, 2)), 0)) AS "EstimatedSQFTJob",
+                MAX(OrderDet.QtyToMake) AS "JobQty",
                 POReleases.Qty AS "ActualSQFTJob",
-
                 PODet.QtyOrd AS "TotalSQFTPO",
-
                 PODet.PartNo AS "Material",
-                PODet.PartDesc AS "MaterialDescription",
                 PODet.DueDate,
                 PODet.Status,
                 PODet.ProdCode,
-                PODet.GLCode
+                PODet.GLCode,
+                m.Qty AS "MaterialQty"
 
-                
             FROM POReleases
             LEFT JOIN PODet ON POReleases.PONum = PODet.PONum
             LEFT JOIN OrderDet ON POReleases.JobNo = OrderDet.JobNo
             LEFT JOIN JobReq ON POReleases.JobNo = JobReq.JobNo AND PODet.PartNo = JobReq.PartNo
+            LEFT JOIN Materials m ON m.PartNo = OrderDet.PartNo AND m.SubPartNo = PODet.PartNo
 
             WHERE PODet.GLCode = '5010-20'
             AND PODet.DueDate BETWEEN @startDate AND @endDate
+            AND m.Qty IS NOT NULL
 
             GROUP BY 
                 POReleases.PONum, 
                 POReleases.JobNo, 
                 POReleases.Qty, 
                 PODet.PartNo, 
-                PODet.PartDesc, 
                 PODet.QtyOrd, 
                 PODet.DueDate, 
                 PODet.Status,
                 PODet.ProdCode,
-                PODet.GLCode;
+                PODet.GLCode,
+                m.Qty;
             `, 
 
             function (err, recordset) {
@@ -85,38 +84,37 @@ async function getAllPOsPO(req, res) {
                 POReleases.PONum AS "PONo",
                 POReleases.JobNo AS "JobNo",
                 MAX(OrderDet.PartNo) AS "PartNo",
-                SUM(COALESCE(CAST(JobReq.PurchQty AS DECIMAL(10, 2)), 0)) AS "EstimatedSQFTJob",
+                MAX(OrderDet.QtyToMake) AS "JobQty",
                 POReleases.Qty AS "ActualSQFTJob",
-
                 PODet.QtyOrd AS "TotalSQFTPO",
-
                 PODet.PartNo AS "Material",
-                PODet.PartDesc AS "MaterialDescription",
                 PODet.DueDate,
                 PODet.Status,
                 PODet.ProdCode,
-                PODet.GLCode
+                PODet.GLCode,
+                m.Qty AS "MaterialQty"
 
-                
             FROM POReleases
             LEFT JOIN PODet ON POReleases.PONum = PODet.PONum
             LEFT JOIN OrderDet ON POReleases.JobNo = OrderDet.JobNo
             LEFT JOIN JobReq ON POReleases.JobNo = JobReq.JobNo AND PODet.PartNo = JobReq.PartNo
+            LEFT JOIN Materials m ON m.PartNo = OrderDet.PartNo AND m.SubPartNo = PODet.PartNo
 
             WHERE PODet.GLCode = '5010-20'
             AND POReleases.PONum = @poNum
+            AND m.Qty IS NOT NULL
 
             GROUP BY 
                 POReleases.PONum, 
                 POReleases.JobNo, 
                 POReleases.Qty, 
                 PODet.PartNo, 
-                PODet.PartDesc, 
                 PODet.QtyOrd, 
                 PODet.DueDate, 
                 PODet.Status,
                 PODet.ProdCode,
-                PODet.GLCode;
+                PODet.GLCode,
+                m.Qty;
             `, 
 
             function (err, recordset) {

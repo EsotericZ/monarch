@@ -13,5 +13,6 @@ router.post('/updateEmail', backlogController.updateEmail);
 router.post('/updateHold', backlogController.updateHold);
 router.get('/unconfirmed', backlogController.Unconfirmed);
 router.get('/test', backlogController.Test);
+router.get('/test2', backlogController.Test2);
 
 module.exports = router;
