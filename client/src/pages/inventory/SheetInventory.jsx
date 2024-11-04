@@ -41,10 +41,31 @@ export const SheetInventory = () => {
         setEndDate('');
     };
 
-    const totalEstSqFt = poData.reduce((sum, item) => sum + (item.MaterialQty * item.JobQty), 0).toFixed(2);
-    const totalActSqFt = poData.reduce((sum, item) => sum + item.ActualSQFTJob, 0).toFixed(2);
-    const totalDifference = (totalEstSqFt - totalActSqFt).toFixed(2);
-    const totalPercentageDiff = ((totalDifference / totalEstSqFt) * 100).toFixed(1);
+    // const totalEstSqFt = poData.reduce((sum, item) => sum + (item.MaterialQty * item.JobQty), 0).toFixed(2);
+    // const totalActSqFt = poData.reduce((sum, item) => sum + item.ActualSQFTJob, 0).toFixed(2);
+    // const totalDifference = (totalEstSqFt - totalActSqFt).toFixed(2);
+    // const totalPercentageDiff = ((totalDifference / totalEstSqFt) * 100).toFixed(1);
+
+    const groupedData = poData.reduce((acc, item) => {
+        const material = item.Material;
+        const estimatedSqFt = item.MaterialQty * item.JobQty;
+        const actualSqFt = item.ActualSQFTJob;
+
+        if (!acc[material]) {
+            acc[material] = { material, totalEstSqFt: 0, totalActSqFt: 0 };
+        }
+
+        acc[material].totalEstSqFt += estimatedSqFt;
+        acc[material].totalActSqFt += actualSqFt;
+
+        return acc;
+    }, {});
+
+    const materialTotals = Object.values(groupedData).map(item => {
+        const difference = (item.totalEstSqFt - item.totalActSqFt).toFixed(2);
+        const percentageDiff = ((difference / item.totalEstSqFt) * 100).toFixed(1);
+        return { ...item, difference, percentageDiff };
+    });
 
     return (
         <div style={{ display: 'flex' }}>
@@ -116,7 +137,7 @@ export const SheetInventory = () => {
                                                     <td>{item.PartNo}</td>
                                                     <td>{item.Material}</td>
                                                     <td>{EstimatedSQFTJob}</td>
-                                                    <td>{item.ActualSQFTJob}</td>
+                                                    <td>{(item.ActualSQFTJob).toFixed(2)}</td>
                                                     <td style={{ color: difference >= 0 ? 'green' : 'red', fontWeight: 'bold', }}>{difference}</td>
                                                     <td>{percentageDiff}%</td>
                                                 </tr>
@@ -128,6 +149,7 @@ export const SheetInventory = () => {
                                 <Table striped bordered hover style={{ marginTop: '20px' }}>
                                     <thead>
                                         <tr>
+                                            <th>Material</th>
                                             <th>Total Est Sq Ft</th>
                                             <th>Total Act Sq Ft</th>
                                             <th>Total + / -</th>
@@ -135,14 +157,17 @@ export const SheetInventory = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>{totalEstSqFt}</td>
-                                            <td>{totalActSqFt}</td>
-                                            <td style={{ color: totalDifference >= 0 ? 'green' : 'red', fontWeight: 'bold' }}>
-                                                {totalDifference}
-                                            </td>
-                                            <td>{totalPercentageDiff}%</td>
-                                        </tr>
+                                        {materialTotals.map((item, index) => (
+                                            <tr key={index}>
+                                                <td>{item.material}</td>
+                                                <td>{item.totalEstSqFt.toFixed(2)}</td>
+                                                <td>{item.totalActSqFt.toFixed(2)}</td>
+                                                <td style={{ color: item.difference >= 0 ? 'green' : 'red', fontWeight: 'bold' }}>
+                                                    {item.difference}
+                                                </td>
+                                                <td>{item.percentageDiff}%</td>
+                                            </tr>
+                                        ))}
                                     </tbody>
                                 </Table>
 
